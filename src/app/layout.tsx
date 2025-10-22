@@ -6,6 +6,7 @@ import SEOScripts from "@/components/SEOScripts";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AudioPlayer from "@/components/AudioPlayer";
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: "Meshari's Ongoing Charity - صدقة جارية لمشاري",
@@ -39,10 +40,10 @@ export const metadata: Metadata = {
     siteName: "Meshari's Ongoing Charity",
     images: [
       {
-        url: "/og-image.svg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Meshari's Ongoing Charity",
+        alt: "Meshari's Ongoing Charity - صدقة جارية لمشاري",
       },
     ],
     locale: "ar_SA",
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Meshari's Ongoing Charity - صدقة جارية لمشاري",
     description: "A tribute to Meshari Ahmed Sulaiman Alabra - Ongoing charity through Quran, supplications, and good deeds",
-    images: ["/og-image.svg"],
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -68,6 +69,9 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icons/icon.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-32x32.png", sizes: "32x32", type: "image/png" },
       { url: "/icons/icon-72x72.png", sizes: "72x72", type: "image/png" },
       { url: "/icons/icon-96x96.png", sizes: "96x96", type: "image/png" },
       { url: "/icons/icon-128x128.png", sizes: "128x128", type: "image/png" },
@@ -80,6 +84,7 @@ export const metadata: Metadata = {
     apple: [
       { url: "/icons/apple-icon-180.png", sizes: "180x180", type: "image/png" },
     ],
+    shortcut: "/favicon.ico",
   },
   appleWebApp: {
     capable: true,
@@ -99,14 +104,20 @@ export default function RootLayout({
   return (
     <html lang="ar" suppressHydrationWarning>
       <head>
-        {/* DNS Prefetch for external domains */}
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-        <link rel="dns-prefetch" href="https://api.aladhan.com" />
-        <link rel="dns-prefetch" href="https://api.alquran.cloud" />
-        <link rel="dns-prefetch" href="https://api.quran.com" />
-        <link rel="dns-prefetch" href="https://img.youtube.com" />
-        <link rel="dns-prefetch" href="https://i.ytimg.com" />
+            {/* Favicon */}
+            <link rel="icon" href="/favicon.ico" sizes="any" />
+            <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+            <link rel="icon" href="/icons/icon-32x32.png" sizes="32x32" type="image/png" />
+            <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
+            
+            {/* DNS Prefetch for external domains */}
+            <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+            <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+            <link rel="dns-prefetch" href="https://api.aladhan.com" />
+            <link rel="dns-prefetch" href="https://api.alquran.cloud" />
+            <link rel="dns-prefetch" href="https://api.quran.com" />
+            <link rel="dns-prefetch" href="https://img.youtube.com" />
+            <link rel="dns-prefetch" href="https://i.ytimg.com" />
 
         {/* Preconnect for critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -172,6 +183,7 @@ export default function RootLayout({
                   {children}
                   <AudioPlayer />
                   <Analytics />
+                  <SpeedInsights />
                 </LanguageProvider>
           </ThemeProvider>
         </ErrorBoundary>

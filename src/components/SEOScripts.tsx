@@ -51,7 +51,7 @@ export default function SEOScripts() {
         "about": { "@id": "https://meshari.charity/#organization" },
         "primaryImageOfPage": {
           "@type": "ImageObject",
-          "url": "https://meshari.charity/og-image.svg"
+          "url": "https://meshari.charity/og-image.png"
         },
         "inLanguage": "ar",
         "breadcrumb": {
