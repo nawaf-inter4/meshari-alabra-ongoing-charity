@@ -249,8 +249,7 @@ const nextConfig = {
   // Production source maps (disable for smaller builds)
   productionBrowserSourceMaps: false,
 
-  // Optimize for serverless
-  output: 'standalone',
+  // Optimize for serverless (removed standalone for Vercel compatibility)
 };
 
 module.exports = withBundleAnalyzer(withPWA(nextConfig));
