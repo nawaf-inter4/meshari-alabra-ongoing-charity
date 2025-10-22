@@ -1,0 +1,168 @@
+{
+  "site.title": "Amal Jariyah Meshari",
+  "site.subtitle": "Semoga Allah mengampuninya dan menjadikan Al-Quran sebagai pemberi syafaat baginya pada Hari Penghakiman",
+  "memorial.name": "Meshari Ahmed Sulaiman Alabra",
+  "memorial.death": "Wafat pada 29 Maret 2023 - Riyadh, Arab Saudi",
+  "memorial.description": "Semoga Allah merahmatinya dan memberikannya Surga tertinggi, dan semoga amalan ini menjadi timbangan kebaikannya",
+
+  "hero.title": "Amal Jariyah",
+  "hero.subtitle": "Sesungguhnya kita adalah milik Allah, dan kepada-Nya kita akan kembali",
+  "hero.description": "Halaman ini didedikasikan untuk saudara saya Meshari, yang wafat karena kanker otak. Semoga Allah mengampuninya dan menjadikan Al-Quran dan amal jariyah sebagai pemberi syafaat baginya",
+
+  "youtube.title": "Bacaan Al-Quran",
+  "youtube.description": "Dengarkan bacaan Al-Quran sebagai amal jariyah",
+
+  "donation.title": "Sponsor Anak Yatim",
+  "donation.subtitle": "Lanjutkan amal kebaikan atas nama Meshari",
+  "donation.description": "Amal jariyah adalah salah satu amalan terbesar yang bermanfaat bagi yang telah wafat, dan mensponsori anak yatim adalah salah satu amalan yang paling dicintai Allah",
+  "donation.button": "Donasi Sekarang",
+  "donation.benefits": "Manfaat Sponsor Anak Yatim",
+  "donation.benefit1": "Persahabatan dengan Nabi ﷺ di Surga",
+  "donation.benefit2": "Memenuhi kebutuhan mereka yang kehilangan wali",
+  "donation.benefit3": "Amal jariyah dengan pahala berkelanjutan",
+
+  "supplications.title": "Doa-doa",
+  "supplications.subtitle": "Doa untuk yang telah wafat dari Al-Quran dan Sunnah",
+  "supplications.daily": "Dzikir Harian",
+  "supplications.deceased": "Doa untuk yang Wafat",
+  "supplications.morning": "Dzikir Pagi",
+  "supplications.evening": "Dzikir Petang",
+
+  "prayer.title": "Waktu Shalat",
+  "prayer.subtitle": "Waktu shalat berdasarkan lokasi Anda",
+  "prayer.fajr": "Subuh",
+  "prayer.dhuhr": "Dzuhur",
+  "prayer.asr": "Ashar",
+  "prayer.maghrib": "Maghrib",
+  "prayer.isha": "Isya",
+  "prayer.sunrise": "Terbit",
+  "prayer.next": "Shalat Berikutnya",
+  "prayer.remaining": "Sisa Waktu",
+  "prayer.location": "Lokasi",
+  "prayer.enable": "Aktifkan Notifikasi Shalat",
+
+  "hijri.title": "Tanggal Hijriah",
+  "hijri.gregorian": "Masehi",
+
+  "quran.title": "Al-Quran Al-Karim",
+  "quran.subtitle": "Baca dan renungkan ayat-ayat Allah",
+  "quran.select_surah": "Pilih Surah",
+  "quran.verse": "Ayat",
+  "quran.juz": "Juz",
+  "quran.page": "Halaman",
+  "quran.play": "Putar",
+  "quran.pause": "Jeda",
+
+  "tafseer.title": "Tafsir Al-Quran",
+  "tafseer.subtitle": "Memahami makna firman Allah",
+  "tafseer.select": "Pilih Tafsir",
+  "tafseer.jalalayn": "Tafsir Al-Jalalayn",
+  "tafseer.tabari": "Tafsir At-Tabari",
+  "tafseer.kathir": "Tafsir Ibnu Katsir",
+  "tafseer.saadi": "Tafsir As-Sa'di",
+
+  "hadith.title": "Hadits Nabi",
+  "hadith.subtitle": "Dari tuntunan Nabi Muhammad ﷺ",
+  "hadith.source": "Sumber",
+
+  "dhikr.title": "Penghitung Dzikir",
+  "dhikr.subtitle": "Berdzikir kepada Allah setiap waktu",
+  "dhikr.count": "Hitungan",
+  "dhikr.reset": "Reset",
+  "dhikr.subhanallah": "Subhanallah",
+  "dhikr.alhamdulillah": "Alhamdulillah",
+  "dhikr.allahuakbar": "Allahu Akbar",
+
+  "qibla.title": "Arah Kiblat",
+  "qibla.subtitle": "Ketahui arah Ka'bah",
+  "qibla.direction": "Kiblat mengarah ke",
+  "qibla.distance": "Jarak ke Mekkah",
+  "qibla.allow_location": "Izinkan akses lokasi",
+
+  "footer.title": "Semoga Allah merahmatinya",
+  "footer.description": "Ya Allah, jadikanlah Al-Quran sebagai pemberi syafaat bagi saudara saya Meshari pada Hari Penghakiman, dan jadikanlah setiap hurufnya sebagai cahaya di kuburnya",
+  "footer.charity": "Amal Jariyah",
+  "footer.all_rights": "Hak cipta dilindungi © 2024",
+
+  "theme.toggle": "Ganti tema",
+  "theme.light": "Mode terang",
+  "theme.dark": "Mode gelap",
+  "theme.system": "Tema sistem",
+
+  "language.select": "Pilih Bahasa",
+  "language.ar": "العربية",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+  "language.ur": "اردو",
+  "language.id": "Bahasa Indonesia",
+  "language.ms": "Bahasa Melayu",
+  "language.fr": "Français",
+  "language.bn": "বাংলা",
+  "language.zh": "中文",
+  "language.it": "Italiano",
+  "language.ja": "日本語",
+  "language.ko": "한국어",
+
+  "notifications.title": "Notifikasi",
+  "notifications.enable": "Aktifkan Notifikasi",
+  "notifications.prayer_times": "Pengingat Waktu Shalat",
+  "notifications.daily_supplications": "Dzikir Harian",
+  "notifications.permission_required": "Mohon izinkan notifikasi browser",
+
+  "offline.title": "Anda sedang offline",
+  "offline.message": "Beberapa fitur mungkin tidak berfungsi tanpa koneksi internet",
+
+  "loading": "Memuat...",
+  "error": "Terjadi kesalahan",
+  "retry": "Coba lagi",
+  "share": "Bagikan",
+  "social.x_account": "Akun X Meshari",
+  "copy": "Salin",
+  "copied": "Tersalin",
+  "close": "Tutup",
+  "next": "Selanjutnya",
+  "previous": "Sebelumnya",
+  "search": "Cari",
+
+  "accessibility": {
+    "increment_counter": "Tambah hitungan",
+    "reset_counter": "Reset hitungan",
+    "play_audio": "Putar audio",
+    "pause_audio": "Jeda audio",
+    "select_surah": "Pilih surah",
+    "select_tafseer": "Pilih tafsir",
+    "toggle_menu": "Buka/tutup menu",
+    "close_modal": "Tutup jendela"
+  },
+
+  "dhikr": {
+    "increment": "Tambah",
+    "milestone_33": "Target pertama: 33",
+    "milestone_66": "Target kedua: 66",
+    "milestone_99": "Target ketiga: 99",
+    "milestone_100": "Target akhir: 100"
+  },
+
+  "supplications": {
+    "deceased_1": "Ya Allah, ampunilah dia dan rahmatilah dia, maafkanlah dia dan ampunilah dia. Muliakanlah tempat tinggalnya, luaskanlah kuburnya, mandikanlah dia dengan air, salju dan embun. Bersihkanlah dia dari dosa-dosa sebagaimana Engkau membersihkan baju putih dari kotoran",
+    "deceased_2": "Ya Allah, jadikanlah kuburnya sebagai taman dari taman-taman surga, dan janganlah jadikan ia lubang dari lubang-lubang neraka",
+    "deceased_3": "Ya Allah, berilah dia rumah yang lebih baik dari rumahnya, dan keluarga yang lebih baik dari keluarganya, dan masukkanlah dia ke dalam surga dan lindungilah dia dari siksa kubur dan siksa neraka"
+  },
+
+  "hadith": {
+    "title": "Hadits",
+    "subtitle": "Kata-kata hikmah dari Nabi Muhammad (semoga Allah melimpahkan rahmat dan keselamatan kepadanya)",
+    "source": "Sumber",
+    "random_button": "Hadits Acak",
+    "click_button": "Klik tombol untuk mendapatkan hadits acak"
+  },
+
+  "footer": {
+    "charity": "Lembaga Amal Berkelanjutan Meshary Al-Abra",
+    "all_rights": "Semua hak dilindungi © {{year}}",
+    "technology": "Dibangun dengan cinta untuk Allah menggunakan teknologi web modern",
+    "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+    "sitemap": "Peta Situs",
+    "llm_txt": "File LLM"
+  }
+}

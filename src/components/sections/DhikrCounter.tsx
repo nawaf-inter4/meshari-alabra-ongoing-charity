@@ -7,6 +7,12 @@ import { RotateCcw, Hand } from "lucide-react";
 
 export default function DhikrCounter() {
   const { t } = useLanguage();
+  
+  // Fallback function for translations
+  const getTranslation = (key: string, fallback: string) => {
+    const translation = t(key);
+    return translation === key ? fallback : translation;
+  };
   const [count, setCount] = useState(0);
   const [selectedDhikr, setSelectedDhikr] = useState("subhanallah");
 
@@ -72,6 +78,12 @@ export default function DhikrCounter() {
                     ? "bg-islamic-gold text-white shadow-lg scale-105"
                     : "bg-light-secondary dark:bg-dark-secondary hover:bg-islamic-gold/20"
                 }`}
+                style={{
+                  direction: 'rtl',
+                  unicodeBidi: 'isolate',
+                  fontFamily: "'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', sans-serif",
+                  fontFeatureSettings: '"liga", "clig", "calt"'
+                }}
               >
                 {dhikr.text}
               </button>
@@ -98,7 +110,15 @@ export default function DhikrCounter() {
 
           {/* Dhikr Text */}
           <div className="text-center mb-8">
-            <p className="text-5xl md:text-6xl font-arabic mb-4 text-islamic-green dark:text-islamic-gold">
+            <p 
+              className="text-5xl md:text-6xl font-arabic mb-4 text-islamic-green dark:text-islamic-gold"
+              style={{
+                direction: 'rtl',
+                unicodeBidi: 'isolate',
+                fontFamily: "'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', sans-serif",
+                fontFeatureSettings: '"liga", "clig", "calt"'
+              }}
+            >
               {currentDhikr.text}
             </p>
             <p className="text-xl text-gray-600 dark:text-gray-400">
@@ -113,7 +133,7 @@ export default function DhikrCounter() {
               onClick={increment}
               className="flex-1 max-w-xs px-8 py-6 bg-islamic-gold text-white font-bold text-xl rounded-2xl hover:bg-islamic-green transition-all duration-300 shadow-lg"
             >
-              تسبيح
+              {getTranslation("dhikr.increment", "Tasbih")}
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.95 }}

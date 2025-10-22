@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookOpen, ChevronDown } from "lucide-react";
@@ -25,6 +25,8 @@ export default function QuranSection() {
   const [selectedSurah, setSelectedSurah] = useState<number>(1);
   const [ayahs, setAyahs] = useState<Ayah[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchSurahs();
@@ -35,6 +37,17 @@ export default function QuranSection() {
       fetchAyahs(selectedSurah);
     }
   }, [selectedSurah]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const fetchSurahs = async () => {
     try {
@@ -99,19 +112,36 @@ export default function QuranSection() {
           <label className="block text-lg font-semibold mb-3">
             {t("quran.select_surah")}
           </label>
-          <div className="relative">
-            <select
-              value={selectedSurah}
-              onChange={(e) => setSelectedSurah(Number(e.target.value))}
-              className="w-full p-4 rounded-xl bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none appearance-none cursor-pointer text-lg"
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-full p-4 rounded-xl bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
             >
-              {surahs.map((surah) => (
-                <option key={surah.number} value={surah.number}>
-                  {surah.number}. {surah.name} - {surah.englishName} ({surah.numberOfAyahs} {t("quran.verse")}s)
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none" />
+              <span className="text-left">
+                {currentSurah ? `${currentSurah.number}. ${currentSurah.englishName}` : "Select Surah"}
+              </span>
+              <ChevronDown className={`w-5 h-5 text-islamic-gold transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {isDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border-2 border-islamic-gold/30 rounded-2xl shadow-2xl z-50 max-h-60 overflow-y-auto custom-scrollbar">
+                {surahs.map((surah) => (
+                  <button
+                    key={surah.number}
+                    onClick={() => {
+                      setSelectedSurah(surah.number);
+                      setIsDropdownOpen(false);
+                    }}
+                    className={`w-full px-6 py-4 text-left hover:bg-islamic-gold/10 transition-colors duration-300 first:rounded-t-2xl last:rounded-b-2xl ${
+                      selectedSurah === surah.number ? 'bg-islamic-gold/20 text-islamic-gold' : 'text-gray-900 dark:text-white'
+                    }`}
+                  >
+                    <div className="font-semibold">{surah.number}. {surah.englishName}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{surah.name} • {surah.numberOfAyahs} verses</div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </motion.div>
 

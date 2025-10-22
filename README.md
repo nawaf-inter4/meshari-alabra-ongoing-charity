@@ -11,7 +11,7 @@
 
 *March 29, 2023 - May Allah have mercy on him*
 
-[🚀 Live Demo](#) | [📖 Documentation](./DEPLOYMENT.md) | [🤲 Donate](https://ehsan.sa/campaign/6FC11E15DA)
+[🚀 Live Demo](https://meshari.charity) | [📖 Documentation](./DEPLOYMENT.md) | [🤲 Donate](https://ehsan.sa/campaign/6FC11E15DA)
 
 </div>
 
@@ -508,7 +508,7 @@ Feel free to use, modify, and distribute this code to create similar memorial pa
 
 ## 📞 Links
 
-- **Live Site**: [Coming Soon]
+- **Live Site**: [https://meshari.charity]
 - **GitHub**: [nawaf-inter4/meshari-alabra-ongoing-charity](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 - **Donation**: [Ehsan.sa Campaign](https://ehsan.sa/campaign/6FC11E15DA)
 - **Issues**: [GitHub Issues](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/issues)

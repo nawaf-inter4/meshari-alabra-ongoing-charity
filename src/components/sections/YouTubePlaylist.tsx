@@ -27,7 +27,7 @@ export default function YouTubePlaylist({ playlistId }: YouTubePlaylistProps) {
               {t("youtube.title")}
             </h2>
           </div>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
+          <p className="text-xl text-gray-600 dark:text-gray-400 leading-loose py-4 px-6">
             {t("youtube.description")}
           </p>
         </motion.div>

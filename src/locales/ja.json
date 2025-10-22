@@ -1,0 +1,168 @@
+{
+  "site.title": "メシャリの継続的な慈善活動",
+  "site.subtitle": "アッラーが彼を赦し、審判の日にクルアーンを彼の執り成しとしてくださいますように",
+  "memorial.name": "メシャリ・アハメド・スライマン・アラブラ",
+  "memorial.death": "2023年3月29日逝去 - リヤド、サウジアラビア",
+  "memorial.description": "アッラーが彼に慈悲を与え、最高の楽園を授けてくださいますように。そしてこの活動が彼の善行の記録に加えられますように",
+
+  "hero.title": "継続的な慈善活動",
+  "hero.subtitle": "私たちはアッラーのものであり、必ず彼の元に帰るのです",
+  "hero.description": "このページは、脳腫瘍で亡くなった私の兄弟メシャリに捧げられています。アッラーが彼を赦し、クルアーンと継続的な慈善活動を彼の執り成しとしてくださいますように",
+
+  "youtube.title": "クルアーン朗誦",
+  "youtube.description": "継続的な慈善活動としてクルアーンの朗誦を聴く",
+
+  "donation.title": "孤児支援",
+  "donation.subtitle": "メシャリの名において善行を継続する",
+  "donation.description": "継続的な慈善活動は故人に恩恵をもたらす最も偉大な行為の一つであり、孤児支援はアッラーが最も愛される行為の一つです",
+  "donation.button": "今すぐ寄付",
+  "donation.benefits": "孤児支援の恩恵",
+  "donation.benefit1": "楽園での預言者 ﷺ との同伴",
+  "donation.benefit2": "保護者を失った者のニーズを満たす",
+  "donation.benefit3": "継続的な報奨のある慈善活動",
+
+  "supplications.title": "祈願",
+  "supplications.subtitle": "クルアーンとスンナからの故人のための祈り",
+  "supplications.daily": "日々の唱念",
+  "supplications.deceased": "故人のための祈り",
+  "supplications.morning": "朝の唱念",
+  "supplications.evening": "夕べの唱念",
+
+  "prayer.title": "礼拝時刻",
+  "prayer.subtitle": "あなたの位置に基づく礼拝時刻",
+  "prayer.fajr": "ファジュル",
+  "prayer.dhuhr": "ズフル",
+  "prayer.asr": "アスル",
+  "prayer.maghrib": "マグリブ",
+  "prayer.isha": "イシャー",
+  "prayer.sunrise": "日の出",
+  "prayer.next": "次の礼拝",
+  "prayer.remaining": "残り時間",
+  "prayer.location": "位置情報",
+  "prayer.enable": "礼拝通知を有効にする",
+
+  "hijri.title": "ヒジュラ暦",
+  "hijri.gregorian": "西暦",
+
+  "quran.title": "聖クルアーン",
+  "quran.subtitle": "アッラーの節を読み、熟考する",
+  "quran.select_surah": "スーラを選択",
+  "quran.verse": "節",
+  "quran.juz": "ジュズ",
+  "quran.page": "ページ",
+  "quran.play": "再生",
+  "quran.pause": "一時停止",
+
+  "tafseer.title": "クルアーン解釈",
+  "tafseer.subtitle": "アッラーの言葉の意味を理解する",
+  "tafseer.select": "タフシールを選択",
+  "tafseer.jalalayn": "タフシール・アル＝ジャラーライン",
+  "tafseer.tabari": "タフシール・アッ＝タバリー",
+  "tafseer.kathir": "タフシール・イブン・カスィール",
+  "tafseer.saadi": "タフシール・アッ＝サアディー",
+
+  "hadith.title": "預言者の伝承",
+  "hadith.subtitle": "預言者ムハンマド ﷺ の導きから",
+  "hadith.source": "出典",
+
+  "dhikr.title": "ズィクルカウンター",
+  "dhikr.subtitle": "常にアッラーを讃える",
+  "dhikr.count": "カウント",
+  "dhikr.reset": "リセット",
+  "dhikr.subhanallah": "スブハーナッラー",
+  "dhikr.alhamdulillah": "アルハムドリッラー",
+  "dhikr.allahuakbar": "アッラーフ・アクバル",
+
+  "qibla.title": "キブラの方向",
+  "qibla.subtitle": "聖カアバ殿の方向を知る",
+  "qibla.direction": "キブラの方向",
+  "qibla.distance": "メッカまでの距離",
+  "qibla.allow_location": "位置情報へのアクセスを許可",
+
+  "footer.title": "アッラーが彼に慈悲を与えますように",
+  "footer.description": "アッラーよ、聖クルアーンを私の兄弟メシャリの審判の日の執り成しとし、その一文字一文字を彼の墓の光としてください",
+  "footer.charity": "継続的な慈善活動",
+  "footer.all_rights": "全ての権利を保有 © 2024",
+
+  "theme.toggle": "テーマ切り替え",
+  "theme.light": "ライトモード",
+  "theme.dark": "ダークモード",
+  "theme.system": "システムテーマ",
+
+  "language.select": "言語を選択",
+  "language.ar": "العربية",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+  "language.ur": "اردو",
+  "language.id": "Bahasa Indonesia",
+  "language.ms": "Bahasa Melayu",
+  "language.fr": "Français",
+  "language.bn": "বাংলা",
+  "language.zh": "中文",
+  "language.it": "Italiano",
+  "language.ja": "日本語",
+  "language.ko": "한국어",
+
+  "notifications.title": "通知",
+  "notifications.enable": "通知を有効にする",
+  "notifications.prayer_times": "礼拝時刻アラート",
+  "notifications.daily_supplications": "日々の唱念",
+  "notifications.permission_required": "ブラウザの通知を許可してください",
+
+  "offline.title": "オフラインです",
+  "offline.message": "インターネット接続なしでは一部の機能が動作しない場合があります",
+
+  "loading": "読み込み中...",
+  "error": "エラーが発生しました",
+  "retry": "再試行",
+  "share": "共有",
+  "social.x_account": "MeshariのXアカウント",
+  "copy": "コピー",
+  "copied": "コピーしました",
+  "close": "閉じる",
+  "next": "次へ",
+  "previous": "前へ",
+  "search": "検索",
+
+  "accessibility": {
+    "increment_counter": "カウンターを増やす",
+    "reset_counter": "カウンターをリセット",
+    "play_audio": "音声を再生",
+    "pause_audio": "音声を一時停止",
+    "select_surah": "スーラを選択",
+    "select_tafseer": "タフシールを選択",
+    "toggle_menu": "メニュー切り替え",
+    "close_modal": "ウィンドウを閉じる"
+  },
+
+  "dhikr": {
+    "increment": "増加",
+    "milestone_33": "第一目標：33",
+    "milestone_66": "第二目標：66",
+    "milestone_99": "第三目標：99",
+    "milestone_100": "最終目標：100"
+  },
+
+  "supplications": {
+    "deceased_1": "アッラーよ、彼を赦し、慈悲を与え、健康を与え、赦してください。彼の住まいを寛大にし、その入り口を広くし、水と雪と雹で彼を洗い清めてください。白い衣が汚れから清められるように、彼を罪から清めてください",
+    "deceased_2": "アッラーよ、彼の墓を楽園の庭園の一つとし、地獄の穴の一つとしないでください",
+    "deceased_3": "アッラーよ、彼に彼の家よりも良い家を、彼の家族よりも良い家族を与え、彼を楽園に入れ、墓の苦しみと火獄の苦しみから守ってください"
+  },
+
+  "hadith": {
+    "title": "ハディース",
+    "subtitle": "預言者ムハンマド（彼に平安あれ）からの知恵の言葉",
+    "source": "出典",
+    "random_button": "ランダムハディース",
+    "click_button": "ランダムハディースを取得するにはボタンをクリックしてください"
+  },
+
+  "footer": {
+    "charity": "Meshari Al-Abra 継続慈善団体",
+    "all_rights": "全著作権所有 © {{year}}",
+    "technology": "アッラーのために愛を込めて現代のウェブ技術で構築",
+    "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+    "sitemap": "サイトマップ",
+    "llm_txt": "LLMファイル"
+  }
+}

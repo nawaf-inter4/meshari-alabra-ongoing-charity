@@ -1,0 +1,166 @@
+{
+  "site.title": "Meshari'nin Devam Eden Sadakası",
+  "site.subtitle": "Allah onu bağışlasın ve Kur'an'ı kıyamet gününde ona şefaatçi kılsın",
+  "memorial.name": "Meshari Ahmed Sulaiman Alabra",
+  "memorial.death": "29 Mart 2023'te vefat etti - Riyad, Suudi Arabistan",
+  "memorial.description": "Allah ona rahmet etsin ve ona en yüksek cenneti nasip etsin, ve bu çalışma onun iyilik terazisinde olsun",
+
+  "hero.title": "Devam Eden Sadaka",
+  "hero.subtitle": "Şüphesiz biz Allah'a aidiz ve şüphesiz O'na döneceğiz",
+  "hero.description": "Bu sayfa, beyin kanserinden vefat eden kardeşim Meshari'ye adanmıştır. Allah onu bağışlasın ve Kur'an ile devam eden sadakayı ona şefaatçi kılsın",
+
+  "youtube.title": "Kur'an Tilavetleri",
+  "youtube.description": "Devam eden sadaka olarak Kur'an tilavetlerini dinleyin",
+
+  "donation.title": "Yetim Sponsorluğu",
+  "donation.subtitle": "Meshari'nin adına hayır işlerini devam ettirin",
+  "donation.description": "Devam eden sadaka, vefat edenlere fayda sağlayan en büyük amellerdendir ve yetim sponsorluğu Allah'a en sevimli amellerdendir",
+  "donation.button": "Şimdi Bağış Yap",
+  "donation.header_button": "Bağış",
+  "donation.benefits": "Yetim Sponsorluğunun Faydaları",
+  "donation.benefit1": "Cennette Peygamber ﷺ ile arkadaşlık",
+  "donation.benefit2": "Velisini kaybedenlerin ihtiyaçlarını karşılamak",
+  "donation.benefit3": "Sürekli sevabı olan devam eden sadaka",
+
+  "supplications.title": "Dualar",
+  "supplications.subtitle": "Kur'an ve Sünnetten vefat edenler için dualar",
+  "supplications.daily": "Günlük Zikirler",
+  "supplications.deceased": "Vefat Eden İçin Dua",
+  "supplications.morning": "Sabah Zikirleri",
+  "supplications.evening": "Akşam Zikirleri",
+
+  "prayer.title": "Namaz Vakitleri",
+  "prayer.subtitle": "Bulunduğunuz konuma göre namaz vakitleri",
+  "prayer.fajr": "Sabah",
+  "prayer.dhuhr": "Öğle",
+  "prayer.asr": "İkindi",
+  "prayer.maghrib": "Akşam",
+  "prayer.isha": "Yatsı",
+  "prayer.sunrise": "Güneş Doğuşu",
+  "prayer.next": "Sonraki Namaz",
+  "prayer.remaining": "Kalan Süre",
+  "prayer.location": "Konum",
+  "prayer.enable": "Namaz Bildirimlerini Etkinleştir",
+
+  "hijri.title": "Hicri Tarih",
+  "hijri.gregorian": "Miladi",
+
+  "quran.title": "Kur'an-ı Kerim",
+  "quran.subtitle": "Allah'ın ayetlerini oku ve düşün",
+  "quran.select_surah": "Sure Seç",
+  "quran.verse": "Ayet",
+  "quran.juz": "Cüz",
+  "quran.page": "Sayfa",
+  "quran.play": "Oynat",
+  "quran.pause": "Duraklat",
+
+  "tafseer.title": "Kur'an Tefsiri",
+  "tafseer.subtitle": "Allah'ın kelimelerinin anlamlarını anlamak",
+  "tafseer.select": "Tefsir Seç",
+  "tafseer.jalalayn": "Celaleyn Tefsiri",
+  "tafseer.tabari": "Taberi Tefsiri",
+  "tafseer.kathir": "İbn Kesir Tefsiri",
+  "tafseer.saadi": "Sa'di Tefsiri",
+
+  "hadith.title": "Peygamber Sözleri",
+  "hadith.subtitle": "Peygamber Efendimiz ﷺ'in rehberliğinden",
+  "hadith.source": "Kaynak",
+
+  "dhikr.title": "Zikir Sayacı",
+  "dhikr.subtitle": "Her zaman Allah'ı zikret",
+  "dhikr.count": "Sayı",
+  "dhikr.reset": "Sıfırla",
+  "dhikr.subhanallah": "Sübhanallah",
+  "dhikr.alhamdulillah": "Elhamdülillah",
+  "dhikr.allahuakbar": "Allahu Ekber",
+
+  "qibla.title": "Kıble Yönü",
+  "qibla.subtitle": "Kâbe'nin yönünü öğren",
+  "qibla.direction": "Kıble yönü",
+  "qibla.distance": "Mekke'ye uzaklık",
+  "qibla.allow_location": "Konum erişimine izin ver",
+
+  "footer.title": "Allah ona rahmet etsin",
+  "footer.description": "Allah'ım, Kur'an-ı Kerim'i kardeşim Meshari'ye kıyamet gününde şefaatçi kıl ve her harfini onun kabrinde bir nur eyle",
+  "footer.charity": "Devam Eden Sadaka",
+  "footer.all_rights": "Tüm hakları saklıdır © {{year}}",
+  "footer.technology": "Allah rızası için sevgiyle yapılmış modern web teknolojileri",
+
+  "theme.toggle": "Tema değiştir",
+  "theme.light": "Açık tema",
+  "theme.dark": "Koyu tema",
+  "theme.system": "Sistem teması",
+
+  "language.select": "Dil Seç",
+  "language.ar": "العربية",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+  "language.ur": "اردو",
+  "language.id": "Bahasa Indonesia",
+  "language.ms": "Bahasa Melayu",
+  "language.fr": "Français",
+  "language.bn": "বাংলা",
+
+  "notifications.title": "Bildirimler",
+  "notifications.enable": "Bildirimleri Etkinleştir",
+  "notifications.prayer_times": "Namaz Vakti Bildirimleri",
+  "notifications.daily_supplications": "Günlük Zikirler",
+  "notifications.permission_required": "Lütfen tarayıcı bildirimlerine izin verin",
+
+  "offline.title": "Çevrimdışısınız",
+  "offline.message": "Bazı özellikler internet bağlantısı olmadan çalışmayabilir",
+
+  "loading": "Yükleniyor...",
+  "error": "Bir hata oluştu",
+  "retry": "Tekrar dene",
+  "share": "Paylaş",
+  "social.x_account": "Meshari'nin X Hesabı",
+  "copy": "Kopyala",
+  "copied": "Kopyalandı",
+  "close": "Kapat",
+  "next": "Sonraki",
+  "previous": "Önceki",
+  "search": "Ara",
+
+  "accessibility": {
+    "increment_counter": "Sayacı artır",
+    "reset_counter": "Sayacı sıfırla",
+    "play_audio": "Sesi oynat",
+    "pause_audio": "Sesi duraklat",
+    "select_surah": "Sure seç",
+    "select_tafseer": "Tefsir seç",
+    "toggle_menu": "Menüyü aç/kapat",
+    "close_modal": "Pencereyi kapat"
+  },
+
+  "dhikr": {
+    "increment": "Tesbih",
+    "milestone_33": "İlk hedef: 33",
+    "milestone_66": "İkinci hedef: 66",
+    "milestone_99": "Üçüncü hedef: 99",
+    "milestone_100": "Son hedef: 100"
+  },
+
+  "supplications": {
+    "deceased_1": "Allah'ım, onu bağışla ve ona merhamet et, ona afiyet ver ve onu affet. Onun konumunu yücelt ve girişini genişlet. Onu su, kar ve dolu ile yıka. Beyaz elbisenin kirden temizlendiği gibi onu günahlardan temizle",
+    "deceased_2": "Allah'ım, onun kabrini cennet bahçelerinden bir bahçe eyle ve onu cehennem çukurlarından bir çukur eyleme",
+    "deceased_3": "Allah'ım, ona evinden daha hayırlı bir ev, ailesinden daha hayırlı bir aile ver. Onu cennete koy ve onu kabir azabından ve cehennem azabından koru"
+  },
+
+  "hadith": {
+    "title": "Hadis",
+    "subtitle": "Peygamber Muhammed'den (sallallahu aleyhi ve sellem) hikmetli sözler",
+    "source": "Kaynak",
+    "random_button": "Rastgele Hadis",
+    "click_button": "Rastgele hadis almak için butona tıklayın"
+  },
+
+  "footer": {
+    "charity": "Meshari Al-Abra Sürekli Hayır Kurumu",
+    "all_rights": "Tüm hakları saklıdır © {{year}}",
+    "technology": "Allah rızası için sevgiyle yapılmış modern web teknolojileri",
+    "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+    "sitemap": "Site Haritası",
+    "llm_txt": "LLM Dosyası"
+  }
+}

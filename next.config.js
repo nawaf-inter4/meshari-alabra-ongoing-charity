@@ -2,8 +2,12 @@ const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-  buildExcludes: [/middleware-manifest\.json$/],
+  disable: false, // Enable PWA in development for testing
+  buildExcludes: [
+    /middleware-manifest\.json$/,
+    /_next\/static\/chunks\/.*\.js$/,
+    /_next\/static\/development\/.*\.js$/
+  ],
   maximumFileSizeToCacheInBytes: 5000000, // 5MB
   runtimeCaching: [
     {
@@ -136,6 +140,11 @@ const nextConfig = {
       'next-themes',
       'react-i18next',
     ],
+  },
+
+  // Turbopack configuration
+  turbopack: {
+    root: __dirname,
   },
 
   // Image optimization

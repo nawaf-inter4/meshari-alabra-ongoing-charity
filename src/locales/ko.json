@@ -1,0 +1,168 @@
+{
+  "site.title": "메샤리의 지속적인 자선",
+  "site.subtitle": "알라께서 그를 용서하시고 심판의 날에 꾸란을 그의 중재자로 삼으시기를",
+  "memorial.name": "메샤리 아흐메드 술라이만 알라브라",
+  "memorial.death": "2023년 3월 29일 별세 - 리야드, 사우디아라비아",
+  "memorial.description": "알라께서 그에게 자비를 베푸시고 가장 높은 천국을 주시며, 이 일이 그의 선행 저울에 있기를",
+
+  "hero.title": "지속적인 자선",
+  "hero.subtitle": "실로 우리는 알라께 속하며, 실로 우리는 그분께 돌아갈 것입니다",
+  "hero.description": "이 페이지는 뇌암으로 별세한 제 형제 메샤리를 위한 것입니다. 알라께서 그를 용서하시고 꾸란과 지속적인 자선을 그의 중재자로 삼으시기를",
+
+  "youtube.title": "꾸란 낭송",
+  "youtube.description": "지속적인 자선으로서 꾸란 낭송을 들으세요",
+
+  "donation.title": "고아 후원",
+  "donation.subtitle": "메샤리의 이름으로 선행을 계속하세요",
+  "donation.description": "지속적인 자선은 고인에게 유익한 가장 큰 행위 중 하나이며, 고아 후원은 알라께서 가장 사랑하시는 행위 중 하나입니다",
+  "donation.button": "지금 기부하기",
+  "donation.benefits": "고아 후원의 혜택",
+  "donation.benefit1": "천국에서 예언자 ﷺ 와의 동행",
+  "donation.benefit2": "보호자를 잃은 이들의 필요 충족",
+  "donation.benefit3": "지속적인 보상이 있는 자선",
+
+  "supplications.title": "기도문",
+  "supplications.subtitle": "꾸란과 순나로부터의 고인을 위한 기도",
+  "supplications.daily": "일일 디크르",
+  "supplications.deceased": "고인을 위한 기도",
+  "supplications.morning": "아침 디크르",
+  "supplications.evening": "저녁 디크르",
+
+  "prayer.title": "예배 시간",
+  "prayer.subtitle": "당신의 위치에 기반한 예배 시간",
+  "prayer.fajr": "파즈르",
+  "prayer.dhuhr": "두흐르",
+  "prayer.asr": "아스르",
+  "prayer.maghrib": "마그립",
+  "prayer.isha": "이샤",
+  "prayer.sunrise": "일출",
+  "prayer.next": "다음 예배",
+  "prayer.remaining": "남은 시간",
+  "prayer.location": "위치",
+  "prayer.enable": "예배 알림 활성화",
+
+  "hijri.title": "히즈라력",
+  "hijri.gregorian": "양력",
+
+  "quran.title": "성 꾸란",
+  "quran.subtitle": "알라의 절을 읽고 숙고하세요",
+  "quran.select_surah": "수라 선택",
+  "quran.verse": "절",
+  "quran.juz": "주즈",
+  "quran.page": "페이지",
+  "quran.play": "재생",
+  "quran.pause": "일시정지",
+
+  "tafseer.title": "꾸란 해석",
+  "tafseer.subtitle": "알라의 말씀의 의미 이해하기",
+  "tafseer.select": "타프시르 선택",
+  "tafseer.jalalayn": "타프시르 알-잘랄라인",
+  "tafseer.tabari": "타프시르 앗-타바리",
+  "tafseer.kathir": "타프시르 이븐 카시르",
+  "tafseer.saadi": "타프시르 앗-사디",
+
+  "hadith.title": "예언자의 전승",
+  "hadith.subtitle": "예언자 무함마드 ﷺ 의 인도로부터",
+  "hadith.source": "출처",
+
+  "dhikr.title": "디크르 카운터",
+  "dhikr.subtitle": "항상 알라를 찬미하세요",
+  "dhikr.count": "횟수",
+  "dhikr.reset": "초기화",
+  "dhikr.subhanallah": "수브하날라",
+  "dhikr.alhamdulillah": "알함두릴라",
+  "dhikr.allahuakbar": "알라후 아크바르",
+
+  "qibla.title": "끼블라 방향",
+  "qibla.subtitle": "성스러운 카바의 방향을 알아보세요",
+  "qibla.direction": "끼블라 방향",
+  "qibla.distance": "메카까지의 거리",
+  "qibla.allow_location": "위치 접근 허용",
+
+  "footer.title": "알라께서 그에게 자비를 베푸시기를",
+  "footer.description": "오 알라, 성 꾸란을 심판의 날에 제 형제 메샤리의 중재자로 삼아주시고, 그 모든 글자를 그의 무덤의 빛으로 삼아주소서",
+  "footer.charity": "지속적인 자선",
+  "footer.all_rights": "모든 권리 보유 © 2024",
+
+  "theme.toggle": "테마 전환",
+  "theme.light": "라이트 모드",
+  "theme.dark": "다크 모드",
+  "theme.system": "시스템 테마",
+
+  "language.select": "언어 선택",
+  "language.ar": "العربية",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+  "language.ur": "اردو",
+  "language.id": "Bahasa Indonesia",
+  "language.ms": "Bahasa Melayu",
+  "language.fr": "Français",
+  "language.bn": "বাংলা",
+  "language.zh": "中文",
+  "language.it": "Italiano",
+  "language.ja": "日本語",
+  "language.ko": "한국어",
+
+  "notifications.title": "알림",
+  "notifications.enable": "알림 활성화",
+  "notifications.prayer_times": "예배 시간 알림",
+  "notifications.daily_supplications": "일일 디크르",
+  "notifications.permission_required": "브라우저 알림을 허용해주세요",
+
+  "offline.title": "오프라인 상태입니다",
+  "offline.message": "일부 기능은 인터넷 연결 없이 작동하지 않을 수 있습니다",
+
+  "loading": "로딩 중...",
+  "error": "오류가 발생했습니다",
+  "retry": "다시 시도",
+  "share": "공유",
+  "social.x_account": "Meshari의 X 계정",
+  "copy": "복사",
+  "copied": "복사됨",
+  "close": "닫기",
+  "next": "다음",
+  "previous": "이전",
+  "search": "검색",
+
+  "accessibility": {
+    "increment_counter": "카운터 증가",
+    "reset_counter": "카운터 초기화",
+    "play_audio": "오디오 재생",
+    "pause_audio": "오디오 일시정지",
+    "select_surah": "수라 선택",
+    "select_tafseer": "타프시르 선택",
+    "toggle_menu": "메뉴 토글",
+    "close_modal": "창 닫기"
+  },
+
+  "dhikr": {
+    "increment": "증가",
+    "milestone_33": "첫 번째 목표: 33",
+    "milestone_66": "두 번째 목표: 66",
+    "milestone_99": "세 번째 목표: 99",
+    "milestone_100": "최종 목표: 100"
+  },
+
+  "supplications": {
+    "deceased_1": "오 알라, 그를 용서하시고 자비를 베푸시며, 그에게 힘을 주시고 용서하소서. 그의 거처를 관대히 하시고 그의 입구를 넓히시며, 물과 눈과 우박으로 그를 씻어주소서. 흰 옷이 더러움에서 깨끗해지듯이 그를 죄에서 깨끗이 하소서",
+    "deceased_2": "오 알라, 그의 무덤을 천국의 정원들 중 하나로 만드시고, 지옥의 구덩이들 중 하나로 만들지 마소서",
+    "deceased_3": "오 알라, 그에게 그의 집보다 더 좋은 집을, 그의 가족보다 더 좋은 가족을 주시고, 그를 천국에 들게 하시며 무덤의 고통과 불의 고통으로부터 보호하소서"
+  },
+
+  "hadith": {
+    "title": "하디스",
+    "subtitle": "예언자 무함마드(그에게 평화가 있기를)의 지혜로운 말씀",
+    "source": "출처",
+    "random_button": "랜덤 하디스",
+    "click_button": "랜덤 하디스를 얻으려면 버튼을 클릭하세요"
+  },
+
+  "footer": {
+    "charity": "Meshari Al-Abra 지속적 자선 단체",
+    "all_rights": "모든 권리 보유 © {{year}}",
+    "technology": "알라를 위해 사랑으로 현대 웹 기술로 구축",
+    "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+    "sitemap": "사이트맵",
+    "llm_txt": "LLM 파일"
+  }
+}

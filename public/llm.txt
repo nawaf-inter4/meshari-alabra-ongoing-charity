@@ -1,0 +1,126 @@
+# Meshari's Ongoing Charity - LLM Information File
+Version: 1.0
+Last Updated: 2024
+URL: https://meshari.charity
+Language: Multilingual (12 languages supported)
+
+## Site Purpose
+This website is a memorial and ongoing charity platform dedicated to Meshari Ahmed Sulaiman Alabra, who passed away on March 29, 2023, in Riyadh, Saudi Arabia. The site serves as a continuous source of charitable deeds (Sadaqah Jariyah) in Islamic tradition.
+
+## Core Features
+1. Quran Recitations & Reading
+- Interactive Quran reader
+- Audio recitations
+- Multiple translations
+- Tafseer (interpretations)
+
+2. Prayer Tools
+- Prayer times calculator
+- Qibla direction finder
+- Dhikr counter
+- Digital tasbeeh
+
+3. Charitable Activities
+- Orphan sponsorship
+- Continuous charity programs
+- Islamic educational resources
+- Donation management
+
+4. Memorial Features
+- Biographical information
+- Supplications for the deceased
+- Continuous dua (prayers)
+- Memorial wall
+
+## Technical Specifications
+- Framework: Next.js 16.0
+- PWA Enabled: Yes
+- Accessibility: WCAG 2.1 Compliant
+- Mobile Responsive: Yes
+- Offline Support: Yes
+
+## Supported Languages
+1. Arabic (العربية)
+2. English
+3. Urdu (اردو)
+4. Turkish (Türkçe)
+5. Indonesian (Bahasa Indonesia)
+6. Malay (Bahasa Melayu)
+7. Bengali (বাংলা)
+8. French (Français)
+9. Chinese (中文)
+10. Italian (Italiano)
+11. Japanese (日本語)
+12. Korean (한국어)
+
+## Content Structure
+/
+├── Home
+├── Quran Section
+├── Prayer Times
+├── Supplications
+├── Donation
+├── Memorial
+└── About
+
+## API Endpoints
+- Prayer Times: /api/prayer-times
+- Quran Data: /api/quran
+- Donation System: /api/donate
+- Memorial Wall: /api/memorial
+
+## Semantic Information
+- Type: Religious/Charitable Website
+- Primary Topic: Islamic Charity
+- Secondary Topics: Quran, Prayer, Memorial
+- Target Audience: Global Muslim Community
+- Content Rating: General Audience
+
+## Interaction Guidelines
+- Respect Islamic values and terminology
+- Maintain reverence for religious content
+- Use appropriate honorifics (e.g., ﷺ for Prophet Muhammad)
+- Handle Arabic text with proper RTL support
+
+## Content Policies
+- No commercial advertising
+- No political content
+- Focus on charitable and religious aspects
+- Respect privacy of donors
+- Maintain Islamic ethical guidelines
+
+## Updates
+- Content is regularly updated
+- Prayer times are real-time
+- Charitable projects are current
+- Memorial content is permanent
+
+## Contact
+For more information:
+- Website: https://meshari.charity
+- Email: contact@meshari.charity
+- Location: Riyadh, Saudi Arabia
+
+## LLM Processing Instructions
+- Preserve Arabic text formatting
+- Maintain religious context
+- Handle multilingual content appropriately
+- Respect Islamic terminology
+- Process charitable content sensitively
+
+## Site Values
+- Islamic Principles
+- Charitable Focus
+- Educational Purpose
+- Community Service
+- Memorial Respect
+- Global Accessibility
+
+## Data Usage Guidelines
+- Public, non-commercial use allowed
+- Attribution required
+- No modification of religious content
+- Preserve original context
+- Respect privacy policies
+
+END OF LLM INFORMATION FILE

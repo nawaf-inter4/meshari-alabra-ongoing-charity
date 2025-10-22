@@ -28,7 +28,9 @@ body {
 /* RTL Support */
 [dir="rtl"] {
   direction: rtl;
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', sans-serif;
+  unicode-bidi: isolate;
+  font-feature-settings: "liga", "clig", "calt";
 }
 
 [dir="ltr"] {
@@ -36,22 +38,152 @@ body {
   font-family: 'Lexend Deca', sans-serif;
 }
 
-/* Scrollbar Styling */
+/* Arabic Text Rendering */
+.font-arabic {
+  font-family: 'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', sans-serif;
+  direction: rtl;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga", "clig", "calt";
+  unicode-bidi: isolate;
+  font-variant-ligatures: common-ligatures;
+  font-kerning: normal;
+  font-synthesis: none;
+  -webkit-font-feature-settings: "liga", "clig", "calt";
+  -moz-font-feature-settings: "liga", "clig", "calt";
+  /* Force proper Arabic text shaping */
+  text-combine-upright: none;
+  -webkit-text-combine: none;
+  /* Handle special Unicode characters properly */
+  font-variant-east-asian: normal;
+  font-variant-caps: normal;
+  font-variant-numeric: normal;
+}
+
+/* Quran Text with Special Unicode Characters */
+.quran-text {
+  font-family: 'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', sans-serif !important;
+  direction: rtl !important;
+  unicode-bidi: isolate !important;
+  text-rendering: optimizeLegibility !important;
+  font-feature-settings: "liga", "clig", "calt" !important;
+  -webkit-font-feature-settings: "liga", "clig", "calt" !important;
+  -moz-font-feature-settings: "liga", "clig", "calt" !important;
+  font-variant-ligatures: common-ligatures !important;
+  font-kerning: normal !important;
+  font-synthesis: none !important;
+  /* Handle special Unicode characters in Quran text */
+  font-variant-east-asian: normal !important;
+  font-variant-caps: normal !important;
+  font-variant-numeric: normal !important;
+  /* Force proper character shaping */
+  -webkit-text-stroke: 0.01em transparent !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Scrollbar Styling - Hidden by default, visible on scroll/hover */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-light-secondary dark:bg-dark-secondary;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-islamic-gold rounded-full;
+  background: transparent;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: all 0.3s ease;
+}
+
+/* Show scrollbar on scroll or hover */
+html:hover ::-webkit-scrollbar-thumb,
+html:focus ::-webkit-scrollbar-thumb,
+body:hover ::-webkit-scrollbar-thumb,
+body:focus ::-webkit-scrollbar-thumb,
+html:active ::-webkit-scrollbar-thumb,
+body:active ::-webkit-scrollbar-thumb {
+  background: #D4AF37 !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-islamic-green;
+  background: #22C55E !important;
+}
+
+/* Firefox scrollbar - hidden by default */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+/* Show Firefox scrollbar on hover/scroll */
+html:hover,
+html:active {
+  scrollbar-color: #D4AF37 transparent;
+}
+
+/* Language Switcher Scrollbar */
+.language-switcher::-webkit-scrollbar {
+  width: 6px;
+}
+
+.language-switcher::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.language-switcher::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.language-switcher:hover::-webkit-scrollbar-thumb,
+.language-switcher:focus::-webkit-scrollbar-thumb {
+  background: #D4AF37 !important;
+}
+
+.language-switcher::-webkit-scrollbar-thumb:hover {
+  background: #22C55E !important;
+}
+
+/* Firefox scrollbar - hidden by default */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+/* Show Firefox scrollbar on hover */
+html:hover *,
+html:focus *,
+body:hover *,
+body:focus * {
+  scrollbar-color: #D4AF37 transparent;
+}
+
+/* Safari scrollbar support */
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Force scrollbar visibility on scroll */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Additional scrollbar fixes for all browsers */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+html:hover *,
+html:focus *,
+body:hover *,
+body:focus * {
+  scrollbar-color: #D4AF37 transparent;
 }
 
 /* Islamic Patterns Background */
