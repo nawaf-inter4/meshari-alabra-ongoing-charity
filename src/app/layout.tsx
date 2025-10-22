@@ -85,12 +85,27 @@ export default function RootLayout({
   return (
     <html lang="ar" suppressHydrationWarning>
       <head>
+        {/* DNS Prefetch for external domains */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="https://api.aladhan.com" />
+        <link rel="dns-prefetch" href="https://api.alquran.cloud" />
+        <link rel="dns-prefetch" href="https://api.quran.com" />
+        <link rel="dns-prefetch" href="https://img.youtube.com" />
+        <link rel="dns-prefetch" href="https://i.ytimg.com" />
+
+        {/* Preconnect for critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* Load critical fonts */}
         <link
           href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
+
+        {/* Viewport optimization */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
       </head>
       <body className="font-tajwal antialiased">
         <ThemeProvider
