@@ -1,0 +1,168 @@
+{
+  "site.title": "মেশারির চলমান সদকা",
+  "site.subtitle": "আল্লাহ তাকে ক্ষমা করুন এবং কিয়ামতের দিন কুরআনকে তার সুপারিশকারী বানান",
+  "memorial.name": "মেশারি আহমেদ সুলাইমান আলাবরা",
+  "memorial.death": "মৃত্যু: ২৯ মার্চ ২০২৩ - রিয়াদ, সৌদি আরব",
+  "memorial.description": "আল্লাহ তাকে রহমত করুন এবং সর্বোচ্চ জান্নাত দান করুন, এবং এই কাজটি তার নেক আমলের মিজানে যোগ হোক",
+
+  "hero.title": "চলমান সদকা",
+  "hero.subtitle": "নিশ্চয়ই আমরা আল্লাহর জন্য, এবং নিশ্চয়ই আমরা তাঁর কাছে ফিরে যাব",
+  "hero.description": "এই পেজটি আমার ভাই মেশারির জন্য উৎসর্গীকৃত, যিনি ব্রেইন ক্যান্সারে মারা গেছেন। আল্লাহ তাকে ক্ষমা করুন এবং কুরআন ও চলমান সদকাকে তার সুপারিশকারী বানান",
+
+  "youtube.title": "কুরআন তেলাওয়াত",
+  "youtube.description": "চলমান সদকা হিসেবে কুরআন তেলাওয়াত শুনুন",
+
+  "donation.title": "এতিম স্পনসরশিপ",
+  "donation.subtitle": "মেশারির নামে নেক আমল চালিয়ে যান",
+  "donation.description": "চলমান সদকা হল মৃত ব্যক্তির জন্য সর্বশ্রেষ্ঠ আমলগুলির একটি, এবং এতিম স্পনসরশিপ হল আল্লাহর কাছে সবচেয়ে প্রিয় আমলগুলির একটি",
+  "donation.button": "এখনই দান করুন",
+  "donation.benefits": "এতিম স্পনসরশিপের উপকারিতা",
+  "donation.benefit1": "জান্নাতে নবী ﷺ এর সাথে সঙ্গী হওয়া",
+  "donation.benefit2": "অভিভাবক হারানো মানুষদের প্রয়োজন পূরণ করা",
+  "donation.benefit3": "নিরন্তর সওয়াবের চলমান সদকা",
+
+  "supplications.title": "দোয়াসমূহ",
+  "supplications.subtitle": "কুরআন ও সুন্নাহ থেকে মৃত ব্যক্তির জন্য দোয়া",
+  "supplications.daily": "দৈনিক যিকির",
+  "supplications.deceased": "মৃত ব্যক্তির জন্য দোয়া",
+  "supplications.morning": "সকালের যিকির",
+  "supplications.evening": "সন্ধ্যার যিকির",
+
+  "prayer.title": "নামাজের সময়",
+  "prayer.subtitle": "আপনার অবস্থান অনুযায়ী নামাজের সময়",
+  "prayer.fajr": "ফজর",
+  "prayer.dhuhr": "যোহর",
+  "prayer.asr": "আসর",
+  "prayer.maghrib": "মাগরিব",
+  "prayer.isha": "ইশা",
+  "prayer.sunrise": "সূর্যোদয়",
+  "prayer.next": "পরবর্তী নামাজ",
+  "prayer.remaining": "বাকি সময়",
+  "prayer.location": "অবস্থান",
+  "prayer.enable": "নামাজের নোটিফিকেশন চালু করুন",
+
+  "hijri.title": "হিজরি তারিখ",
+  "hijri.gregorian": "গ্রেগরিয়ান",
+
+  "quran.title": "পবিত্র কুরআন",
+  "quran.subtitle": "আল্লাহর আয়াত পড়ুন ও চিন্তা করুন",
+  "quran.select_surah": "সূরা নির্বাচন করুন",
+  "quran.verse": "আয়াত",
+  "quran.juz": "পারা",
+  "quran.page": "পৃষ্ঠা",
+  "quran.play": "চালু করুন",
+  "quran.pause": "বিরতি দিন",
+
+  "tafseer.title": "কুরআনের তাফসীর",
+  "tafseer.subtitle": "আল্লাহর বাণীর অর্থ বোঝা",
+  "tafseer.select": "তাফসীর নির্বাচন করুন",
+  "tafseer.jalalayn": "তাফসীর আল-জালালাইন",
+  "tafseer.tabari": "তাফসীর আত-তাবারি",
+  "tafseer.kathir": "তাফসীর ইবনে কাসীর",
+  "tafseer.saadi": "তাফসীর আস-সাদি",
+
+  "hadith.title": "হাদীস",
+  "hadith.subtitle": "নবী মুহাম্মাদ ﷺ এর নির্দেশনা থেকে",
+  "hadith.source": "উৎস",
+
+  "dhikr.title": "যিকির কাউন্টার",
+  "dhikr.subtitle": "সর্বদা আল্লাহর যিকির করুন",
+  "dhikr.count": "গণনা",
+  "dhikr.reset": "রিসেট",
+  "dhikr.subhanallah": "সুবহানাল্লাহ",
+  "dhikr.alhamdulillah": "আলহামদুলিল্লাহ",
+  "dhikr.allahuakbar": "আল্লাহু আকবার",
+
+  "qibla.title": "কিবলার দিক",
+  "qibla.subtitle": "পবিত্র কাবার দিক জানুন",
+  "qibla.direction": "কিবলার দিক",
+  "qibla.distance": "মক্কার দূরত্ব",
+  "qibla.allow_location": "লোকেশন অ্যাক্সেস অনুমতি দিন",
+
+  "footer.title": "আল্লাহ তাকে রহমত করুন",
+  "footer.description": "হে আল্লাহ, কিয়ামতের দিন কুরআনকে আমার ভাই মেশারির সুপারিশকারী বানান, এবং এর প্রতিটি অক্ষরকে তার কবরের আলো বানান",
+  "footer.charity": "চলমান সদকা",
+  "footer.all_rights": "সর্বস্বত্ব সংরক্ষিত © ২০২৪",
+
+  "theme.toggle": "থিম পরিবর্তন",
+  "theme.light": "লাইট মোড",
+  "theme.dark": "ডার্ক মোড",
+  "theme.system": "সিস্টেম থিম",
+
+  "language.select": "ভাষা নির্বাচন করুন",
+  "language.ar": "العربية",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+  "language.ur": "اردو",
+  "language.id": "Bahasa Indonesia",
+  "language.ms": "Bahasa Melayu",
+  "language.fr": "Français",
+  "language.bn": "বাংলা",
+  "language.zh": "中文",
+  "language.it": "Italiano",
+  "language.ja": "日本語",
+  "language.ko": "한국어",
+
+  "notifications.title": "নোটিফিকেশন",
+  "notifications.enable": "নোটিফিকেশন চালু করুন",
+  "notifications.prayer_times": "নামাজের সময়ের নোটিফিকেশন",
+  "notifications.daily_supplications": "দৈনিক যিকির",
+  "notifications.permission_required": "ব্রাউজার নোটিফিকেশন অনুমতি দিন",
+
+  "offline.title": "আপনি অফলাইনে আছেন",
+  "offline.message": "ইন্টারনেট সংযোগ ছাড়া কিছু ফিচার কাজ নাও করতে পারে",
+
+  "loading": "লোড হচ্ছে...",
+  "error": "একটি ত্রুটি ঘটেছে",
+  "retry": "আবার চেষ্টা করুন",
+  "share": "শেয়ার করুন",
+  "social.x_account": "মেশারির এক্স অ্যাকাউন্ট",
+  "copy": "কপি করুন",
+  "copied": "কপি করা হয়েছে",
+  "close": "বন্ধ করুন",
+  "next": "পরবর্তী",
+  "previous": "পূর্ববর্তী",
+  "search": "অনুসন্ধান",
+
+  "accessibility": {
+    "increment_counter": "কাউন্টার বাড়ান",
+    "reset_counter": "কাউন্টার রিসেট করুন",
+    "play_audio": "অডিও চালু করুন",
+    "pause_audio": "অডিও বিরতি দিন",
+    "select_surah": "সূরা নির্বাচন করুন",
+    "select_tafseer": "তাফসীর নির্বাচন করুন",
+    "toggle_menu": "মেনু টগল করুন",
+    "close_modal": "উইন্ডো বন্ধ করুন"
+  },
+
+  "dhikr": {
+    "increment": "বৃদ্ধি",
+    "milestone_33": "প্রথম লক্ষ্য: ৩৩",
+    "milestone_66": "দ্বিতীয় লক্ষ্য: ৬৬",
+    "milestone_99": "তৃতীয় লক্ষ্য: ৯৯",
+    "milestone_100": "চূড়ান্ত লক্ষ্য: ১০০"
+  },
+
+  "supplications": {
+    "deceased_1": "হে আল্লাহ, তাকে ক্ষমা করুন এবং তার প্রতি রহম করুন, তাকে নিরাপত্তা দিন এবং ক্ষমা করুন। তার আবাসস্থলকে সম্মানিত করুন এবং তার প্রবেশপথকে প্রশস্ত করুন। তাকে পানি, বরফ এবং শিলা দিয়ে ধৌত করুন। সাদা কাপড় যেভাবে ময়লা থেকে পরিষ্কার করা হয়, সেভাবে তাকে পাপ থেকে পরিষ্কার করুন",
+    "deceased_2": "হে আল্লাহ, তার কবরকে জান্নাতের বাগানগুলির একটি বাগান বানান, এবং এটিকে জাহান্নামের গর্তগুলির একটি গর্ত বানাবেন না",
+    "deceased_3": "হে আল্লাহ, তাকে তার বাড়ির চেয়ে উত্তম বাড়ি দান করুন, এবং তার পরিবারের চেয়ে উত্তম পরিবার দান করুন, এবং তাকে জান্নাতে প্রবেশ করান এবং কবর ও জাহান্নামের আযাব থেকে রক্ষা করুন"
+  },
+
+  "hadith": {
+    "title": "হাদিস",
+    "subtitle": "নবী মুহাম্মদ (সাল্লাল্লাহু আলাইহি ওয়া সাল্লাম) এর জ্ঞানময় বাণী",
+    "source": "উৎস",
+    "random_button": "এলোমেলো হাদিস",
+    "click_button": "এলোমেলো হাদিস পেতে বোতামে ক্লিক করুন"
+  },
+
+  "footer": {
+    "charity": "মেশারি আল-আবরা চলমান দাতব্য সংস্থা",
+    "all_rights": "সকল অধিকার সংরক্ষিত © {{year}}",
+    "technology": "আল্লাহর সন্তুষ্টির জন্য প্রেম দিয়ে আধুনিক ওয়েব প্রযুক্তি দিয়ে তৈরি",
+    "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+    "sitemap": "সাইটম্যাপ",
+    "llm_txt": "LLM ফাইল"
+  }
+}

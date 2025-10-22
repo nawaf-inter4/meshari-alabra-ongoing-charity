@@ -1,0 +1,168 @@
+{
+  "site.title": "La Carità Continua di Meshari",
+  "site.subtitle": "Che Allah lo perdoni e faccia del Corano un intercessore per lui nel Giorno del Giudizio",
+  "memorial.name": "Meshari Ahmed Sulaiman Alabra",
+  "memorial.death": "Deceduto il 29 marzo 2023 - Riyadh, Arabia Saudita",
+  "memorial.description": "Che Allah abbia misericordia di lui e gli conceda il più alto Paradiso, e che quest'opera sia nella sua bilancia delle buone azioni",
+
+  "hero.title": "Carità Continua",
+  "hero.subtitle": "In verità apparteniamo ad Allah e a Lui faremo ritorno",
+  "hero.description": "Questa pagina è dedicata a mio fratello Meshari, scomparso per un tumore al cervello. Che Allah lo perdoni e faccia del Corano e della carità continua un intercessore per lui",
+
+  "youtube.title": "Recitazioni del Corano",
+  "youtube.description": "Ascolta le recitazioni del Corano come carità continua",
+
+  "donation.title": "Sostegno agli Orfani",
+  "donation.subtitle": "Continua le buone azioni nel nome di Meshari",
+  "donation.description": "La carità continua è una delle più grandi azioni che beneficiano il defunto, e il sostegno agli orfani è una delle azioni più amate da Allah",
+  "donation.button": "Dona Ora",
+  "donation.benefits": "Benefici del Sostegno agli Orfani",
+  "donation.benefit1": "Compagnia del Profeta ﷺ in Paradiso",
+  "donation.benefit2": "Soddisfare i bisogni di chi ha perso il tutore",
+  "donation.benefit3": "Carità continua con ricompensa perpetua",
+
+  "supplications.title": "Suppliche",
+  "supplications.subtitle": "Preghiere per il defunto dal Corano e dalla Sunnah",
+  "supplications.daily": "Ricordo Quotidiano",
+  "supplications.deceased": "Preghiera per il Defunto",
+  "supplications.morning": "Ricordo del Mattino",
+  "supplications.evening": "Ricordo della Sera",
+
+  "prayer.title": "Orari delle Preghiere",
+  "prayer.subtitle": "Orari delle preghiere basati sulla tua posizione",
+  "prayer.fajr": "Fajr",
+  "prayer.dhuhr": "Dhuhr",
+  "prayer.asr": "Asr",
+  "prayer.maghrib": "Maghrib",
+  "prayer.isha": "Isha",
+  "prayer.sunrise": "Alba",
+  "prayer.next": "Prossima Preghiera",
+  "prayer.remaining": "Tempo Rimanente",
+  "prayer.location": "Posizione",
+  "prayer.enable": "Attiva Notifiche Preghiera",
+
+  "hijri.title": "Data Hijri",
+  "hijri.gregorian": "Gregoriano",
+
+  "quran.title": "Il Sacro Corano",
+  "quran.subtitle": "Leggi e rifletti sui versetti di Allah",
+  "quran.select_surah": "Seleziona Sura",
+  "quran.verse": "Versetto",
+  "quran.juz": "Juz",
+  "quran.page": "Pagina",
+  "quran.play": "Riproduci",
+  "quran.pause": "Pausa",
+
+  "tafseer.title": "Tafseer del Corano",
+  "tafseer.subtitle": "Comprendere i significati delle parole di Allah",
+  "tafseer.select": "Seleziona Tafseer",
+  "tafseer.jalalayn": "Tafseer Al-Jalalayn",
+  "tafseer.tabari": "Tafseer At-Tabari",
+  "tafseer.kathir": "Tafseer Ibn Kathir",
+  "tafseer.saadi": "Tafseer As-Sa'di",
+
+  "hadith.title": "Tradizioni Profetiche",
+  "hadith.subtitle": "Dalla guida del Profeta Muhammad ﷺ",
+  "hadith.source": "Fonte",
+
+  "dhikr.title": "Contatore di Dhikr",
+  "dhikr.subtitle": "Glorifica Allah in ogni momento",
+  "dhikr.count": "Conteggio",
+  "dhikr.reset": "Azzera",
+  "dhikr.subhanallah": "Gloria ad Allah",
+  "dhikr.alhamdulillah": "Lode ad Allah",
+  "dhikr.allahuakbar": "Allah è il più Grande",
+
+  "qibla.title": "Direzione della Qibla",
+  "qibla.subtitle": "Conosci la direzione della Sacra Kaaba",
+  "qibla.direction": "La Qibla è verso",
+  "qibla.distance": "Distanza da Mecca",
+  "qibla.allow_location": "Consenti accesso alla posizione",
+
+  "footer.title": "Che Allah abbia misericordia di lui",
+  "footer.description": "O Allah, fa' che il Sacro Corano sia un intercessore per mio fratello Meshari nel Giorno del Giudizio, e fa' che ogni sua lettera sia una luce nella sua tomba",
+  "footer.charity": "Carità Continua",
+  "footer.all_rights": "Tutti i diritti riservati © 2024",
+
+  "theme.toggle": "Cambia tema",
+  "theme.light": "Tema chiaro",
+  "theme.dark": "Tema scuro",
+  "theme.system": "Tema di sistema",
+
+  "language.select": "Seleziona Lingua",
+  "language.ar": "العربية",
+  "language.en": "English",
+  "language.tr": "Türkçe",
+  "language.ur": "اردو",
+  "language.id": "Bahasa Indonesia",
+  "language.ms": "Bahasa Melayu",
+  "language.fr": "Français",
+  "language.bn": "বাংলা",
+  "language.zh": "中文",
+  "language.it": "Italiano",
+  "language.ja": "日本語",
+  "language.ko": "한국어",
+
+  "notifications.title": "Notifiche",
+  "notifications.enable": "Attiva Notifiche",
+  "notifications.prayer_times": "Avvisi Orari Preghiera",
+  "notifications.daily_supplications": "Ricordo Quotidiano",
+  "notifications.permission_required": "Per favore consenti le notifiche del browser",
+
+  "offline.title": "Sei offline",
+  "offline.message": "Alcune funzionalità potrebbero non funzionare senza connessione internet",
+
+  "loading": "Caricamento...",
+  "error": "Si è verificato un errore",
+  "retry": "Riprova",
+  "share": "Condividi",
+  "social.x_account": "Account X di Meshari",
+  "copy": "Copia",
+  "copied": "Copiato",
+  "close": "Chiudi",
+  "next": "Successivo",
+  "previous": "Precedente",
+  "search": "Cerca",
+
+  "accessibility": {
+    "increment_counter": "Incrementa contatore",
+    "reset_counter": "Azzera contatore",
+    "play_audio": "Riproduci audio",
+    "pause_audio": "Metti in pausa audio",
+    "select_surah": "Seleziona sura",
+    "select_tafseer": "Seleziona tafseer",
+    "toggle_menu": "Apri/chiudi menu",
+    "close_modal": "Chiudi finestra"
+  },
+
+  "dhikr": {
+    "increment": "Incrementa",
+    "milestone_33": "Primo traguardo: 33",
+    "milestone_66": "Secondo traguardo: 66",
+    "milestone_99": "Terzo traguardo: 99",
+    "milestone_100": "Traguardo finale: 100"
+  },
+
+  "supplications": {
+    "deceased_1": "O Allah, perdonalo e abbi misericordia di lui, dagli forza e perdonalo. Sii generoso con lui e rendi ampio il suo ingresso, lavalo con acqua, neve e grandine. Purificalo dai peccati come un abito bianco viene purificato dalle macchie",
+    "deceased_2": "O Allah, rendi la sua tomba un giardino tra i giardini del Paradiso, e non renderla una fossa tra le fosse dell'Inferno",
+    "deceased_3": "O Allah, dagli una casa migliore della sua casa, e una famiglia migliore della sua famiglia, e ammettilo in Paradiso e proteggilo dal tormento della tomba e dal tormento del Fuoco"
+  },
+
+  "hadith": {
+    "title": "Hadith",
+    "subtitle": "Parole di saggezza del Profeta Muhammad (che la pace sia su di lui)",
+    "source": "Fonte",
+    "random_button": "Hadith Casuale",
+    "click_button": "Clicca il pulsante per ottenere un hadith casuale"
+  },
+
+  "footer": {
+    "charity": "Organizzazione di Beneficenza Continua Meshary Al-Abra",
+    "all_rights": "Tutti i diritti riservati © {{year}}",
+    "technology": "Costruito con amore per Allah utilizzando tecnologie web moderne",
+    "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+    "sitemap": "Mappa del sito",
+    "llm_txt": "File LLM"
+  }
+}

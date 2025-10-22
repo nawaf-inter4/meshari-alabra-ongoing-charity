@@ -16,6 +16,7 @@
   "donation.subtitle": "Continue the good deeds in Meshari's name",
   "donation.description": "Ongoing charity is one of the greatest deeds that benefit the deceased, and orphan sponsorship is one of the most beloved deeds to Allah",
   "donation.button": "Donate Now",
+  "donation.header_button": "Donate",
   "donation.benefits": "Benefits of Orphan Sponsorship",
   "donation.benefit1": "Companionship with the Prophet ﷺ in Paradise",
   "donation.benefit2": "Fulfilling the needs of those who lost their guardian",
@@ -82,7 +83,8 @@
   "footer.title": "May Allah have mercy on him",
   "footer.description": "O Allah, make the Holy Quran an intercessor for my brother Meshari on the Day of Judgment, and make every letter of it a light in his grave",
   "footer.charity": "Ongoing Charity",
-  "footer.all_rights": "All rights reserved © 2024",
+  "footer.all_rights": "All rights reserved © {{year}}",
+  "footer.technology": "Built with ❤️ for the sake of Allah using modern web technologies",
 
   "theme.toggle": "Toggle theme",
   "theme.light": "Light mode",
@@ -106,10 +108,53 @@
   "error": "An error occurred",
   "retry": "Retry",
   "share": "Share",
+  "social.x_account": "Meshari's X",
   "copy": "Copy",
   "copied": "Copied",
   "close": "Close",
   "next": "Next",
   "previous": "Previous",
-  "search": "Search"
+  "search": "Search",
+
+  "accessibility": {
+    "increment_counter": "Increment counter",
+    "reset_counter": "Reset counter",
+    "play_audio": "Play audio",
+    "pause_audio": "Pause audio",
+    "select_surah": "Select surah",
+    "select_tafseer": "Select tafseer",
+    "toggle_menu": "Toggle menu",
+    "close_modal": "Close modal"
+  },
+
+  "dhikr": {
+    "increment": "Tasbih",
+    "milestone_33": "First milestone: 33",
+    "milestone_66": "Second milestone: 66",
+    "milestone_99": "Third milestone: 99",
+    "milestone_100": "Final milestone: 100"
+  },
+
+  "supplications": {
+    "deceased_1": "O Allah, forgive him and have mercy upon him and give him strength and pardon him. Be generous to him and cause his entrance to be wide and wash him with water and snow and hail. Cleanse him of his transgressions as white cloth is cleansed of stains",
+    "deceased_2": "O Allah, make his grave a garden from the gardens of Paradise, and do not make it a pit from the pits of Hell",
+    "deceased_3": "O Allah, give him a home better than his home, and a family better than his family, and admit him to Paradise and protect him from the torment of the grave and the torment of the Fire"
+  },
+
+  "hadith": {
+    "title": "Hadith",
+    "subtitle": "Words of wisdom from the Prophet Muhammad (peace be upon him)",
+    "source": "Source",
+    "random_button": "Random Hadith",
+    "click_button": "Click the button to get a random hadith"
+  },
+
+  "footer": {
+    "charity": "Meshari Al-Abra Ongoing Charity",
+    "all_rights": "All rights reserved © {{year}}",
+    "technology": "Built with ❤️ for the sake of Allah using modern web technologies",
+    "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+    "sitemap": "Sitemap",
+    "llm_txt": "LLM.txt"
+  }
 }

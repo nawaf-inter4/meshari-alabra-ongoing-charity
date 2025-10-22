@@ -13,6 +13,12 @@ interface Hadith {
 
 export default function HadithSection() {
   const { t } = useLanguage();
+  
+  // Fallback function for translations
+  const getTranslation = (key: string, fallback: string) => {
+    const translation = t(key);
+    return translation === key ? fallback : translation;
+  };
   const [hadith, setHadith] = useState<Hadith | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -95,7 +101,7 @@ export default function HadithSection() {
             className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105"
           >
             <RefreshCw className="w-5 h-5" />
-            حديث عشوائي
+            {getTranslation("hadith.random_button", "Random Hadith")}
           </button>
         </motion.div>
 
@@ -113,7 +119,15 @@ export default function HadithSection() {
                 <BookMarked className="w-8 h-8 text-islamic-gold" />
               </div>
             </div>
-            <p className="text-2xl md:text-3xl font-arabic text-right leading-loose mb-6 text-islamic-green dark:text-islamic-gold">
+            <p 
+              className="text-2xl md:text-3xl font-arabic text-right leading-loose mb-6 text-islamic-green dark:text-islamic-gold"
+              style={{
+                direction: 'rtl',
+                unicodeBidi: 'isolate',
+                fontFamily: "'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', sans-serif",
+                fontFeatureSettings: '"liga", "clig", "calt"'
+              }}
+            >
               {hadith.arab}
             </p>
             {hadiths[hadith.number - 1] && (
@@ -129,7 +143,7 @@ export default function HadithSection() {
           </motion.div>
         ) : (
           <div className="text-center text-gray-600 dark:text-gray-400 py-12">
-            اضغط على الزر للحصول على حديث عشوائي
+            {getTranslation("hadith.click_button", "Click the button to get a random hadith")}
           </div>
         )}
       </div>

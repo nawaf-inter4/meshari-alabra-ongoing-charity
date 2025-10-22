@@ -20,7 +20,7 @@ export default function TafseerSection() {
   const fetchTafseer = async () => {
     setLoading(true);
     try {
-      // Using alternative Quran tafseer API
+      // Using the working Quran tafseer API
       const response = await fetch(
         `https://api.quran.com/api/v4/quran/tafsirs/169?verse_key=${surahNumber}:${ayahNumber}`
       );
@@ -30,9 +30,15 @@ export default function TafseerSection() {
           ayah: ayahNumber,
           text: data.tafsirs[0].text,
         });
+      } else {
+        // Fallback to basic info
+        setTafseer({
+          ayah: ayahNumber,
+          text: "التفسير غير متوفر حالياً. يرجى المحاولة لاحقاً.",
+        });
       }
     } catch (error) {
-      console.error("Error fetching tafseer:", error);
+      // Error fetching tafseer - using fallback
       // Fallback to basic info
       setTafseer({
         ayah: ayahNumber,

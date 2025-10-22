@@ -10,6 +10,11 @@
   "dir": "rtl",
   "lang": "ar",
   "scope": "/",
+  "id": "meshari-charity-pwa",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
   "icons": [
     {
       "src": "/icons/icon-72x72.png",

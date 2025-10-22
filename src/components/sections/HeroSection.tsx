@@ -3,29 +3,74 @@
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Heart, Star } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function HeroSection() {
   const { t, direction } = useLanguage();
+  const [dimensions, setDimensions] = useState({ width: 1920, height: 1080 });
+  const [starKey, setStarKey] = useState(0);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+
+  // Regenerate stars when language changes
+  useEffect(() => {
+    setStarKey(prev => prev + 1);
+  }, [direction]);
+
+  // Generate star positions
+  const generateStarPositions = () => {
+    return [...Array(20)].map((_, i) => ({
+      id: i,
+      x: Math.random() * (dimensions.width - 100) + 50, // Keep stars within bounds
+      y: Math.random() * (dimensions.height - 100) + 50, // Keep stars within bounds
+      delay: i * 0.2,
+    }));
+  };
+
+  const [starPositions, setStarPositions] = useState(() => generateStarPositions());
+
+  useEffect(() => {
+    setStarPositions(generateStarPositions());
+  }, [dimensions, direction, starKey]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 py-20">
+    <section 
+      className="relative min-h-screen flex items-center justify-center px-4 pt-28 pb-20 sm:pt-32 md:pt-28" 
+      style={{ paddingTop: 'max(7rem, env(safe-area-inset-top, 7rem))' }}
+      suppressHydrationWarning
+    >
       {/* Animated Background Stars */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {starPositions.map((star) => (
           <motion.div
-            key={i}
+            key={`${starKey}-${star.id}`}
             className="absolute"
             initial={{ opacity: 0, scale: 0 }}
             animate={{
-              opacity: [0, 1, 0],
-              scale: [0, 1, 0],
-              x: typeof window !== 'undefined' ? Math.random() * window.innerWidth : Math.random() * 1920,
-              y: typeof window !== 'undefined' ? Math.random() * window.innerHeight : Math.random() * 1080,
+              opacity: [0, 1, 0.8, 0],
+              scale: [0, 1, 1.2, 0],
+              x: direction === 'rtl' 
+                ? [star.x, star.x - 100] 
+                : [star.x, star.x + 100],
+              y: [star.y, star.y + Math.random() * 30 - 15],
             }}
             transition={{
-              duration: 3,
+              duration: 4,
               repeat: Infinity,
-              delay: i * 0.2,
+              delay: star.delay,
+              ease: "easeInOut",
             }}
           >
             <Star className="w-2 h-2 text-islamic-gold" fill="currentColor" />
@@ -33,18 +78,19 @@ export default function HeroSection() {
         ))}
       </div>
 
-      <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10">
+      <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10 mt-6">
         {/* Main Title */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="mt-2"
         >
           <div className="inline-block p-1 rounded-full bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue mb-6">
             <Heart className="w-16 h-16 text-white m-2" fill="currentColor" />
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 gradient-text">
+          <h1 className="text-5xl md:text-7xl font-bold mb-4 gradient-text pt-4">
             {t("hero.title")}
           </h1>
 

@@ -15,25 +15,31 @@ interface Supplication {
 export default function SupplicationsSection() {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("deceased");
+  
+  // Fallback function for translations
+  const getTranslation = (key: string, fallback: string) => {
+    const translation = t(key);
+    return translation === key ? fallback : translation;
+  };
 
   const supplications = {
     deceased: [
       {
         arabic: "اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ وَعَافِهِ وَاعْفُ عَنْهُ، وَأَكْرِمْ نُزُلَهُ، وَوَسِّعْ مُدْخَلَهُ، وَاغْسِلْهُ بِالْمَاءِ وَالثَّلْجِ وَالْبَرَدِ، وَنَقِّهِ مِنَ الْخَطَايَا كَمَا نَقَّيْتَ الثَّوْبَ الْأَبْيَضَ مِنَ الدَّنَسِ",
         transliteration: "Allāhumma-ghfir lahu warhamhu wa ʿāfihi waʿfu ʿanhu, wa akrim nuzulahu, wa wassiʿ mudkhalahu, waghsilhu bil-māʾi wath-thalji wal-barad, wa naqqihi minal-khaṭāyā kamā naqqayta-th-thawb al-abyaḍ min ad-danas",
-        translation: "O Allah, forgive him and have mercy upon him and give him strength and pardon him. Be generous to him and cause his entrance to be wide and wash him with water and snow and hail. Cleanse him of his transgressions as white cloth is cleansed of stains",
+        translation: getTranslation("supplications.deceased_1", "O Allah, forgive him, have mercy on him, grant him well-being, pardon him, honor his arrival, expand his entrance, wash him with water, snow and hail, and cleanse him of sins as You cleanse a white garment of dirt"),
         reference: "Sahih Muslim 963"
       },
       {
         arabic: "اللَّهُمَّ اجْعَلْ قَبْرَهُ رَوْضَةً مِنْ رِيَاضِ الْجَنَّةِ، وَلَا تَجْعَلْهُ حُفْرَةً مِنْ حُفَرِ النَّارِ",
         transliteration: "Allāhumma-jʿal qabrahu rawḍatan min riyāḍ al-jannah, wa lā tajʿalhu ḥufratan min ḥufar an-nār",
-        translation: "O Allah, make his grave a garden from the gardens of Paradise, and do not make it a pit from the pits of Hell",
+        translation: getTranslation("supplications.deceased_2", "O Allah, make his grave a garden from the gardens of Paradise, and do not make it a pit from the pits of Hell"),
         reference: "At-Tirmidhi"
       },
       {
         arabic: "اللَّهُمَّ أَبْدِلْهُ دَاراً خَيْراً مِنْ دَارِهِ، وَأَهْلاً خَيْراً مِنْ أَهْلِهِ، وَأَدْخِلْهُ الْجَنَّةَ وَأَعِذْهُ مِنْ عَذَابِ الْقَبْرِ وَمِنْ عَذَابِ النَّارِ",
         transliteration: "Allāhumma abdilhu dāran khayran min dārihi, wa ahlan khayran min ahlihi, wa adkhilhu-l-jannah wa aʿidhhu min ʿadhāb al-qabr wa min ʿadhāb an-nār",
-        translation: "O Allah, give him a home better than his home, and a family better than his family, and admit him into Paradise and protect him from the punishment of the grave and the punishment of Hell",
+        translation: getTranslation("supplications.deceased_3", "O Allah, give him a better home than his home, and better family than his family, and admit him to Paradise and protect him from the punishment of the grave and the punishment of Hell"),
         reference: "Sahih Muslim 963"
       }
     ],
@@ -111,13 +117,23 @@ export default function SupplicationsSection() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="bg-light dark:bg-dark rounded-2xl p-6 md:p-8 border-2 border-islamic-gold/30 hover:border-islamic-gold transition-all duration-300"
             >
-              <p className="text-2xl md:text-3xl font-arabic text-right leading-loose mb-4 text-islamic-green dark:text-islamic-gold">
+              <p 
+                className="text-2xl md:text-3xl font-arabic text-right leading-loose mb-4 text-islamic-green dark:text-islamic-gold py-2 px-4" 
+                style={{ 
+                  lineHeight: '2.5', 
+                  wordSpacing: '0.2em',
+                  direction: 'rtl',
+                  unicodeBidi: 'isolate',
+                  fontFamily: "'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', sans-serif",
+                  fontFeatureSettings: '"liga", "clig", "calt"'
+                }}
+              >
                 {dua.arabic}
               </p>
               <p className="text-sm italic text-gray-600 dark:text-gray-400 mb-3">
                 {dua.transliteration}
               </p>
-              <p className="text-base leading-relaxed mb-3">
+              <p className="text-base leading-loose mb-3 py-2">
                 {dua.translation}
               </p>
               <p className="text-sm text-islamic-blue dark:text-islamic-gold font-semibold">

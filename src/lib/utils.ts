@@ -46,7 +46,7 @@ export async function subscribeToPushNotifications(): Promise<PushSubscription |
     });
     return subscription;
   } catch (error) {
-    console.error('Error subscribing to push notifications:', error);
+    // Error subscribing to push notifications
     return null;
   }
 }

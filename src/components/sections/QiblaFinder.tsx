@@ -33,21 +33,29 @@ export default function QiblaFinder() {
     }
   };
 
-  const getQiblaDirection = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          const qibla = calculateQibla(latitude, longitude);
+  const getQiblaDirection = async () => {
+    try {
+      // Use IP-based geolocation instead of browser geolocation
+      const ipResponse = await fetch('https://ipapi.co/json/');
+      
+      if (ipResponse.ok) {
+        const ipData = await ipResponse.json();
+        
+        if (ipData.latitude && ipData.longitude) {
+          const qibla = calculateQibla(ipData.latitude, ipData.longitude);
           setQiblaDirection(qibla.direction);
           setDistance(qibla.distance);
-        },
-        () => {
-          setError(t("qibla.allow_location"));
+        } else {
+          throw new Error('Invalid IP response');
         }
-      );
-    } else {
-      setError("Geolocation not supported");
+      } else {
+        throw new Error('IP service failed');
+      }
+    } catch (error) {
+      // Fallback to Riyadh coordinates
+      const qibla = calculateQibla(24.7136, 46.6753);
+      setQiblaDirection(qibla.direction);
+      setDistance(qibla.distance);
     }
   };
 

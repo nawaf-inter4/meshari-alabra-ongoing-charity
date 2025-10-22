@@ -32,7 +32,7 @@ export default function DonationSection() {
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-4">
             {t("donation.subtitle")}
           </p>
-          <p className="text-lg leading-relaxed max-w-3xl mx-auto">
+          <p className="text-lg leading-loose max-w-3xl mx-auto py-4 px-6">
             {t("donation.description")}
           </p>
         </motion.div>
@@ -55,7 +55,7 @@ export default function DonationSection() {
                 className="flex items-start gap-3 bg-light/50 dark:bg-dark/50 p-4 rounded-xl"
               >
                 <benefit.icon className="w-6 h-6 text-islamic-gold flex-shrink-0 mt-1" />
-                <p className="text-sm leading-relaxed">{benefit.text}</p>
+                <p className="text-sm leading-loose py-2">{benefit.text}</p>
               </motion.div>
             ))}
           </div>
