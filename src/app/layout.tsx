@@ -5,6 +5,7 @@ import { LanguageProvider } from "@/components/LanguageProvider";
 import SEOScripts from "@/components/SEOScripts";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AudioPlayer from "@/components/AudioPlayer";
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: "Meshari's Ongoing Charity - صدقة جارية لمشاري",
@@ -167,10 +168,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange={false}
           >
-            <LanguageProvider>
-              {children}
-              <AudioPlayer />
-            </LanguageProvider>
+                <LanguageProvider>
+                  {children}
+                  <AudioPlayer />
+                  <Analytics />
+                </LanguageProvider>
           </ThemeProvider>
         </ErrorBoundary>
       </body>
