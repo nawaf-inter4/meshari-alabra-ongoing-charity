@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#006B3F;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0066B2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="#0F172A"/>
+  <circle cx="256" cy="256" r="180" fill="url(#grad)" opacity="0.2"/>
+  <path d="M256 140 L280 200 L340 210 L298 252 L308 312 L256 282 L204 312 L214 252 L172 210 L232 200 Z" fill="url(#grad)"/>
+  <text x="256" y="380" font-family="Arial" font-size="80" fill="#D4AF37" text-anchor="middle" font-weight="bold">MC</text>
+</svg>

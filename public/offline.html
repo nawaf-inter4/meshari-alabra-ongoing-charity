@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - Meshari's Ongoing Charity</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: #FAF8F3;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #D4AF37;
+    }
+    p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+    .offline-icon {
+      font-size: 5rem;
+      margin-bottom: 2rem;
+    }
+    .retry-btn {
+      padding: 1rem 2rem;
+      background: #D4AF37;
+      color: #0F172A;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .retry-btn:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="offline-icon">📡</div>
+    <h1>أنت غير متصل بالإنترنت</h1>
+    <p>You are offline</p>
+    <p>يبدو أنك غير متصل بالإنترنت حالياً. بعض الميزات قد لا تعمل بشكل صحيح.</p>
+    <p>It seems you are offline. Some features may not work properly.</p>
+    <button class="retry-btn" onclick="window.location.reload()">
+      إعادة المحاولة / Retry
+    </button>
+  </div>
+</body>
+</html>
