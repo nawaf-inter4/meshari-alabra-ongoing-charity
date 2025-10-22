@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-lexend-deca: 'Lexend Deca', sans-serif;
+  --font-tajwal: 'Tajawal', sans-serif;
+  --font-family: 'Tajawal', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-light dark:bg-dark text-gray-900 dark:text-gray-100 transition-colors duration-300;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+  font-family: 'Tajawal', sans-serif;
+}
+
+[dir="ltr"] {
+  direction: ltr;
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-light-secondary dark:bg-dark-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-islamic-gold rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-islamic-green;
+}
+
+/* Islamic Patterns Background */
+.islamic-pattern {
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 107, 63, 0.03) 0%, transparent 50%);
+}
+
+/* Glowing Effect */
+.glow {
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+/* Card Hover Effect */
+.card-hover {
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-xl;
+}
+
+/* Gradient Text */
+.gradient-text {
+  @apply bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue bg-clip-text text-transparent;
+}
+
+/* Loading Shimmer */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+  background-size: 200% 100%;
+}
