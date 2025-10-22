@@ -1,4 +1,4 @@
-# Meshari's Ongoing Charity - صدقة جارية لمشاري
+# Meshari's Continuous Charity - صدقة جارية لمشاري
 
 <div align="center">
 
