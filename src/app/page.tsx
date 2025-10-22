@@ -1,20 +1,64 @@
 "use client";
 
 import { useEffect } from "react";
-import HeroSection from "@/components/sections/HeroSection";
-import YouTubePlaylist from "@/components/sections/YouTubePlaylist";
-import DonationSection from "@/components/sections/DonationSection";
-import SupplicationsSection from "@/components/sections/SupplicationsSection";
-import PrayerTimesSection from "@/components/sections/PrayerTimesSection";
-import QuranSection from "@/components/sections/QuranSection";
-import TafseerSection from "@/components/sections/TafseerSection";
-import HadithSection from "@/components/sections/HadithSection";
-import DhikrCounter from "@/components/sections/DhikrCounter";
-import QiblaFinder from "@/components/sections/QiblaFinder";
-import ThemeToggle from "@/components/ThemeToggle";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
-import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
 import { requestNotificationPermission } from "@/lib/utils";
+
+// Dynamic imports for better code splitting and performance
+const HeroSection = dynamic(() => import("@/components/sections/HeroSection"), {
+  loading: () => <div className="min-h-screen flex items-center justify-center"><div className="shimmer w-32 h-32 rounded-full" /></div>,
+});
+
+const YouTubePlaylist = dynamic(() => import("@/components/sections/YouTubePlaylist"), {
+  loading: () => <div className="shimmer w-full h-96 rounded-2xl" />,
+});
+
+const DonationSection = dynamic(() => import("@/components/sections/DonationSection"), {
+  loading: () => <div className="shimmer w-full h-64 rounded-2xl" />,
+});
+
+const PrayerTimesSection = dynamic(() => import("@/components/sections/PrayerTimesSection"), {
+  loading: () => <div className="shimmer w-full h-96 rounded-2xl" />,
+});
+
+const SupplicationsSection = dynamic(() => import("@/components/sections/SupplicationsSection"), {
+  loading: () => <div className="shimmer w-full h-64 rounded-2xl" />,
+});
+
+const QuranSection = dynamic(() => import("@/components/sections/QuranSection"), {
+  loading: () => <div className="shimmer w-full h-96 rounded-2xl" />,
+  ssr: false, // Disable SSR for heavy interactive component
+});
+
+const TafseerSection = dynamic(() => import("@/components/sections/TafseerSection"), {
+  loading: () => <div className="shimmer w-full h-64 rounded-2xl" />,
+  ssr: false,
+});
+
+const HadithSection = dynamic(() => import("@/components/sections/HadithSection"), {
+  loading: () => <div className="shimmer w-full h-64 rounded-2xl" />,
+  ssr: false,
+});
+
+const DhikrCounter = dynamic(() => import("@/components/sections/DhikrCounter"), {
+  loading: () => <div className="shimmer w-full h-96 rounded-2xl" />,
+  ssr: false,
+});
+
+const QiblaFinder = dynamic(() => import("@/components/sections/QiblaFinder"), {
+  loading: () => <div className="shimmer w-full h-96 rounded-2xl" />,
+  ssr: false, // Needs device orientation APIs
+});
+
+const ThemeToggle = dynamic(() => import("@/components/ThemeToggle"), {
+  ssr: false,
+});
+
+const LanguageSwitcher = dynamic(() => import("@/components/LanguageSwitcher"), {
+  ssr: false,
+});
+
+const Footer = dynamic(() => import("@/components/Footer"));
 
 export default function Home() {
   useEffect(() => {
@@ -38,34 +82,34 @@ export default function Home() {
         <LanguageSwitcher />
       </div>
 
-      {/* Hero Section */}
+      {/* Hero Section - Load immediately */}
       <HeroSection />
 
-      {/* YouTube Playlist Section */}
+      {/* YouTube Playlist Section - High priority */}
       <YouTubePlaylist playlistId="PLozaqJ9egxJegXbK52PNLLlvWf4K5g-Cb" />
 
-      {/* Donation Section */}
+      {/* Donation Section - High priority */}
       <DonationSection />
 
-      {/* Prayer Times and Hijri Date */}
+      {/* Prayer Times and Hijri Date - Medium priority */}
       <PrayerTimesSection />
 
-      {/* Supplications Section */}
+      {/* Supplications Section - Medium priority */}
       <SupplicationsSection />
 
-      {/* Quran Reading Section */}
+      {/* Quran Reading Section - Lower priority, heavy component */}
       <QuranSection />
 
-      {/* Tafseer Section */}
+      {/* Tafseer Section - Lower priority */}
       <TafseerSection />
 
-      {/* Hadith Section */}
+      {/* Hadith Section - Lower priority */}
       <HadithSection />
 
-      {/* Dhikr Counter */}
+      {/* Dhikr Counter - Lower priority */}
       <DhikrCounter />
 
-      {/* Qibla Finder */}
+      {/* Qibla Finder - Lower priority */}
       <QiblaFinder />
 
       {/* Footer */}

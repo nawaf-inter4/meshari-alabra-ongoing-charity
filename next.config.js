@@ -4,6 +4,7 @@ const withPWA = require('next-pwa')({
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
   buildExcludes: [/middleware-manifest\.json$/],
+  maximumFileSizeToCacheInBytes: 5000000, // 5MB
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
@@ -28,7 +29,7 @@ const withPWA = require('next-pwa')({
       }
     },
     {
-      urlPattern: /\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
+      urlPattern: /\.(?:jpg|jpeg|gif|png|svg|ico|webp|avif)$/i,
       handler: 'StaleWhileRevalidate',
       options: {
         cacheName: 'static-image-assets',
@@ -61,14 +62,36 @@ const withPWA = require('next-pwa')({
       }
     },
     {
-      urlPattern: /\/api\/.*/i,
+      urlPattern: /^https:\/\/api\.aladhan\.com\/.*/i,
       handler: 'NetworkFirst',
       options: {
-        cacheName: 'apis',
+        cacheName: 'prayer-times-api',
         networkTimeoutSeconds: 10,
         expiration: {
-          maxEntries: 16,
-          maxAgeSeconds: 24 * 60 * 60 // 24 hours
+          maxEntries: 50,
+          maxAgeSeconds: 6 * 60 * 60 // 6 hours
+        }
+      }
+    },
+    {
+      urlPattern: /^https:\/\/api\.alquran\.cloud\/.*/i,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'quran-api',
+        expiration: {
+          maxEntries: 200,
+          maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+        }
+      }
+    },
+    {
+      urlPattern: /^https:\/\/api\.quran\.com\/.*/i,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'quran-tafseer-api',
+        expiration: {
+          maxEntries: 200,
+          maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
         }
       }
     },
@@ -87,17 +110,138 @@ const withPWA = require('next-pwa')({
   ]
 });
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable React strict mode for better development
   reactStrictMode: true,
-  swcMinify: true,
-  i18n: {
-    locales: ['en', 'ar', 'ur', 'tr', 'id', 'ms', 'bn', 'fr', 'de', 'es', 'pt', 'ru', 'zh', 'ja', 'ko', 'hi', 'fa', 'ps', 'so', 'ha', 'sw', 'ml', 'ta', 'te', 'kn', 'mr', 'gu', 'pa', 'ne', 'si', 'my', 'th', 'vi', 'tl', 'km', 'am', 'ti', 'om', 'rw', 'yo', 'ig', 'zu', 'xh', 'st', 'sn', 'ny', 'mg', 'eo', 'la', 'cy', 'ga', 'gd', 'eu', 'ca', 'gl', 'ast', 'it', 'ro', 'nl', 'da', 'sv', 'no', 'fi', 'is', 'et', 'lv', 'lt', 'pl', 'cs', 'sk', 'hu', 'hr', 'sr', 'bs', 'sq', 'mk', 'bg', 'uk', 'be', 'ka', 'hy', 'he', 'yi', 'az', 'uz', 'kk', 'ky', 'tg', 'tk', 'mn', 'bo'],
-    defaultLocale: 'ar',
+
+  // Compiler options for optimization
+  compiler: {
+    // Remove console logs in production
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
   },
+
+  // Experimental features for better performance
+  experimental: {
+    // Optimize package imports
+    optimizePackageImports: [
+      'lucide-react',
+      'framer-motion',
+      'next-themes',
+      'react-i18next',
+    ],
+  },
+
+  // Image optimization
   images: {
-    domains: ['img.youtube.com', 'i.ytimg.com'],
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'img.youtube.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ytimg.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'hatscripts.github.io',
+      },
+    ],
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
+
+  // Headers for security and caching
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin'
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(self)'
+          }
+        ],
+      },
+      {
+        source: '/sw.js',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=0, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/icons/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
+
+  // Compress output
+  compress: true,
+
+  // Generate ETags
+  generateEtags: true,
+
+  // Power user features
+  poweredByHeader: false,
+
+  // Production source maps (disable for smaller builds)
+  productionBrowserSourceMaps: false,
+
+  // Optimize for serverless
+  output: 'standalone',
 };
 
-module.exports = withPWA(nextConfig);
+module.exports = withBundleAnalyzer(withPWA(nextConfig));
