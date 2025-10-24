@@ -23,33 +23,46 @@ body {
 
 body {
   @apply bg-light dark:bg-dark text-gray-900 dark:text-gray-100 transition-colors duration-300;
-}
-
-/* RTL Support */
-[dir="rtl"] {
-  direction: rtl;
-  font-family: 'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', sans-serif;
-  unicode-bidi: isolate;
-  font-feature-settings: "liga", "clig", "calt";
-}
-
-[dir="ltr"] {
-  direction: ltr;
+  /* Default font will be overridden by direction-specific rules */
   font-family: 'Lexend Deca', sans-serif;
 }
 
+/* RTL Support */
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+html[dir="ltr"] {
+  direction: ltr;
+}
+
+/* Dynamic font classes for body */
+html[dir="rtl"] body {
+  font-family: 'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', sans-serif !important;
+  text-rendering: optimizeLegibility !important;
+  font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
+  font-variant-ligatures: common-ligatures !important;
+  font-kerning: normal !important;
+}
+
+html[dir="ltr"] body {
+  font-family: 'Lexend Deca', sans-serif !important;
+  text-rendering: optimizeLegibility !important;
+  font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
+}
+
+/* Additional specificity for font switching - removed universal selectors to prevent text direction issues */
+
 /* Arabic Text Rendering */
 .font-arabic {
-  font-family: 'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', sans-serif;
-  direction: rtl;
+  font-family: 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', 'Tajawal', serif;
   text-rendering: optimizeLegibility;
-  font-feature-settings: "liga", "clig", "calt";
-  unicode-bidi: isolate;
+  font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
   font-variant-ligatures: common-ligatures;
   font-kerning: normal;
   font-synthesis: none;
-  -webkit-font-feature-settings: "liga", "clig", "calt";
-  -moz-font-feature-settings: "liga", "clig", "calt";
+  -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
+  -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
   /* Force proper Arabic text shaping */
   text-combine-upright: none;
   -webkit-text-combine: none;
@@ -57,17 +70,29 @@ body {
   font-variant-east-asian: normal;
   font-variant-caps: normal;
   font-variant-numeric: normal;
+  /* Enhanced Arabic text rendering */
+  font-variant-alternates: normal;
+  font-variant-position: normal;
+  font-variant-emoji: normal;
+  /* Ensure proper character spacing */
+  word-spacing: 0.1em;
+  letter-spacing: 0.02em;
+  line-height: 2.5;
+}
+
+/* Only apply RTL direction to Arabic text when in RTL context */
+html[dir="rtl"] .font-arabic {
+  direction: rtl;
+  unicode-bidi: bidi-override;
 }
 
 /* Quran Text with Special Unicode Characters */
 .quran-text {
-  font-family: 'Tajawal', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', sans-serif !important;
-  direction: rtl !important;
-  unicode-bidi: isolate !important;
+  font-family: 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', 'Tajawal', serif !important;
   text-rendering: optimizeLegibility !important;
-  font-feature-settings: "liga", "clig", "calt" !important;
-  -webkit-font-feature-settings: "liga", "clig", "calt" !important;
-  -moz-font-feature-settings: "liga", "clig", "calt" !important;
+  font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
+  -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
+  -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
   font-variant-ligatures: common-ligatures !important;
   font-kerning: normal !important;
   font-synthesis: none !important;
@@ -75,10 +100,95 @@ body {
   font-variant-east-asian: normal !important;
   font-variant-caps: normal !important;
   font-variant-numeric: normal !important;
+  font-variant-alternates: normal !important;
+  font-variant-position: normal !important;
+  font-variant-emoji: normal !important;
   /* Force proper character shaping */
   -webkit-text-stroke: 0.01em transparent !important;
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
+  /* Enhanced spacing for better readability */
+  word-spacing: 0.1em !important;
+  letter-spacing: 0.02em !important;
+  line-height: 2.5 !important;
+  /* Ensure proper text encoding */
+  text-encoding: utf-8 !important;
+  /* Force proper Unicode handling */
+  text-transform: none !important;
+  font-variant-ligatures: common-ligatures contextual !important;
+}
+
+/* Only apply RTL direction to Quran text when in RTL context */
+html[dir="rtl"] .quran-text {
+  direction: rtl !important;
+  unicode-bidi: bidi-override !important;
+}
+
+/* Force Arabic font loading and rendering */
+@font-face {
+  font-family: 'Amiri';
+  font-display: swap;
+  src: url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+}
+
+/* Enhanced Arabic text rendering for Quran */
+.arabic-quran-text {
+  font-family: 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', 'Tajawal', 'Arial Unicode MS', serif !important;
+  text-rendering: optimizeLegibility !important;
+  font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+  -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+  -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+  font-variant-ligatures: common-ligatures contextual !important;
+  font-kerning: normal !important;
+  font-synthesis: none !important;
+  /* Enhanced Unicode support for Arabic diacritics */
+  font-variant-east-asian: normal !important;
+  font-variant-caps: normal !important;
+  font-variant-numeric: normal !important;
+  font-variant-alternates: normal !important;
+  font-variant-position: normal !important;
+  font-variant-emoji: normal !important;
+  /* Force proper character shaping and diacritics */
+  -webkit-text-stroke: 0.01em transparent !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  /* Optimal spacing for Arabic text */
+  word-spacing: 0.1em !important;
+  letter-spacing: 0.02em !important;
+  line-height: 2.5 !important;
+  /* Ensure proper text encoding and Unicode handling */
+  text-transform: none !important;
+  /* Force proper Arabic text shaping */
+  text-combine-upright: none !important;
+  -webkit-text-combine: none !important;
+  /* Additional font properties for better rendering */
+  font-variant-ligatures: common-ligatures contextual !important;
+  font-variant-numeric: normal !important;
+  font-variant-caps: normal !important;
+  font-variant-east-asian: normal !important;
+  font-variant-alternates: normal !important;
+  font-variant-position: normal !important;
+  font-variant-emoji: normal !important;
+  /* Ensure proper Unicode character support */
+  font-variant-ligatures: common-ligatures contextual !important;
+  /* Force proper Arabic text rendering */
+  -webkit-text-stroke: 0.01em transparent !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  /* Additional Unicode support */
+  font-variant-ligatures: common-ligatures contextual !important;
+  font-variant-numeric: normal !important;
+  font-variant-caps: normal !important;
+  font-variant-east-asian: normal !important;
+  font-variant-alternates: normal !important;
+  font-variant-position: normal !important;
+  font-variant-emoji: normal !important;
+}
+
+/* Only apply RTL direction to Arabic Quran text when in RTL context */
+html[dir="rtl"] .arabic-quran-text {
+  direction: rtl !important;
+  unicode-bidi: bidi-override !important;
 }
 
 /* Scrollbar Styling - Hidden by default, visible on scroll/hover */

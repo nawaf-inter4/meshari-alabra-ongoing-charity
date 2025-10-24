@@ -3,14 +3,20 @@
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Heart, Gift, Users, Star } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function DonationSection() {
   const { t } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const benefits = [
-    { icon: Star, text: t("donation.benefit1") },
-    { icon: Users, text: t("donation.benefit2") },
-    { icon: Gift, text: t("donation.benefit3") },
+    { icon: Star, text: mounted ? t("donation.benefit1") : "صدقة جارية" },
+    { icon: Users, text: mounted ? t("donation.benefit2") : "مساعدة المحتاجين" },
+    { icon: Gift, text: mounted ? t("donation.benefit3") : "نشر الخير" },
   ];
 
   return (
@@ -52,7 +58,7 @@ export default function DonationSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                className="flex items-start gap-3 bg-light/50 dark:bg-dark/50 p-4 rounded-xl"
+                className="flex items-start gap-3 bg-light/50 dark:bg-dark/50 p-4 rounded-full"
               >
                 <benefit.icon className="w-6 h-6 text-islamic-gold flex-shrink-0 mt-1" />
                 <p className="text-sm leading-loose py-2">{benefit.text}</p>

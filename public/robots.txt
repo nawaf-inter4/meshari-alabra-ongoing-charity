@@ -1,75 +1,31 @@
-# Meshari's Ongoing Charity - Robots.txt Configuration
-# Website: https://meshari.charity
-
-# Allow all major search engines and AI bots
+# *
 User-agent: *
 Allow: /
-Allow: /ar/
-Allow: /en/
-Allow: /tr/
-Allow: /ur/
-Allow: /id/
-Allow: /ms/
-Allow: /bn/
-Allow: /fr/
-Allow: /zh/
-Allow: /it/
-Allow: /ja/
-Allow: /ko/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /sw.js
+Disallow: /workbox-*.js
 
-# Specific rules for major bots
+# Googlebot
 User-agent: Googlebot
 Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /sw.js
+Disallow: /workbox-*.js
 Crawl-delay: 1
 
+# Bingbot
 User-agent: Bingbot
 Allow: /
-Crawl-delay: 1
-
-User-agent: DuckDuckBot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Baiduspider
-Allow: /
-Crawl-delay: 1
-
-User-agent: YandexBot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Anthropic-ai
-Allow: /
-Allow: /llm.txt
-Crawl-delay: 1
-
-User-agent: GPTBot
-Allow: /
-Allow: /llm.txt
-Crawl-delay: 1
-
-User-agent: ClaudeBot
-Allow: /
-Allow: /llm.txt
-Crawl-delay: 1
-
-# Protect sensitive directories
-Disallow: /api/private/
+Disallow: /api/
 Disallow: /admin/
-Disallow: /.env
-Disallow: /.git/
-Disallow: /node_modules/
-
-# Allow access to public assets
-Allow: /icons/
-Allow: /images/
-Allow: /public/
-Allow: /sitemap.xml
-Allow: /manifest.json
-Allow: /llm.txt
-
-# Rate limiting
-Crawl-delay: 10
+Disallow: /_next/
+Disallow: /sw.js
+Disallow: /workbox-*.js
+Crawl-delay: 2
 
 # Host
 Host: https://meshari.charity

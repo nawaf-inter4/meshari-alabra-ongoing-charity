@@ -32,11 +32,21 @@ export default function YouTubePlaylist({ playlistId }: YouTubePlaylistProps) {
           </p>
         </motion.div>
 
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-center mb-8 text-lg text-islamic-green dark:text-islamic-gold"
+        >
+          ﷽
+        </motion.p>
+
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
           className="relative rounded-2xl overflow-hidden shadow-2xl glow"
           style={{ paddingBottom: "56.25%" }} // 16:9 aspect ratio
         >
@@ -48,16 +58,6 @@ export default function YouTubePlaylist({ playlistId }: YouTubePlaylistProps) {
             allowFullScreen
           />
         </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-8 text-lg text-islamic-green dark:text-islamic-gold"
-        >
-          ﷽ - بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-        </motion.p>
       </div>
     </section>
   );

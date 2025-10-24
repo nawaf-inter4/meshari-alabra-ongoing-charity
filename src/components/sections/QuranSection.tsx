@@ -26,7 +26,12 @@ export default function QuranSection() {
   const [ayahs, setAyahs] = useState<Ayah[]>([]);
   const [loading, setLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     fetchSurahs();
@@ -93,11 +98,11 @@ export default function QuranSection() {
           <div className="inline-flex items-center gap-2 mb-4">
             <BookOpen className="w-8 h-8 text-islamic-gold" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text">
-              {t("quran.title")}
+              {mounted && t("quran.title") !== "quran.title" ? t("quran.title") : "القرآن الكريم"}
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400">
-            {t("quran.subtitle")}
+            {mounted && t("quran.subtitle") !== "quran.subtitle" ? t("quran.subtitle") : "كتاب الله العظيم"}
           </p>
         </motion.div>
 
@@ -110,12 +115,12 @@ export default function QuranSection() {
           className="mb-8"
         >
           <label className="block text-lg font-semibold mb-3">
-            {t("quran.select_surah")}
+            {mounted && t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
           </label>
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-full p-4 rounded-xl bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
+              className="w-full p-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
             >
               <span className="text-left">
                 {currentSurah ? `${currentSurah.number}. ${currentSurah.englishName}` : "Select Surah"}
@@ -124,7 +129,7 @@ export default function QuranSection() {
             </button>
             
             {isDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border-2 border-islamic-gold/30 rounded-2xl shadow-2xl z-50 max-h-60 overflow-y-auto custom-scrollbar">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
                 {surahs.map((surah) => (
                   <button
                     key={surah.number}
@@ -132,8 +137,8 @@ export default function QuranSection() {
                       setSelectedSurah(surah.number);
                       setIsDropdownOpen(false);
                     }}
-                    className={`w-full px-6 py-4 text-left hover:bg-islamic-gold/10 transition-colors duration-300 first:rounded-t-2xl last:rounded-b-2xl ${
-                      selectedSurah === surah.number ? 'bg-islamic-gold/20 text-islamic-gold' : 'text-gray-900 dark:text-white'
+                    className={`w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${
+                      selectedSurah === surah.number ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white'
                     }`}
                   >
                     <div className="font-semibold">{surah.number}. {surah.englishName}</div>

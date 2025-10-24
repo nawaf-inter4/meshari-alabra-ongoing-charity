@@ -4,14 +4,12 @@
   "memorial.name": "مشاری احمد سلیمان العبرہ",
   "memorial.death": "29 مارچ 2023 کو وفات پا گئے - ریاض، سعودی عرب",
   "memorial.description": "اللہ ان پر رحم کرے اور انہیں اعلیٰ جنت عطا کرے، اور یہ عمل ان کے میزان حسنات میں شامل ہو",
-
   "hero.title": "جاری صدقہ",
   "hero.subtitle": "انا للہ وانا الیہ راجعون",
   "hero.description": "یہ صفحہ میرے بھائی مشاری کے لیے وقف ہے، جو دماغی کینسر سے وفات پا گئے۔ اللہ انہیں معاف کرے اور قرآن اور جاری صدقہ کو ان کا شفیع بنائے",
-
+  "hero.supplications_button": "مشاری کے لیے دعائیں (اللہ رحمت کرے)",
   "youtube.title": "قرآن کی تلاوتیں",
   "youtube.description": "جاری صدقہ کے طور پر قرآن کی تلاوتیں سنیں",
-
   "donation.title": "یتیم کی کفالت",
   "donation.subtitle": "مشاری کے نام پر نیک اعمال جاری رکھیں",
   "donation.description": "جاری صدقہ مرحوم کو فائدہ پہنچانے والے سب سے بڑے اعمال میں سے ہے، اور یتیم کی کفالت اللہ کو سب سے محبوب اعمال میں سے ہے",
@@ -21,14 +19,12 @@
   "donation.benefit1": "جنت میں نبی ﷺ کی رفاقت",
   "donation.benefit2": "سرپرست کھونے والوں کی ضروریات پوری کرنا",
   "donation.benefit3": "مسلسل ثواب کے ساتھ جاری صدقہ",
-
   "supplications.title": "دعائیں",
   "supplications.subtitle": "قرآن و سنت سے مرحوم کے لیے دعائیں",
   "supplications.daily": "روزانہ کے اذکار",
   "supplications.deceased": "مرحوم کے لیے دعا",
   "supplications.morning": "صبح کے اذکار",
   "supplications.evening": "شام کے اذکار",
-
   "prayer.title": "نماز کے اوقات",
   "prayer.subtitle": "آپ کے مقام کے مطابق نماز کے اوقات",
   "prayer.fajr": "فجر",
@@ -41,19 +37,20 @@
   "prayer.remaining": "باقی وقت",
   "prayer.location": "مقام",
   "prayer.enable": "نماز کی اطلاعات فعال کریں",
-
   "hijri.title": "ہجری تاریخ",
   "hijri.gregorian": "عیسوی",
-
   "quran.title": "قرآن کریم",
   "quran.subtitle": "اللہ کی آیات پڑھیں اور غور کریں",
   "quran.select_surah": "سورہ منتخب کریں",
+  "quran.select_reciter": "قاری منتخب کریں",
+  "quran.select_translation": "ترجمہ منتخب کریں",
   "quran.verse": "آیت",
   "quran.juz": "جزء",
   "quran.page": "صفحہ",
   "quran.play": "چلائیں",
   "quran.pause": "روکیں",
-
+  "quran.translation": "ترجمہ",
+  "quran.meshari_favorite": "مشاری کا پسندیدہ",
   "tafseer.title": "قرآن کی تفسیر",
   "tafseer.subtitle": "اللہ کے کلام کے معانی کو سمجھنا",
   "tafseer.select": "تفسیر منتخب کریں",
@@ -61,11 +58,15 @@
   "tafseer.tabari": "تفسیر طبری",
   "tafseer.kathir": "تفسیر ابن کثیر",
   "tafseer.saadi": "تفسیر سعدی",
-
+  "tafseer.search_verse": "آیت تلاش کریں",
+  "tafseer.source": "تفسیر کا ماخذ",
+  "tafseer.verse_number": "آیت نمبر",
+  "tafseer.select_instruction": "تفسیر حاصل کرنے کے لیے سورہ اور آیت منتخب کریں",
+  "tafseer.available_languages": "عربی، انگریزی اور اردو زبانوں میں متعدد تفسیریں دستیاب ہیں",
+  "qibla.instruction": "ڈیوائس کو سیدھا پکڑیں اور تیر کو قبلہ کی طرف اشارہ کریں",
   "hadith.title": "احادیث نبوی",
   "hadith.subtitle": "نبی کریم ﷺ کی رہنمائی سے",
   "hadith.source": "مصدر",
-
   "dhikr.title": "ذکر کاؤنٹر",
   "dhikr.subtitle": "ہر وقت اللہ کا ذکر کریں",
   "dhikr.count": "تعداد",
@@ -73,24 +74,20 @@
   "dhikr.subhanallah": "سبحان اللہ",
   "dhikr.alhamdulillah": "الحمد للہ",
   "dhikr.allahuakbar": "اللہ اکبر",
-
   "qibla.title": "قبلہ کی سمت",
   "qibla.subtitle": "کعبہ شریف کی سمت جانیں",
   "qibla.direction": "قبلہ کی سمت",
   "qibla.distance": "مکہ تک فاصلہ",
   "qibla.allow_location": "مقام تک رسائی کی اجازت دیں",
-
   "footer.title": "اللہ ان پر رحم کرے",
   "footer.description": "اے اللہ، قرآن کریم کو میرے بھائی مشاری کے لیے قیامت کے دن شفیع بنا دے، اور اس کے ہر حرف کو ان کی قبر میں نور بنا دے",
   "footer.charity": "جاری صدقہ",
   "footer.all_rights": "جملہ حقوق محفوظ ہیں © {{year}}",
   "footer.technology": "اللہ کی خاطر محبت سے بنایا گیا جدید ویب ٹیکنالوجی کے ساتھ",
-
   "theme.toggle": "تھیم تبدیل کریں",
   "theme.light": "لائٹ موڈ",
   "theme.dark": "ڈارک موڈ",
   "theme.system": "سسٹم تھیم",
-
   "language.select": "زبان منتخب کریں",
   "language.ar": "العربية",
   "language.en": "English",
@@ -100,28 +97,25 @@
   "language.ms": "Bahasa Melayu",
   "language.fr": "Français",
   "language.bn": "বাংলা",
-
   "notifications.title": "اطلاعات",
   "notifications.enable": "اطلاعات فعال کریں",
   "notifications.prayer_times": "نماز کے اوقات کی اطلاعات",
   "notifications.daily_supplications": "روزانہ کے اذکار",
   "notifications.permission_required": "براہ کرم براؤزر کی اطلاعات کی اجازت دیں",
-
   "offline.title": "آپ آف لائن ہیں",
   "offline.message": "کچھ خصوصیات انٹرنیٹ کنکشن کے بغیر کام نہیں کر سکتیں",
-
   "loading": "لوڈ ہو رہا ہے...",
   "error": "ایک خرابی پیش آ گئی",
   "retry": "دوبارہ کوشش کریں",
   "share": "شیئر کریں",
   "social.x_account": "مشاری کا ایکس اکاؤنٹ",
+  "social.github": "GitHub",
   "copy": "کاپی کریں",
   "copied": "کاپی ہو گیا",
   "close": "بند کریں",
   "next": "اگلا",
   "previous": "پچھلا",
   "search": "تلاش کریں",
-
   "accessibility": {
     "increment_counter": "کاؤنٹر بڑھائیں",
     "reset_counter": "کاؤنٹر ریسیٹ کریں",
@@ -132,7 +126,6 @@
     "toggle_menu": "مینو کھولیں/بند کریں",
     "close_modal": "ونڈو بند کریں"
   },
-
   "dhikr": {
     "increment": "تسبیح",
     "milestone_33": "پہلا مقصد: ٣٣",
@@ -140,13 +133,11 @@
     "milestone_99": "تیسرا مقصد: ٩٩",
     "milestone_100": "آخری مقصد: ١٠٠"
   },
-
   "supplications": {
     "deceased_1": "اللہم اغفر لہ وارحمہ وعافہ واعف عنہ، واکرم نزلہ، ووسع مدخلہ، واغسلہ بالماء والثلج والبرد، ونقہ من الخطایا کما نقیت الثوب الابیض من الدنس",
     "deceased_2": "اللہم اجعل قبرہ روضۃ من ریاض الجنۃ، ولا تجعلہ حفرۃ من حفر النار",
     "deceased_3": "اللہم ابدلہ دارا خیرا من دارہ، واہلا خیرا من اہلہ، وادخلہ الجنۃ واعذہ من عذاب القبر ومن عذاب النار"
   },
-
   "hadith": {
     "title": "حدیث",
     "subtitle": "نبی محمد صلی اللہ علیہ وسلم کی حکمت کی باتیں",
@@ -154,7 +145,6 @@
     "random_button": "بے ترتیب حدیث",
     "click_button": "بے ترتیب حدیث حاصل کرنے کے لیے بٹن دبائیں"
   },
-
   "footer": {
     "charity": "مشاری العبرہ جاری خیرات",
     "all_rights": "جملہ حقوق محفوظ ہیں © {{year}}",
@@ -162,5 +152,80 @@
     "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
     "sitemap": "سائٹ میپ",
     "llm_txt": "ایل ایل ایم فائل"
+  },
+  "footer.sitemap": "سائٹ میپ",
+  "footer.llm_txt": "ایل ایل ایم فائل",
+  "dhikr.la_ilaha_illallah": "اللہ کے سوا کوئی معبود نہیں",
+  "dhikr.astaghfirullah": "میں اللہ سے معافی مانگتا ہوں",
+  "dhikr.la_ilaha_illallah_wahdahu": "اللہ کے سوا کوئی معبود نہیں، وہ اکیلا ہے، اس کا کوئی شریک نہیں",
+  "dhikr.subhanallah_walhamdulillah": "اللہ کی پاکی بیان کرتا ہوں اور اللہ کی حمد کرتا ہوں",
+  "dhikr.subhanallah_walhamdulillah_wallahu_akbar": "اللہ کی پاکی بیان کرتا ہوں، اللہ کی حمد کرتا ہوں، اللہ کے سوا کوئی معبود نہیں اور اللہ سب سے بڑا ہے",
+  "dhikr.la_hawla_wala_quwwata": "اللہ کے سوا کوئی طاقت اور قوت نہیں",
+  "dhikr.hasbunallah_wa_ni'mal_wakil": "اللہ ہمارے لیے کافی ہے اور وہ بہترین کارساز ہے",
+  "dhikr.bismillah": "اللہ کے نام سے",
+  "dhikr.inna_lillahi_wa_inna_ilaihi_rajiun": "بے شک ہم اللہ کے ہیں اور بے شک ہم اسی کی طرف لوٹنے والے ہیں",
+  "dhikr.select_dhikr": "ذکر منتخب کریں",
+  "dhikr.categories.title": "ذکر کی اقسام",
+  "dhikr.categories.all": "سب",
+  "dhikr.categories.basic": "بنیادی",
+  "dhikr.categories.repentance": "توبہ",
+  "dhikr.categories.tawhid": "توحید",
+  "dhikr.categories.combined": "مشترکہ",
+  "dhikr.categories.reliance": "توکل",
+  "dhikr.categories.beginning": "شروع",
+  "dhikr.categories.patience": "صبر",
+  "hadith.random_button": "بے ترتیب حدیث",
+  "hadith.click_button": "بے ترتیب حدیث حاصل کرنے کے لیے بٹن پر کلک کریں",
+  "hadith.categories.title": "حدیث کی اقسام",
+  "hadith.categories.all": "سب",
+  "hadith.categories.charity": "صدقہ",
+  "hadith.categories.speech": "کلام",
+  "hadith.categories.religion": "دین",
+  "hadith.categories.brotherhood": "بھائی چارہ",
+  "hadith.categories.knowledge": "علم",
+  "hadith.categories.mercy": "رحمت",
+  "hadith.categories.faith": "ایمان",
+  "hadith.categories.help": "مدد",
+  "hadith.categories.love": "محبت",
+  "hadith.categories.purity": "پاکیزگی",
+  "hadith.categories.hospitality": "مہمان نوازی",
+  "hadith.categories.safety": "حفاظت",
+  "supplications.protection": "حفاظت",
+  "supplications.travel": "سفر",
+  "supplications.family": "خاندان",
+  "supplications.work": "کام",
+  "supplications.health": "صحت",
+  "supplications.deceased_4": "اے اللہ، اسے دنیا اور آخرت میں سچے کلام پر ثابت قدم رکھ",
+  "supplications.morning_1": "ہم صبح کو پہنچ گئے اور اس وقت تمام بادشاہی اللہ کی ہے۔ تمام تعریف اللہ کے لیے ہے۔ اللہ کے سوا کوئی معبود نہیں، وہ اکیلا ہے، اس کا کوئی شریک نہیں۔ بادشاہی اسی کی ہے اور تمام تعریف اسی کی ہے، اور وہ ہر چیز پر قادر ہے",
+  "supplications.morning_2": "اے اللہ، تیرے ساتھ ہم صبح کو پہنچے، تیرے ساتھ ہم شام کو پہنچے، تیرے ساتھ ہم جیتے ہیں، تیرے ساتھ ہم مرتے ہیں، اور تیری طرف لوٹنا ہے",
+  "supplications.morning_3": "اے اللہ، ہم صبح کو پہنچ گئے اور ہم آپ کی اور آپ کے عرش کے حاملوں کی اور آپ کے فرشتوں کی اور آپ کی تمام مخلوق کی گواہی دیتے ہیں کہ آپ اللہ ہیں، آپ کے سوا کوئی معبود نہیں، آپ اکیلا ہیں، آپ کا کوئی شریک نہیں اور محمد آپ کے بندے اور رسول ہیں",
+  "supplications.evening_1": "ہم شام کو پہنچ گئے اور اس وقت تمام بادشاہی اللہ کی ہے۔ تمام تعریف اللہ کے لیے ہے۔ اللہ کے سوا کوئی معبود نہیں، وہ اکیلا ہے، اس کا کوئی شریک نہیں۔ بادشاہی اسی کی ہے اور تمام تعریف اسی کی ہے، اور وہ ہر چیز پر قادر ہے",
+  "supplications.evening_2": "اے اللہ، تیرے ساتھ ہم شام کو پہنچے، تیرے ساتھ ہم صبح کو پہنچے، تیرے ساتھ ہم جیتے ہیں، تیرے ساتھ ہم مرتے ہیں، اور تیری طرف منزل ہے",
+  "dhikr.tasbih": "تسبیح",
+  "supplications.guidance": "ہدایت",
+  "supplications.forgiveness": "معافی",
+  "supplications.gratitude": "شکرگزاری",
+  "supplications.sleep": "نیند",
+  "supplications.waking": "جاگنا",
+  "dhikr.auto_saved": "خودکار محفوظ",
+  "islamic_chant": {
+    "title": "مشاری کا پسندیدہ اسلامی نغمہ",
+    "description": "مشاری کا پسندیدہ خوبصورت اسلامی نغمہ جو امن و سکون لاتا ہے"
+  },
+  "quran_verse": {
+    "bismillah": "اللہ کے نام سے جو رحمان و رحیم ہے",
+    "verse": "اور صبر کرنے والوں کو خوشخبری دو، جو جب ان پر کوئی مصیبت آتی ہے تو کہتے ہیں کہ ہم اللہ کے ہیں اور اسی کی طرف لوٹنے والے ہیں۔ یہی لوگ ہیں جن پر ان کے رب کی طرف سے برکتیں اور رحمت ہے اور یہی لوگ ہدایت یافتہ ہیں۔",
+    "sadaqallah": "اللہ تعالیٰ نے سچ فرمایا"
+  },
+  "social": {
+    "x_account": "X اکاؤنٹ",
+    "github": "GitHub"
+  },
+  "meshari_favorite_reciter": {
+    "title": "مشاری کے پسندیدہ قرآن پڑھنے والے",
+    "subtitle": "مشاری کی پسندیدہ قرآن کی تلاوت سنیں",
+    "reciter_title": "احمد العجمی - مبارک تلاوت",
+    "description": "شیخ احمد العجمی کی ایک خوبصورت قرآنی تلاوت، جسے مشاری بہت سننا پسند کرتے تھے۔ یہ تلاوت دل میں سکون اور خشوع لاتی ہے۔",
+    "feature_1": "اعلیٰ معیار کی تلاوت"
   }
 }

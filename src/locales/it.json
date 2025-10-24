@@ -4,14 +4,13 @@
   "memorial.name": "Meshari Ahmed Sulaiman Alabra",
   "memorial.death": "Deceduto il 29 marzo 2023 - Riyadh, Arabia Saudita",
   "memorial.description": "Che Allah abbia misericordia di lui e gli conceda il più alto Paradiso, e che quest'opera sia nella sua bilancia delle buone azioni",
-
   "hero.title": "Carità Continua",
   "hero.subtitle": "In verità apparteniamo ad Allah e a Lui faremo ritorno",
   "hero.description": "Questa pagina è dedicata a mio fratello Meshari, scomparso per un tumore al cervello. Che Allah lo perdoni e faccia del Corano e della carità continua un intercessore per lui",
-
+  "hero.supplications_button": "Suppliche per Meshari (Che Allah abbia misericordia di lui)",
   "youtube.title": "Recitazioni del Corano",
   "youtube.description": "Ascolta le recitazioni del Corano come carità continua",
-
+  "donation.header_button": "Dona",
   "donation.title": "Sostegno agli Orfani",
   "donation.subtitle": "Continua le buone azioni nel nome di Meshari",
   "donation.description": "La carità continua è una delle più grandi azioni che beneficiano il defunto, e il sostegno agli orfani è una delle azioni più amate da Allah",
@@ -20,14 +19,12 @@
   "donation.benefit1": "Compagnia del Profeta ﷺ in Paradiso",
   "donation.benefit2": "Soddisfare i bisogni di chi ha perso il tutore",
   "donation.benefit3": "Carità continua con ricompensa perpetua",
-
   "supplications.title": "Suppliche",
   "supplications.subtitle": "Preghiere per il defunto dal Corano e dalla Sunnah",
   "supplications.daily": "Ricordo Quotidiano",
   "supplications.deceased": "Preghiera per il Defunto",
   "supplications.morning": "Ricordo del Mattino",
   "supplications.evening": "Ricordo della Sera",
-
   "prayer.title": "Orari delle Preghiere",
   "prayer.subtitle": "Orari delle preghiere basati sulla tua posizione",
   "prayer.fajr": "Fajr",
@@ -40,19 +37,19 @@
   "prayer.remaining": "Tempo Rimanente",
   "prayer.location": "Posizione",
   "prayer.enable": "Attiva Notifiche Preghiera",
-
   "hijri.title": "Data Hijri",
   "hijri.gregorian": "Gregoriano",
-
   "quran.title": "Il Sacro Corano",
   "quran.subtitle": "Leggi e rifletti sui versetti di Allah",
   "quran.select_surah": "Seleziona Sura",
+  "quran.select_reciter": "Seleziona Recitatore",
+  "quran.select_translation": "Seleziona Traduzione",
   "quran.verse": "Versetto",
   "quran.juz": "Juz",
   "quran.page": "Pagina",
   "quran.play": "Riproduci",
   "quran.pause": "Pausa",
-
+  "quran.translation": "Traduzione",
   "tafseer.title": "Tafseer del Corano",
   "tafseer.subtitle": "Comprendere i significati delle parole di Allah",
   "tafseer.select": "Seleziona Tafseer",
@@ -60,11 +57,15 @@
   "tafseer.tabari": "Tafseer At-Tabari",
   "tafseer.kathir": "Tafseer Ibn Kathir",
   "tafseer.saadi": "Tafseer As-Sa'di",
-
+  "tafseer.search_verse": "Cerca un versetto",
+  "tafseer.source": "Fonte del Tafseer",
+  "tafseer.verse_number": "Numero del versetto",
+  "tafseer.select_instruction": "Scegli la sura e il versetto per ottenere il tafseer",
+  "tafseer.available_languages": "Tafseer multipli disponibili in arabo, inglese e urdu",
+  "qibla.instruction": "Tieni il dispositivo piatto e punta la freccia verso la qibla",
   "hadith.title": "Tradizioni Profetiche",
   "hadith.subtitle": "Dalla guida del Profeta Muhammad ﷺ",
   "hadith.source": "Fonte",
-
   "dhikr.title": "Contatore di Dhikr",
   "dhikr.subtitle": "Glorifica Allah in ogni momento",
   "dhikr.count": "Conteggio",
@@ -72,23 +73,19 @@
   "dhikr.subhanallah": "Gloria ad Allah",
   "dhikr.alhamdulillah": "Lode ad Allah",
   "dhikr.allahuakbar": "Allah è il più Grande",
-
   "qibla.title": "Direzione della Qibla",
   "qibla.subtitle": "Conosci la direzione della Sacra Kaaba",
   "qibla.direction": "La Qibla è verso",
   "qibla.distance": "Distanza da Mecca",
   "qibla.allow_location": "Consenti accesso alla posizione",
-
   "footer.title": "Che Allah abbia misericordia di lui",
   "footer.description": "O Allah, fa' che il Sacro Corano sia un intercessore per mio fratello Meshari nel Giorno del Giudizio, e fa' che ogni sua lettera sia una luce nella sua tomba",
   "footer.charity": "Carità Continua",
   "footer.all_rights": "Tutti i diritti riservati © 2024",
-
   "theme.toggle": "Cambia tema",
   "theme.light": "Tema chiaro",
   "theme.dark": "Tema scuro",
   "theme.system": "Tema di sistema",
-
   "language.select": "Seleziona Lingua",
   "language.ar": "العربية",
   "language.en": "English",
@@ -102,28 +99,25 @@
   "language.it": "Italiano",
   "language.ja": "日本語",
   "language.ko": "한국어",
-
   "notifications.title": "Notifiche",
   "notifications.enable": "Attiva Notifiche",
   "notifications.prayer_times": "Avvisi Orari Preghiera",
   "notifications.daily_supplications": "Ricordo Quotidiano",
   "notifications.permission_required": "Per favore consenti le notifiche del browser",
-
   "offline.title": "Sei offline",
   "offline.message": "Alcune funzionalità potrebbero non funzionare senza connessione internet",
-
   "loading": "Caricamento...",
   "error": "Si è verificato un errore",
   "retry": "Riprova",
   "share": "Condividi",
   "social.x_account": "Account X di Meshari",
+  "social.github": "GitHub",
   "copy": "Copia",
   "copied": "Copiato",
   "close": "Chiudi",
   "next": "Successivo",
   "previous": "Precedente",
   "search": "Cerca",
-
   "accessibility": {
     "increment_counter": "Incrementa contatore",
     "reset_counter": "Azzera contatore",
@@ -134,7 +128,6 @@
     "toggle_menu": "Apri/chiudi menu",
     "close_modal": "Chiudi finestra"
   },
-
   "dhikr": {
     "increment": "Incrementa",
     "milestone_33": "Primo traguardo: 33",
@@ -142,13 +135,11 @@
     "milestone_99": "Terzo traguardo: 99",
     "milestone_100": "Traguardo finale: 100"
   },
-
   "supplications": {
     "deceased_1": "O Allah, perdonalo e abbi misericordia di lui, dagli forza e perdonalo. Sii generoso con lui e rendi ampio il suo ingresso, lavalo con acqua, neve e grandine. Purificalo dai peccati come un abito bianco viene purificato dalle macchie",
     "deceased_2": "O Allah, rendi la sua tomba un giardino tra i giardini del Paradiso, e non renderla una fossa tra le fosse dell'Inferno",
     "deceased_3": "O Allah, dagli una casa migliore della sua casa, e una famiglia migliore della sua famiglia, e ammettilo in Paradiso e proteggilo dal tormento della tomba e dal tormento del Fuoco"
   },
-
   "hadith": {
     "title": "Hadith",
     "subtitle": "Parole di saggezza del Profeta Muhammad (che la pace sia su di lui)",
@@ -156,7 +147,6 @@
     "random_button": "Hadith Casuale",
     "click_button": "Clicca il pulsante per ottenere un hadith casuale"
   },
-
   "footer": {
     "charity": "Organizzazione di Beneficenza Continua Meshary Al-Abra",
     "all_rights": "Tutti i diritti riservati © {{year}}",
@@ -164,5 +154,74 @@
     "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
     "sitemap": "Mappa del sito",
     "llm_txt": "File LLM"
+  },
+  "footer.sitemap": "Mappa del sito",
+  "footer.llm_txt": "File LLM",
+  "dhikr.la_ilaha_illallah": "Non c'è dio all'infuori di Allah",
+  "dhikr.astaghfirullah": "Chiedo perdono ad Allah",
+  "dhikr.la_ilaha_illallah_wahdahu": "Non c'è dio all'infuori di Allah, Egli è uno, non ha associati",
+  "dhikr.subhanallah_walhamdulillah": "Gloria ad Allah e lode ad Allah",
+  "dhikr.subhanallah_walhamdulillah_wallahu_akbar": "Gloria ad Allah, lode ad Allah, non c'è dio all'infuori di Allah e Allah è il Più Grande",
+  "dhikr.la_hawla_wala_quwwata": "Non c'è potere e forza eccetto con Allah",
+  "dhikr.hasbunallah_wa_ni'mal_wakil": "Allah ci basta ed Egli è il migliore dei garanti",
+  "dhikr.bismillah": "Nel nome di Allah",
+  "dhikr.inna_lillahi_wa_inna_ilaihi_rajiun": "Apparteniamo ad Allah e a Lui ritorneremo",
+  "dhikr.select_dhikr": "Seleziona Dhikr",
+  "dhikr.categories.title": "Categorie di Dhikr",
+  "dhikr.categories.all": "Tutti",
+  "dhikr.categories.basic": "Base",
+  "dhikr.categories.repentance": "Pentimento",
+  "dhikr.categories.tawhid": "Monoteismo",
+  "dhikr.categories.combined": "Combinato",
+  "dhikr.categories.reliance": "Fiducia",
+  "dhikr.categories.beginning": "Inizio",
+  "dhikr.categories.patience": "Pazienza",
+  "hadith.random_button": "Hadith Casuale",
+  "hadith.click_button": "Clicca il pulsante per ottenere un hadith casuale",
+  "hadith.categories.title": "Categorie di Hadith",
+  "hadith.categories.all": "Tutti",
+  "hadith.categories.charity": "Carità",
+  "hadith.categories.speech": "Parola",
+  "hadith.categories.religion": "Religione",
+  "hadith.categories.brotherhood": "Fratellanza",
+  "hadith.categories.knowledge": "Conoscenza",
+  "hadith.categories.mercy": "Misericordia",
+  "hadith.categories.faith": "Fede",
+  "hadith.categories.help": "Aiuto",
+  "hadith.categories.love": "Amore",
+  "hadith.categories.purity": "Purezza",
+  "hadith.categories.hospitality": "Ospitalità",
+  "hadith.categories.safety": "Sicurezza",
+  "supplications.protection": "Protezione",
+  "supplications.travel": "Viaggio",
+  "supplications.family": "Famiglia",
+  "supplications.work": "Lavoro",
+  "supplications.health": "Salute",
+  "supplications.deceased_4": "O Allah, rafforzalo sulla parola di verità in questa vita e nell'aldilà",
+  "supplications.morning_1": "Abbiamo raggiunto il mattino e in questo momento tutta la sovranità appartiene ad Allah. Tutte le lodi ad Allah. Non c'è dio all'infuori di Allah, solo, senza associati. A Lui appartiene il dominio e a Lui appartengono tutte le lodi, e Egli ha potere su ogni cosa",
+  "supplications.morning_2": "O Allah, per Te raggiungiamo il mattino, per Te raggiungiamo la sera, per Te viviamo, per Te moriamo, e a Te è il ritorno",
+  "supplications.morning_3": "O Allah, abbiamo raggiunto il mattino e testimoniamo di Te e dei portatori del Tuo Trono e dei Tuoi angeli e di tutta la Tua creazione che Tu sei Allah, non c'è dio all'infuori di Te solo, Tu non hai associati, e che Muhammad è il Tuo servo e il Tuo Messaggero",
+  "supplications.evening_1": "Abbiamo raggiunto la sera e in questo momento tutta la sovranità appartiene ad Allah. Tutte le lodi ad Allah. Non c'è dio all'infuori di Allah, solo, senza associati. A Lui appartiene il dominio e a Lui appartengono tutte le lodi, e Egli ha potere su ogni cosa",
+  "supplications.evening_2": "O Allah, per Te raggiungiamo la sera, per Te raggiungiamo il mattino, per Te viviamo, per Te moriamo, e a Te è la destinazione",
+  "dhikr.tasbih": "Tasbih",
+  "supplications.guidance": "Guida",
+  "supplications.forgiveness": "Perdono",
+  "supplications.gratitude": "Gratitudine",
+  "supplications.sleep": "Sonno",
+  "supplications.waking": "Risveglio",
+  "dhikr.auto_saved": "Salvato automaticamente",
+  "islamic_chant": {
+    "title": "Canto Islamico Preferito di Meshari",
+    "description": "Un bel canto islamico che Meshari amava molto, portando pace e tranquillità"
+  },
+  "quran_verse": {
+    "bismillah": "Nel nome di Allah, il Compassionevole, il Misericordioso",
+    "verse": "E da' la buona novella ai pazienti, che quando li colpisce una disgrazia dicono: 'In verità apparteniamo ad Allah e a Lui ritorniamo.' Essi sono quelli su cui scendono benedizioni dal loro Signore e misericordia. E sono quelli che sono ben guidati.",
+    "sadaqallah": "Allah l'Altissimo e il Grande ha detto la verità"
+  },
+  "quran.meshari_favorite": "Preferito di Meshari",
+  "social": {
+    "x_account": "Account X",
+    "github": "GitHub"
   }
 }

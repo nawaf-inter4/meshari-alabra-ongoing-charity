@@ -4,14 +4,13 @@
   "memorial.name": "メシャリ・アハメド・スライマン・アラブラ",
   "memorial.death": "2023年3月29日逝去 - リヤド、サウジアラビア",
   "memorial.description": "アッラーが彼に慈悲を与え、最高の楽園を授けてくださいますように。そしてこの活動が彼の善行の記録に加えられますように",
-
   "hero.title": "継続的な慈善活動",
   "hero.subtitle": "私たちはアッラーのものであり、必ず彼の元に帰るのです",
   "hero.description": "このページは、脳腫瘍で亡くなった私の兄弟メシャリに捧げられています。アッラーが彼を赦し、クルアーンと継続的な慈善活動を彼の執り成しとしてくださいますように",
-
+  "hero.supplications_button": "メシャリのための祈り（アッラーが彼に慈悲をかけられますように）",
   "youtube.title": "クルアーン朗誦",
   "youtube.description": "継続的な慈善活動としてクルアーンの朗誦を聴く",
-
+  "donation.header_button": "寄付",
   "donation.title": "孤児支援",
   "donation.subtitle": "メシャリの名において善行を継続する",
   "donation.description": "継続的な慈善活動は故人に恩恵をもたらす最も偉大な行為の一つであり、孤児支援はアッラーが最も愛される行為の一つです",
@@ -20,14 +19,12 @@
   "donation.benefit1": "楽園での預言者 ﷺ との同伴",
   "donation.benefit2": "保護者を失った者のニーズを満たす",
   "donation.benefit3": "継続的な報奨のある慈善活動",
-
   "supplications.title": "祈願",
   "supplications.subtitle": "クルアーンとスンナからの故人のための祈り",
   "supplications.daily": "日々の唱念",
   "supplications.deceased": "故人のための祈り",
   "supplications.morning": "朝の唱念",
   "supplications.evening": "夕べの唱念",
-
   "prayer.title": "礼拝時刻",
   "prayer.subtitle": "あなたの位置に基づく礼拝時刻",
   "prayer.fajr": "ファジュル",
@@ -40,19 +37,19 @@
   "prayer.remaining": "残り時間",
   "prayer.location": "位置情報",
   "prayer.enable": "礼拝通知を有効にする",
-
   "hijri.title": "ヒジュラ暦",
   "hijri.gregorian": "西暦",
-
   "quran.title": "聖クルアーン",
   "quran.subtitle": "アッラーの節を読み、熟考する",
   "quran.select_surah": "スーラを選択",
+  "quran.select_reciter": "朗誦者を選択",
+  "quran.select_translation": "翻訳を選択",
   "quran.verse": "節",
   "quran.juz": "ジュズ",
   "quran.page": "ページ",
   "quran.play": "再生",
   "quran.pause": "一時停止",
-
+  "quran.translation": "翻訳",
   "tafseer.title": "クルアーン解釈",
   "tafseer.subtitle": "アッラーの言葉の意味を理解する",
   "tafseer.select": "タフシールを選択",
@@ -60,11 +57,15 @@
   "tafseer.tabari": "タフシール・アッ＝タバリー",
   "tafseer.kathir": "タフシール・イブン・カスィール",
   "tafseer.saadi": "タフシール・アッ＝サアディー",
-
+  "tafseer.search_verse": "節を検索",
+  "tafseer.source": "タフシールの出典",
+  "tafseer.verse_number": "節番号",
+  "tafseer.select_instruction": "タフシールを得るために章と節を選択してください",
+  "tafseer.available_languages": "アラビア語、英語、ウルドゥー語で複数のタフシールが利用可能",
+  "qibla.instruction": "デバイスを平らに持ち、矢印をキブラの方向に向けてください",
   "hadith.title": "預言者の伝承",
   "hadith.subtitle": "預言者ムハンマド ﷺ の導きから",
   "hadith.source": "出典",
-
   "dhikr.title": "ズィクルカウンター",
   "dhikr.subtitle": "常にアッラーを讃える",
   "dhikr.count": "カウント",
@@ -72,23 +73,19 @@
   "dhikr.subhanallah": "スブハーナッラー",
   "dhikr.alhamdulillah": "アルハムドリッラー",
   "dhikr.allahuakbar": "アッラーフ・アクバル",
-
   "qibla.title": "キブラの方向",
   "qibla.subtitle": "聖カアバ殿の方向を知る",
   "qibla.direction": "キブラの方向",
   "qibla.distance": "メッカまでの距離",
   "qibla.allow_location": "位置情報へのアクセスを許可",
-
   "footer.title": "アッラーが彼に慈悲を与えますように",
   "footer.description": "アッラーよ、聖クルアーンを私の兄弟メシャリの審判の日の執り成しとし、その一文字一文字を彼の墓の光としてください",
   "footer.charity": "継続的な慈善活動",
   "footer.all_rights": "全ての権利を保有 © 2024",
-
   "theme.toggle": "テーマ切り替え",
   "theme.light": "ライトモード",
   "theme.dark": "ダークモード",
   "theme.system": "システムテーマ",
-
   "language.select": "言語を選択",
   "language.ar": "العربية",
   "language.en": "English",
@@ -102,28 +99,25 @@
   "language.it": "Italiano",
   "language.ja": "日本語",
   "language.ko": "한국어",
-
   "notifications.title": "通知",
   "notifications.enable": "通知を有効にする",
   "notifications.prayer_times": "礼拝時刻アラート",
   "notifications.daily_supplications": "日々の唱念",
   "notifications.permission_required": "ブラウザの通知を許可してください",
-
   "offline.title": "オフラインです",
   "offline.message": "インターネット接続なしでは一部の機能が動作しない場合があります",
-
   "loading": "読み込み中...",
   "error": "エラーが発生しました",
   "retry": "再試行",
   "share": "共有",
   "social.x_account": "MeshariのXアカウント",
+  "social.github": "GitHub",
   "copy": "コピー",
   "copied": "コピーしました",
   "close": "閉じる",
   "next": "次へ",
   "previous": "前へ",
   "search": "検索",
-
   "accessibility": {
     "increment_counter": "カウンターを増やす",
     "reset_counter": "カウンターをリセット",
@@ -134,7 +128,6 @@
     "toggle_menu": "メニュー切り替え",
     "close_modal": "ウィンドウを閉じる"
   },
-
   "dhikr": {
     "increment": "増加",
     "milestone_33": "第一目標：33",
@@ -142,13 +135,11 @@
     "milestone_99": "第三目標：99",
     "milestone_100": "最終目標：100"
   },
-
   "supplications": {
     "deceased_1": "アッラーよ、彼を赦し、慈悲を与え、健康を与え、赦してください。彼の住まいを寛大にし、その入り口を広くし、水と雪と雹で彼を洗い清めてください。白い衣が汚れから清められるように、彼を罪から清めてください",
     "deceased_2": "アッラーよ、彼の墓を楽園の庭園の一つとし、地獄の穴の一つとしないでください",
     "deceased_3": "アッラーよ、彼に彼の家よりも良い家を、彼の家族よりも良い家族を与え、彼を楽園に入れ、墓の苦しみと火獄の苦しみから守ってください"
   },
-
   "hadith": {
     "title": "ハディース",
     "subtitle": "預言者ムハンマド（彼に平安あれ）からの知恵の言葉",
@@ -156,13 +147,81 @@
     "random_button": "ランダムハディース",
     "click_button": "ランダムハディースを取得するにはボタンをクリックしてください"
   },
-
   "footer": {
-    "charity": "Meshari Al-Abra 継続慈善団体",
+    "charity": "Meshari Alabra 継続慈善団体",
     "all_rights": "全著作権所有 © {{year}}",
     "technology": "アッラーのために愛を込めて現代のウェブ技術で構築",
     "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
     "sitemap": "サイトマップ",
     "llm_txt": "LLMファイル"
+  },
+  "footer.sitemap": "サイトマップ",
+  "footer.llm_txt": "LLMファイル",
+  "dhikr.la_ilaha_illallah": "アッラーの他に神はなし",
+  "dhikr.astaghfirullah": "アッラーに赦しを請う",
+  "dhikr.la_ilaha_illallah_wahdahu": "アッラーの他に神はなし、彼は唯一で、仲間を持たない",
+  "dhikr.subhanallah_walhamdulillah": "アッラーに栄光あれ、アッラーに讃美あれ",
+  "dhikr.subhanallah_walhamdulillah_wallahu_akbar": "アッラーに栄光あれ、アッラーに讃美あれ、アッラーの他に神はなし、アッラーは最も偉大",
+  "dhikr.la_hawla_wala_quwwata": "アッラーと共にでなければ力も強さもない",
+  "dhikr.hasbunallah_wa_ni'mal_wakil": "アッラーは私たちに十分で、彼は最良の後見人",
+  "dhikr.bismillah": "アッラーの御名において",
+  "dhikr.inna_lillahi_wa_inna_ilaihi_rajiun": "私たちはアッラーに属し、確かに彼の許に帰る",
+  "dhikr.select_dhikr": "ズィクルを選択",
+  "dhikr.categories.title": "ズィクルカテゴリ",
+  "dhikr.categories.all": "すべて",
+  "dhikr.categories.basic": "基本",
+  "dhikr.categories.repentance": "悔い改め",
+  "dhikr.categories.tawhid": "一神教",
+  "dhikr.categories.combined": "組み合わせ",
+  "dhikr.categories.reliance": "信頼",
+  "dhikr.categories.beginning": "開始",
+  "dhikr.categories.patience": "忍耐",
+  "hadith.random_button": "ランダムハディース",
+  "hadith.click_button": "ランダムハディースを取得するにはボタンをクリック",
+  "hadith.categories.title": "ハディースカテゴリ",
+  "hadith.categories.all": "すべて",
+  "hadith.categories.charity": "慈善",
+  "hadith.categories.speech": "言葉",
+  "hadith.categories.religion": "宗教",
+  "hadith.categories.brotherhood": "兄弟愛",
+  "hadith.categories.knowledge": "知識",
+  "hadith.categories.mercy": "慈悲",
+  "hadith.categories.faith": "信仰",
+  "hadith.categories.help": "助け",
+  "hadith.categories.love": "愛",
+  "hadith.categories.purity": "純潔",
+  "hadith.categories.hospitality": "おもてなし",
+  "hadith.categories.safety": "安全",
+  "supplications.protection": "保護",
+  "supplications.travel": "旅行",
+  "supplications.family": "家族",
+  "supplications.work": "仕事",
+  "supplications.health": "健康",
+  "supplications.deceased_4": "アッラーよ、この世と来世で彼を真理の言葉に堅固にしてください",
+  "supplications.morning_1": "私たちは朝に到達し、この時点で全ての主権はアッラーに属します。全ての賛美はアッラーにあります。アッラーの他に神はなく、彼は唯一で、仲間を持ちません。主権は彼に属し、賛美は彼に属し、彼は全てのことに全能です",
+  "supplications.morning_2": "アッラーよ、あなたによって私たちは朝に到達し、あなたによって私たちは夕方に到達し、あなたによって私たちは生き、あなたによって私たちは死に、あなたへの帰還があります",
+  "supplications.morning_3": "アッラーよ、私たちは朝に到達し、あなたとあなたの玉座の担い手たちとあなたの天使たちとあなたのすべての創造物に証言します。あなたはアッラーであり、あなたの他に神はなく、あなたは唯一で、あなたには仲間がなく、ムハンマドはあなたのしもべであり使者であることを",
+  "supplications.evening_1": "私たちは夕方に到達し、この時点で全ての主権はアッラーに属します。全ての賛美はアッラーにあります。アッラーの他に神はなく、彼は唯一で、仲間を持ちません。主権は彼に属し、賛美は彼に属し、彼は全てのことに全能です",
+  "supplications.evening_2": "アッラーよ、あなたによって私たちは夕方に到達し、あなたによって私たちは朝に到達し、あなたによって私たちは生き、あなたによって私たちは死に、あなたへの行き先があります",
+  "dhikr.tasbih": "タスビーフ",
+  "supplications.guidance": "指導",
+  "supplications.forgiveness": "許し",
+  "supplications.gratitude": "感謝",
+  "supplications.sleep": "睡眠",
+  "supplications.waking": "目覚め",
+  "dhikr.auto_saved": "自動保存",
+  "islamic_chant": {
+    "title": "メシャリのお気に入りのイスラム聖歌",
+    "description": "メシャリが深く愛した美しいイスラム聖歌、平和と静寂をもたらす"
+  },
+  "quran_verse": {
+    "bismillah": "慈悲深く慈愛あまねきアッラーの御名において",
+    "verse": "そして忍耐する者たちに吉報を伝えよ。彼らは災難に遭った時、『私たちはアッラーに属し、私たちは必ず彼に帰る』と言う者たちである。これらの者たちには、主からの祝福と慈悲が下る。そしてこれらの者こそ、正しく導かれた者たちである。",
+    "sadaqallah": "アッラー至高にして偉大なる御方は真実を語られた"
+  },
+  "quran.meshari_favorite": "メシャリのお気に入り",
+  "social": {
+    "x_account": "Xアカウント",
+    "github": "GitHub"
   }
 }

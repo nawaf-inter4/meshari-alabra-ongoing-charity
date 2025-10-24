@@ -17,8 +17,11 @@ export default function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    
     // Check if app is already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true);
@@ -100,7 +103,7 @@ The app will then be installed on your device!`);
     setDeferredPrompt(null);
   };
 
-  if (isInstalled || !showInstallPrompt) {
+  if (!mounted || isInstalled || !showInstallPrompt) {
     return null;
   }
 
@@ -131,7 +134,7 @@ The app will then be installed on your device!`);
               <div className="flex gap-2">
                 <button
                   onClick={handleInstallClick}
-                  className="flex-1 bg-islamic-gold hover:bg-islamic-green text-white text-xs font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1"
+                  className="flex-1 bg-islamic-gold hover:bg-islamic-green text-white text-xs font-medium py-2 px-3 rounded-full transition-colors duration-200 flex items-center justify-center gap-1"
                 >
                   <Download className="w-3 h-3" />
                   Install

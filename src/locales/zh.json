@@ -4,14 +4,13 @@
   "memorial.name": "麦沙里·艾哈迈德·苏莱曼·阿拉布拉",
   "memorial.death": "2023年3月29日逝世 - 利雅得，沙特阿拉伯",
   "memorial.description": "愿真主慈悯他，赐予他最高的天堂，愿这项工作计入他的善功",
-
   "hero.title": "持续慈善",
   "hero.subtitle": "我们确是属于真主的，我们必定只归于他",
   "hero.description": "这个页面是献给我的兄弟麦沙里的，他因脑癌去世。愿真主宽恕他，使《古兰经》和持续慈善成为他的说情者",
-
+  "hero.supplications_button": "为麦沙里祈祷（愿真主怜悯他）",
   "youtube.title": "古兰经诵读",
   "youtube.description": "聆听古兰经诵读作为持续慈善",
-
+  "donation.header_button": "捐赠",
   "donation.title": "孤儿赞助",
   "donation.subtitle": "以麦沙里的名义继续行善",
   "donation.description": "持续慈善是对亡者最有益的善功之一，赞助孤儿是真主最喜爱的善功之一",
@@ -20,14 +19,12 @@
   "donation.benefit1": "在天堂中与先知 ﷺ 为伴",
   "donation.benefit2": "满足失去监护人者的需求",
   "donation.benefit3": "持续获得回赐的慈善",
-
   "supplications.title": "祈祷词",
   "supplications.subtitle": "来自《古兰经》和圣训的为亡人祈祷",
   "supplications.daily": "每日记念词",
   "supplications.deceased": "为亡人祈祷",
   "supplications.morning": "晨间记念词",
   "supplications.evening": "晚间记念词",
-
   "prayer.title": "礼拜时间",
   "prayer.subtitle": "基于您所在位置的礼拜时间",
   "prayer.fajr": "晨礼",
@@ -40,19 +37,19 @@
   "prayer.remaining": "剩余时间",
   "prayer.location": "位置",
   "prayer.enable": "启用礼拜提醒",
-
   "hijri.title": "伊斯兰历",
   "hijri.gregorian": "公历",
-
   "quran.title": "尊贵的《古兰经》",
   "quran.subtitle": "诵读并思考真主的经文",
   "quran.select_surah": "选择章节",
+  "quran.select_reciter": "选择诵经师",
+  "quran.select_translation": "选择翻译",
   "quran.verse": "节",
   "quran.juz": "卷",
   "quran.page": "页",
   "quran.play": "播放",
   "quran.pause": "暂停",
-
+  "quran.translation": "翻译",
   "tafseer.title": "古兰经注释",
   "tafseer.subtitle": "理解真主言语的含义",
   "tafseer.select": "选择注释",
@@ -60,11 +57,15 @@
   "tafseer.tabari": "泰伯里注",
   "tafseer.kathir": "伊本·凯西尔注",
   "tafseer.saadi": "萨阿迪注",
-
+  "tafseer.search_verse": "搜索经文",
+  "tafseer.source": "注释来源",
+  "tafseer.verse_number": "经文编号",
+  "tafseer.select_instruction": "选择章节和经文以获取注释",
+  "tafseer.available_languages": "提供阿拉伯语、英语和乌尔都语多种注释",
+  "qibla.instruction": "平握设备并将箭头指向朝拜方向",
   "hadith.title": "圣训",
   "hadith.subtitle": "来自先知穆罕默德 ﷺ 的指导",
   "hadith.source": "来源",
-
   "dhikr.title": "记念词计数器",
   "dhikr.subtitle": "时刻赞颂真主",
   "dhikr.count": "计数",
@@ -72,23 +73,19 @@
   "dhikr.subhanallah": "赞主超绝",
   "dhikr.alhamdulillah": "一切赞颂全归真主",
   "dhikr.allahuakbar": "真主至大",
-
   "qibla.title": "朝向",
   "qibla.subtitle": "了解天房的方向",
   "qibla.direction": "朝向方向",
   "qibla.distance": "到麦加的距离",
   "qibla.allow_location": "允许位置访问",
-
   "footer.title": "愿真主慈悯他",
   "footer.description": "主啊，使《古兰经》在审判日成为我的兄弟麦沙里的说情者，使其每一个字母都成为他坟墓中的光明",
   "footer.charity": "持续慈善",
   "footer.all_rights": "版权所有 © 2024",
-
   "theme.toggle": "切换主题",
   "theme.light": "浅色模式",
   "theme.dark": "深色模式",
   "theme.system": "系统主题",
-
   "language.select": "选择语言",
   "language.ar": "العربية",
   "language.en": "English",
@@ -102,28 +99,25 @@
   "language.it": "Italiano",
   "language.ja": "日本語",
   "language.ko": "한국어",
-
   "notifications.title": "通知",
   "notifications.enable": "启用通知",
   "notifications.prayer_times": "礼拜时间提醒",
   "notifications.daily_supplications": "每日记念词",
   "notifications.permission_required": "请允许浏览器通知",
-
   "offline.title": "您已离线",
   "offline.message": "某些功能可能无法在没有网络连接的情况下工作",
-
   "loading": "加载中...",
   "error": "发生错误",
   "retry": "重试",
   "share": "分享",
   "social.x_account": "Meshari的X账号",
+  "social.github": "GitHub",
   "copy": "复制",
   "copied": "已复制",
   "close": "关闭",
   "next": "下一个",
   "previous": "上一个",
   "search": "搜索",
-
   "accessibility": {
     "increment_counter": "增加计数",
     "reset_counter": "重置计数器",
@@ -134,7 +128,6 @@
     "toggle_menu": "切换菜单",
     "close_modal": "关闭窗口"
   },
-
   "dhikr": {
     "increment": "增加",
     "milestone_33": "第一个里程碑：33",
@@ -142,13 +135,11 @@
     "milestone_99": "第三个里程碑：99",
     "milestone_100": "最终里程碑：100"
   },
-
   "supplications": {
     "deceased_1": "主啊，求你饶恕他，慈悯他，恕饶他，赦免他，使他的住处宽敞，以水、冰雪洗涤他，清除他的过错，如同洗涤白衣上的污垢一样",
     "deceased_2": "主啊，求你使他的坟墓成为天园中的一座花园，不要使它成为火狱的坑洞",
     "deceased_3": "主啊，求你赐予他比他的住所更好的住所，比他的家人更好的家人，求你使他进入天园，保护他免遭坟墓的刑罚和火狱的刑罚"
   },
-
   "hadith": {
     "title": "圣训",
     "subtitle": "先知穆罕默德（愿主福安之）的智慧之言",
@@ -156,13 +147,81 @@
     "random_button": "随机圣训",
     "click_button": "点击按钮获取随机圣训"
   },
-
   "footer": {
-    "charity": "Meshari Al-Abra 持续慈善机构",
+    "charity": "Meshari Alabra 持续慈善机构",
     "all_rights": "版权所有 © {{year}}",
     "technology": "为安拉而用现代网络技术爱心构建",
     "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
     "sitemap": "网站地图",
     "llm_txt": "LLM文件"
+  },
+  "footer.sitemap": "网站地图",
+  "footer.llm_txt": "LLM文件",
+  "dhikr.la_ilaha_illallah": "除真主外，绝无应受崇拜的",
+  "dhikr.astaghfirullah": "我向真主求饶恕",
+  "dhikr.la_ilaha_illallah_wahdahu": "除真主外，绝无应受崇拜的，他是独一的，绝无伙伴",
+  "dhikr.subhanallah_walhamdulillah": "赞颂真主超绝，一切赞颂全归真主",
+  "dhikr.subhanallah_walhamdulillah_wallahu_akbar": "赞颂真主超绝，一切赞颂全归真主，除真主外绝无应受崇拜的，真主至大",
+  "dhikr.la_hawla_wala_quwwata": "除真主外，绝无能力和力量",
+  "dhikr.hasbunallah_wa_ni'mal_wakil": "真主使我们满足，他是最好的监护者",
+  "dhikr.bismillah": "以真主的名义",
+  "dhikr.inna_lillahi_wa_inna_ilaihi_rajiun": "我们确是真主所有的，我们必定只归依他",
+  "dhikr.select_dhikr": "选择记念词",
+  "dhikr.categories.title": "记念词类别",
+  "dhikr.categories.all": "全部",
+  "dhikr.categories.basic": "基本",
+  "dhikr.categories.repentance": "忏悔",
+  "dhikr.categories.tawhid": "认主独一",
+  "dhikr.categories.combined": "组合",
+  "dhikr.categories.reliance": "信托",
+  "dhikr.categories.beginning": "开始",
+  "dhikr.categories.patience": "耐心",
+  "hadith.random_button": "随机圣训",
+  "hadith.click_button": "点击按钮获取随机圣训",
+  "hadith.categories.title": "圣训类别",
+  "hadith.categories.all": "全部",
+  "hadith.categories.charity": "慈善",
+  "hadith.categories.speech": "言语",
+  "hadith.categories.religion": "宗教",
+  "hadith.categories.brotherhood": "兄弟情谊",
+  "hadith.categories.knowledge": "知识",
+  "hadith.categories.mercy": "仁慈",
+  "hadith.categories.faith": "信仰",
+  "hadith.categories.help": "帮助",
+  "hadith.categories.love": "爱",
+  "hadith.categories.purity": "纯洁",
+  "hadith.categories.hospitality": "好客",
+  "hadith.categories.safety": "安全",
+  "supplications.protection": "保护",
+  "supplications.travel": "旅行",
+  "supplications.family": "家庭",
+  "supplications.work": "工作",
+  "supplications.health": "健康",
+  "supplications.deceased_4": "真主啊，在今世和后世都使他坚持真理之言",
+  "supplications.morning_1": "我们已到达早晨，此时一切主权都属于真主。一切赞颂全归真主。除真主外绝无应受崇拜的，他是独一的，绝无伙伴。主权是他的，赞颂是他的，他对万事是全能的",
+  "supplications.morning_2": "真主啊，通过你我们到达早晨，通过你我们到达傍晚，通过你我们生活，通过你我们死亡，回归于你",
+  "supplications.morning_3": "真主啊，我们已到达早晨，我们见证你和你宝座的承载者以及你的天使们以及你的一切创造物，你就是真主，除你外绝无应受崇拜的，你是独一的，你没有伙伴，穆罕默德是你的仆人和使者",
+  "supplications.evening_1": "我们已到达傍晚，此时一切主权都属于真主。一切赞颂全归真主。除真主外绝无应受崇拜的，他是独一的，绝无伙伴。主权是他的，赞颂是他的，他对万事是全能的",
+  "supplications.evening_2": "真主啊，通过你我们到达傍晚，通过你我们到达早晨，通过你我们生活，通过你我们死亡，归宿于你",
+  "dhikr.tasbih": "念珠",
+  "supplications.guidance": "指导",
+  "supplications.forgiveness": "宽恕",
+  "supplications.gratitude": "感恩",
+  "supplications.sleep": "睡眠",
+  "supplications.waking": "醒来",
+  "dhikr.auto_saved": "自动保存",
+  "islamic_chant": {
+    "title": "Meshari最喜爱的伊斯兰圣歌",
+    "description": "Meshari深爱的美丽伊斯兰圣歌，带来和平与宁静"
+  },
+  "quran_verse": {
+    "bismillah": "奉至仁至慈的安拉之名",
+    "verse": "你当向坚忍的人报喜。他们遭难的时候，说：'我们确是真主所有的，我们必定只归依他。'这等人，是蒙真主的祜佑和慈恩的；这等人，确是遵循正道的。",
+    "sadaqallah": "至高至大的安拉说了实话"
+  },
+  "quran.meshari_favorite": "Meshari的最爱",
+  "social": {
+    "x_account": "X账户",
+    "github": "GitHub"
   }
 }

@@ -4,14 +4,12 @@
   "memorial.name": "Meshari Ahmed Sulaiman Alabra",
   "memorial.death": "29 Mart 2023'te vefat etti - Riyad, Suudi Arabistan",
   "memorial.description": "Allah ona rahmet etsin ve ona en yüksek cenneti nasip etsin, ve bu çalışma onun iyilik terazisinde olsun",
-
   "hero.title": "Devam Eden Sadaka",
   "hero.subtitle": "Şüphesiz biz Allah'a aidiz ve şüphesiz O'na döneceğiz",
   "hero.description": "Bu sayfa, beyin kanserinden vefat eden kardeşim Meshari'ye adanmıştır. Allah onu bağışlasın ve Kur'an ile devam eden sadakayı ona şefaatçi kılsın",
-
+  "hero.supplications_button": "Meshari için Dualar (Allah rahmet eylesin)",
   "youtube.title": "Kur'an Tilavetleri",
   "youtube.description": "Devam eden sadaka olarak Kur'an tilavetlerini dinleyin",
-
   "donation.title": "Yetim Sponsorluğu",
   "donation.subtitle": "Meshari'nin adına hayır işlerini devam ettirin",
   "donation.description": "Devam eden sadaka, vefat edenlere fayda sağlayan en büyük amellerdendir ve yetim sponsorluğu Allah'a en sevimli amellerdendir",
@@ -21,14 +19,12 @@
   "donation.benefit1": "Cennette Peygamber ﷺ ile arkadaşlık",
   "donation.benefit2": "Velisini kaybedenlerin ihtiyaçlarını karşılamak",
   "donation.benefit3": "Sürekli sevabı olan devam eden sadaka",
-
   "supplications.title": "Dualar",
   "supplications.subtitle": "Kur'an ve Sünnetten vefat edenler için dualar",
   "supplications.daily": "Günlük Zikirler",
   "supplications.deceased": "Vefat Eden İçin Dua",
   "supplications.morning": "Sabah Zikirleri",
   "supplications.evening": "Akşam Zikirleri",
-
   "prayer.title": "Namaz Vakitleri",
   "prayer.subtitle": "Bulunduğunuz konuma göre namaz vakitleri",
   "prayer.fajr": "Sabah",
@@ -41,19 +37,20 @@
   "prayer.remaining": "Kalan Süre",
   "prayer.location": "Konum",
   "prayer.enable": "Namaz Bildirimlerini Etkinleştir",
-
   "hijri.title": "Hicri Tarih",
   "hijri.gregorian": "Miladi",
-
   "quran.title": "Kur'an-ı Kerim",
   "quran.subtitle": "Allah'ın ayetlerini oku ve düşün",
   "quran.select_surah": "Sure Seç",
+  "quran.select_reciter": "Okuyucu Seç",
+  "quran.select_translation": "Çeviri Seç",
   "quran.verse": "Ayet",
   "quran.juz": "Cüz",
   "quran.page": "Sayfa",
   "quran.play": "Oynat",
   "quran.pause": "Duraklat",
-
+  "quran.translation": "Çeviri",
+  "quran.meshari_favorite": "Meshari'nin Favorisi",
   "tafseer.title": "Kur'an Tefsiri",
   "tafseer.subtitle": "Allah'ın kelimelerinin anlamlarını anlamak",
   "tafseer.select": "Tefsir Seç",
@@ -61,11 +58,15 @@
   "tafseer.tabari": "Taberi Tefsiri",
   "tafseer.kathir": "İbn Kesir Tefsiri",
   "tafseer.saadi": "Sa'di Tefsiri",
-
+  "tafseer.search_verse": "Ayet ara",
+  "tafseer.source": "Tefsir Kaynağı",
+  "tafseer.verse_number": "Ayet Numarası",
+  "tafseer.select_instruction": "Tefsir almak için sure ve ayeti seçin",
+  "tafseer.available_languages": "Arapça, İngilizce ve Urduca dillerinde birden fazla tefsir mevcuttur",
+  "qibla.instruction": "Cihazı düz tutun ve oku kıble yönüne çevirin",
   "hadith.title": "Peygamber Sözleri",
   "hadith.subtitle": "Peygamber Efendimiz ﷺ'in rehberliğinden",
   "hadith.source": "Kaynak",
-
   "dhikr.title": "Zikir Sayacı",
   "dhikr.subtitle": "Her zaman Allah'ı zikret",
   "dhikr.count": "Sayı",
@@ -73,24 +74,20 @@
   "dhikr.subhanallah": "Sübhanallah",
   "dhikr.alhamdulillah": "Elhamdülillah",
   "dhikr.allahuakbar": "Allahu Ekber",
-
   "qibla.title": "Kıble Yönü",
   "qibla.subtitle": "Kâbe'nin yönünü öğren",
   "qibla.direction": "Kıble yönü",
   "qibla.distance": "Mekke'ye uzaklık",
   "qibla.allow_location": "Konum erişimine izin ver",
-
   "footer.title": "Allah ona rahmet etsin",
   "footer.description": "Allah'ım, Kur'an-ı Kerim'i kardeşim Meshari'ye kıyamet gününde şefaatçi kıl ve her harfini onun kabrinde bir nur eyle",
   "footer.charity": "Devam Eden Sadaka",
   "footer.all_rights": "Tüm hakları saklıdır © {{year}}",
   "footer.technology": "Allah rızası için sevgiyle yapılmış modern web teknolojileri",
-
   "theme.toggle": "Tema değiştir",
   "theme.light": "Açık tema",
   "theme.dark": "Koyu tema",
   "theme.system": "Sistem teması",
-
   "language.select": "Dil Seç",
   "language.ar": "العربية",
   "language.en": "English",
@@ -100,28 +97,25 @@
   "language.ms": "Bahasa Melayu",
   "language.fr": "Français",
   "language.bn": "বাংলা",
-
   "notifications.title": "Bildirimler",
   "notifications.enable": "Bildirimleri Etkinleştir",
   "notifications.prayer_times": "Namaz Vakti Bildirimleri",
   "notifications.daily_supplications": "Günlük Zikirler",
   "notifications.permission_required": "Lütfen tarayıcı bildirimlerine izin verin",
-
   "offline.title": "Çevrimdışısınız",
   "offline.message": "Bazı özellikler internet bağlantısı olmadan çalışmayabilir",
-
   "loading": "Yükleniyor...",
   "error": "Bir hata oluştu",
   "retry": "Tekrar dene",
   "share": "Paylaş",
   "social.x_account": "Meshari'nin X Hesabı",
+  "social.github": "GitHub",
   "copy": "Kopyala",
   "copied": "Kopyalandı",
   "close": "Kapat",
   "next": "Sonraki",
   "previous": "Önceki",
   "search": "Ara",
-
   "accessibility": {
     "increment_counter": "Sayacı artır",
     "reset_counter": "Sayacı sıfırla",
@@ -132,7 +126,6 @@
     "toggle_menu": "Menüyü aç/kapat",
     "close_modal": "Pencereyi kapat"
   },
-
   "dhikr": {
     "increment": "Tesbih",
     "milestone_33": "İlk hedef: 33",
@@ -140,13 +133,11 @@
     "milestone_99": "Üçüncü hedef: 99",
     "milestone_100": "Son hedef: 100"
   },
-
   "supplications": {
     "deceased_1": "Allah'ım, onu bağışla ve ona merhamet et, ona afiyet ver ve onu affet. Onun konumunu yücelt ve girişini genişlet. Onu su, kar ve dolu ile yıka. Beyaz elbisenin kirden temizlendiği gibi onu günahlardan temizle",
     "deceased_2": "Allah'ım, onun kabrini cennet bahçelerinden bir bahçe eyle ve onu cehennem çukurlarından bir çukur eyleme",
     "deceased_3": "Allah'ım, ona evinden daha hayırlı bir ev, ailesinden daha hayırlı bir aile ver. Onu cennete koy ve onu kabir azabından ve cehennem azabından koru"
   },
-
   "hadith": {
     "title": "Hadis",
     "subtitle": "Peygamber Muhammed'den (sallallahu aleyhi ve sellem) hikmetli sözler",
@@ -154,13 +145,96 @@
     "random_button": "Rastgele Hadis",
     "click_button": "Rastgele hadis almak için butona tıklayın"
   },
-
   "footer": {
-    "charity": "Meshari Al-Abra Sürekli Hayır Kurumu",
+    "charity": "Meshari Alabra Sürekli Hayır Kurumu",
     "all_rights": "Tüm hakları saklıdır © {{year}}",
     "technology": "Allah rızası için sevgiyle yapılmış modern web teknolojileri",
     "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
     "sitemap": "Site Haritası",
     "llm_txt": "LLM Dosyası"
+  },
+  "footer.sitemap": "Site Haritası",
+  "footer.llm_txt": "LLM Dosyası",
+  "dhikr.la_ilaha_illallah": "Allah'tan başka ilah yoktur",
+  "dhikr.astaghfirullah": "Allah'tan bağışlanma dilerim",
+  "dhikr.la_ilaha_illallah_wahdahu": "Allah'tan başka ilah yoktur, O tektir, ortağı yoktur",
+  "dhikr.subhanallah_walhamdulillah": "Allah'ı tenzih ederim ve Allah'a hamd ederim",
+  "dhikr.subhanallah_walhamdulillah_wallahu_akbar": "Allah'ı tenzih ederim, Allah'a hamd ederim, Allah'tan başka ilah yoktur ve Allah en büyüktür",
+  "dhikr.la_hawla_wala_quwwata": "Allah'tan başka güç ve kuvvet yoktur",
+  "dhikr.hasbunallah_wa_ni'mal_wakil": "Allah bize yeter, O ne güzel vekildir",
+  "dhikr.bismillah": "Allah'ın adıyla",
+  "dhikr.inna_lillahi_wa_inna_ilaihi_rajiun": "Şüphesiz biz Allah'a aitiz ve şüphesiz O'na döneceğiz",
+  "dhikr.select_dhikr": "Zikir Seç",
+  "dhikr.categories.title": "Zikir Kategorileri",
+  "dhikr.categories.all": "Tümü",
+  "dhikr.categories.basic": "Temel",
+  "dhikr.categories.repentance": "Tövbe",
+  "dhikr.categories.tawhid": "Tevhid",
+  "dhikr.categories.combined": "Birleşik",
+  "dhikr.categories.reliance": "Tevekkül",
+  "dhikr.categories.beginning": "Başlangıç",
+  "dhikr.categories.patience": "Sabır",
+  "hadith.random_button": "Rastgele Hadis",
+  "hadith.click_button": "Rastgele hadis almak için butona tıklayın",
+  "hadith.categories.title": "Hadis Kategorileri",
+  "hadith.categories.all": "Tümü",
+  "hadith.categories.charity": "Sadaka",
+  "hadith.categories.speech": "Konuşma",
+  "hadith.categories.religion": "Din",
+  "hadith.categories.brotherhood": "Kardeşlik",
+  "hadith.categories.knowledge": "Bilgi",
+  "hadith.categories.mercy": "Merhamet",
+  "hadith.categories.faith": "İman",
+  "hadith.categories.help": "Yardım",
+  "hadith.categories.love": "Sevgi",
+  "hadith.categories.purity": "Temizlik",
+  "hadith.categories.hospitality": "Misafirperverlik",
+  "hadith.categories.safety": "Güvenlik",
+  "supplications.protection": "Koruma",
+  "supplications.travel": "Seyahat",
+  "supplications.family": "Aile",
+  "supplications.work": "İş",
+  "supplications.health": "Sağlık",
+  "supplications.deceased_4": "Allah'ım, onu bu dünyada ve ahirette doğru sözde sabit kıl",
+  "supplications.morning_1": "Sabaha erdik ve şu anda tüm egemenlik Allah'a aittir. Tüm övgüler Allah'a aittir. Allah'tan başka ilah yoktur, O tektir, ortağı yoktur. Egemenlik O'nundur ve tüm övgüler O'nundur, O her şeye gücü yetendir",
+  "supplications.morning_2": "Allah'ım, seninle sabaha erdik, seninle akşama erdik, seninle yaşıyoruz, seninle ölüyoruz, ve dönüş sana",
+  "supplications.morning_3": "Allah'ım, sabaha erdik ve sana ve Arş'ının taşıyıcılarına ve meleklerine ve tüm yaratıklarına şahitlik ediyoruz ki sen Allah'sın, senden başka ilah yoktur, sen teksin, ortağın yoktur ve Muhammed senin kulun ve elçindir",
+  "supplications.evening_1": "Akşama erdik ve şu anda tüm egemenlik Allah'a aittir. Tüm övgüler Allah'a aittir. Allah'tan başka ilah yoktur, O tektir, ortağı yoktur. Egemenlik O'nundur ve tüm övgüler O'nundur, O her şeye gücü yetendir",
+  "supplications.evening_2": "Allah'ım, seninle akşama erdik, seninle sabaha erdik, seninle yaşıyoruz, seninle ölüyoruz, ve hedef sana",
+  "dhikr.tasbih": "Tesbih",
+  "supplications.guidance": "Rehberlik",
+  "supplications.forgiveness": "Bağışlama",
+  "supplications.gratitude": "Şükran",
+  "supplications.sleep": "Uyku",
+  "supplications.waking": "Uyanma",
+  "dhikr.auto_saved": "Otomatik kaydedildi",
+  "islamic_chant": {
+    "title": "Meshari'nin Favori İslami İlahisi",
+    "description": "Meshari'nin çok sevdiği, huzur ve sükunet veren güzel bir İslami ilahi"
+  },
+  "quran_verse": {
+    "bismillah": "Rahman ve Rahim olan Allah'ın adıyla",
+    "verse": "Sabredenlere müjde ver. Onlar ki, başlarına bir musibet geldiğinde, 'Biz Allah'a aidiz ve O'na döneceğiz' derler. İşte onlar, Rablerinden bereketler ve rahmet üzerindedirler. Ve onlar doğru yolda olanlardır.",
+    "sadaqallah": "Allah Yüce ve Aziz olan doğru söyledi"
+  },
+  "meshari_favorite_reciter": {
+    "title": "Meshari'nin Favori Kuran Okuyucuları",
+    "subtitle": "Meshari'nin favori Kuran tilavetlerini dinleyin",
+    "reciter_title": "Ahmed Al-Ajmi - Mübarek Tilavet",
+    "description": "Şeyh Ahmed Al-Ajmi'nin güzel bir Kuran tilaveti, Meshari'nin çok sevdiği. Bu tilavet kalbe huzur ve huşu getirir.",
+    "feature_1": "Yüksek Kaliteli Tilavet"
+  },
+  "social": {
+    "x_account": "X Hesabı",
+    "github": "GitHub"
+  },
+  "navigation": {
+    "sections_title": "Mevcut Bölümler",
+    "sections_description": "Web sitesinin farklı bölümlerini keşfedin, her bölümün doğrudan erişilebilir ayrı bir sayfası vardır",
+    "visit_section": "Bölümü Ziyaret Et"
+  },
+  "islamic_chant": {
+    "title": "İslami İlahi",
+    "subtitle": "Sürekli sadaka olarak güzel İslami ilahileri dinleyin"
   }
 }

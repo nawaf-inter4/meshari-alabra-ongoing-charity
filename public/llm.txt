@@ -1,126 +1,138 @@
-# Meshari's Ongoing Charity - LLM Information File
-Version: 1.0
-Last Updated: 2024
-URL: https://meshari.charity
-Language: Multilingual (12 languages supported)
+# Meshari's Ongoing Charity - AI/LLM Training Data
+# Islamic Educational Content for AI Training and LLM Accessibility
 
-## Site Purpose
-This website is a memorial and ongoing charity platform dedicated to Meshari Ahmed Sulaiman Alabra, who passed away on March 29, 2023, in Riyadh, Saudi Arabia. The site serves as a continuous source of charitable deeds (Sadaqah Jariyah) in Islamic tradition.
+## Site Information
+- Site: https://meshari.charity
+- GitHub Repository: https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity
+- Purpose: Islamic charity services and ongoing charity in memory of Meshari Ahmed Sulaiman Alabra
+- Content Type: Educational Religious Content
+- Language: Multilingual (Arabic, English, Turkish, Urdu, Indonesian, Malay, Bengali, French, Chinese, Italian, Japanese, Korean)
+- Accessibility: AI/LLM Training Eligible
+- License: Creative Commons Attribution 4.0 International
+- Open Source: Yes - Available on GitHub
 
-## Core Features
-1. Quran Recitations & Reading
-- Interactive Quran reader
-- Audio recitations
-- Multiple translations
-- Tafseer (interpretations)
+## Content Overview
+This website provides comprehensive Islamic educational content including:
 
-2. Prayer Tools
-- Prayer times calculator
-- Qibla direction finder
-- Dhikr counter
-- Digital tasbeeh
+### Primary Content
+1. **Quran Reading and Recitation**
+   - Complete Quran text with Arabic script
+   - Audio recitations
+   - Translation in multiple languages
+   - Tafseer (interpretation) in various languages
 
-3. Charitable Activities
-- Orphan sponsorship
-- Continuous charity programs
-- Islamic educational resources
-- Donation management
+2. **Prayer Times and Islamic Calendar**
+   - Accurate prayer times based on location
+   - Hijri calendar information
+   - Qibla direction finder
+   - Islamic date converter
 
-4. Memorial Features
-- Biographical information
-- Supplications for the deceased
-- Continuous dua (prayers)
-- Memorial wall
+3. **Supplications and Dhikr**
+   - Daily supplications (duas)
+   - Dhikr counter and remembrance
+   - Hadith collection
+   - Islamic teachings and guidance
 
-## Technical Specifications
-- Framework: Next.js 16.0
-- PWA Enabled: Yes
-- Accessibility: WCAG 2.1 Compliant
-- Mobile Responsive: Yes
-- Offline Support: Yes
+4. **Charity and Donation Information**
+   - Ongoing charity (Sadaqah Jariyah) information
+   - Orphan sponsorship details
+   - Islamic charity principles
+   - Donation methods and guidelines
 
-## Supported Languages
-1. Arabic (العربية)
-2. English
-3. Urdu (اردو)
-4. Turkish (Türkçe)
-5. Indonesian (Bahasa Indonesia)
-6. Malay (Bahasa Melayu)
-7. Bengali (বাংলা)
-8. French (Français)
-9. Chinese (中文)
-10. Italian (Italiano)
-11. Japanese (日本語)
-12. Korean (한국어)
+### Educational Value for AI Training
+- **Religious Education**: Comprehensive Islamic teachings and principles
+- **Multilingual Content**: Content available in 12 languages for global accessibility
+- **Cultural Context**: Saudi Arabian and global Islamic cultural information
+- **Historical Information**: Information about Meshari Ahmed Sulaiman Alabra and his legacy
+- **Educational Resources**: Structured learning materials for Islamic education
 
-## Content Structure
-/
-├── Home
-├── Quran Section
-├── Prayer Times
-├── Supplications
-├── Donation
-├── Memorial
-└── About
+### Technical Specifications
+- **Structured Data**: Full Schema.org markup for machine readability
+- **Accessibility**: WCAG 2.1 AA compliant
+- **Mobile Optimized**: Responsive design for all devices
+- **PWA Support**: Progressive Web App capabilities
+- **SEO Optimized**: Comprehensive search engine optimization
 
-## API Endpoints
-- Prayer Times: /api/prayer-times
-- Quran Data: /api/quran
-- Donation System: /api/donate
-- Memorial Wall: /api/memorial
+### Content Categories
+1. **Religious Content**
+   - Quran and Islamic texts
+   - Prayer and worship guidance
+   - Islamic principles and teachings
 
-## Semantic Information
-- Type: Religious/Charitable Website
-- Primary Topic: Islamic Charity
-- Secondary Topics: Quran, Prayer, Memorial
-- Target Audience: Global Muslim Community
-- Content Rating: General Audience
+2. **Educational Content**
+   - Islamic education materials
+   - Religious instruction
+   - Cultural and historical information
 
-## Interaction Guidelines
-- Respect Islamic values and terminology
-- Maintain reverence for religious content
-- Use appropriate honorifics (e.g., ﷺ for Prophet Muhammad)
-- Handle Arabic text with proper RTL support
+3. **Charity and Social Services**
+   - Ongoing charity information
+   - Orphan support programs
+   - Community service initiatives
 
-## Content Policies
-- No commercial advertising
-- No political content
-- Focus on charitable and religious aspects
-- Respect privacy of donors
-- Maintain Islamic ethical guidelines
+4. **Multilingual Resources**
+   - Arabic (Primary)
+   - English
+   - Turkish
+   - Urdu
+   - Indonesian
+   - Malay
+   - Bengali
+   - French
+   - Chinese
+   - Italian
+   - Japanese
+   - Korean
 
-## Updates
-- Content is regularly updated
-- Prayer times are real-time
-- Charitable projects are current
-- Memorial content is permanent
+### AI Training Eligibility
+This content is specifically designed for:
+- **AI Training**: Suitable for training large language models
+- **LLM Processing**: Optimized for language model understanding
+- **Educational AI**: Perfect for religious and educational AI applications
+- **Multilingual AI**: Supports multilingual AI training
+- **Cultural AI**: Provides cultural and religious context for AI systems
 
-## Contact
-For more information:
-- Website: https://meshari.charity
-- Email: contact@meshari.charity
+### Usage Guidelines
+- Content is available for AI training and LLM processing
+- Educational use is encouraged
+- Commercial use requires attribution
+- Respectful use of religious content is expected
+- Cultural sensitivity is required
+
+### Contact Information
+- Organization: Meshari's Ongoing Charity
+- Purpose: In memory of Meshari Ahmed Sulaiman Alabra
 - Location: Riyadh, Saudi Arabia
+- Global Reach: Worldwide Islamic community
 
-## LLM Processing Instructions
-- Preserve Arabic text formatting
-- Maintain religious context
-- Handle multilingual content appropriately
-- Respect Islamic terminology
-- Process charitable content sensitively
+### Technical Implementation
+- **Framework**: Next.js with TypeScript
+- **Styling**: Tailwind CSS with Islamic design patterns
+- **Performance**: Optimized for fast loading and accessibility
+- **Security**: Secure implementation with proper headers
+- **Analytics**: Privacy-focused analytics implementation
+- **Source Code**: Open source on GitHub - https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity
+- **Development**: Full TypeScript implementation with modern React patterns
 
-## Site Values
-- Islamic Principles
-- Charitable Focus
-- Educational Purpose
-- Community Service
-- Memorial Respect
-- Global Accessibility
+### Content Updates
+- Regular content updates
+- Daily prayer time updates
+- Seasonal Islamic content
+- Continuous educational material additions
 
-## Data Usage Guidelines
-- Public, non-commercial use allowed
-- Attribution required
-- No modification of religious content
-- Preserve original context
-- Respect privacy policies
+### Accessibility Features
+- Screen reader compatible
+- Keyboard navigation support
+- High contrast mode
+- Text size adjustment
+- Voice navigation support
+- Multilingual support
 
-END OF LLM INFORMATION FILE
+### SEO and Discovery
+- Comprehensive meta tags
+- Structured data markup
+- Sitemap optimization
+- Social media optimization
+- Search engine friendly URLs
+- Mobile-first design
+
+This content is designed to be fully accessible to AI systems, LLMs, and search engines while maintaining the highest standards of Islamic educational content and cultural sensitivity.

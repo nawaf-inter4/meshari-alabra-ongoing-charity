@@ -1,0 +1,35 @@
+
+<svg width="96" height="96" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F5F5DC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F0F0E6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="96" height="96" fill="url(#bg)" rx="12"/>
+  
+  <!-- Main Content -->
+  <g transform="translate(48, 48)">
+    <!-- Meshari Text (English) -->
+    <text x="0" y="-11.294117647058824" text-anchor="middle" font-family="Arial, sans-serif" font-size="8.971962616822431" font-weight="bold" fill="#1a365d">
+      Meshari
+    </text>
+    
+    <!-- Meshari Text (Arabic) -->
+    <text x="0" y="1.875" text-anchor="middle" font-family="Arial, sans-serif" font-size="9.795918367346937" font-weight="bold" fill="#1a365d" direction="rtl">
+      مشارى
+    </text>
+    
+    <!-- Continuous Charity (English) -->
+    <text x="0" y="5.647058823529412" text-anchor="middle" font-family="Arial, sans-serif" font-size="3.75" font-weight="normal" fill="#2d3748">
+      continuous charity
+    </text>
+    
+    <!-- Continuous Charity (Arabic) -->
+    <text x="0" y="11.294117647058824" text-anchor="middle" font-family="Arial, sans-serif" font-size="4.120171673819742" font-weight="normal" fill="#2d3748" direction="rtl">
+      صدقة جارية
+    </text>
+  </g>
+</svg>
