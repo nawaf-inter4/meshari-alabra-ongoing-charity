@@ -4,14 +4,12 @@
   "memorial.name": "Meshari Ahmed Sulaiman Alabra",
   "memorial.death": "Passed away on March 29, 2023 - Riyadh, Saudi Arabia",
   "memorial.description": "May Allah have mercy on him and grant him the highest Paradise, and may this work be in his scale of good deeds",
-
   "hero.title": "Ongoing Charity",
   "hero.subtitle": "Indeed we belong to Allah, and indeed to Him we will return",
   "hero.description": "This page is dedicated to my brother Meshari, who passed away from brain cancer. May Allah forgive him and make the Quran and ongoing charity an intercessor for him",
-
+  "hero.supplications_button": "Supplications for Meshari (May Allah have mercy on him)",
   "youtube.title": "Quran Recitations",
   "youtube.description": "Listen to Quran recitations as ongoing charity",
-
   "donation.title": "Orphan Sponsorship",
   "donation.subtitle": "Continue the good deeds in Meshari's name",
   "donation.description": "Ongoing charity is one of the greatest deeds that benefit the deceased, and orphan sponsorship is one of the most beloved deeds to Allah",
@@ -21,14 +19,12 @@
   "donation.benefit1": "Companionship with the Prophet ﷺ in Paradise",
   "donation.benefit2": "Fulfilling the needs of those who lost their guardian",
   "donation.benefit3": "Ongoing charity with continuous reward",
-
   "supplications.title": "Supplications",
   "supplications.subtitle": "Prayers for the deceased from Quran and Sunnah",
   "supplications.daily": "Daily Remembrance",
   "supplications.deceased": "Prayer for the Deceased",
   "supplications.morning": "Morning Remembrance",
   "supplications.evening": "Evening Remembrance",
-
   "prayer.title": "Prayer Times",
   "prayer.subtitle": "Prayer times based on your location",
   "prayer.fajr": "Fajr",
@@ -41,19 +37,20 @@
   "prayer.remaining": "Remaining",
   "prayer.location": "Location",
   "prayer.enable": "Enable Prayer Notifications",
-
   "hijri.title": "Hijri Date",
   "hijri.gregorian": "Gregorian",
-
   "quran.title": "The Holy Quran",
   "quran.subtitle": "Read and reflect upon Allah's verses",
   "quran.select_surah": "Select Surah",
+  "quran.select_reciter": "Select Reciter",
+  "quran.select_translation": "Select Translation",
   "quran.verse": "Verse",
   "quran.juz": "Juz",
   "quran.page": "Page",
   "quran.play": "Play",
   "quran.pause": "Pause",
-
+  "quran.translation": "Translation",
+  "quran.meshari_favorite": "Meshari's Favorite",
   "tafseer.title": "Quran Tafseer",
   "tafseer.subtitle": "Understanding the meanings of Allah's words",
   "tafseer.select": "Select Tafseer",
@@ -61,11 +58,15 @@
   "tafseer.tabari": "Tafseer At-Tabari",
   "tafseer.kathir": "Tafseer Ibn Kathir",
   "tafseer.saadi": "Tafseer As-Sa'di",
-
+  "tafseer.search_verse": "Search for a verse",
+  "tafseer.source": "Tafseer Source",
+  "tafseer.verse_number": "Verse Number",
+  "tafseer.select_instruction": "Choose the surah and verse to get the tafseer",
+  "tafseer.available_languages": "Multiple tafseer available in Arabic, English and Urdu languages",
+  "qibla.instruction": "Hold the device flat and point the arrow towards the qibla",
   "hadith.title": "Prophetic Traditions",
   "hadith.subtitle": "From the guidance of Prophet Muhammad ﷺ",
   "hadith.source": "Source",
-
   "dhikr.title": "Dhikr Counter",
   "dhikr.subtitle": "Glorify Allah at all times",
   "dhikr.count": "Count",
@@ -73,49 +74,42 @@
   "dhikr.subhanallah": "Glory be to Allah",
   "dhikr.alhamdulillah": "Praise be to Allah",
   "dhikr.allahuakbar": "Allah is the Greatest",
-
   "qibla.title": "Qibla Direction",
   "qibla.subtitle": "Know the direction of the Holy Kaaba",
   "qibla.direction": "Qibla is towards",
   "qibla.distance": "Distance to Makkah",
   "qibla.allow_location": "Allow location access",
-
   "footer.title": "May Allah have mercy on him",
   "footer.description": "O Allah, make the Holy Quran an intercessor for my brother Meshari on the Day of Judgment, and make every letter of it a light in his grave",
   "footer.charity": "Ongoing Charity",
   "footer.all_rights": "All rights reserved © {{year}}",
   "footer.technology": "Built with ❤️ for the sake of Allah using modern web technologies",
-
   "theme.toggle": "Toggle theme",
   "theme.light": "Light mode",
   "theme.dark": "Dark mode",
   "theme.system": "System theme",
-
   "language.select": "Select Language",
   "language.ar": "العربية",
   "language.en": "English",
-
   "notifications.title": "Notifications",
   "notifications.enable": "Enable Notifications",
   "notifications.prayer_times": "Prayer Time Alerts",
   "notifications.daily_supplications": "Daily Remembrance",
   "notifications.permission_required": "Please allow browser notifications",
-
   "offline.title": "You are offline",
   "offline.message": "Some features may not work without internet connection",
-
   "loading": "Loading...",
   "error": "An error occurred",
   "retry": "Retry",
   "share": "Share",
   "social.x_account": "Meshari's X",
+  "social.github": "GitHub",
   "copy": "Copy",
   "copied": "Copied",
   "close": "Close",
   "next": "Next",
   "previous": "Previous",
   "search": "Search",
-
   "accessibility": {
     "increment_counter": "Increment counter",
     "reset_counter": "Reset counter",
@@ -126,35 +120,147 @@
     "toggle_menu": "Toggle menu",
     "close_modal": "Close modal"
   },
-
   "dhikr": {
     "increment": "Tasbih",
     "milestone_33": "First milestone: 33",
     "milestone_66": "Second milestone: 66",
     "milestone_99": "Third milestone: 99",
+    "select_dhikr": "Select Dhikr",
+    "categories": {
+      "title": "Dhikr Categories",
+      "all": "All",
+      "charity": "Charity",
+      "speech": "Speech",
+      "religion": "Religion",
+      "brotherhood": "Brotherhood",
+      "knowledge": "Knowledge",
+      "mercy": "Mercy",
+      "faith": "Faith",
+      "help": "Help",
+      "love": "Love",
+      "purity": "Purity",
+      "hospitality": "Hospitality",
+      "safety": "Safety"
+    },
     "milestone_100": "Final milestone: 100"
   },
-
   "supplications": {
     "deceased_1": "O Allah, forgive him and have mercy upon him and give him strength and pardon him. Be generous to him and cause his entrance to be wide and wash him with water and snow and hail. Cleanse him of his transgressions as white cloth is cleansed of stains",
     "deceased_2": "O Allah, make his grave a garden from the gardens of Paradise, and do not make it a pit from the pits of Hell",
     "deceased_3": "O Allah, give him a home better than his home, and a family better than his family, and admit him to Paradise and protect him from the torment of the grave and the torment of the Fire"
   },
-
+  "quran_stories": {
+    "title": "Quran Stories",
+    "description": "Discover the beautiful stories behind each surah of the Holy Quran",
+    "featured_story": "Featured Story",
+    "pages": "pages",
+    "reading_time": "min",
+    "preview": "Preview",
+    "read": "Read",
+    "download": "Download"
+  },
+  "islamic_chant": {
+    "title": "Meshari's Favorite Islamic Chant",
+    "subtitle": "A beautiful Islamic chant that Meshari loved dearly, bringing peace and tranquility"
+  },
   "hadith": {
     "title": "Hadith",
     "subtitle": "Words of wisdom from the Prophet Muhammad (peace be upon him)",
     "source": "Source",
     "random_button": "Random Hadith",
-    "click_button": "Click the button to get a random hadith"
+    "click_button": "Click the button to get a random hadith",
+    "categories": {
+      "title": "Hadith Categories",
+      "all": "All",
+      "charity": "Charity",
+      "speech": "Speech",
+      "religion": "Religion",
+      "brotherhood": "Brotherhood",
+      "knowledge": "Knowledge",
+      "mercy": "Mercy",
+      "faith": "Faith",
+      "help": "Help",
+      "love": "Love",
+      "purity": "Purity",
+      "hospitality": "Hospitality",
+      "safety": "Safety"
+    }
   },
-
   "footer": {
-    "charity": "Meshari Al-Abra Ongoing Charity",
-    "all_rights": "All rights reserved © {{year}}",
-    "technology": "Built with ❤️ for the sake of Allah using modern web technologies",
+    "charity": "Meshari Alabra Ongoing Charity",
+    "all_rights": "All rights reserved ©",
+    "technology": "Developed with ❤️ for the sake of Allah using modern web technologies",
     "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
     "sitemap": "Sitemap",
     "llm_txt": "LLM.txt"
+  },
+  "footer.sitemap": "Sitemap",
+  "footer.llm_txt": "LLM.txt",
+  "supplications.protection": "Protection",
+  "supplications.travel": "Travel",
+  "supplications.family": "Family",
+  "supplications.work": "Work",
+  "supplications.health": "Health",
+  "supplications.deceased_4": "O Allah, make him firm on the word of truth in this life and in the Hereafter",
+  "supplications.morning_1": "We have reached the morning and at this very time all sovereignty belongs to Allah. All praise is for Allah. There is no deity except Allah, alone, without a partner. To Him belongs the dominion and to Him belongs all praise, and He has power over everything",
+  "supplications.morning_2": "O Allah, by You we reach the morning, by You we reach the evening, by You we live, by You we die, and to You is the return",
+  "supplications.morning_3": "O Allah, we have reached the morning and we bear witness to You and to the bearers of Your Throne and Your angels and all Your creation that You are Allah, there is no deity except You alone, You have no partner, and that Muhammad is Your servant and Your Messenger",
+  "supplications.evening_1": "We have reached the evening and at this very time all sovereignty belongs to Allah. All praise is for Allah. There is no deity except Allah, alone, without a partner. To Him belongs the dominion and to Him belongs all praise, and He has power over everything",
+  "supplications.evening_2": "O Allah, by You we reach the evening, by You we reach the morning, by You we live, by You we die, and to You is the destination",
+  "dhikr.tasbih": "Tasbih",
+  "supplications.guidance": "Guidance",
+  "supplications.forgiveness": "Forgiveness",
+  "supplications.gratitude": "Gratitude",
+  "supplications.sleep": "Sleep",
+  "supplications.waking": "Waking",
+  "dhikr.auto_saved": "Auto-saved",
+  "navigation": {
+    "sections_title": "Available Sections",
+    "sections_description": "Browse the different sections of the website, each section has its own page that can be accessed directly",
+    "visit_section": "Visit Section"
+  },
+  "qibla": {
+    "title": "Qibla Direction",
+    "subtitle": "Find the direction of prayer"
+  },
+  "youtube": {
+    "title": "YouTube Channel",
+    "subtitle": "Islamic content"
+  },
+  "quran_verse": {
+    "bismillah": "In the name of Allah, the Most Gracious, the Most Merciful",
+    "verse": "And give good tidings to the patient, who, when disaster strikes them, say, 'Indeed we belong to Allah, and indeed to Him we will return.' Those are the ones upon whom are blessings from their Lord and mercy. And it is those who are the [rightly] guided.",
+    "sadaqallah": "Allah Almighty has spoken the truth"
+  },
+  "meshari_favorite_reciter": {
+    "title": "Meshari's Favorite Quran Reciters",
+    "subtitle": "Listen to Meshari's favorite Quran recitations",
+    "reciter_title": "Ahmad Al-Ajmi - Blessed Recitation",
+    "description": "A beautiful Quranic recitation by Sheikh Ahmad Al-Ajmi, which Meshari loved to listen to very much. This recitation brings tranquility and devotion to the heart.",
+    "feature_1": "High Quality Recitation",
+    "feature_2": "Clear and Distinct Voice",
+    "feature_3": "Meshari's Favorite",
+    "feature_4": "Blessed Recitation",
+    "play": "Play",
+    "pause": "Pause",
+    "mute": "Mute",
+    "unmute": "Unmute"
+  },
+  "social": {
+    "x_account": "X Account",
+    "github": "GitHub"
+  },
+  "navigation": {
+    "sections_title": "Available Sections",
+    "sections_description": "Browse different sections of the website, each section has a separate page that can be accessed directly",
+    "visit_section": "Visit Section"
+  },
+  "meshari_favorite_reciter": {
+    "title": "Meshari's Favorite Reciter",
+    "subtitle": "Listen to the Holy Quran with Meshari's favorite reciter (May Allah have mercy on him)"
+  },
+  "islamic_chant": {
+    "title": "Islamic Chant",
+    "subtitle": "Listen to beautiful Islamic chants as ongoing charity"
   }
 }

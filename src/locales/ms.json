@@ -4,14 +4,13 @@
   "memorial.name": "Meshari Ahmed Sulaiman Alabra",
   "memorial.death": "Meninggal dunia pada 29 Mac 2023 - Riyadh, Arab Saudi",
   "memorial.description": "Semoga Allah merahmatinya dan mengurniakan kepadanya Syurga yang tertinggi, dan semoga amalan ini menjadi timbangan kebaikannya",
-
   "hero.title": "Amal Jariah",
   "hero.subtitle": "Sesungguhnya kita adalah milik Allah, dan kepada-Nya kita akan kembali",
   "hero.description": "Laman ini didedikasikan untuk saudara saya Meshari, yang meninggal dunia kerana kanser otak. Semoga Allah mengampuninya dan menjadikan Al-Quran dan amal jariah sebagai pemberi syafaat baginya",
-
+  "hero.supplications_button": "Doa untuk Meshari (Semoga Allah merahmatinya)",
   "youtube.title": "Bacaan Al-Quran",
   "youtube.description": "Dengar bacaan Al-Quran sebagai amal jariah",
-
+  "donation.header_button": "Derma",
   "donation.title": "Penajaan Anak Yatim",
   "donation.subtitle": "Teruskan amalan kebaikan atas nama Meshari",
   "donation.description": "Amal jariah adalah salah satu amalan terbesar yang memberi manfaat kepada yang telah meninggal dunia, dan menaja anak yatim adalah salah satu amalan yang paling disukai Allah",
@@ -20,14 +19,12 @@
   "donation.benefit1": "Persahabatan dengan Nabi ﷺ di Syurga",
   "donation.benefit2": "Memenuhi keperluan mereka yang kehilangan penjaga",
   "donation.benefit3": "Amal jariah dengan pahala berterusan",
-
   "supplications.title": "Doa-doa",
   "supplications.subtitle": "Doa untuk yang telah meninggal dari Al-Quran dan Sunnah",
   "supplications.daily": "Zikir Harian",
   "supplications.deceased": "Doa untuk yang Meninggal",
   "supplications.morning": "Zikir Pagi",
   "supplications.evening": "Zikir Petang",
-
   "prayer.title": "Waktu Solat",
   "prayer.subtitle": "Waktu solat berdasarkan lokasi anda",
   "prayer.fajr": "Subuh",
@@ -40,10 +37,8 @@
   "prayer.remaining": "Masa Berbaki",
   "prayer.location": "Lokasi",
   "prayer.enable": "Aktifkan Notifikasi Solat",
-
   "hijri.title": "Tarikh Hijrah",
   "hijri.gregorian": "Masihi",
-
   "quran.title": "Al-Quran Al-Karim",
   "quran.subtitle": "Baca dan renungkan ayat-ayat Allah",
   "quran.select_surah": "Pilih Surah",
@@ -52,7 +47,6 @@
   "quran.page": "Halaman",
   "quran.play": "Main",
   "quran.pause": "Jeda",
-
   "tafseer.title": "Tafsir Al-Quran",
   "tafseer.subtitle": "Memahami makna firman Allah",
   "tafseer.select": "Pilih Tafsir",
@@ -60,11 +54,15 @@
   "tafseer.tabari": "Tafsir At-Tabari",
   "tafseer.kathir": "Tafsir Ibnu Kathir",
   "tafseer.saadi": "Tafsir As-Sa'di",
-
+  "tafseer.search_verse": "Cari ayat",
+  "tafseer.source": "Sumber Tafsir",
+  "tafseer.verse_number": "Nombor Ayat",
+  "tafseer.select_instruction": "Pilih surah dan ayat untuk mendapatkan tafsir",
+  "tafseer.available_languages": "Tersedia tafsir dalam bahasa Arab, Inggeris dan Urdu",
+  "qibla.instruction": "Pegang peranti dengan rata dan arahkan anak panah ke arah kiblat",
   "hadith.title": "Hadis Nabi",
   "hadith.subtitle": "Dari panduan Nabi Muhammad ﷺ",
   "hadith.source": "Sumber",
-
   "dhikr.title": "Pembilang Zikir",
   "dhikr.subtitle": "Berzikir kepada Allah setiap masa",
   "dhikr.count": "Kiraan",
@@ -72,23 +70,19 @@
   "dhikr.subhanallah": "Subhanallah",
   "dhikr.alhamdulillah": "Alhamdulillah",
   "dhikr.allahuakbar": "Allahu Akbar",
-
   "qibla.title": "Arah Kiblat",
   "qibla.subtitle": "Ketahui arah Kaabah",
   "qibla.direction": "Kiblat mengarah ke",
   "qibla.distance": "Jarak ke Mekah",
   "qibla.allow_location": "Benarkan akses lokasi",
-
   "footer.title": "Semoga Allah merahmatinya",
   "footer.description": "Ya Allah, jadikanlah Al-Quran sebagai pemberi syafaat bagi saudara saya Meshari pada Hari Penghakiman, dan jadikanlah setiap hurufnya sebagai cahaya di kuburnya",
   "footer.charity": "Amal Jariah",
   "footer.all_rights": "Hak cipta terpelihara © 2024",
-
   "theme.toggle": "Tukar tema",
   "theme.light": "Mod terang",
   "theme.dark": "Mod gelap",
   "theme.system": "Tema sistem",
-
   "language.select": "Pilih Bahasa",
   "language.ar": "العربية",
   "language.en": "English",
@@ -102,28 +96,25 @@
   "language.it": "Italiano",
   "language.ja": "日本語",
   "language.ko": "한국어",
-
   "notifications.title": "Notifikasi",
   "notifications.enable": "Aktifkan Notifikasi",
   "notifications.prayer_times": "Peringatan Waktu Solat",
   "notifications.daily_supplications": "Zikir Harian",
   "notifications.permission_required": "Sila benarkan notifikasi pelayar",
-
   "offline.title": "Anda sedang luar talian",
   "offline.message": "Sesetengah ciri mungkin tidak berfungsi tanpa sambungan internet",
-
   "loading": "Memuatkan...",
   "error": "Ralat berlaku",
   "retry": "Cuba lagi",
   "share": "Kongsi",
   "social.x_account": "Akaun X Meshari",
+  "social.github": "GitHub",
   "copy": "Salin",
   "copied": "Disalin",
   "close": "Tutup",
   "next": "Seterusnya",
   "previous": "Sebelumnya",
   "search": "Cari",
-
   "accessibility": {
     "increment_counter": "Tambah kiraan",
     "reset_counter": "Set semula kiraan",
@@ -134,7 +125,6 @@
     "toggle_menu": "Buka/tutup menu",
     "close_modal": "Tutup tetingkap"
   },
-
   "dhikr": {
     "increment": "Tambah",
     "milestone_33": "Sasaran pertama: 33",
@@ -142,13 +132,11 @@
     "milestone_99": "Sasaran ketiga: 99",
     "milestone_100": "Sasaran akhir: 100"
   },
-
   "supplications": {
     "deceased_1": "Ya Allah, ampunilah dia dan rahmatilah dia, maafkanlah dia dan ampunilah dia. Muliakanlah tempat tinggalnya, luaskanlah kuburnya, mandikanlah dia dengan air, salji dan embun. Bersihkanlah dia dari dosa-dosa sebagaimana Engkau membersihkan kain putih dari kotoran",
     "deceased_2": "Ya Allah, jadikanlah kuburnya sebagai taman dari taman-taman syurga, dan janganlah jadikan ia lubang dari lubang-lubang neraka",
     "deceased_3": "Ya Allah, berilah dia rumah yang lebih baik dari rumahnya, dan keluarga yang lebih baik dari keluarganya, dan masukkanlah dia ke dalam syurga dan lindungilah dia dari azab kubur dan azab neraka"
   },
-
   "hadith": {
     "title": "Hadis",
     "subtitle": "Kata-kata hikmah dari Nabi Muhammad (semoga Allah melimpahkan rahmat dan keselamatan kepadanya)",
@@ -156,7 +144,6 @@
     "random_button": "Hadis Rawak",
     "click_button": "Klik butang untuk mendapatkan hadis rawak"
   },
-
   "footer": {
     "charity": "Pertubuhan Amal Berterusan Meshary Al-Abra",
     "all_rights": "Semua hak terpelihara © {{year}}",
@@ -164,5 +151,74 @@
     "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
     "sitemap": "Peta Laman",
     "llm_txt": "Fail LLM"
+  },
+  "footer.sitemap": "Peta Laman",
+  "footer.llm_txt": "Fail LLM",
+  "dhikr.la_ilaha_illallah": "Tiada tuhan melainkan Allah",
+  "dhikr.astaghfirullah": "Aku memohon ampun kepada Allah",
+  "dhikr.la_ilaha_illallah_wahdahu": "Tiada tuhan melainkan Allah, Dia esa, tiada sekutu bagi-Nya",
+  "dhikr.subhanallah_walhamdulillah": "Maha Suci Allah dan segala puji bagi Allah",
+  "dhikr.subhanallah_walhamdulillah_wallahu_akbar": "Maha Suci Allah, segala puji bagi Allah, tiada tuhan melainkan Allah dan Allah Maha Besar",
+  "dhikr.la_hawla_wala_quwwata": "Tiada daya dan kekuatan melainkan dengan Allah",
+  "dhikr.hasbunallah_wa_ni'mal_wakil": "Allah mencukupi kami dan Dia sebaik-baik penolong",
+  "dhikr.bismillah": "Dengan nama Allah",
+  "dhikr.inna_lillahi_wa_inna_ilaihi_rajiun": "Sesungguhnya kami milik Allah dan sesungguhnya kepada-Nya kami akan kembali",
+  "dhikr.select_dhikr": "Pilih Zikir",
+  "dhikr.categories.title": "Kategori Zikir",
+  "dhikr.categories.all": "Semua",
+  "dhikr.categories.basic": "Asas",
+  "dhikr.categories.repentance": "Taubat",
+  "dhikr.categories.tawhid": "Tauhid",
+  "dhikr.categories.combined": "Gabungan",
+  "dhikr.categories.reliance": "Tawakal",
+  "dhikr.categories.beginning": "Permulaan",
+  "dhikr.categories.patience": "Kesabaran",
+  "hadith.random_button": "Hadis Rawak",
+  "hadith.click_button": "Klik butang untuk mendapatkan hadis rawak",
+  "hadith.categories.title": "Kategori Hadis",
+  "hadith.categories.all": "Semua",
+  "hadith.categories.charity": "Sedekah",
+  "hadith.categories.speech": "Pertuturan",
+  "hadith.categories.religion": "Agama",
+  "hadith.categories.brotherhood": "Persaudaraan",
+  "hadith.categories.knowledge": "Pengetahuan",
+  "hadith.categories.mercy": "Kasih Sayang",
+  "hadith.categories.faith": "Iman",
+  "hadith.categories.help": "Bantuan",
+  "hadith.categories.love": "Cinta",
+  "hadith.categories.purity": "Kesucian",
+  "hadith.categories.hospitality": "Keramahan",
+  "hadith.categories.safety": "Keselamatan",
+  "supplications.protection": "Perlindungan",
+  "supplications.travel": "Perjalanan",
+  "supplications.family": "Keluarga",
+  "supplications.work": "Kerja",
+  "supplications.health": "Kesihatan",
+  "supplications.deceased_4": "Ya Allah, teguhkan dia pada perkataan yang benar di dunia dan akhirat",
+  "supplications.morning_1": "Kami telah mencapai pagi dan pada saat ini semua kedaulatan milik Allah. Segala puji bagi Allah. Tiada tuhan melainkan Allah, Dia esa, tiada sekutu bagi-Nya. Kepada-Nya milik kerajaan dan kepada-Nya segala puji, dan Dia berkuasa atas segala sesuatu",
+  "supplications.morning_2": "Ya Allah, dengan-Mu kami mencapai pagi, dengan-Mu kami mencapai petang, dengan-Mu kami hidup, dengan-Mu kami mati, dan kepada-Mu adalah kembali",
+  "supplications.morning_3": "Ya Allah, kami telah mencapai pagi dan kami bersaksi kepada-Mu dan kepada para pembawa Arsy-Mu dan para malaikat-Mu dan semua makhluk-Mu bahawa Engkau adalah Allah, tiada tuhan melainkan Engkau sendiri, Engkau tidak memiliki sekutu, dan bahawa Muhammad adalah hamba-Mu dan utusan-Mu",
+  "supplications.evening_1": "Kami telah mencapai petang dan pada saat ini semua kedaulatan milik Allah. Segala puji bagi Allah. Tiada tuhan melainkan Allah, Dia esa, tiada sekutu bagi-Nya. Kepada-Nya milik kerajaan dan kepada-Nya segala puji, dan Dia berkuasa atas segala sesuatu",
+  "supplications.evening_2": "Ya Allah, dengan-Mu kami mencapai petang, dengan-Mu kami mencapai pagi, dengan-Mu kami hidup, dengan-Mu kami mati, dan kepada-Mu adalah destinasi",
+  "dhikr.tasbih": "Tasbih",
+  "supplications.guidance": "Bimbingan",
+  "supplications.forgiveness": "Pengampunan",
+  "supplications.gratitude": "Syukur",
+  "supplications.sleep": "Tidur",
+  "supplications.waking": "Bangun",
+  "dhikr.auto_saved": "Disimpan automatik",
+  "islamic_chant": {
+    "title": "Lagu Islam Kegemaran Meshari",
+    "description": "Lagu Islam yang indah yang sangat disukai Meshari, membawa kedamaian dan ketenangan"
+  },
+  "quran_verse": {
+    "bismillah": "Dengan nama Allah, Yang Maha Pengasih, Maha Penyayang",
+    "verse": "Dan berikan kabar gembira kepada orang-orang yang sabar, yang apabila ditimpa musibah, mereka mengucapkan: 'Sesungguhnya kami milik Allah dan kepada-Nya kami akan kembali.' Mereka itulah yang mendapat keberkahan dan rahmat dari Tuhan mereka. Dan mereka itulah orang-orang yang mendapat petunjuk.",
+    "sadaqallah": "Allah Yang Maha Tinggi dan Maha Agung telah berfirman dengan benar"
+  },
+  "quran.meshari_favorite": "Kegemaran Meshari",
+  "social": {
+    "x_account": "Akaun X",
+    "github": "GitHub"
   }
 }

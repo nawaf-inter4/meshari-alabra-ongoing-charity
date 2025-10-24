@@ -15,15 +15,53 @@ const nextConfig = {
     } : false,
   },
 
+  // Enable Partial Pre-Rendering (PPR) - stable in Next.js 16
+  // cacheComponents: true, // Temporarily disabled for build compatibility
+
+  // Strong cache invalidation strategy
+  onDemandEntries: {
+    // Period (in ms) where the server will keep pages in the buffer
+    maxInactiveAge: 25 * 1000,
+    // Number of pages that should be kept simultaneously without being disposed
+    pagesBufferLength: 2,
+  },
+
+  // Webpack configuration for better cache invalidation
+  webpack: (config, { dev, isServer }) => {
+    // Add cache busting for development
+    if (dev) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+        ignored: /node_modules/,
+      };
+    }
+
+    // Add file-based cache invalidation
+    config.cache = {
+      type: 'filesystem',
+      buildDependencies: {
+        config: [__filename],
+      },
+      cacheDirectory: '.next/cache/webpack',
+    };
+
+    return config;
+  },
+
   // Experimental features for better performance
   experimental: {
-    // Optimize package imports
+    // Optimize package imports (stable in Next.js 16)
     optimizePackageImports: [
       'lucide-react',
       'framer-motion',
       'next-themes',
       'react-i18next',
     ],
+    // Enable modern bundling optimizations
+    webpackBuildWorker: true,
+    // Enable modern bundling
+    esmExternals: true,
   },
 
   // Turbopack configuration
@@ -96,7 +134,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=0, must-revalidate',
+            value: 'no-cache, no-store, must-revalidate',
           },
         ],
       },

@@ -34,29 +34,30 @@ export default function QiblaFinder() {
   };
 
   const getQiblaDirection = async () => {
+    let latitude = 24.7136; // Default to Riyadh
+    let longitude = 46.6753;
+
+    // Try to get user location via IP
     try {
-      // Use IP-based geolocation instead of browser geolocation
-      const ipResponse = await fetch('https://ipapi.co/json/');
+      const ipResponse = await fetch('https://ipapi.co/json/', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
       
       if (ipResponse.ok) {
         const ipData = await ipResponse.json();
-        
-        if (ipData.latitude && ipData.longitude) {
-          const qibla = calculateQibla(ipData.latitude, ipData.longitude);
-          setQiblaDirection(qibla.direction);
-          setDistance(qibla.distance);
-        } else {
-          throw new Error('Invalid IP response');
-        }
-      } else {
-        throw new Error('IP service failed');
+        latitude = ipData.latitude;
+        longitude = ipData.longitude;
       }
     } catch (error) {
-      // Fallback to Riyadh coordinates
-      const qibla = calculateQibla(24.7136, 46.6753);
-      setQiblaDirection(qibla.direction);
-      setDistance(qibla.distance);
+      console.warn('IP location detection failed, using default location:', error);
     }
+
+    const qibla = calculateQibla(latitude, longitude);
+    setQiblaDirection(qibla.direction);
+    setDistance(qibla.distance);
   };
 
   const calculateQibla = (lat: number, lng: number) => {
@@ -185,7 +186,7 @@ export default function QiblaFinder() {
 
               {/* Instructions */}
               <p className="mt-6 text-sm text-gray-600 dark:text-gray-400">
-                أمسك الجهاز بشكل مسطح ووجه السهم نحو القبلة
+                {t("qibla.instruction") !== "qibla.instruction" ? t("qibla.instruction") : "أمسك الجهاز بشكل مسطح ووجه السهم نحو القبلة"}
               </p>
             </div>
           ) : (

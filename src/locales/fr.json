@@ -4,14 +4,12 @@
   "memorial.name": "Meshari Ahmed Sulaiman Alabra",
   "memorial.death": "Décédé le 29 mars 2023 - Riyad, Arabie Saoudite",
   "memorial.description": "Qu'Allah ait pitié de lui et lui accorde le plus haut Paradis, et que cette œuvre soit dans sa balance de bonnes actions",
-
   "hero.title": "Charité Continue",
   "hero.subtitle": "Nous appartenons à Allah et c'est vers Lui que nous retournerons",
   "hero.description": "Cette page est dédiée à mon frère Meshari, décédé d'un cancer du cerveau. Qu'Allah lui pardonne et fasse du Coran et de la charité continue un intercesseur pour lui",
-
+  "hero.supplications_button": "Supplications pour Meshari (Qu'Allah lui fasse miséricorde)",
   "youtube.title": "Récitations du Coran",
   "youtube.description": "Écoutez les récitations du Coran comme charité continue",
-
   "donation.title": "Parrainage d'Orphelins",
   "donation.subtitle": "Continuez les bonnes œuvres au nom de Meshari",
   "donation.description": "La charité continue est l'une des plus grandes œuvres qui profitent au défunt, et le parrainage d'orphelins est l'une des œuvres les plus aimées d'Allah",
@@ -21,14 +19,12 @@
   "donation.benefit1": "Compagnie du Prophète ﷺ au Paradis",
   "donation.benefit2": "Répondre aux besoins de ceux qui ont perdu leur tuteur",
   "donation.benefit3": "Charité continue avec récompense perpétuelle",
-
   "supplications.title": "Invocations",
   "supplications.subtitle": "Prier pour le défunt du Coran et de la Sunna",
   "supplications.daily": "Rappel Quotidien",
   "supplications.deceased": "Prière pour le Défunt",
   "supplications.morning": "Rappel du Matin",
   "supplications.evening": "Rappel du Soir",
-
   "prayer.title": "Heures de Prière",
   "prayer.subtitle": "Heures de prière basées sur votre localisation",
   "prayer.fajr": "Fajr",
@@ -41,19 +37,20 @@
   "prayer.remaining": "Temps Restant",
   "prayer.location": "Localisation",
   "prayer.enable": "Activer les Notifications de Prière",
-
   "hijri.title": "Date Hijri",
   "hijri.gregorian": "Grégorien",
-
   "quran.title": "Le Saint Coran",
   "quran.subtitle": "Lisez et réfléchissez aux versets d'Allah",
   "quran.select_surah": "Sélectionner une Sourate",
+  "quran.select_reciter": "Sélectionner un Récitateur",
+  "quran.select_translation": "Sélectionner une Traduction",
   "quran.verse": "Verset",
   "quran.juz": "Juz",
   "quran.page": "Page",
   "quran.play": "Lire",
   "quran.pause": "Pause",
-
+  "quran.translation": "Traduction",
+  "quran.meshari_favorite": "Préféré de Meshari",
   "tafseer.title": "Tafsir du Coran",
   "tafseer.subtitle": "Comprendre les significations des paroles d'Allah",
   "tafseer.select": "Sélectionner un Tafsir",
@@ -61,11 +58,15 @@
   "tafseer.tabari": "Tafsir At-Tabari",
   "tafseer.kathir": "Tafsir Ibn Kathir",
   "tafseer.saadi": "Tafsir As-Sa'di",
-
+  "tafseer.search_verse": "Rechercher un verset",
+  "tafseer.source": "Source du Tafsir",
+  "tafseer.verse_number": "Numéro du verset",
+  "tafseer.select_instruction": "Choisissez la sourate et le verset pour obtenir le tafsir",
+  "tafseer.available_languages": "Plusieurs tafsir disponibles en arabe, anglais et ourdou",
+  "qibla.instruction": "Tenez l'appareil à plat et pointez la flèche vers la qibla",
   "hadith.title": "Traditions Prophétiques",
   "hadith.subtitle": "De la guidance du Prophète Muhammad ﷺ",
   "hadith.source": "Source",
-
   "dhikr.title": "Compteur de Dhikr",
   "dhikr.subtitle": "Glorifiez Allah en tout temps",
   "dhikr.count": "Compte",
@@ -73,24 +74,20 @@
   "dhikr.subhanallah": "Gloire à Allah",
   "dhikr.alhamdulillah": "Louange à Allah",
   "dhikr.allahuakbar": "Allah est le Plus Grand",
-
   "qibla.title": "Direction de la Qibla",
   "qibla.subtitle": "Connaître la direction de la Sainte Kaaba",
   "qibla.direction": "La Qibla est vers",
   "qibla.distance": "Distance à La Mecque",
   "qibla.allow_location": "Autoriser l'accès à la localisation",
-
   "footer.title": "Qu'Allah ait pitié de lui",
   "footer.description": "Ô Allah, fais du Saint Coran un intercesseur pour mon frère Meshari au Jour du Jugement, et fais de chaque lettre une lumière dans sa tombe",
   "footer.charity": "Charité Continue",
   "footer.all_rights": "Tous droits réservés © {{year}}",
   "footer.technology": "Construit avec amour pour Allah en utilisant les technologies web modernes",
-
   "theme.toggle": "Changer de thème",
   "theme.light": "Mode clair",
   "theme.dark": "Mode sombre",
   "theme.system": "Thème système",
-
   "language.select": "Sélectionner la Langue",
   "language.ar": "العربية",
   "language.en": "English",
@@ -104,28 +101,25 @@
   "language.it": "Italiano",
   "language.ja": "日本語",
   "language.ko": "한국어",
-
   "notifications.title": "Notifications",
   "notifications.enable": "Activer les Notifications",
   "notifications.prayer_times": "Alertes d'Heures de Prière",
   "notifications.daily_supplications": "Rappel Quotidien",
   "notifications.permission_required": "Veuillez autoriser les notifications du navigateur",
-
   "offline.title": "Vous êtes hors ligne",
   "offline.message": "Certaines fonctionnalités peuvent ne pas fonctionner sans connexion internet",
-
   "loading": "Chargement...",
   "error": "Une erreur s'est produite",
   "retry": "Réessayer",
   "share": "Partager",
   "social.x_account": "Compte X de Meshari",
+  "social.github": "GitHub",
   "copy": "Copier",
   "copied": "Copié",
   "close": "Fermer",
   "next": "Suivant",
   "previous": "Précédent",
   "search": "Rechercher",
-
   "accessibility": {
     "increment_counter": "Incrémenter le compteur",
     "reset_counter": "Réinitialiser le compteur",
@@ -136,7 +130,6 @@
     "toggle_menu": "Basculer le menu",
     "close_modal": "Fermer la fenêtre"
   },
-
   "dhikr": {
     "increment": "Tasbih",
     "milestone_33": "Premier jalon : 33",
@@ -144,13 +137,11 @@
     "milestone_99": "Troisième jalon : 99",
     "milestone_100": "Jalon final : 100"
   },
-
   "supplications": {
     "deceased_1": "Ô Allah, pardonne-lui et aie pitié de lui, donne-lui la force et pardonne-lui. Sois généreux avec lui et élargis son entrée, lave-le avec l'eau, la neige et la grêle. Purifie-le de ses péchés comme on purifie un vêtement blanc de la saleté",
     "deceased_2": "Ô Allah, fais de sa tombe un jardin parmi les jardins du Paradis, et ne la fais pas un trou parmi les trous de l'Enfer",
     "deceased_3": "Ô Allah, donne-lui une maison meilleure que sa maison, et une famille meilleure que sa famille, et fais-le entrer au Paradis et protège-le du châtiment de la tombe et du châtiment du Feu"
   },
-
   "hadith": {
     "title": "Hadith",
     "subtitle": "Paroles de sagesse du Prophète Muhammad (que la paix soit sur lui)",
@@ -158,7 +149,6 @@
     "random_button": "Hadith Aléatoire",
     "click_button": "Cliquez sur le bouton pour obtenir un hadith aléatoire"
   },
-
   "footer": {
     "charity": "Organisation de Bienfaisance Continue Meshary Al-Abra",
     "all_rights": "Tous droits réservés © {{year}}",
@@ -166,5 +156,93 @@
     "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
     "sitemap": "Plan du site",
     "llm_txt": "Fichier LLM"
+  },
+  "footer.sitemap": "Plan du site",
+  "footer.llm_txt": "Fichier LLM",
+  "dhikr.la_ilaha_illallah": "Il n'y a pas de dieu sauf Allah",
+  "dhikr.astaghfirullah": "Je demande pardon à Allah",
+  "dhikr.la_ilaha_illallah_wahdahu": "Il n'y a pas de dieu sauf Allah, Il est unique, Il n'a pas d'associé",
+  "dhikr.subhanallah_walhamdulillah": "Gloire à Allah et louange à Allah",
+  "dhikr.subhanallah_walhamdulillah_wallahu_akbar": "Gloire à Allah, louange à Allah, il n'y a pas de dieu sauf Allah et Allah est le Plus Grand",
+  "dhikr.la_hawla_wala_quwwata": "Il n'y a pas de pouvoir et de force sauf avec Allah",
+  "dhikr.hasbunallah_wa_ni'mal_wakil": "Allah nous suffit et Il est le meilleur des garants",
+  "dhikr.bismillah": "Au nom d'Allah",
+  "dhikr.inna_lillahi_wa_inna_ilaihi_rajiun": "Nous appartenons à Allah et c'est vers Lui que nous retournerons",
+  "dhikr.select_dhikr": "Sélectionner Dhikr",
+  "dhikr.categories.title": "Catégories de Dhikr",
+  "dhikr.categories.all": "Tous",
+  "dhikr.categories.basic": "Basique",
+  "dhikr.categories.repentance": "Repentance",
+  "dhikr.categories.tawhid": "Monothéisme",
+  "dhikr.categories.combined": "Combiné",
+  "dhikr.categories.reliance": "Confiance",
+  "dhikr.categories.beginning": "Début",
+  "dhikr.categories.patience": "Patience",
+  "hadith.random_button": "Hadith Aléatoire",
+  "hadith.click_button": "Cliquez sur le bouton pour obtenir un hadith aléatoire",
+  "hadith.categories.title": "Catégories de Hadith",
+  "hadith.categories.all": "Tous",
+  "hadith.categories.charity": "Charité",
+  "hadith.categories.speech": "Parole",
+  "hadith.categories.religion": "Religion",
+  "hadith.categories.brotherhood": "Fraternité",
+  "hadith.categories.knowledge": "Connaissance",
+  "hadith.categories.mercy": "Miséricorde",
+  "hadith.categories.faith": "Foi",
+  "hadith.categories.help": "Aide",
+  "hadith.categories.love": "Amour",
+  "hadith.categories.purity": "Pureté",
+  "hadith.categories.hospitality": "Hospitalité",
+  "hadith.categories.safety": "Sécurité",
+  "supplications.protection": "Protection",
+  "supplications.travel": "Voyage",
+  "supplications.family": "Famille",
+  "supplications.work": "Travail",
+  "supplications.health": "Santé",
+  "supplications.deceased_4": "Ô Allah, affermis-le sur la parole de vérité dans cette vie et dans l'au-delà",
+  "supplications.morning_1": "Nous avons atteint le matin et à ce moment même toute souveraineté appartient à Allah. Toute louange est à Allah. Il n'y a pas de dieu sauf Allah, seul, sans associé. À Lui appartient la domination et à Lui appartient toute louange, et Il a pouvoir sur toute chose",
+  "supplications.morning_2": "Ô Allah, par Toi nous atteignons le matin, par Toi nous atteignons le soir, par Toi nous vivons, par Toi nous mourons, et vers Toi est le retour",
+  "supplications.morning_3": "Ô Allah, nous avons atteint le matin et nous témoignons de Toi et des porteurs de Ton Trône et de Tes anges et de toute Ta création que Tu es Allah, il n'y a pas de dieu sauf Toi seul, Tu n'as pas d'associé, et que Muhammad est Ton serviteur et Ton Messager",
+  "supplications.evening_1": "Nous avons atteint le soir et à ce moment même toute souveraineté appartient à Allah. Toute louange est à Allah. Il n'y a pas de dieu sauf Allah, seul, sans associé. À Lui appartient la domination et à Lui appartient toute louange, et Il a pouvoir sur toute chose",
+  "supplications.evening_2": "Ô Allah, par Toi nous atteignons le soir, par Toi nous atteignons le matin, par Toi nous vivons, par Toi nous mourons, et vers Toi est la destination",
+  "dhikr.tasbih": "Tasbih",
+  "supplications.guidance": "Guidance",
+  "supplications.forgiveness": "Pardon",
+  "supplications.gratitude": "Gratitude",
+  "supplications.sleep": "Sommeil",
+  "supplications.waking": "Réveil",
+  "dhikr.auto_saved": "Sauvegardé automatiquement",
+  "islamic_chant": {
+    "title": "Chant Islamique Préféré de Meshari",
+    "description": "Un beau chant islamique que Meshari aimait beaucoup, apportant paix et tranquillité"
+  },
+  "quran_verse": {
+    "bismillah": "Au nom d'Allah, le Tout Miséricordieux, le Très Miséricordieux",
+    "verse": "Et annonce la bonne nouvelle aux endurants, qui, lorsqu'un malheur les atteint, disent : 'Nous appartenons à Allah et c'est vers Lui que nous retournerons.' Ce sont eux qui reçoivent des bénédictions de leur Seigneur et Sa miséricorde. Et ce sont eux les bien-guidés.",
+    "sadaqallah": "Allah le Très-Haut a dit la vérité"
+  },
+  "meshari_favorite_reciter": {
+    "title": "Récitateurs de Coran Préférés de Meshari",
+    "subtitle": "Écoutez les récitations de Coran préférées de Meshari",
+    "reciter_title": "Ahmad Al-Ajmi - Récitation Bénie",
+    "description": "Une belle récitation coranique du Cheikh Ahmad Al-Ajmi, que Meshari aimait beaucoup écouter. Cette récitation apporte la tranquillité et la dévotion au cœur.",
+    "feature_1": "Récitation de Haute Qualité"
+  },
+  "social": {
+    "x_account": "Compte X",
+    "github": "GitHub"
+  },
+  "navigation": {
+    "sections_title": "Sections Disponibles",
+    "sections_description": "Parcourez les différentes sections du site web, chaque section a une page séparée accessible directement",
+    "visit_section": "Visiter la Section"
+  },
+  "meshari_favorite_reciter": {
+    "title": "Récitateur Préféré de Meshari",
+    "subtitle": "Écoutez le Saint Coran avec le récitateur préféré de Meshari (Qu'Allah lui fasse miséricorde)"
+  },
+  "islamic_chant": {
+    "title": "Chant Islamique",
+    "subtitle": "Écoutez de beaux chants islamiques comme aumône continue"
   }
 }

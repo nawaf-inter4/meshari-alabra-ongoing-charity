@@ -4,14 +4,13 @@
   "memorial.name": "মেশারি আহমেদ সুলাইমান আলাবরা",
   "memorial.death": "মৃত্যু: ২৯ মার্চ ২০২৩ - রিয়াদ, সৌদি আরব",
   "memorial.description": "আল্লাহ তাকে রহমত করুন এবং সর্বোচ্চ জান্নাত দান করুন, এবং এই কাজটি তার নেক আমলের মিজানে যোগ হোক",
-
   "hero.title": "চলমান সদকা",
   "hero.subtitle": "নিশ্চয়ই আমরা আল্লাহর জন্য, এবং নিশ্চয়ই আমরা তাঁর কাছে ফিরে যাব",
   "hero.description": "এই পেজটি আমার ভাই মেশারির জন্য উৎসর্গীকৃত, যিনি ব্রেইন ক্যান্সারে মারা গেছেন। আল্লাহ তাকে ক্ষমা করুন এবং কুরআন ও চলমান সদকাকে তার সুপারিশকারী বানান",
-
+  "hero.supplications_button": "মেশারির জন্য দোয়া (আল্লাহ রহম করুন)",
   "youtube.title": "কুরআন তেলাওয়াত",
   "youtube.description": "চলমান সদকা হিসেবে কুরআন তেলাওয়াত শুনুন",
-
+  "donation.header_button": "দান",
   "donation.title": "এতিম স্পনসরশিপ",
   "donation.subtitle": "মেশারির নামে নেক আমল চালিয়ে যান",
   "donation.description": "চলমান সদকা হল মৃত ব্যক্তির জন্য সর্বশ্রেষ্ঠ আমলগুলির একটি, এবং এতিম স্পনসরশিপ হল আল্লাহর কাছে সবচেয়ে প্রিয় আমলগুলির একটি",
@@ -20,14 +19,12 @@
   "donation.benefit1": "জান্নাতে নবী ﷺ এর সাথে সঙ্গী হওয়া",
   "donation.benefit2": "অভিভাবক হারানো মানুষদের প্রয়োজন পূরণ করা",
   "donation.benefit3": "নিরন্তর সওয়াবের চলমান সদকা",
-
   "supplications.title": "দোয়াসমূহ",
   "supplications.subtitle": "কুরআন ও সুন্নাহ থেকে মৃত ব্যক্তির জন্য দোয়া",
   "supplications.daily": "দৈনিক যিকির",
   "supplications.deceased": "মৃত ব্যক্তির জন্য দোয়া",
   "supplications.morning": "সকালের যিকির",
   "supplications.evening": "সন্ধ্যার যিকির",
-
   "prayer.title": "নামাজের সময়",
   "prayer.subtitle": "আপনার অবস্থান অনুযায়ী নামাজের সময়",
   "prayer.fajr": "ফজর",
@@ -40,19 +37,19 @@
   "prayer.remaining": "বাকি সময়",
   "prayer.location": "অবস্থান",
   "prayer.enable": "নামাজের নোটিফিকেশন চালু করুন",
-
   "hijri.title": "হিজরি তারিখ",
   "hijri.gregorian": "গ্রেগরিয়ান",
-
   "quran.title": "পবিত্র কুরআন",
   "quran.subtitle": "আল্লাহর আয়াত পড়ুন ও চিন্তা করুন",
   "quran.select_surah": "সূরা নির্বাচন করুন",
+  "quran.select_reciter": "ক্বারী নির্বাচন করুন",
+  "quran.select_translation": "অনুবাদ নির্বাচন করুন",
   "quran.verse": "আয়াত",
   "quran.juz": "পারা",
   "quran.page": "পৃষ্ঠা",
   "quran.play": "চালু করুন",
   "quran.pause": "বিরতি দিন",
-
+  "quran.translation": "অনুবাদ",
   "tafseer.title": "কুরআনের তাফসীর",
   "tafseer.subtitle": "আল্লাহর বাণীর অর্থ বোঝা",
   "tafseer.select": "তাফসীর নির্বাচন করুন",
@@ -60,11 +57,15 @@
   "tafseer.tabari": "তাফসীর আত-তাবারি",
   "tafseer.kathir": "তাফসীর ইবনে কাসীর",
   "tafseer.saadi": "তাফসীর আস-সাদি",
-
+  "tafseer.search_verse": "আয়াত খুঁজুন",
+  "tafseer.source": "তাফসিরের উৎস",
+  "tafseer.verse_number": "আয়াত নম্বর",
+  "tafseer.select_instruction": "তাফসির পেতে সূরা এবং আয়াত নির্বাচন করুন",
+  "tafseer.available_languages": "আরবি, ইংরেজি এবং উর্দু ভাষায় একাধিক তাফসির উপলব্ধ",
+  "qibla.instruction": "ডিভাইসটি সমতলভাবে ধরে রাখুন এবং তীরটি কিবলার দিকে নির্দেশ করুন",
   "hadith.title": "হাদীস",
   "hadith.subtitle": "নবী মুহাম্মাদ ﷺ এর নির্দেশনা থেকে",
   "hadith.source": "উৎস",
-
   "dhikr.title": "যিকির কাউন্টার",
   "dhikr.subtitle": "সর্বদা আল্লাহর যিকির করুন",
   "dhikr.count": "গণনা",
@@ -72,23 +73,19 @@
   "dhikr.subhanallah": "সুবহানাল্লাহ",
   "dhikr.alhamdulillah": "আলহামদুলিল্লাহ",
   "dhikr.allahuakbar": "আল্লাহু আকবার",
-
   "qibla.title": "কিবলার দিক",
   "qibla.subtitle": "পবিত্র কাবার দিক জানুন",
   "qibla.direction": "কিবলার দিক",
   "qibla.distance": "মক্কার দূরত্ব",
   "qibla.allow_location": "লোকেশন অ্যাক্সেস অনুমতি দিন",
-
   "footer.title": "আল্লাহ তাকে রহমত করুন",
   "footer.description": "হে আল্লাহ, কিয়ামতের দিন কুরআনকে আমার ভাই মেশারির সুপারিশকারী বানান, এবং এর প্রতিটি অক্ষরকে তার কবরের আলো বানান",
   "footer.charity": "চলমান সদকা",
   "footer.all_rights": "সর্বস্বত্ব সংরক্ষিত © ২০২৪",
-
   "theme.toggle": "থিম পরিবর্তন",
   "theme.light": "লাইট মোড",
   "theme.dark": "ডার্ক মোড",
   "theme.system": "সিস্টেম থিম",
-
   "language.select": "ভাষা নির্বাচন করুন",
   "language.ar": "العربية",
   "language.en": "English",
@@ -102,28 +99,25 @@
   "language.it": "Italiano",
   "language.ja": "日本語",
   "language.ko": "한국어",
-
   "notifications.title": "নোটিফিকেশন",
   "notifications.enable": "নোটিফিকেশন চালু করুন",
   "notifications.prayer_times": "নামাজের সময়ের নোটিফিকেশন",
   "notifications.daily_supplications": "দৈনিক যিকির",
   "notifications.permission_required": "ব্রাউজার নোটিফিকেশন অনুমতি দিন",
-
   "offline.title": "আপনি অফলাইনে আছেন",
   "offline.message": "ইন্টারনেট সংযোগ ছাড়া কিছু ফিচার কাজ নাও করতে পারে",
-
   "loading": "লোড হচ্ছে...",
   "error": "একটি ত্রুটি ঘটেছে",
   "retry": "আবার চেষ্টা করুন",
   "share": "শেয়ার করুন",
   "social.x_account": "মেশারির এক্স অ্যাকাউন্ট",
+  "social.github": "GitHub",
   "copy": "কপি করুন",
   "copied": "কপি করা হয়েছে",
   "close": "বন্ধ করুন",
   "next": "পরবর্তী",
   "previous": "পূর্ববর্তী",
   "search": "অনুসন্ধান",
-
   "accessibility": {
     "increment_counter": "কাউন্টার বাড়ান",
     "reset_counter": "কাউন্টার রিসেট করুন",
@@ -134,7 +128,6 @@
     "toggle_menu": "মেনু টগল করুন",
     "close_modal": "উইন্ডো বন্ধ করুন"
   },
-
   "dhikr": {
     "increment": "বৃদ্ধি",
     "milestone_33": "প্রথম লক্ষ্য: ৩৩",
@@ -142,13 +135,11 @@
     "milestone_99": "তৃতীয় লক্ষ্য: ৯৯",
     "milestone_100": "চূড়ান্ত লক্ষ্য: ১০০"
   },
-
   "supplications": {
     "deceased_1": "হে আল্লাহ, তাকে ক্ষমা করুন এবং তার প্রতি রহম করুন, তাকে নিরাপত্তা দিন এবং ক্ষমা করুন। তার আবাসস্থলকে সম্মানিত করুন এবং তার প্রবেশপথকে প্রশস্ত করুন। তাকে পানি, বরফ এবং শিলা দিয়ে ধৌত করুন। সাদা কাপড় যেভাবে ময়লা থেকে পরিষ্কার করা হয়, সেভাবে তাকে পাপ থেকে পরিষ্কার করুন",
     "deceased_2": "হে আল্লাহ, তার কবরকে জান্নাতের বাগানগুলির একটি বাগান বানান, এবং এটিকে জাহান্নামের গর্তগুলির একটি গর্ত বানাবেন না",
     "deceased_3": "হে আল্লাহ, তাকে তার বাড়ির চেয়ে উত্তম বাড়ি দান করুন, এবং তার পরিবারের চেয়ে উত্তম পরিবার দান করুন, এবং তাকে জান্নাতে প্রবেশ করান এবং কবর ও জাহান্নামের আযাব থেকে রক্ষা করুন"
   },
-
   "hadith": {
     "title": "হাদিস",
     "subtitle": "নবী মুহাম্মদ (সাল্লাল্লাহু আলাইহি ওয়া সাল্লাম) এর জ্ঞানময় বাণী",
@@ -156,7 +147,6 @@
     "random_button": "এলোমেলো হাদিস",
     "click_button": "এলোমেলো হাদিস পেতে বোতামে ক্লিক করুন"
   },
-
   "footer": {
     "charity": "মেশারি আল-আবরা চলমান দাতব্য সংস্থা",
     "all_rights": "সকল অধিকার সংরক্ষিত © {{year}}",
@@ -164,5 +154,74 @@
     "quranic_verse": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
     "sitemap": "সাইটম্যাপ",
     "llm_txt": "LLM ফাইল"
+  },
+  "footer.sitemap": "সাইটম্যাপ",
+  "footer.llm_txt": "LLM ফাইল",
+  "dhikr.la_ilaha_illallah": "আল্লাহ ছাড়া কোন উপাস্য নেই",
+  "dhikr.astaghfirullah": "আমি আল্লাহর কাছে ক্ষমা চাই",
+  "dhikr.la_ilaha_illallah_wahdahu": "আল্লাহ ছাড়া কোন উপাস্য নেই, তিনি এক, তাঁর কোন অংশীদার নেই",
+  "dhikr.subhanallah_walhamdulillah": "আল্লাহ পবিত্র এবং সকল প্রশংসা আল্লাহর",
+  "dhikr.subhanallah_walhamdulillah_wallahu_akbar": "আল্লাহ পবিত্র, সকল প্রশংসা আল্লাহর, আল্লাহ ছাড়া কোন উপাস্য নেই এবং আল্লাহ সর্বশ্রেষ্ঠ",
+  "dhikr.la_hawla_wala_quwwata": "আল্লাহ ছাড়া কোন শক্তি এবং ক্ষমতা নেই",
+  "dhikr.hasbunallah_wa_ni'mal_wakil": "আল্লাহ আমাদের জন্য যথেষ্ট এবং তিনি সর্বোত্তম কার্যসাধক",
+  "dhikr.bismillah": "আল্লাহর নামে",
+  "dhikr.inna_lillahi_wa_inna_ilaihi_rajiun": "নিশ্চয়ই আমরা আল্লাহর এবং নিশ্চয়ই তাঁর দিকেই আমাদের ফিরে যাওয়া",
+  "dhikr.select_dhikr": "যিকির নির্বাচন করুন",
+  "dhikr.categories.title": "যিকিরের বিভাগ",
+  "dhikr.categories.all": "সব",
+  "dhikr.categories.basic": "মৌলিক",
+  "dhikr.categories.repentance": "তওবা",
+  "dhikr.categories.tawhid": "তাওহীদ",
+  "dhikr.categories.combined": "সংযুক্ত",
+  "dhikr.categories.reliance": "তাওয়াক্কুল",
+  "dhikr.categories.beginning": "শুরু",
+  "dhikr.categories.patience": "ধৈর্য",
+  "hadith.random_button": "এলোমেলো হাদিস",
+  "hadith.click_button": "এলোমেলো হাদিস পেতে বাটনে ক্লিক করুন",
+  "hadith.categories.title": "হাদিসের বিভাগ",
+  "hadith.categories.all": "সব",
+  "hadith.categories.charity": "সদকা",
+  "hadith.categories.speech": "বাক্য",
+  "hadith.categories.religion": "ধর্ম",
+  "hadith.categories.brotherhood": "ভ্রাতৃত্ব",
+  "hadith.categories.knowledge": "জ্ঞান",
+  "hadith.categories.mercy": "দয়া",
+  "hadith.categories.faith": "ঈমান",
+  "hadith.categories.help": "সাহায্য",
+  "hadith.categories.love": "ভালোবাসা",
+  "hadith.categories.purity": "পবিত্রতা",
+  "hadith.categories.hospitality": "আতিথেয়তা",
+  "hadith.categories.safety": "নিরাপত্তা",
+  "supplications.protection": "সুরক্ষা",
+  "supplications.travel": "ভ্রমণ",
+  "supplications.family": "পরিবার",
+  "supplications.work": "কাজ",
+  "supplications.health": "স্বাস্থ্য",
+  "supplications.deceased_4": "হে আল্লাহ, তাকে দুনিয়া ও আখিরাতে সত্য কথায় দৃঢ় রাখুন",
+  "supplications.morning_1": "আমরা সকালে পৌঁছেছি এবং এই মুহূর্তে সব সার্বভৌমত্ব আল্লাহর। সব প্রশংসা আল্লাহর। আল্লাহ ছাড়া কোন উপাস্য নেই, তিনি এক, তাঁর কোন অংশীদার নেই। তাঁরই রাজত্ব এবং তাঁরই সব প্রশংসা, এবং তিনি সব কিছুর উপর ক্ষমতাবান",
+  "supplications.morning_2": "হে আল্লাহ, তোমার মাধ্যমে আমরা সকালে পৌঁছেছি, তোমার মাধ্যমে আমরা সন্ধ্যায় পৌঁছেছি, তোমার মাধ্যমে আমরা বেঁচে আছি, তোমার মাধ্যমে আমরা মরব, এবং তোমার দিকেই আমাদের ফিরে যাওয়া",
+  "supplications.morning_3": "হে আল্লাহ, আমরা সকালে পৌঁছেছি এবং আমরা আপনার এবং আপনার আরশের বাহকদের এবং আপনার ফেরেশতাদের এবং আপনার সব সৃষ্টির সাক্ষ্য দিচ্ছি যে আপনি আল্লাহ, আপনার ছাড়া কোন উপাস্য নেই, আপনি একা, আপনার কোন অংশীদার নেই এবং মুহাম্মদ আপনার বান্দা এবং রাসূল",
+  "supplications.evening_1": "আমরা সন্ধ্যায় পৌঁছেছি এবং এই মুহূর্তে সব সার্বভৌমত্ব আল্লাহর। সব প্রশংসা আল্লাহর। আল্লাহ ছাড়া কোন উপাস্য নেই, তিনি এক, তাঁর কোন অংশীদার নেই। তাঁরই রাজত্ব এবং তাঁরই সব প্রশংসা, এবং তিনি সব কিছুর উপর ক্ষমতাবান",
+  "supplications.evening_2": "হে আল্লাহ, তোমার মাধ্যমে আমরা সন্ধ্যায় পৌঁছেছি, তোমার মাধ্যমে আমরা সকালে পৌঁছেছি, তোমার মাধ্যমে আমরা বেঁচে আছি, তোমার মাধ্যমে আমরা মরব, এবং তোমার দিকেই গন্তব্য",
+  "dhikr.tasbih": "তাসবিহ",
+  "supplications.guidance": "পথনির্দেশ",
+  "supplications.forgiveness": "ক্ষমা",
+  "supplications.gratitude": "কৃতজ্ঞতা",
+  "supplications.sleep": "ঘুম",
+  "supplications.waking": "জাগরণ",
+  "dhikr.auto_saved": "স্বয়ংক্রিয়ভাবে সংরক্ষিত",
+  "islamic_chant": {
+    "title": "মেশারির প্রিয় ইসলামিক গান",
+    "description": "মেশারির প্রিয় একটি সুন্দর ইসলামিক গান যা শান্তি ও প্রশান্তি আনে"
+  },
+  "quran_verse": {
+    "bismillah": "আল্লাহর নামে, যিনি পরম করুণাময়, অতি দয়ালু",
+    "verse": "এবং ধৈর্যশীলদের সুসংবাদ দাও, যারা যখন তাদের উপর বিপদ আসে তখন বলে, 'নিশ্চয়ই আমরা আল্লাহর এবং নিশ্চয়ই তাঁর দিকেই আমরা ফিরে যাব।' তারাই তাদের রবের পক্ষ থেকে বরকত ও রহমতের অধিকারী। আর তারাই সৎপথপ্রাপ্ত।",
+    "sadaqallah": "আল্লাহ সর্বোচ্চ ও মহান সত্য বলেছেন"
+  },
+  "quran.meshari_favorite": "মেশারির প্রিয়",
+  "social": {
+    "x_account": "X অ্যাকাউন্ট",
+    "github": "GitHub"
   }
 }

@@ -2,13 +2,19 @@
 
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
-import { Heart, Star } from "lucide-react";
+import { Heart, Star, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export default function HeroSection() {
-  const { t, direction } = useLanguage();
+  const { t, direction, locale } = useLanguage();
   const [dimensions, setDimensions] = useState({ width: 1920, height: 1080 });
   const [starKey, setStarKey] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -39,11 +45,18 @@ export default function HeroSection() {
     }));
   };
 
-  const [starPositions, setStarPositions] = useState(() => generateStarPositions());
+  const [starPositions, setStarPositions] = useState<Array<{id: number, x: number, y: number, delay: number}>>([]);
 
   useEffect(() => {
+    setMounted(true);
     setStarPositions(generateStarPositions());
-  }, [dimensions, direction, starKey]);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      setStarPositions(generateStarPositions());
+    }
+  }, [dimensions, direction, starKey, mounted]);
 
   return (
     <section 
@@ -59,52 +72,52 @@ export default function HeroSection() {
             className="absolute"
             initial={{ opacity: 0, scale: 0 }}
             animate={{
-              opacity: [0, 1, 0.8, 0],
-              scale: [0, 1, 1.2, 0],
-              x: direction === 'rtl' 
-                ? [star.x, star.x - 100] 
-                : [star.x, star.x + 100],
-              y: [star.y, star.y + Math.random() * 30 - 15],
+              opacity: [0, 1, 0.8, 1],
+              scale: [0, 1, 0.8, 1],
             }}
             transition={{
-              duration: 4,
-              repeat: Infinity,
+              duration: 2,
               delay: star.delay,
-              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "reverse",
+              repeatDelay: Math.random() * 3 + 2,
+            }}
+            style={{
+              left: `${star.x}px`,
+              top: `${star.y}px`,
             }}
           >
-            <Star className="w-2 h-2 text-islamic-gold" fill="currentColor" />
+            <Star 
+              size={Math.random() * 3 + 1} 
+              className="text-islamic-gold/60 fill-current" 
+            />
           </motion.div>
         ))}
       </div>
 
-      <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10 mt-6">
-        {/* Main Title */}
+      {/* Main Content */}
+      <div className="relative z-10 max-w-4xl mx-auto text-center">
+
+        {/* Islamic Phrase - Above the card */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mt-2"
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-8"
+          suppressHydrationWarning
         >
-          <div className="inline-block p-1 rounded-full bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue mb-6">
-            <Heart className="w-16 h-16 text-white m-2" fill="currentColor" />
-          </div>
-
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 gradient-text pt-4">
-            {t("hero.title")}
-          </h1>
-
-          <p className="text-2xl md:text-3xl text-islamic-gold font-semibold mb-6">
+          <p className="text-3xl md:text-4xl font-bold text-islamic-gold dark:text-islamic-gold leading-relaxed mb-2">
             {t("hero.subtitle")}
           </p>
         </motion.div>
 
-        {/* Memorial Info */}
+        {/* Memorial Description */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="bg-light-secondary/80 dark:bg-dark-secondary/80 backdrop-blur-lg rounded-2xl p-8 border-2 border-islamic-gold/30 glow"
+          suppressHydrationWarning
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-3">
             {t("memorial.name")}
@@ -112,35 +125,51 @@ export default function HeroSection() {
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
             {t("memorial.death")}
           </p>
-          <p className="text-xl text-islamic-green dark:text-islamic-gold leading-relaxed">
+          <p className="text-xl text-islamic-green dark:text-islamic-gold leading-relaxed mb-6">
             {t("hero.description")}
+          </p>
+
+          {/* Supplications Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex justify-center"
+          >
+            <a
+              href="/mehsari (دعاء).pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-semibold rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              <FileText className="w-5 h-5" />
+              <span>{t("hero.supplications_button")}</span>
+            </a>
+          </motion.div>
+        </motion.div>
+
+        {/* Site Subtitle - Below the card */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-8"
+        >
+          <p className="text-2xl md:text-3xl font-bold text-islamic-gold !text-islamic-gold dark:text-islamic-gold leading-relaxed">
+            {t("site.subtitle")}
           </p>
         </motion.div>
 
-        {/* Quote */}
+        {/* Scroll Down Icon */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-2xl md:text-3xl font-arabic leading-relaxed text-islamic-blue dark:text-islamic-gold"
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mt-12 flex justify-center"
         >
-          <p className="italic">"{t("site.subtitle")}"</p>
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 1 }}
-          className="pt-8"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-islamic-gold rounded-full mx-auto flex justify-center"
-          >
-            <div className="w-1 h-3 bg-islamic-gold rounded-full mt-2" />
-          </motion.div>
+          <div className="w-4 h-6 border border-islamic-gold dark:border-islamic-gold rounded-full flex items-center justify-center animate-bounce">
+            <div className="w-0.5 h-3 bg-islamic-gold dark:bg-islamic-gold"></div>
+          </div>
         </motion.div>
       </div>
     </section>
