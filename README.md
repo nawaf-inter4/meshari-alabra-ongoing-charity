@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Next.js](https://img.shields.io/badge/Next.js-15.1-black?style=for-the-badge&logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
 ![PWA](https://img.shields.io/badge/PWA-Enabled-green?style=for-the-badge)
 ![Performance](https://img.shields.io/badge/Performance-Optimized-gold?style=for-the-badge)
@@ -530,6 +530,6 @@ Built with ❤️ for Meshari
 
 ---
 
-⚡ **Powered by Next.js 15** | 🚀 **Turbopack** | 📱 **PWA Ready** | 🌍 **60+ Languages**
+⚡ **Powered by Next.js 16** | 🚀 **Turbopack** | 📱 **PWA Ready** | 🌍 **60+ Languages**
 
 </div>
