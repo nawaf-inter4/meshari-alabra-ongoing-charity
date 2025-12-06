@@ -227,5 +227,33 @@
     "reciter_title": "احمد العجمی - مبارک تلاوت",
     "description": "شیخ احمد العجمی کی ایک خوبصورت قرآنی تلاوت، جسے مشاری بہت سننا پسند کرتے تھے۔ یہ تلاوت دل میں سکون اور خشوع لاتی ہے۔",
     "feature_1": "اعلیٰ معیار کی تلاوت"
-  }
+  },
+  "navigation": {
+    "sections_title": "دستیاب اقسام",
+    "sections_description": "ویب سائٹ کے مختلف حصوں کو براؤز کریں، ہر حصے کا اپنا صفحہ ہے جس تک براہ راست رسائی حاصل کی جا سکتی ہے",
+    "visit_section": "حصہ ملاحظہ کریں",
+    "back_to_home": "ہوم پر واپس"
+  },
+  "navigation.visit_section": "حصہ ملاحظہ کریں",
+  "navigation.back_to_home": "ہوم پر واپس",
+  "navigation.sections_title": "دستیاب اقسام",
+  "navigation.sections_description": "ویب سائٹ کے مختلف حصوں کو براؤز کریں، ہر حصے کا اپنا صفحہ ہے جس تک براہ راست رسائی حاصل کی جا سکتی ہے",
+  "quran_stories.featured_story": "نمایاں کہانی",
+  "quran_stories.preview": "پیش منظر",
+  "quran_stories.read": "پڑھیں",
+  "location.riyadh": "ریاض",
+  "location.saudi_arabia": "سعودی عرب",
+  "donation.balance_text": "اللہ تعالیٰ اسے اس کے نیک اعمال کے میزان میں رکھے",
+  "qibla.find_direction": "العثور على اتجاه القبلة",
+  "qibla.detecting_location": "جاري تحديد موقعك...",
+  "qibla.please_allow": "يرجى السماح بالوصول إلى الموقع إذا تم الطلب",
+  "qibla.retry": "إعادة المحاولة",
+  "qibla.refresh": "دوبارہ کوشش کریں",
+  "quran_stories.title": "قرآن کی کہانیاں",
+  "quran_stories.description": "قرآن پاک کی ہر سورت کے پیچھے خوبصورت کہانیاں دریافت کریں",
+  "quran_stories.download": "ڈاؤن لوڈ کریں",
+  "meshari_favorite_reciter.title": "مشاری کے پسندیدہ قاری",
+  "meshari_favorite_reciter.subtitle": "مشاری کے پسندیدہ قاری کے ساتھ قرآن پاک سنیں (اللہ تعالیٰ ان پر رحم فرمائے)",
+  "islamic_chant.title": "مشاری کا پسندیدہ اسلامی نغمہ",
+  "islamic_chant.subtitle": "ایک خوبصورت اسلامی نغمہ جسے مشاری بہت پسند کرتے تھے، امن و سکون لاتا ہے"
 }

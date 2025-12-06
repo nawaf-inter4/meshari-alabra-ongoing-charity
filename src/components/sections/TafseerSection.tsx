@@ -550,8 +550,8 @@ export default function TafseerSection() {
         ) : (
           <div className="text-center text-gray-600 dark:text-gray-400 py-12">
             <Globe className="w-16 h-16 mx-auto mb-4 text-islamic-gold/50" />
-            <p className="text-lg mb-2">{mounted && t("tafseer.select_instruction") !== "tafseer.select_instruction" ? t("tafseer.select_instruction") : "اختر السورة والآية للحصول على التفسير"}</p>
-            <p className="text-sm">{mounted && t("tafseer.available_languages") !== "tafseer.available_languages" ? t("tafseer.available_languages") : "متوفر تفسيرات متعددة باللغات العربية والإنجليزية والأردية"}</p>
+            <p className="text-lg mb-2">{t("tafseer.select_instruction")}</p>
+            <p className="text-sm">{t("tafseer.available_translations")}</p>
           </div>
         )}
       </div>

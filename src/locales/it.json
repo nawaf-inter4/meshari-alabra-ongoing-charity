@@ -223,5 +223,33 @@
   "social": {
     "x_account": "Account X",
     "github": "GitHub"
-  }
+  },
+  "navigation": {
+    "sections_title": "Sezioni Disponibili",
+    "sections_description": "Esplora le diverse sezioni del sito web, ogni sezione ha una propria pagina accessibile direttamente",
+    "visit_section": "Visita la Sezione",
+    "back_to_home": "Torna alla Home"
+  },
+  "navigation.visit_section": "Visita la Sezione",
+  "navigation.back_to_home": "Torna alla Home",
+  "navigation.sections_title": "Sezioni Disponibili",
+  "navigation.sections_description": "Esplora le diverse sezioni del sito web, ogni sezione ha una propria pagina accessibile direttamente",
+  "quran_stories.featured_story": "Storia in Evidenza",
+  "quran_stories.preview": "Anteprima",
+  "quran_stories.read": "Leggi",
+  "location.riyadh": "Riad",
+  "location.saudi_arabia": "Arabia Saudita",
+  "donation.balance_text": "Che Allah lo metta nella bilancia delle sue buone azioni",
+  "qibla.find_direction": "Trova la Direzione della Qibla",
+  "qibla.detecting_location": "Rilevamento della tua posizione...",
+  "qibla.please_allow": "Consenti l'accesso alla posizione se richiesto",
+  "qibla.retry": "Riprova",
+  "qibla.refresh": "Riprova",
+  "quran_stories.title": "Storie del Corano",
+  "quran_stories.description": "Scopri le belle storie dietro ogni sura del Sacro Corano",
+  "quran_stories.download": "Scarica",
+  "meshari_favorite_reciter.title": "Recitatore Preferito di Meshari",
+  "meshari_favorite_reciter.subtitle": "Ascolta il Sacro Corano con il recitatore preferito di Meshari (Che Allah abbia misericordia di lui)",
+  "islamic_chant.title": "Canto Islamico Preferito di Meshari",
+  "islamic_chant.subtitle": "Un bel canto islamico che Meshari amava molto, portando pace e tranquillità"
 }

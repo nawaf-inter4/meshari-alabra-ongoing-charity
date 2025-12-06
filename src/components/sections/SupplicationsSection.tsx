@@ -249,19 +249,19 @@ export default function SupplicationsSection() {
   };
 
   const tabs = [
-    { id: "deceased", label: mounted ? t("supplications.deceased") : "للمتوفى", icon: Heart },
-    { id: "morning", label: mounted ? t("supplications.morning") : "الصباح", icon: Sunrise },
-    { id: "evening", label: mounted ? t("supplications.evening") : "المساء", icon: Sunset },
-    { id: "protection", label: mounted ? t("supplications.protection") : "الحماية", icon: Shield },
-    { id: "travel", label: mounted ? t("supplications.travel") : "السفر", icon: Car },
-    { id: "family", label: mounted ? t("supplications.family") : "العائلة", icon: Users },
-    { id: "work", label: mounted ? t("supplications.work") : "العمل", icon: Briefcase },
-    { id: "health", label: mounted ? t("supplications.health") : "الصحة", icon: Star },
-    { id: "guidance", label: mounted ? t("supplications.guidance") : "الهداية", icon: Compass },
-    { id: "forgiveness", label: mounted ? t("supplications.forgiveness") : "المغفرة", icon: ShieldCheck },
-    { id: "gratitude", label: mounted ? t("supplications.gratitude") : "الشكر", icon: HeartHandshake },
-    { id: "sleep", label: mounted ? t("supplications.sleep") : "النوم", icon: Moon },
-    { id: "waking", label: mounted ? t("supplications.waking") : "الاستيقاظ", icon: Sunrise },
+    { id: "deceased", label: mounted ? getTranslation("supplications.deceased", "للمتوفى") : "للمتوفى", icon: Heart },
+    { id: "morning", label: mounted ? getTranslation("supplications.morning", "الصباح") : "الصباح", icon: Sunrise },
+    { id: "evening", label: mounted ? getTranslation("supplications.evening", "المساء") : "المساء", icon: Sunset },
+    { id: "protection", label: mounted ? getTranslation("supplications.protection", "الحماية") : "الحماية", icon: Shield },
+    { id: "travel", label: mounted ? getTranslation("supplications.travel", "السفر") : "السفر", icon: Car },
+    { id: "family", label: mounted ? getTranslation("supplications.family", "العائلة") : "العائلة", icon: Users },
+    { id: "work", label: mounted ? getTranslation("supplications.work", "العمل") : "العمل", icon: Briefcase },
+    { id: "health", label: mounted ? getTranslation("supplications.health", "الصحة") : "الصحة", icon: Star },
+    { id: "guidance", label: mounted ? getTranslation("supplications.guidance", "الهداية") : "الهداية", icon: Compass },
+    { id: "forgiveness", label: mounted ? getTranslation("supplications.forgiveness", "المغفرة") : "المغفرة", icon: ShieldCheck },
+    { id: "gratitude", label: mounted ? getTranslation("supplications.gratitude", "الشكر") : "الشكر", icon: HeartHandshake },
+    { id: "sleep", label: mounted ? getTranslation("supplications.sleep", "النوم") : "النوم", icon: Moon },
+    { id: "waking", label: mounted ? getTranslation("supplications.waking", "الاستيقاظ") : "الاستيقاظ", icon: Sunrise },
   ];
 
   return (

@@ -223,5 +223,33 @@
   "social": {
     "x_account": "X账户",
     "github": "GitHub"
-  }
+  },
+  "navigation": {
+    "sections_title": "可用部分",
+    "sections_description": "浏览网站的不同部分，每个部分都有自己的页面，可以直接访问",
+    "visit_section": "访问部分",
+    "back_to_home": "返回首页"
+  },
+  "navigation.visit_section": "访问部分",
+  "navigation.back_to_home": "返回首页",
+  "navigation.sections_title": "可用部分",
+  "navigation.sections_description": "浏览网站的不同部分，每个部分都有自己的页面，可以直接访问",
+  "quran_stories.featured_story": "精选故事",
+  "quran_stories.preview": "预览",
+  "quran_stories.read": "阅读",
+  "location.riyadh": "利雅得",
+  "location.saudi_arabia": "沙特阿拉伯",
+  "donation.balance_text": "愿真主将其放在他善行的天平上",
+  "qibla.find_direction": "查找朝拜方向",
+  "qibla.detecting_location": "正在检测您的位置...",
+  "qibla.please_allow": "如果提示，请允许位置访问",
+  "qibla.retry": "重试",
+  "qibla.refresh": "重试",
+  "quran_stories.title": "古兰经故事",
+  "quran_stories.description": "发现神圣古兰经每一章背后的美丽故事",
+  "quran_stories.download": "下载",
+  "meshari_favorite_reciter.title": "Meshari最喜欢的诵经者",
+  "meshari_favorite_reciter.subtitle": "与Meshari最喜欢的诵经者一起聆听神圣古兰经（愿真主怜悯他）",
+  "islamic_chant.title": "Meshari最喜欢的伊斯兰圣歌",
+  "islamic_chant.subtitle": "Meshari非常喜爱的美丽伊斯兰圣歌，带来和平与宁静"
 }

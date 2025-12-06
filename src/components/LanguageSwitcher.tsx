@@ -52,10 +52,8 @@ export default function LanguageSwitcher() {
   const handleLanguageChange = useCallback((langCode: string) => {
     if (langCode === locale || isChanging) return;
     
-    setIsOpen(false);
-    setIsChanging(true);
-    
-    // Call setLocale directly
+    // Don't update React state - this causes unmounting issues
+    // Just navigate immediately
     setLocale(langCode);
   }, [locale, isChanging, setLocale]);
 

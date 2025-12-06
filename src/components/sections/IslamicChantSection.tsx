@@ -25,11 +25,11 @@ export default function IslamicChantSection() {
             <div className="inline-flex items-center gap-2 mb-4">
               <PlayCircle className="w-8 h-8 text-islamic-gold" />
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
-                {mounted && t("islamic_chant.title") !== "islamic_chant.title" ? t("islamic_chant.title") : "النشيد المفضل لمشاري رحمه الله"}
+                {t("islamic_chant.title")}
               </h2>
             </div>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              {mounted && t("islamic_chant.subtitle") !== "islamic_chant.subtitle" ? t("islamic_chant.subtitle") : "نشيد إسلامي جميل كان يحبه مشاري كثيراً، يبعث على الطمأنينة والسلام"}
+                {t("islamic_chant.subtitle")}
             </p>
           </div>
         </div>
@@ -49,7 +49,7 @@ export default function IslamicChantSection() {
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            {mounted && t("islamic_chant.subtitle") !== "islamic_chant.subtitle" ? t("islamic_chant.subtitle") : "نشيد إسلامي جميل كان يحبه مشاري كثيراً، يبعث على الطمأنينة والسلام"}
+                {t("islamic_chant.subtitle")}
           </p>
         </div>
 

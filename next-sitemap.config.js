@@ -127,18 +127,21 @@ module.exports = {
         alternateRefs,
       });
 
-      // Add section pages for each language
+      // Add section pages for each language with proper multilingual alternates
       for (const section of sections) {
+        // Generate alternate language URLs for this section
         const sectionAlternateRefs = allLanguages.map(l => ({
           href: l === 'ar' ? `${config.siteUrl}/sections/${section}` : `${config.siteUrl}/${l}/sections/${section}`,
           hreflang: l,
         }));
 
+        // Add x-default pointing to Arabic version
         sectionAlternateRefs.unshift({
           href: `${config.siteUrl}/sections/${section}`,
           hreflang: 'x-default',
         });
 
+        // Add the section URL for current language
         result.push({
           loc: lang === 'ar' ? `/sections/${section}` : `/${lang}/sections/${section}`,
           changefreq: 'weekly',

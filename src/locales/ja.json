@@ -223,5 +223,33 @@
   "social": {
     "x_account": "Xアカウント",
     "github": "GitHub"
-  }
+  },
+  "navigation": {
+    "sections_title": "利用可能なセクション",
+    "sections_description": "ウェブサイトのさまざまなセクションを閲覧します。各セクションには直接アクセスできる独自のページがあります",
+    "visit_section": "セクションを訪問",
+    "back_to_home": "ホームに戻る"
+  },
+  "navigation.visit_section": "セクションを訪問",
+  "navigation.back_to_home": "ホームに戻る",
+  "navigation.sections_title": "利用可能なセクション",
+  "navigation.sections_description": "ウェブサイトのさまざまなセクションを閲覧します。各セクションには直接アクセスできる独自のページがあります",
+  "quran_stories.featured_story": "注目の物語",
+  "quran_stories.preview": "プレビュー",
+  "quran_stories.read": "読む",
+  "location.riyadh": "リヤド",
+  "location.saudi_arabia": "サウジアラビア",
+  "donation.balance_text": "アッラーが彼の善行の天秤にそれを置かれるように",
+  "qibla.find_direction": "キブラの方向を見つける",
+  "qibla.detecting_location": "位置を検出しています...",
+  "qibla.please_allow": "プロンプトが表示された場合は、位置情報へのアクセスを許可してください",
+  "qibla.retry": "再試行",
+  "qibla.refresh": "再試行",
+  "quran_stories.title": "クルアーンの物語",
+  "quran_stories.description": "聖なるクルアーンの各章の背後にある美しい物語を発見する",
+  "quran_stories.download": "ダウンロード",
+  "meshari_favorite_reciter.title": "メシャリのお気に入りのクルアーン朗読者",
+  "meshari_favorite_reciter.subtitle": "メシャリのお気に入りのクルアーン朗読者と一緒に聖なるクルアーンを聞く（アッラーが彼に慈悲をかけてくださいますように）",
+  "islamic_chant.title": "メシャリのお気に入りのイスラム聖歌",
+  "islamic_chant.subtitle": "メシャリがとても愛していた美しいイスラム聖歌、平和と静けさをもたらす"
 }

@@ -220,5 +220,33 @@
   "social": {
     "x_account": "Akaun X",
     "github": "GitHub"
-  }
+  },
+  "navigation": {
+    "sections_title": "Bahagian yang Tersedia",
+    "sections_description": "Layari bahagian-bahagian laman web yang berbeza, setiap bahagian mempunyai halaman sendiri yang boleh diakses secara langsung",
+    "visit_section": "Lawati Bahagian",
+    "back_to_home": "Kembali ke Laman Utama"
+  },
+  "navigation.visit_section": "Lawati Bahagian",
+  "navigation.back_to_home": "Kembali ke Laman Utama",
+  "navigation.sections_title": "Bahagian yang Tersedia",
+  "navigation.sections_description": "Layari bahagian-bahagian laman web yang berbeza, setiap bahagian mempunyai halaman sendiri yang boleh diakses secara langsung",
+  "quran_stories.featured_story": "Cerita Pilihan",
+  "quran_stories.preview": "Pratonton",
+  "quran_stories.read": "Baca",
+  "location.riyadh": "Riyadh",
+  "location.saudi_arabia": "Arab Saudi",
+  "donation.balance_text": "Semoga Allah meletakkannya dalam timbangan kebaikannya",
+  "qibla.find_direction": "Cari Arah Kiblat",
+  "qibla.detecting_location": "Mengesan lokasi anda...",
+  "qibla.please_allow": "Sila benarkan akses lokasi jika diminta",
+  "qibla.retry": "Cuba Lagi",
+  "qibla.refresh": "Cuba Lagi",
+  "quran_stories.title": "Kisah Al-Quran",
+  "quran_stories.description": "Temui kisah-kisah indah di sebalik setiap surah Al-Quran",
+  "quran_stories.download": "Muat Turun",
+  "meshari_favorite_reciter.title": "Pembaca Al-Quran Kegemaran Meshari",
+  "meshari_favorite_reciter.subtitle": "Dengarkan Al-Quran dengan pembaca kegemaran Meshari (Semoga Allah merahmatinya)",
+  "islamic_chant.title": "Lagu Islami Kegemaran Meshari",
+  "islamic_chant.subtitle": "Lagu islami yang indah yang sangat disukai Meshari, membawa kedamaian dan ketenangan"
 }

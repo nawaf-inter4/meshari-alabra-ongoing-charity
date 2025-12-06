@@ -223,5 +223,33 @@
   "social": {
     "x_account": "X অ্যাকাউন্ট",
     "github": "GitHub"
-  }
+  },
+  "navigation": {
+    "sections_title": "উপলব্ধ বিভাগ",
+    "sections_description": "ওয়েবসাইটের বিভিন্ন বিভাগ ব্রাউজ করুন, প্রতিটি বিভাগের নিজস্ব পৃষ্ঠা রয়েছে যা সরাসরি অ্যাক্সেস করা যায়",
+    "visit_section": "বিভাগ দেখুন",
+    "back_to_home": "হোমে ফিরে যান"
+  },
+  "navigation.visit_section": "বিভাগ দেখুন",
+  "navigation.back_to_home": "হোমে ফিরুন",
+  "navigation.sections_title": "উপলব্ধ বিভাগ",
+  "navigation.sections_description": "ওয়েবসাইটের বিভিন্ন বিভাগ ব্রাউজ করুন, প্রতিটি বিভাগের নিজস্ব পৃষ্ঠা রয়েছে যা সরাসরি অ্যাক্সেস করা যায়",
+  "quran_stories.featured_story": "বিশেষ গল্প",
+  "quran_stories.preview": "পূর্বরূপ",
+  "quran_stories.read": "পড়ুন",
+  "location.riyadh": "রিয়াদ",
+  "location.saudi_arabia": "সৌদি আরব",
+  "donation.balance_text": "আল্লাহ তাকে তার ভাল কাজের পাল্লায় রাখুন",
+  "qibla.find_direction": "কিবলা দিক খুঁজুন",
+  "qibla.detecting_location": "আপনার অবস্থান সনাক্ত করা হচ্ছে...",
+  "qibla.please_allow": "অনুরোধ করা হলে অনুগ্রহ করে অবস্থান অ্যাক্সেস অনুমোদন করুন",
+  "qibla.retry": "পুনরায় চেষ্টা করুন",
+  "qibla.refresh": "পুনরায় চেষ্টা করুন",
+  "quran_stories.title": "কুরআনের গল্প",
+  "quran_stories.description": "পবিত্র কুরআনের প্রতিটি সূরার পিছনে সুন্দর গল্প আবিষ্কার করুন",
+  "quran_stories.download": "ডাউনলোড",
+  "meshari_favorite_reciter.title": "মেশারির প্রিয় কুরআন পাঠক",
+  "meshari_favorite_reciter.subtitle": "মেশারির প্রিয় কুরআন পাঠকের সাথে পবিত্র কুরআন শুনুন (আল্লাহ তাকে রহম করুন)",
+  "islamic_chant.title": "মেশারির প্রিয় ইসলামি গান",
+  "islamic_chant.subtitle": "একটি সুন্দর ইসলামি গান যা মেশারি খুব পছন্দ করতেন, শান্তি ও প্রশান্তি আনে"
 }

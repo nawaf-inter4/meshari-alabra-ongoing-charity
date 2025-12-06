@@ -83,7 +83,7 @@ export default function DonationSection() {
               {t("donation.button")}
             </a>
             <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-              جَعَلَهُ اللَّهُ فِي مِيزَانِ حَسَنَاتِهِ
+              {t("donation.balance_text")}
             </p>
           </motion.div>
         </motion.div>

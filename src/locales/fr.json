@@ -235,8 +235,18 @@
   "navigation": {
     "sections_title": "Sections Disponibles",
     "sections_description": "Parcourez les différentes sections du site web, chaque section a une page séparée accessible directement",
-    "visit_section": "Visiter la Section"
+    "visit_section": "Visiter la Section",
+    "back_to_home": "Retour à l'Accueil"
   },
+  "navigation.visit_section": "Visiter la Section",
+  "navigation.back_to_home": "Retour à l'Accueil",
+  "navigation.sections_title": "Sections Disponibles",
+  "navigation.sections_description": "Parcourez les différentes sections du site web, chaque section a une page séparée accessible directement",
+  "quran_stories.featured_story": "Histoire en Vedette",
+  "quran_stories.preview": "Aperçu",
+  "quran_stories.read": "Lire",
+  "location.riyadh": "Riyad",
+  "location.saudi_arabia": "Arabie Saoudite",
   "meshari_favorite_reciter": {
     "title": "Récitateur Préféré de Meshari",
     "subtitle": "Écoutez le Saint Coran avec le récitateur préféré de Meshari (Qu'Allah lui fasse miséricorde)"
@@ -244,5 +254,18 @@
   "islamic_chant": {
     "title": "Chant Islamique",
     "subtitle": "Écoutez de beaux chants islamiques comme aumône continue"
-  }
+  },
+  "donation.balance_text": "Qu'Allah le place dans la balance de ses bonnes actions",
+  "qibla.find_direction": "Trouver la Direction de la Qibla",
+  "qibla.detecting_location": "Détection de votre localisation...",
+  "qibla.please_allow": "Veuillez autoriser l'accès à la localisation si demandé",
+  "qibla.retry": "Réessayer",
+  "qibla.refresh": "Réessayer",
+  "quran_stories.title": "Histoires du Coran",
+  "quran_stories.description": "Découvrez les belles histoires derrière chaque sourate du Saint Coran",
+  "quran_stories.download": "Télécharger",
+  "meshari_favorite_reciter.title": "Récitateur Préféré de Meshari",
+  "meshari_favorite_reciter.subtitle": "Écoutez le Saint Coran avec le récitateur préféré de Meshari (Qu'Allah lui fasse miséricorde)",
+  "islamic_chant.title": "Chant Islamique Préféré de Meshari",
+  "islamic_chant.subtitle": "Un beau chant islamique que Meshari aimait beaucoup, apportant paix et tranquillité"
 }
