@@ -223,11 +223,11 @@ export default function QuranStoriesSection() {
             <div className="inline-flex items-center gap-2 mb-4">
               <BookOpen className="w-8 h-8 text-islamic-gold" />
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
-                {mounted && t("quran_stories.title") !== "quran_stories.title" ? t("quran_stories.title") : "قصص القرآن الكريم"}
+                {t("quran_stories.title")}
               </h2>
             </div>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              {mounted && t("quran_stories.description") !== "quran_stories.description" ? t("quran_stories.description") : "اكتشف القصص الجميلة وراء كل سورة من سور القرآن الكريم"}
+                {t("quran_stories.description")}
             </p>
           </div>
         </div>
@@ -247,7 +247,7 @@ export default function QuranStoriesSection() {
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            {mounted && t("quran_stories.description") !== "quran_stories.description" ? t("quran_stories.description") : "اكتشف القصص الجميلة وراء كل سورة من سور القرآن الكريم"}
+                {t("quran_stories.description")}
           </p>
         </div>
 
@@ -280,14 +280,14 @@ export default function QuranStoriesSection() {
                       className="bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full hover:bg-white/30 transition-colors duration-200 flex items-center space-x-2"
                     >
                       <Eye className="w-4 h-4" />
-                      <span>{mounted && t("quran_stories.preview") !== "quran_stories.preview" ? t("quran_stories.preview") : "معاينة"}</span>
+                      <span>{t("quran_stories.preview")}</span>
                     </button>
                     <button
                       onClick={() => handleViewInBrowser(story)}
                       className="bg-islamic-gold text-white px-4 py-2 rounded-full hover:bg-islamic-green transition-colors duration-200 flex items-center space-x-2"
                     >
                       <BookOpen className="w-4 h-4" />
-                      <span>{mounted && t("quran_stories.read") !== "quran_stories.read" ? t("quran_stories.read") : "قراءة"}</span>
+                      <span>{t("quran_stories.read")}</span>
                     </button>
                   </div>
                 </div>
@@ -299,7 +299,7 @@ export default function QuranStoriesSection() {
                   <div className="flex items-center space-x-2">
                     <Star className="w-4 h-4 text-islamic-gold fill-current" />
                     <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                      {mounted && t("quran_stories.featured_story") !== "quran_stories.featured_story" ? t("quran_stories.featured_story") : "قصة مميزة"}
+                      {t("quran_stories.featured_story")}
                     </span>
                   </div>
                   <div className="flex items-center space-x-1 text-sm text-gray-500 dark:text-gray-400">
@@ -329,7 +329,7 @@ export default function QuranStoriesSection() {
                     className="bg-gradient-to-r from-islamic-gold to-islamic-green text-white px-6 py-3 rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 flex items-center space-x-2 text-sm font-medium"
                   >
                     <Download className="w-4 h-4" />
-                    <span>{mounted && t("quran_stories.download") !== "quran_stories.download" ? t("quran_stories.download") : "تحميل"}</span>
+                    <span>{t("quran_stories.download")}</span>
                   </button>
                 </div>
               </div>

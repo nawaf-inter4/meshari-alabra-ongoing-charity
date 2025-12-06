@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Clock, MapPin, Bell, Search, ChevronDown, Volume2, VolumeX, AlertCircle } from "lucide-react";
@@ -51,8 +51,45 @@ export default function PrayerTimesSection() {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
+      calendar: 'gregory', // Explicitly use Gregorian calendar
     }).format(date);
   };
+
+  // Translate location names based on locale using translation keys
+  const translateLocation = (city: string, country: string): string => {
+    // Normalize city and country names for translation keys
+    const cityKey = `location.${city.toLowerCase().replace(/\s+/g, '_')}`;
+    const countryKey = `location.${country.toLowerCase().replace(/\s+/g, '_')}`;
+    
+    // Get translations, fallback to original if translation key doesn't exist
+    let translatedCity = t(cityKey);
+    let translatedCountry = t(countryKey);
+    
+    // If translation returns the key itself, it means the key doesn't exist, use original
+    if (translatedCity === cityKey) translatedCity = city;
+    if (translatedCountry === countryKey) translatedCountry = country;
+    
+    // Use appropriate separator based on locale direction
+    const separator = locale === 'ar' ? '، ' : ', ';
+    
+    return `${translatedCity}${separator}${translatedCountry}`;
+  };
+  
+  // Update location when locale changes
+  useEffect(() => {
+    if (location && mounted) {
+      // Extract city and country from current location string
+      // Location format is either "City, Country" or "المدينة، الدولة"
+      const parts = location.split(/[،,]/).map(p => p.trim());
+      if (parts.length >= 2) {
+        // Try to reverse translate or use default
+        const city = parts[0];
+        const country = parts[1];
+        // Re-translate with new locale
+        setLocation(translateLocation(city, country));
+      }
+    }
+  }, [locale, mounted]);
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -93,14 +130,58 @@ export default function PrayerTimesSection() {
     updateHijriDate();
   }, [locale]);
 
-  // Handle location search
-  useEffect(() => {
-    if (searchQuery.length > 2) {
-      searchLocations();
-    } else {
+  // Search locations function
+  const searchLocations = useCallback(async () => {
+    if (searchQuery.length < 2) {
       setSearchResults([]);
+      return;
+    }
+    
+    setIsSearching(true);
+    try {
+      // Use our Next.js API route to proxy the location search (avoids CORS issues)
+      const response = await fetch(
+        `/api/location-search?q=${encodeURIComponent(searchQuery)}`,
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setSearchResults(data);
+        } else {
+          setSearchResults([]);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error('Location search error:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
     }
   }, [searchQuery]);
+
+  // Handle location search with debouncing
+  useEffect(() => {
+    if (searchQuery.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    // Debounce the search to avoid too many API calls
+    const timeoutId = setTimeout(() => {
+      searchLocations();
+    }, 300); // Wait 300ms after user stops typing
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, searchLocations]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -184,7 +265,7 @@ export default function PrayerTimesSection() {
           Isha: formatTime(timings.Isha),
           Sunrise: formatTime(timings.Sunrise),
         });
-        setLocation(`${city}, ${country}`);
+        setLocation(translateLocation(city, country));
       } else {
         throw new Error('Invalid prayer times API response');
       }
@@ -241,7 +322,7 @@ export default function PrayerTimesSection() {
           Isha: formatTime(timings.Isha),
           Sunrise: formatTime(timings.Sunrise),
         });
-        setLocation("Riyadh, Saudi Arabia");
+        setLocation(translateLocation("Riyadh", "Saudi Arabia"));
       } else {
         throw new Error('Invalid API response');
       }
@@ -258,7 +339,7 @@ export default function PrayerTimesSection() {
         Maghrib: "6:00 PM",
         Isha: "7:30 PM"
       });
-      setLocation("Riyadh, Saudi Arabia");
+      setLocation(translateLocation("Riyadh", "Saudi Arabia"));
       setLoading(false);
     }
   };
@@ -492,34 +573,6 @@ export default function PrayerTimesSection() {
     }
   };
 
-  const searchLocations = async () => {
-    if (searchQuery.length < 3) return;
-    
-    setIsSearching(true);
-    try {
-      const response = await fetch(
-        `https://api.aladhan.com/v1/citiesByCountry/${searchQuery}`,
-        {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.code === 200 && data.data) {
-          setSearchResults(data.data.slice(0, 10)); // Limit to 10 results
-        }
-      }
-    } catch (error) {
-      console.error('Location search error:', error);
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
   const handleLocationSelect = async (location: any) => {
     setSelectedLocation({
       city: location.city,
@@ -527,7 +580,7 @@ export default function PrayerTimesSection() {
       lat: location.latitude,
       lng: location.longitude
     });
-    setLocation(`${location.city}, ${location.country}`);
+    setLocation(translateLocation(location.city, location.country));
     setSearchQuery("");
     setSearchResults([]);
     setIsLocationDropdownOpen(false);
@@ -619,7 +672,7 @@ export default function PrayerTimesSection() {
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{mounted ? (t("hijri.title") !== "hijri.title" ? t("hijri.title") : "التاريخ الهجري") : "التاريخ الهجري"}</p>
           <p className="text-2xl md:text-3xl font-bold text-islamic-gold">{hijriDate}</p>
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-            {getLocalizedDate()}
+            {mounted ? (t("hijri.gregorian") !== "hijri.gregorian" ? t("hijri.gregorian") : (locale === 'ar' ? "الميلادي" : "Gregorian")) : (locale === 'ar' ? "الميلادي" : "Gregorian")}: {getLocalizedDate()}
           </p>
           
           {/* Current Prayer Status */}
@@ -674,7 +727,7 @@ export default function PrayerTimesSection() {
             >
               <MapPin className="w-4 h-4 text-islamic-gold" />
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {location || "Select Location"}
+                {location || t("prayer.select_location")}
               </span>
               <ChevronDown className="w-4 h-4 text-islamic-gold" />
             </button>
@@ -686,7 +739,7 @@ export default function PrayerTimesSection() {
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <input
                       type="text"
-                      placeholder="Search city or country..."
+                      placeholder={locale === 'ar' ? 'ابحث عن مدينة أو دولة...' : 'Search city or country...'}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-islamic-gold"
@@ -714,13 +767,13 @@ export default function PrayerTimesSection() {
                         </div>
                       </button>
                     ))
-                  ) : searchQuery.length > 2 ? (
+                  ) : searchQuery.length >= 2 ? (
                     <div className="p-4 text-center text-gray-500">
-                      No locations found
+                      {locale === 'ar' ? 'لم يتم العثور على مواقع' : 'No locations found'}
                     </div>
                   ) : (
                     <div className="p-4 text-center text-gray-500">
-                      Type to search for cities...
+                      {locale === 'ar' ? 'اكتب للبحث عن المدن...' : 'Type to search for cities...'}
                     </div>
                   )}
                 </div>

@@ -13,12 +13,6 @@ interface Hadith {
 
 export default function HadithSection() {
   const { t } = useLanguage();
-  
-  // Fallback function for translations
-  const getTranslation = (key: string, fallback: string) => {
-    const translation = t(key);
-    return translation === key ? fallback : translation;
-  };
   const [hadith, setHadith] = useState<Hadith | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -132,19 +126,19 @@ export default function HadithSection() {
   ];
 
   const categories = [
-    { id: "all", name: t("hadith.categories.all") },
-    { id: "charity", name: t("hadith.categories.charity") },
-    { id: "speech", name: t("hadith.categories.speech") },
-    { id: "religion", name: t("hadith.categories.religion") },
-    { id: "brotherhood", name: t("hadith.categories.brotherhood") },
-    { id: "knowledge", name: t("hadith.categories.knowledge") },
-    { id: "mercy", name: t("hadith.categories.mercy") },
-    { id: "faith", name: t("hadith.categories.faith") },
-    { id: "help", name: t("hadith.categories.help") },
-    { id: "love", name: t("hadith.categories.love") },
-    { id: "purity", name: t("hadith.categories.purity") },
-    { id: "hospitality", name: t("hadith.categories.hospitality") },
-    { id: "safety", name: t("hadith.categories.safety") },
+    { id: "all", name: t("hadith.categories.all") || "All" },
+    { id: "charity", name: t("hadith.categories.charity") || "Charity" },
+    { id: "speech", name: t("hadith.categories.speech") || "Speech" },
+    { id: "religion", name: t("hadith.categories.religion") || "Religion" },
+    { id: "brotherhood", name: t("hadith.categories.brotherhood") || "Brotherhood" },
+    { id: "knowledge", name: t("hadith.categories.knowledge") || "Knowledge" },
+    { id: "mercy", name: t("hadith.categories.mercy") || "Mercy" },
+    { id: "faith", name: t("hadith.categories.faith") || "Faith" },
+    { id: "help", name: t("hadith.categories.help") || "Help" },
+    { id: "love", name: t("hadith.categories.love") || "Love" },
+    { id: "purity", name: t("hadith.categories.purity") || "Purity" },
+    { id: "hospitality", name: t("hadith.categories.hospitality") || "Hospitality" },
+    { id: "safety", name: t("hadith.categories.safety") || "Safety" },
   ];
 
   const filteredHadiths = selectedCategory === "all" 
@@ -218,7 +212,7 @@ export default function HadithSection() {
               className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105"
             >
               <RefreshCw className="w-5 h-5" />
-              {getTranslation("hadith.random_button", "Random Hadith")}
+              {t("hadith.random_button")}
             </button>
           </div>
         </motion.div>
@@ -261,7 +255,7 @@ export default function HadithSection() {
           </motion.div>
         ) : (
           <div className="text-center text-gray-600 dark:text-gray-400 py-12">
-            {getTranslation("hadith.click_button", "Click the button to get a random hadith")}
+            {t("hadith.click_button")}
           </div>
         )}
       </div>

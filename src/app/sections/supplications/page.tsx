@@ -1,59 +1,24 @@
-"use client";
-
-import { useEffect } from "react";
-import dynamic from "next/dynamic";
+import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import ClientHeader from "@/components/ClientHeader";
 import Footer from "@/components/Footer";
-import { useLanguage } from "@/components/LanguageProvider";
+import SectionSchema from "@/components/SectionSchema";
+import SupplicationsSectionWrapper from "@/components/sections/SupplicationsSectionWrapper";
+import { generateSectionMetadata } from "@/lib/section-metadata";
 
-// Dynamically import the SupplicationsSection to avoid SSR issues
-const SupplicationsSection = dynamic(() => import("@/components/sections/SupplicationsSection"), {
-  loading: () => (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-islamic-gold"></div>
-    </div>
-  ),
-});
-
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers();
+  const locale = headersList.get('x-locale') || 'ar';
+  return generateSectionMetadata('supplications', locale);
+}
 
 export default function SupplicationsPage() {
-  const { locale, t } = useLanguage();
-
-  useEffect(() => {
-    // Update document title and meta tags based on current language
-    const title = t("supplications.title") !== "supplications.title" ? t("supplications.title") : "الأدعية";
-    const description = t("supplications.subtitle") !== "supplications.subtitle" ? t("supplications.subtitle") : "أدعية مختارة";
-    
-    document.title = `${title} - Meshari Alabra Ongoing Charity`;
-    
-    // Update meta description
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', description);
-    } else {
-      const meta = document.createElement('meta');
-      meta.name = 'description';
-      meta.content = description;
-      document.head.appendChild(meta);
-    }
-
-    // Update Open Graph tags
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) {
-      ogTitle.setAttribute('content', `${title} - Meshari Alabra Ongoing Charity`);
-    }
-
-    const ogDescription = document.querySelector('meta[property="og:description"]');
-    if (ogDescription) {
-      ogDescription.setAttribute('content', description);
-    }
-  }, [locale, t]);
-
   return (
     <main className="min-h-screen bg-light dark:bg-dark islamic-pattern">
+      <SectionSchema sectionId="supplications" />
       <ClientHeader />
       <div className="pt-20">
-        <SupplicationsSection />
+        <SupplicationsSectionWrapper />
       </div>
       <Footer />
     </main>

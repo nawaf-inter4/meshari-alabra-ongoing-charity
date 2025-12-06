@@ -1,9 +1,62 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function proxy(request: NextRequest) {
+const supportedLanguages = ['ar', 'en', 'ur', 'tr', 'id', 'ms', 'bn', 'fr', 'zh', 'it', 'ja', 'ko'];
+
+function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const pathSegments = pathname.split('/').filter(Boolean);
+  
+  // Check if path starts with a language code
+  const firstSegment = pathSegments[0];
+  const isLanguagePrefix = supportedLanguages.includes(firstSegment);
+  
+  // Handle /[lang]/sections/... routes - rewrite to /sections/... internally
+  // This allows sections to work with language prefixes in the URL
+  if (isLanguagePrefix && pathSegments[1] === 'sections') {
+    const sectionPath = '/' + pathSegments.slice(1).join('/');
+    const url = request.nextUrl.clone();
+    url.pathname = sectionPath;
+    
+    // Set language header so components can detect it
+    const response = NextResponse.rewrite(url);
+    response.headers.set('x-locale', firstSegment);
+    
+    // Apply security headers
+    applySecurityHeaders(response, request);
+    return response;
+  }
+  
+  // Redirect /sections/... to /[lang]/sections/... if no language prefix
+  // This ensures all section URLs have a language prefix
+  if (pathSegments[0] === 'sections' && !isLanguagePrefix) {
+    // Try to get preferred language from cookie
+    const preferredLang = request.cookies.get('preferred-locale')?.value || 'ar';
+    const lang = supportedLanguages.includes(preferredLang) ? preferredLang : 'ar';
+    
+    // Build new path with language prefix
+    const newPath = `/${lang}${pathname}`;
+    const url = request.nextUrl.clone();
+    url.pathname = newPath;
+    
+    const response = NextResponse.redirect(url);
+    applySecurityHeaders(response, request);
+    return response;
+  }
+  
   const response = NextResponse.next();
 
+  // Apply security headers
+  applySecurityHeaders(response, request);
+  
+  return response;
+}
+
+// Export as both default and named for Next.js 16+ compatibility
+export default proxy;
+export { proxy };
+
+function applySecurityHeaders(response: NextResponse, request: NextRequest) {
   // Security Headers
   response.headers.set('X-DNS-Prefetch-Control', 'on');
   response.headers.set('X-XSS-Protection', '1; mode=block');
@@ -71,8 +124,6 @@ export function proxy(request: NextRequest) {
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   }
-
-  return response;
 }
 
 export const config = {

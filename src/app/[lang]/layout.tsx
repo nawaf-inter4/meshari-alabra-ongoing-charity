@@ -17,111 +17,111 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 // Language-specific metadata
 const languageMetadata = {
   ar: {
-    title: "صدقة جارية - مشاري بن أحمد بن سليمان العبره",
+    title: "صدقة جارية | مشاري بن أحمد بن سليمان العبره",
     description: "صفحة مخصصة لأخي مشاري، توفي إثر مرض سرطان الدماغ. اللهم اغفر له وارحمه واجعل القرآن والصدقة الجارية شفيعاً له",
     locale: "ar_SA",
-    ogTitle: "صدقة جارية - مشاري بن أحمد بن سليمان العبره",
+    ogTitle: "صدقة جارية | مشاري بن أحمد بن سليمان العبره",
     ogDescription: "صفحة مخصصة لأخي مشاري، توفي إثر مرض سرطان الدماغ. اللهم اغفر له وارحمه واجعل القرآن والصدقة الجارية شفيعاً له",
-    twitterTitle: "صدقة جارية لمشاري - مشاري بن أحمد بن سليمان العبره",
+    twitterTitle: "صدقة جارية لمشاري | مشاري بن أحمد بن سليمان العبره",
     twitterDescription: "صفحة مخصصة لأخي مشاري، توفي إثر مرض سرطان الدماغ. اللهم اغفر له وارحمه واجعل القرآن والصدقة الجارية شفيعاً له"
   },
   en: {
-    title: "Ongoing Charity - Meshari Ahmed Sulaiman Alabra",
+    title: "Ongoing Charity | Meshari Ahmed Sulaiman Alabra",
     description: "A tribute to Meshari Ahmed Sulaiman Alabra - Ongoing charity through Quran, supplications, and good deeds. May Allah have mercy on him.",
     locale: "en_US",
-    ogTitle: "Ongoing Charity - Meshari Ahmed Sulaiman Alabra",
+    ogTitle: "Ongoing Charity | Meshari Ahmed Sulaiman Alabra",
     ogDescription: "A tribute to Meshari Ahmed Sulaiman Alabra - Ongoing charity through Quran, supplications, and good deeds. May Allah have mercy on him.",
-    twitterTitle: "Ongoing Charity - Meshari Ahmed Sulaiman Alabra",
+    twitterTitle: "Ongoing Charity | Meshari Ahmed Sulaiman Alabra",
     twitterDescription: "A tribute to Meshari Ahmed Sulaiman Alabra - Ongoing charity through Quran, supplications, and good deeds. May Allah have mercy on him."
   },
   ur: {
-    title: "کی جاری صدقہ - مشاری احمد سلیمان العبرہ",
+    title: "کی جاری صدقہ | مشاری احمد سلیمان العبرہ",
     description: "مشاری احمد سلیمان العبرہ کے لیے خراج عقیدت - قرآن، دعاؤں اور نیک اعمال کے ذریعے جاری صدقہ۔ اللہ ان پر رحم فرمائے۔",
     locale: "ur_PK",
-    ogTitle: "کی جاری صدقہ - مشاری احمد سلیمان العبرہ",
+    ogTitle: "کی جاری صدقہ | مشاری احمد سلیمان العبرہ",
     ogDescription: "مشاری احمد سلیمان العبرہ کے لیے خراج عقیدت - قرآن، دعاؤں اور نیک اعمال کے ذریعے جاری صدقہ۔ اللہ ان پر رحم فرمائے۔",
-    twitterTitle: "کی جاری صدقہ - مشاری احمد سلیمان العبرہ",
+    twitterTitle: "کی جاری صدقہ | مشاری احمد سلیمان العبرہ",
     twitterDescription: "مشاری احمد سلیمان العبرہ کے لیے خراج عقیدت - قرآن، دعاؤں اور نیک اعمال کے ذریعے جاری صدقہ۔ اللہ ان پر رحم فرمائے۔"
   },
   tr: {
-    title: "nin Sürekli Hayır İşi - Meshari Ahmed Sulaiman Alabra",
+    title: "nin Sürekli Hayır İşi | Meshari Ahmed Sulaiman Alabra",
     description: "Meshari Ahmed Sulaiman Alabra'ya saygı - Kuran, dualar ve iyilikler yoluyla sürekli hayır işi. Allah ona merhamet etsin.",
     locale: "tr_TR",
-    ogTitle: "nin Sürekli Hayır İşi - Meshari Ahmed Sulaiman Alabra",
+    ogTitle: "nin Sürekli Hayır İşi | Meshari Ahmed Sulaiman Alabra",
     ogDescription: "Meshari Ahmed Sulaiman Alabra'ya saygı - Kuran, dualar ve iyilikler yoluyla sürekli hayır işi. Allah ona merhamet etsin.",
-    twitterTitle: "Meshari'nin Sürekli Hayır İşi - Meshari Ahmed Sulaiman Alabra",
+    twitterTitle: "Meshari'nin Sürekli Hayır İşi | Meshari Ahmed Sulaiman Alabra",
     twitterDescription: "Meshari Ahmed Sulaiman Alabra'ya saygı - Kuran, dualar ve iyilikler yoluyla sürekli hayır işi. Allah ona merhamet etsin."
   },
   id: {
-    title: "Amal Jariyah - Meshari Ahmed Sulaiman Alabra",
+    title: "Amal Jariyah | Meshari Ahmed Sulaiman Alabra",
     description: "Penghormatan untuk Meshari Ahmed Sulaiman Alabra - Amal jariyah melalui Al-Quran, doa, dan perbuatan baik. Semoga Allah merahmatinya.",
     locale: "id_ID",
-    ogTitle: "Amal Jariyah - Meshari Ahmed Sulaiman Alabra",
+    ogTitle: "Amal Jariyah | Meshari Ahmed Sulaiman Alabra",
     ogDescription: "Penghormatan untuk Meshari Ahmed Sulaiman Alabra - Amal jariyah melalui Al-Quran, doa, dan perbuatan baik. Semoga Allah merahmatinya.",
-    twitterTitle: "Amal Jariyah - Meshari Ahmed Sulaiman Alabra",
+    twitterTitle: "Amal Jariyah | Meshari Ahmed Sulaiman Alabra",
     twitterDescription: "Penghormatan untuk Meshari Ahmed Sulaiman Alabra - Amal jariyah melalui Al-Quran, doa, dan perbuatan baik. Semoga Allah merahmatinya."
   },
   ms: {
-    title: "Amal Jariyah - Meshari Ahmed Sulaiman Alabra",
+    title: "Amal Jariyah | Meshari Ahmed Sulaiman Alabra",
     description: "Penghormatan untuk Meshari Ahmed Sulaiman Alabra - Amal jariyah melalui Al-Quran, doa, dan perbuatan baik. Semoga Allah merahmatinya.",
     locale: "ms_MY",
-    ogTitle: "Amal Jariyah - Meshari Ahmed Sulaiman Alabra",
+    ogTitle: "Amal Jariyah | Meshari Ahmed Sulaiman Alabra",
     ogDescription: "Penghormatan untuk Meshari Ahmed Sulaiman Alabra - Amal jariyah melalui Al-Quran, doa, dan perbuatan baik. Semoga Allah merahmatinya.",
-    twitterTitle: "Amal Jariyah - Meshari Ahmed Sulaiman Alabra",
+    twitterTitle: "Amal Jariyah | Meshari Ahmed Sulaiman Alabra",
     twitterDescription: "Penghormatan untuk Meshari Ahmed Sulaiman Alabra - Amal jariyah melalui Al-Quran, doa, dan perbuatan baik. Semoga Allah merahmatinya."
   },
   bn: {
-    title: "মেশারির চলমান দান - মেশারি আহমেদ সুলাইমান আল-আবরা",
+    title: "মেশারির চলমান দান | মেশারি আহমেদ সুলাইমান আল-আবরা",
     description: "মেশারি আহমেদ সুলাইমান আল-আবরাকে শ্রদ্ধা - কুরআন, দোয়া ও সৎকর্মের মাধ্যমে চলমান দান। আল্লাহ তাকে রহম করুন।",
     locale: "bn_BD",
-    ogTitle: "মেশারির চলমান দান - মেশারি আহমেদ সুলাইমান আল-আবরা",
+    ogTitle: "মেশারির চলমান দান | মেশারি আহমেদ সুলাইমান আল-আবরা",
     ogDescription: "মেশারি আহমেদ সুলাইমান আল-আবরাকে শ্রদ্ধা - কুরআন, দোয়া ও সৎকর্মের মাধ্যমে চলমান দান। আল্লাহ তাকে রহম করুন।",
-    twitterTitle: "মেশারির চলমান দান - মেশারি আহমেদ সুলাইমান আল-আবরা",
+    twitterTitle: "মেশারির চলমান দান | মেশারি আহমেদ সুলাইমান আল-আবরা",
     twitterDescription: "মেশারি আহমেদ সুলাইমান আল-আবরাকে শ্রদ্ধা - কুরআন, দোয়া ও সৎকর্মের মাধ্যমে চলমান দান। আল্লাহ তাকে রহম করুন।"
   },
   fr: {
-    title: "Charité Continue - Meshari Ahmed Sulaiman Alabra",
+    title: "Charité Continue | Meshari Ahmed Sulaiman Alabra",
     description: "Hommage à Meshari Ahmed Sulaiman Alabra - Charité continue par le Coran, les supplications et les bonnes œuvres. Qu'Allah ait pitié de lui.",
     locale: "fr_FR",
-    ogTitle: "Charité Continue - Meshari Ahmed Sulaiman Alabra",
+    ogTitle: "Charité Continue | Meshari Ahmed Sulaiman Alabra",
     ogDescription: "Hommage à Meshari Ahmed Sulaiman Alabra - Charité continue par le Coran, les supplications et les bonnes œuvres. Qu'Allah ait pitié de lui.",
-    twitterTitle: "Charité Continue - Meshari Ahmed Sulaiman Alabra",
+    twitterTitle: "Charité Continue | Meshari Ahmed Sulaiman Alabra",
     twitterDescription: "Hommage à Meshari Ahmed Sulaiman Alabra - Charité continue par le Coran, les supplications et les bonnes œuvres. Qu'Allah ait pitié de lui."
   },
   zh: {
-    title: "的持续慈善 - Meshari Ahmed Sulaiman Alabra",
+    title: "的持续慈善 | Meshari Ahmed Sulaiman Alabra",
     description: "向Meshari Ahmed Sulaiman Alabra致敬 - 通过古兰经、祈祷和善行进行持续慈善。愿真主怜悯他。",
     locale: "zh_CN",
-    ogTitle: "的持续慈善 - Meshari Ahmed Sulaiman Alabra",
+    ogTitle: "的持续慈善 | Meshari Ahmed Sulaiman Alabra",
     ogDescription: "向Meshari Ahmed Sulaiman Alabra致敬 - 通过古兰经、祈祷和善行进行持续慈善。愿真主怜悯他。",
-    twitterTitle: "的持续慈善 - Meshari Ahmed Sulaiman Alabra",
+    twitterTitle: "的持续慈善 | Meshari Ahmed Sulaiman Alabra",
     twitterDescription: "向Meshari Ahmed Sulaiman Alabra致敬 - 通过古兰经、祈祷和善行进行持续慈善。愿真主怜悯他。"
   },
   it: {
-    title: "Carità Continua - Meshari Ahmed Sulaiman Alabra",
+    title: "Carità Continua | Meshari Ahmed Sulaiman Alabra",
     description: "Omaggio a Meshari Ahmed Sulaiman Alabra - Carità continua attraverso il Corano, le suppliche e le buone azioni. Che Allah abbia pietà di lui.",
     locale: "it_IT",
-    ogTitle: "Carità Continua - Meshari Ahmed Sulaiman Alabra",
+    ogTitle: "Carità Continua | Meshari Ahmed Sulaiman Alabra",
     ogDescription: "Omaggio a Meshari Ahmed Sulaiman Alabra - Carità continua attraverso il Corano, le suppliche e le buone azioni. Che Allah abbia pietà di lui.",
-    twitterTitle: "Carità Continua - Meshari Ahmed Sulaiman Alabra",
+    twitterTitle: "Carità Continua | Meshari Ahmed Sulaiman Alabra",
     twitterDescription: "Omaggio a Meshari Ahmed Sulaiman Alabra - Carità continua attraverso il Corano, le suppliche e le buone azioni. Che Allah abbia pietà di lui."
   },
   ja: {
-    title: "の継続的慈善 - Meshari Ahmed Sulaiman Alabra",
+    title: "の継続的慈善 | Meshari Ahmed Sulaiman Alabra",
     description: "Meshari Ahmed Sulaiman Alabraへの敬意 - コーラン、祈り、善行による継続的な慈善。アッラーが彼を憐れんでくださいますように。",
     locale: "ja_JP",
-    ogTitle: "の継続的慈善 - Meshari Ahmed Sulaiman Alabra",
+    ogTitle: "の継続的慈善 | Meshari Ahmed Sulaiman Alabra",
     ogDescription: "Meshari Ahmed Sulaiman Alabraへの敬意 - コーラン、祈り、善行による継続的な慈善。アッラーが彼を憐れんでくださいますように。",
-    twitterTitle: "の継続的慈善 - Meshari Ahmed Sulaiman Alabra",
+    twitterTitle: "の継続的慈善 | Meshari Ahmed Sulaiman Alabra",
     twitterDescription: "Meshari Ahmed Sulaiman Alabraへの敬意 - コーラン、祈り、善行による継続的な慈善。アッラーが彼を憐れんでくださいますように。"
   },
   ko: {
-    title: "의 지속적인 자선 - Meshari Ahmed Sulaiman Alabra",
+    title: "의 지속적인 자선 | Meshari Ahmed Sulaiman Alabra",
     description: "Meshari Ahmed Sulaiman Alabra에게 경의를 표합니다 - 꾸란, 기도, 선행을 통한 지속적인 자선. 알라가 그를 자비롭게 여기시기를.",
     locale: "ko_KR",
-    ogTitle: "의 지속적인 자선 - Meshari Ahmed Sulaiman Alabra",
+    ogTitle: "의 지속적인 자선 | Meshari Ahmed Sulaiman Alabra",
     ogDescription: "Meshari Ahmed Sulaiman Alabra에게 경의를 표합니다 - 꾸란, 기도, 선행을 통한 지속적인 자선. 알라가 그를 자비롭게 여기시기를.",
-    twitterTitle: "의 지속적인 자선 - Meshari Ahmed Sulaiman Alabra",
+    twitterTitle: "의 지속적인 자선 | Meshari Ahmed Sulaiman Alabra",
     twitterDescription: "Meshari Ahmed Sulaiman Alabra에게 경의를 표합니다 - 꾸란, 기도, 선행을 통한 지속적인 자선. 알라가 그를 자비롭게 여기시기를."
   }
 };
@@ -298,7 +298,7 @@ export default async function LanguageLayout({
             enableSystem
             disableTransitionOnChange={false}
           >
-            <LanguageProvider>
+            <LanguageProvider initialLocale={initialLanguage}>
               <DynamicMetaTags />
               {children}
               <AudioPlayer />

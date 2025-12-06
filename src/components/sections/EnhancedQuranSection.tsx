@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
-import { BookOpen, ChevronDown, Play, Pause, Volume2, Download, Share2, Heart } from "lucide-react";
+import { BookOpen, ChevronDown, Play, Pause, Volume2, Download, Share2, Bookmark, BookmarkCheck } from "lucide-react";
+import ShareModal from "../ShareModal";
 
 interface Ayah {
   number: number;
@@ -260,7 +261,18 @@ function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: {
     return <div className="text-gray-500">Loading translation...</div>;
   }
 
-  return <div>{translationText}</div>;
+  // RTL languages: Arabic, Urdu, Hebrew, Farsi, Yiddish, Pashto
+  const rtlLanguages = ['ar', 'ur', 'he', 'fa', 'yi', 'ps'];
+  const isRTL = rtlLanguages.includes(locale);
+  
+  return (
+    <div 
+      className={isRTL ? "font-arabic text-right leading-relaxed" : "font-lexend text-left leading-relaxed"} 
+      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+    >
+      {translationText}
+    </div>
+  );
 }
 
 export default function EnhancedQuranSection() {
@@ -280,6 +292,17 @@ export default function EnhancedQuranSection() {
   const [isReciterDropdownOpen, setIsReciterDropdownOpen] = useState(false);
   const [usingStaticFallback, setUsingStaticFallback] = useState(false);
   const [audioLoading, setAudioLoading] = useState(false);
+  const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [selectedVerseForShare, setSelectedVerseForShare] = useState<{
+    surahNumber: number;
+    surahName: string;
+    ayahNumber: number;
+    arabicText: string;
+    translation?: string;
+    juz?: number;
+    page?: number;
+  } | null>(null);
   
   const audioRef = useRef<HTMLAudioElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -308,7 +331,74 @@ export default function EnhancedQuranSection() {
     setMounted(true);
     fetchSurahs();
     fetchReciters();
+    // Load bookmarks from localStorage
+    if (typeof window !== 'undefined') {
+      const savedBookmarks = localStorage.getItem('quran-bookmarks');
+      if (savedBookmarks) {
+        try {
+          setBookmarks(new Set(JSON.parse(savedBookmarks)));
+        } catch (e) {
+          console.error('Error loading bookmarks:', e);
+        }
+      }
+    }
   }, []);
+
+  // Save bookmarks to localStorage whenever they change
+  useEffect(() => {
+    if (mounted && typeof window !== 'undefined') {
+      localStorage.setItem('quran-bookmarks', JSON.stringify(Array.from(bookmarks)));
+      // Dispatch custom event to notify other components
+      window.dispatchEvent(new CustomEvent('bookmarks-updated', { detail: { bookmarks: Array.from(bookmarks) } }));
+    }
+  }, [bookmarks, mounted]);
+
+  const toggleBookmark = (surahNumber: number, ayahNumber: number) => {
+    const bookmarkKey = `${surahNumber}-${ayahNumber}`;
+    setBookmarks(prev => {
+      const newBookmarks = new Set(prev);
+      if (newBookmarks.has(bookmarkKey)) {
+        newBookmarks.delete(bookmarkKey);
+      } else {
+        newBookmarks.add(bookmarkKey);
+      }
+      return newBookmarks;
+    });
+  };
+
+  const isBookmarked = (surahNumber: number, ayahNumber: number): boolean => {
+    return bookmarks.has(`${surahNumber}-${ayahNumber}`);
+  };
+
+  const handleShare = async (ayah: Ayah) => {
+    const currentSurah = surahs.find((s) => s.number === selectedSurah);
+    if (!currentSurah) return;
+
+    // Fetch translation text
+    let translationText = '';
+    if (selectedTranslation) {
+      try {
+        const response = await fetch(`/api/quran/ayah/${selectedSurah}:${ayah.numberInSurah}/${selectedTranslation}`);
+        const data = await response.json();
+        if (data.data && data.data.text) {
+          translationText = data.data.text;
+        }
+      } catch (error) {
+        console.error('Error fetching translation for share:', error);
+      }
+    }
+
+    setSelectedVerseForShare({
+      surahNumber: selectedSurah,
+      surahName: locale === 'ar' ? currentSurah.name : currentSurah.englishName,
+      ayahNumber: ayah.numberInSurah,
+      arabicText: ayah.text,
+      translation: translationText,
+      juz: ayah.juz,
+      page: ayah.page
+    });
+    setIsShareModalOpen(true);
+  };
 
   // Audio event handlers
   useEffect(() => {
@@ -362,6 +452,33 @@ export default function EnhancedQuranSection() {
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Listen for navigation to ayah events
+  useEffect(() => {
+    const handleNavigateToAyah = (event: CustomEvent) => {
+      const { surah, ayah } = event.detail;
+      if (surah && ayah) {
+        setSelectedSurah(surah);
+        // Wait for ayahs to load, then scroll to the ayah
+        setTimeout(() => {
+          const ayahElement = document.querySelector(`[data-ayah-number="${ayah}"]`);
+          if (ayahElement) {
+            ayahElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Highlight the ayah briefly
+            ayahElement.classList.add('ring-4', 'ring-islamic-gold', 'ring-opacity-50');
+            setTimeout(() => {
+              ayahElement.classList.remove('ring-4', 'ring-islamic-gold', 'ring-opacity-50');
+            }, 2000);
+          }
+        }, 500);
+      }
+    };
+
+    window.addEventListener('navigate-to-ayah', handleNavigateToAyah as EventListener);
+    return () => {
+      window.removeEventListener('navigate-to-ayah', handleNavigateToAyah as EventListener);
+    };
   }, []);
 
   const fetchSurahs = async () => {
@@ -850,6 +967,7 @@ export default function EnhancedQuranSection() {
             {ayahs.map((ayah, index) => (
               <motion.div
                 key={ayah.number}
+                data-ayah-number={ayah.numberInSurah}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -881,36 +999,34 @@ export default function EnhancedQuranSection() {
                       )}
                     </button>
                     
-                    <button className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-300">
-                      <Heart className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                    <button 
+                      onClick={() => toggleBookmark(selectedSurah, ayah.numberInSurah)}
+                      className={`p-2 rounded-full transition-colors duration-300 ${
+                        isBookmarked(selectedSurah, ayah.numberInSurah)
+                          ? "bg-islamic-gold/20 hover:bg-islamic-gold/30"
+                          : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
+                      }`}
+                      title={isBookmarked(selectedSurah, ayah.numberInSurah) ? "Remove bookmark" : "Bookmark this verse"}
+                    >
+                      {isBookmarked(selectedSurah, ayah.numberInSurah) ? (
+                        <BookmarkCheck className="w-5 h-5 text-islamic-gold" fill="currentColor" />
+                      ) : (
+                        <Bookmark className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      )}
                     </button>
                     
-                    <button className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-300">
+                    <button 
+                      onClick={() => handleShare(ayah)}
+                      className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-300"
+                      title={locale === 'ar' ? 'مشاركة الآية' : 'Share verse'}
+                    >
                       <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                     </button>
                   </div>
                 </div>
 
                 {/* Arabic Text */}
-                <div 
-                  className="arabic-quran-text text-2xl md:text-3xl leading-relaxed mb-4 text-right"
-                  style={{ 
-                    fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Noto Sans Arabic', 'Traditional Arabic', 'Arabic Typesetting', 'Tajawal', 'Arial Unicode MS', serif",
-                    lineHeight: '2.5',
-                    wordSpacing: '0.1em',
-                    letterSpacing: '0.02em',
-                    direction: 'rtl',
-                    unicodeBidi: 'bidi-override',
-                    fontFeatureSettings: '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1',
-                    textRendering: 'optimizeLegibility',
-                    fontVariantLigatures: 'common-ligatures contextual',
-                    fontKerning: 'normal',
-                    fontSynthesis: 'none',
-                    WebkitFontSmoothing: 'antialiased',
-                    MozOsxFontSmoothing: 'grayscale',
-                    textTransform: 'none'
-                  }}
-                >
+                <div className="arabic-quran-text text-2xl md:text-3xl leading-relaxed mb-4 text-right">
                   {ayah.text}
                 </div>
 
@@ -918,7 +1034,7 @@ export default function EnhancedQuranSection() {
                 {selectedTranslation && (
                   <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4">
                     <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                      {mounted && t("quran.translation") !== "quran.translation" ? t("quran.translation") : "الترجمة"} ({locale.toUpperCase()})
+                      {mounted && t("quran.translation") !== "quran.translation" ? t("quran.translation") : "التفسير"} ({locale.toUpperCase()})
                     </div>
                     <AyahTranslation 
                       surahNumber={selectedSurah} 
@@ -952,6 +1068,18 @@ export default function EnhancedQuranSection() {
         onCanPlay={() => {/* Audio can play */}}
         preload="none"
       />
+
+      {/* Share Modal */}
+      {selectedVerseForShare && (
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => {
+            setIsShareModalOpen(false);
+            setSelectedVerseForShare(null);
+          }}
+          verse={selectedVerseForShare}
+        />
+      )}
     </section>
   );
 }

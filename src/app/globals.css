@@ -25,6 +25,7 @@ body {
   @apply bg-light dark:bg-dark text-gray-900 dark:text-gray-100 transition-colors duration-300;
   /* Default font will be overridden by direction-specific rules */
   font-family: 'Lexend Deca', sans-serif;
+  transition: opacity 0.3s ease-in-out;
 }
 
 /* RTL Support */
@@ -52,6 +53,18 @@ html[dir="ltr"] body {
 }
 
 /* Additional specificity for font switching - removed universal selectors to prevent text direction issues */
+
+/* Lexend Deca Font for English/Non-Arabic Text */
+.font-lexend {
+  font-family: 'Lexend Deca', sans-serif !important;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
+  -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
+  -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 /* Arabic Text Rendering */
 .font-arabic {

@@ -223,5 +223,33 @@
   "social": {
     "x_account": "Akun X",
     "github": "GitHub"
-  }
+  },
+  "navigation": {
+    "sections_title": "Bagian yang Tersedia",
+    "sections_description": "Jelajahi berbagai bagian situs web, setiap bagian memiliki halaman terpisah yang dapat diakses langsung",
+    "visit_section": "Kunjungi Bagian",
+    "back_to_home": "Kembali ke Beranda"
+  },
+  "navigation.visit_section": "Kunjungi Bagian",
+  "navigation.back_to_home": "Kembali ke Beranda",
+  "navigation.sections_title": "Bagian yang Tersedia",
+  "navigation.sections_description": "Jelajahi berbagai bagian situs web, setiap bagian memiliki halaman terpisah yang dapat diakses langsung",
+  "quran_stories.featured_story": "Cerita Unggulan",
+  "quran_stories.preview": "Pratinjau",
+  "quran_stories.read": "Baca",
+  "location.riyadh": "Riyadh",
+  "location.saudi_arabia": "Arab Saudi",
+  "donation.balance_text": "Semoga Allah meletakkannya dalam timbangan kebaikannya",
+  "qibla.find_direction": "Cari Arah Kiblat",
+  "qibla.detecting_location": "Mendeteksi lokasi Anda...",
+  "qibla.please_allow": "Silakan izinkan akses lokasi jika diminta",
+  "qibla.retry": "Coba Lagi",
+  "qibla.refresh": "Coba Lagi",
+  "quran_stories.title": "Kisah Al-Quran",
+  "quran_stories.description": "Temukan kisah-kisah indah di balik setiap surah Al-Quran",
+  "quran_stories.download": "Unduh",
+  "meshari_favorite_reciter.title": "Pembaca Al-Quran Favorit Meshari",
+  "meshari_favorite_reciter.subtitle": "Dengarkan Al-Quran dengan pembaca favorit Meshari (Semoga Allah merahmatinya)",
+  "islamic_chant.title": "Lagu Islami Favorit Meshari",
+  "islamic_chant.subtitle": "Lagu islami yang indah yang sangat disukai Meshari, membawa kedamaian dan ketenangan"
 }

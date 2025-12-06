@@ -231,10 +231,33 @@
   "navigation": {
     "sections_title": "Mevcut Bölümler",
     "sections_description": "Web sitesinin farklı bölümlerini keşfedin, her bölümün doğrudan erişilebilir ayrı bir sayfası vardır",
-    "visit_section": "Bölümü Ziyaret Et"
+    "visit_section": "Bölümü Ziyaret Et",
+    "back_to_home": "Ana Sayfaya Dön"
   },
+  "navigation.visit_section": "Bölümü Ziyaret Et",
+  "navigation.back_to_home": "Ana Sayfaya Dön",
+  "navigation.sections_title": "Mevcut Bölümler",
+  "navigation.sections_description": "Web sitesinin farklı bölümlerini keşfedin, her bölümün doğrudan erişilebilir ayrı bir sayfası vardır",
+  "quran_stories.featured_story": "Öne Çıkan Hikaye",
+  "quran_stories.preview": "Önizleme",
+  "quran_stories.read": "Oku",
+  "location.riyadh": "Riyad",
+  "location.saudi_arabia": "Suudi Arabistan",
   "islamic_chant": {
     "title": "İslami İlahi",
     "subtitle": "Sürekli sadaka olarak güzel İslami ilahileri dinleyin"
-  }
+  },
+  "donation.balance_text": "Allah onu iyiliklerinin terazisine koysun",
+  "qibla.find_direction": "Kıble Yönünü Bul",
+  "qibla.detecting_location": "Konumunuz tespit ediliyor...",
+  "qibla.please_allow": "İstenirse lütfen konum erişimine izin verin",
+  "qibla.retry": "Tekrar Dene",
+  "qibla.refresh": "Yeniden Dene",
+  "quran_stories.title": "Kuran Hikayeleri",
+  "quran_stories.description": "Kutsal Kuran'ın her suresinin arkasındaki güzel hikayeleri keşfedin",
+  "quran_stories.download": "İndir",
+  "meshari_favorite_reciter.title": "Meshari'nin Favori Kuran Okuyucusu",
+  "meshari_favorite_reciter.subtitle": "Meshari'nin favori Kuran okuyucusu ile Kutsal Kuran'ı dinleyin (Allah ona rahmet etsin)",
+  "islamic_chant.title": "Meshari'nin Favori İslami İlahisi",
+  "islamic_chant.subtitle": "Meshari'nin çok sevdiği, huzur ve sükunet veren güzel bir İslami ilahi"
 }

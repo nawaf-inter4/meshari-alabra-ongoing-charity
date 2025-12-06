@@ -3,10 +3,12 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLanguage } from "./LanguageProvider";
 import { Heart, Share2, Github } from "lucide-react";
+import ShareModal from "./ShareModal";
 
 export default function Footer() {
   const { t, locale, direction } = useLanguage();
   const [mounted, setMounted] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   
   // Safety check for direction
   const safeDirection = direction || 'ltr';
@@ -102,18 +104,8 @@ export default function Footer() {
     return translation;
   };
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: t("site.title"),
-          text: t("site.subtitle"),
-          url: window.location.href,
-        });
-      } catch (error) {
-        // Error sharing - fallback to copy
-      }
-    }
+  const handleShare = () => {
+    setIsShareModalOpen(true);
   };
 
   return (
@@ -146,6 +138,13 @@ export default function Footer() {
               <Share2 className="w-5 h-5" />
               {memoizedTranslations.share}
             </button>
+            
+            {/* Share Modal */}
+            <ShareModal
+              isOpen={isShareModalOpen}
+              onClose={() => setIsShareModalOpen(false)}
+              mode="website"
+            />
             
             <a
               href="https://x.com/alabrameshari"

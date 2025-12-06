@@ -3,10 +3,25 @@
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookOpen, Book, Heart, Clock, DollarSign, Compass, Users, Calendar, Star, Globe, Shield, Gift, Grid3X3 } from "lucide-react";
-import Link from "next/link";
 
 export default function SectionNavigation() {
-  const { t, locale } = useLanguage();
+  const { t, locale, direction } = useLanguage();
+
+  // Handle section navigation with full page reload to avoid React unmounting issues
+  const handleSectionClick = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
+    // Use full page navigation to avoid React hydration issues between different layouts
+    window.location.href = href;
+  };
+
+  // Helper function to get section href with language prefix
+  const getSectionHref = (sectionPath: string) => {
+    if (locale === 'ar') {
+      return sectionPath; // Arabic: /sections/quran
+    } else {
+      return `/${locale}${sectionPath}`; // Other languages: /en/sections/quran
+    }
+  };
 
   const sections = [
     {
@@ -14,7 +29,7 @@ export default function SectionNavigation() {
       title: t("quran.title"),
       description: t("quran.subtitle"),
       icon: BookOpen,
-      href: "/sections/quran",
+      href: getSectionHref("/sections/quran"),
       color: "from-islamic-blue to-islamic-green"
     },
     {
@@ -22,7 +37,7 @@ export default function SectionNavigation() {
       title: t("tafseer.title"),
       description: t("tafseer.subtitle"),
       icon: Book,
-      href: "/sections/tafseer",
+      href: getSectionHref("/sections/tafseer"),
       color: "from-islamic-green to-islamic-gold"
     },
     {
@@ -30,7 +45,7 @@ export default function SectionNavigation() {
       title: t("dhikr.title"),
       description: t("dhikr.subtitle"),
       icon: Heart,
-      href: "/sections/dhikr",
+      href: getSectionHref("/sections/dhikr"),
       color: "from-islamic-gold to-yellow-500"
     },
     {
@@ -38,7 +53,7 @@ export default function SectionNavigation() {
       title: t("prayer.title"),
       description: t("prayer.subtitle"),
       icon: Clock,
-      href: "/sections/prayer-times",
+      href: getSectionHref("/sections/prayer-times"),
       color: "from-purple-500 to-islamic-blue"
     },
     {
@@ -46,7 +61,7 @@ export default function SectionNavigation() {
       title: t("qibla.title"),
       description: t("qibla.subtitle"),
       icon: Compass,
-      href: "/sections/qibla",
+      href: getSectionHref("/sections/qibla"),
       color: "from-islamic-green to-teal-500"
     },
     {
@@ -54,7 +69,7 @@ export default function SectionNavigation() {
       title: t("donation.title"),
       description: t("donation.subtitle"),
       icon: DollarSign,
-      href: "/sections/donation",
+      href: getSectionHref("/sections/donation"),
       color: "from-red-500 to-pink-500"
     },
     {
@@ -62,7 +77,7 @@ export default function SectionNavigation() {
       title: t("supplications.title"),
       description: t("supplications.subtitle"),
       icon: Star,
-      href: "/sections/supplications",
+      href: getSectionHref("/sections/supplications"),
       color: "from-yellow-500 to-orange-500"
     },
     {
@@ -70,7 +85,7 @@ export default function SectionNavigation() {
       title: t("hadith.title"),
       description: t("hadith.subtitle"),
       icon: Shield,
-      href: "/sections/hadith",
+      href: getSectionHref("/sections/hadith"),
       color: "from-islamic-blue to-blue-600"
     },
     {
@@ -78,7 +93,7 @@ export default function SectionNavigation() {
       title: t("youtube.title"),
       description: t("youtube.description"),
       icon: Globe,
-      href: "/sections/youtube",
+      href: getSectionHref("/sections/youtube"),
       color: "from-red-600 to-red-500"
     }
   ];
@@ -113,8 +128,12 @@ export default function SectionNavigation() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <Link href={section.href}>
-                <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold h-full flex flex-col">
+              <a
+                href={section.href}
+                onClick={(e) => handleSectionClick(e, section.href)}
+                className="block"
+              >
+                <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold h-full flex flex-col cursor-pointer">
                   <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${section.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
                     <section.icon className="w-8 h-8 text-white" />
                   </div>
@@ -127,35 +146,19 @@ export default function SectionNavigation() {
                     {section.description}
                   </p>
                   
-                  <div className={`flex items-center text-islamic-gold font-semibold group-hover:${locale === 'ar' ? '-translate-x-2' : 'translate-x-2'} transition-transform duration-300 mt-auto`}>
-                    {locale === 'ar' ? (
-                      <>
-                        <span>{t("navigation.visit_section") !== "navigation.visit_section" ? t("navigation.visit_section") : "زيارة القسم"}</span>
-                        <svg 
-                          className="w-4 h-4 mr-2 transform rotate-180" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </>
-                    ) : (
-                      <>
-                        <span>{t("navigation.visit_section") !== "navigation.visit_section" ? t("navigation.visit_section") : "Visit Section"}</span>
-                        <svg 
-                          className="w-4 h-4 ml-2" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </>
-                    )}
+                  <div className={`flex items-center text-islamic-gold font-semibold group-hover:${direction === 'rtl' ? '-translate-x-2' : 'translate-x-2'} transition-transform duration-300 mt-auto`}>
+                    <span>{t("navigation.visit_section")}</span>
+                    <svg 
+                      className={`w-4 h-4 ${direction === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </div>
                 </div>
-              </Link>
+              </a>
             </motion.div>
           ))}
         </div>

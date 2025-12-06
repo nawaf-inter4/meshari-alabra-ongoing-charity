@@ -38,15 +38,11 @@ export default function MeshariFavoriteReciter() {
           <div className="inline-flex items-center gap-2 mb-4">
             <PlayCircle className="w-8 h-8 text-islamic-gold" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-2">
-              {mounted && t("meshari_favorite_reciter.title") !== "meshari_favorite_reciter.title" 
-                ? t("meshari_favorite_reciter.title") 
-                : "القارء المفضل لمشاري رحمه الله"}
+              {t("meshari_favorite_reciter.title")}
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            {mounted && t("meshari_favorite_reciter.subtitle") !== "meshari_favorite_reciter.subtitle" 
-              ? t("meshari_favorite_reciter.subtitle") 
-              : "استمع إلى القرآن الكريم بصوت القارء المفضل لمشاري رحمه الله"}
+              {t("meshari_favorite_reciter.subtitle")}
           </p>
         </div>
 

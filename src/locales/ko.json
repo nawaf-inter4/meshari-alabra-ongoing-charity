@@ -222,5 +222,33 @@
   "social": {
     "x_account": "X 계정",
     "github": "GitHub"
-  }
+  },
+  "navigation": {
+    "sections_title": "사용 가능한 섹션",
+    "sections_description": "웹사이트의 다양한 섹션을 탐색하세요. 각 섹션에는 직접 액세스할 수 있는 자체 페이지가 있습니다",
+    "visit_section": "섹션 방문",
+    "back_to_home": "홈으로 돌아가기"
+  },
+  "navigation.visit_section": "섹션 방문",
+  "navigation.back_to_home": "홈으로 돌아가기",
+  "navigation.sections_title": "사용 가능한 섹션",
+  "navigation.sections_description": "웹사이트의 다양한 섹션을 탐색하세요. 각 섹션에는 직접 액세스할 수 있는 자체 페이지가 있습니다",
+  "quran_stories.featured_story": "추천 이야기",
+  "quran_stories.preview": "미리보기",
+  "quran_stories.read": "읽기",
+  "location.riyadh": "리야드",
+  "location.saudi_arabia": "사우디아라비아",
+  "donation.balance_text": "알라가 그의 선행의 저울에 그것을 두시기를",
+  "qibla.find_direction": "키블라 방향 찾기",
+  "qibla.detecting_location": "위치를 감지하는 중...",
+  "qibla.please_allow": "메시지가 표시되면 위치 액세스를 허용하세요",
+  "qibla.retry": "다시 시도",
+  "qibla.refresh": "다시 시도",
+  "quran_stories.title": "꾸란 이야기",
+  "quran_stories.description": "성스러운 꾸란의 각 장 뒤에 숨겨진 아름다운 이야기를 발견하세요",
+  "quran_stories.download": "다운로드",
+  "meshari_favorite_reciter.title": "메샤리의 가장 좋아하는 꾸란 낭송자",
+  "meshari_favorite_reciter.subtitle": "메샤리의 가장 좋아하는 꾸란 낭송자와 함께 성스러운 꾸란을 들으세요 (알라가 그에게 자비를 베푸시기를)",
+  "islamic_chant.title": "메샤리의 가장 좋아하는 이슬람 찬송가",
+  "islamic_chant.subtitle": "메샤리가 매우 사랑했던 아름다운 이슬람 찬송가, 평화와 평온을 가져다 줍니다"
 }

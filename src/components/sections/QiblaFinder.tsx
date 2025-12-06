@@ -11,14 +11,13 @@ export default function QiblaFinder() {
   const [userHeading, setUserHeading] = useState(0);
   const [distance, setDistance] = useState<number | null>(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [locationPermission, setLocationPermission] = useState<"prompt" | "granted" | "denied">("prompt");
+  const [hasRequestedLocation, setHasRequestedLocation] = useState(false);
 
   useEffect(() => {
-    getQiblaDirection();
-
-    // Listen to device orientation
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", handleOrientation);
-    }
+    // Only setup device orientation, don't auto-detect location
+    setupDeviceOrientation();
 
     return () => {
       if (window.DeviceOrientationEvent) {
@@ -27,37 +26,136 @@ export default function QiblaFinder() {
     };
   }, []);
 
+  const setupDeviceOrientation = () => {
+    // Request permission for device orientation (iOS 13+)
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
+      (DeviceOrientationEvent as any).requestPermission()
+        .then((response: string) => {
+          if (response === 'granted') {
+            window.addEventListener("deviceorientation", handleOrientation);
+          }
+        })
+        .catch(() => {
+          console.warn('Device orientation permission denied');
+        });
+    } else if (window.DeviceOrientationEvent) {
+      // For non-iOS devices
+      window.addEventListener("deviceorientation", handleOrientation);
+    }
+  };
+
   const handleOrientation = (event: DeviceOrientationEvent) => {
     if (event.alpha !== null) {
-      setUserHeading(360 - event.alpha);
+      // Convert alpha (0-360) to heading
+      // Alpha is the compass direction (0 = North, 90 = East, etc.)
+      let heading = event.alpha;
+      
+      // Normalize to 0-360
+      if (heading < 0) heading += 360;
+      if (heading >= 360) heading -= 360;
+      
+      setUserHeading(heading);
     }
   };
 
   const getQiblaDirection = async () => {
+    setError("");
+    setLoading(true);
+    setHasRequestedLocation(true);
     let latitude = 24.7136; // Default to Riyadh
     let longitude = 46.6753;
+    let locationDetected = false;
 
-    // Try to get user location via IP
-    try {
-      const ipResponse = await fetch('https://ipapi.co/json/', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
-      
-      if (ipResponse.ok) {
-        const ipData = await ipResponse.json();
-        latitude = ipData.latitude;
-        longitude = ipData.longitude;
+    // First, try browser geolocation API (most accurate)
+    if (navigator.geolocation) {
+      try {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(
+            resolve,
+            reject,
+            {
+              enableHighAccuracy: true,
+              timeout: 15000, // Increased timeout
+              maximumAge: 0
+            }
+          );
+        });
+        
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+        setLocationPermission("granted");
+        locationDetected = true;
+        setError(""); // Clear any previous errors
+      } catch (geoError: any) {
+        console.warn('Geolocation failed:', geoError);
+        setLocationPermission("denied");
+        
+        // Fallback to IP-based location
+        try {
+          const ipResponse = await fetch('https://ipapi.co/json/', {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+            },
+          });
+          
+          if (ipResponse.ok) {
+            const ipData = await ipResponse.json();
+            if (ipData.latitude && ipData.longitude) {
+              latitude = ipData.latitude;
+              longitude = ipData.longitude;
+              locationDetected = true;
+              setError(""); // Clear any previous errors
+            } else {
+              setError(t("qibla.error") || "Unable to determine location. Please allow location access or try again.");
+            }
+          } else {
+            setError(t("qibla.error") || "Unable to determine location. Please allow location access or try again.");
+          }
+        } catch (ipError) {
+          console.warn('IP location detection failed:', ipError);
+          setError(t("qibla.error") || "Unable to determine location. Please allow location access or try again.");
+        }
       }
-    } catch (error) {
-      console.warn('IP location detection failed, using default location:', error);
+    } else {
+      // Browser doesn't support geolocation, try IP
+      try {
+        const ipResponse = await fetch('https://ipapi.co/json/', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+        
+        if (ipResponse.ok) {
+          const ipData = await ipResponse.json();
+          if (ipData.latitude && ipData.longitude) {
+            latitude = ipData.latitude;
+            longitude = ipData.longitude;
+            locationDetected = true;
+            setError(""); // Clear any previous errors
+          } else {
+            setError(t("qibla.error") || "Unable to determine location. Please try again.");
+          }
+        } else {
+          setError(t("qibla.error") || "Unable to determine location. Please try again.");
+        }
+      } catch (ipError) {
+        console.warn('IP location detection failed:', ipError);
+        setError(t("qibla.error") || "Unable to determine location. Please try again.");
+      }
     }
 
+    // Calculate Qibla direction even if using default location
     const qibla = calculateQibla(latitude, longitude);
     setQiblaDirection(qibla.direction);
     setDistance(qibla.distance);
+    setLoading(false);
+    
+    // If location was detected successfully, clear any errors
+    if (locationDetected) {
+      setError("");
+    }
   };
 
   const calculateQibla = (lat: number, lng: number) => {
@@ -91,7 +189,17 @@ export default function QiblaFinder() {
 
   const getCompassRotation = () => {
     if (qiblaDirection === null) return 0;
-    return qiblaDirection - userHeading;
+    // The compass should rotate so that the Qibla arrow points in the correct direction
+    // userHeading is the device's current heading (0 = North)
+    // qiblaDirection is the bearing to Qibla from North
+    // We need to rotate the compass by the difference
+    let rotation = qiblaDirection - userHeading;
+    
+    // Normalize to -180 to 180 for smoother rotation
+    if (rotation > 180) rotation -= 360;
+    if (rotation < -180) rotation += 360;
+    
+    return rotation;
   };
 
   return (
@@ -122,15 +230,45 @@ export default function QiblaFinder() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="bg-light-secondary dark:bg-dark-secondary rounded-2xl p-8 md:p-12 border-2 border-islamic-gold/30 glow"
         >
-          {error ? (
+          {!hasRequestedLocation ? (
             <div className="text-center py-12">
-              <MapPin className="w-16 h-16 text-islamic-gold mx-auto mb-4" />
-              <p className="text-lg text-gray-600 dark:text-gray-400">{error}</p>
+              <Compass className="w-16 h-16 text-islamic-gold mx-auto mb-6 animate-pulse" />
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                {t("qibla.title")}
+              </h3>
+              <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
+                {t("qibla.subtitle") || "Click the button below to find the Qibla direction from your location"}
+              </p>
               <button
                 onClick={getQiblaDirection}
-                className="mt-4 px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300"
+                className="px-8 py-4 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2 mx-auto"
               >
-                {t("retry")}
+                <Navigation className="w-5 h-5" />
+                {t("qibla.find_direction") || "Find Qibla Direction"}
+              </button>
+            </div>
+          ) : loading ? (
+            <div className="text-center py-12">
+              <div className="relative w-32 h-32 mx-auto mb-6">
+                <div className="absolute inset-0 border-4 border-islamic-gold/20 rounded-full"></div>
+                <div className="absolute inset-0 border-4 border-transparent border-t-islamic-gold rounded-full animate-spin"></div>
+              </div>
+              <p className="text-lg text-gray-600 dark:text-gray-400">
+                {t("qibla.detecting_location") || "Detecting your location..."}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+                {t("qibla.please_allow") || "Please allow location access if prompted"}
+              </p>
+            </div>
+          ) : error && !qiblaDirection ? (
+            <div className="text-center py-12">
+              <MapPin className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
+              <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+              <button
+                onClick={getQiblaDirection}
+                className="px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300"
+              >
+                {t("qibla.retry") || "Retry"}
               </button>
             </div>
           ) : qiblaDirection !== null ? (
@@ -185,9 +323,22 @@ export default function QiblaFinder() {
               )}
 
               {/* Instructions */}
-              <p className="mt-6 text-sm text-gray-600 dark:text-gray-400">
-                {t("qibla.instruction") !== "qibla.instruction" ? t("qibla.instruction") : "أمسك الجهاز بشكل مسطح ووجه السهم نحو القبلة"}
-              </p>
+              <div className="mt-6">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                  {t("qibla.location_hint")}
+                </p>
+                {locationPermission === "denied" && (
+                  <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-2">
+                    {t("qibla.location_hint") || "For better accuracy, please allow location access in your browser settings."}
+                  </p>
+                )}
+                <button
+                  onClick={getQiblaDirection}
+                  className="mt-4 px-4 py-2 text-sm bg-islamic-gold/20 text-islamic-gold font-semibold rounded-full hover:bg-islamic-gold/30 transition-all duration-300"
+                >
+                  {t("qibla.refresh") || "Refresh Location"}
+                </button>
+              </div>
             </div>
           ) : (
             <div className="text-center py-12">
