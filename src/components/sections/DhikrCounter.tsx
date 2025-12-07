@@ -226,6 +226,7 @@ export default function DhikrCounter() {
               whileTap={{ scale: 0.95 }}
               onClick={increment}
               className="flex-1 max-w-xs px-8 py-6 bg-islamic-gold text-white font-bold text-xl rounded-full hover:bg-islamic-green transition-all duration-300 shadow-lg"
+              aria-label={t("accessibility.increment_counter") || getTranslation("dhikr.tasbih", "Tasbih")}
             >
               {getTranslation("dhikr.tasbih", "Tasbih")}
             </motion.button>
