@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookmarkCheck, Bookmark } from "lucide-react";
+import { X, BookmarkCheck, Bookmark, ChevronRight, ChevronLeft } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
 
 interface BookmarkedVerse {
@@ -13,8 +13,82 @@ interface BookmarkedVerse {
   translation?: string;
 }
 
+// Component for individual ayah translation (same as in EnhancedQuranSection)
+function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: { 
+  surahNumber: number; 
+  ayahNumber: number; 
+  translationId: string; 
+  locale: string; 
+}) {
+  const [translationText, setTranslationText] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchTranslation = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${translationId}`);
+        const data = await response.json();
+        if (data.data && data.data.text) {
+          setTranslationText(data.data.text);
+        }
+      } catch (error) {
+        console.error("Error fetching translation:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (translationId) {
+      fetchTranslation();
+    }
+  }, [surahNumber, ayahNumber, translationId]);
+
+  if (loading) {
+    return <div className="text-gray-500 text-sm">Loading translation...</div>;
+  }
+
+  // RTL languages: Arabic, Urdu, Hebrew, Farsi, Yiddish, Pashto
+  const rtlLanguages = ['ar', 'ur', 'he', 'fa', 'yi', 'ps'];
+  const isRTL = rtlLanguages.includes(locale);
+  
+  return (
+    <div 
+      className={isRTL ? "font-arabic text-right leading-relaxed" : "font-lexend text-left leading-relaxed"} 
+      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+    >
+      {translationText}
+    </div>
+  );
+}
+
 export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { t, locale } = useLanguage();
+  const { t, locale, direction } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+  const isRTL = direction === "rtl";
+
+  // Language-based translation mapping (same as in EnhancedQuranSection)
+  const getTranslationIdentifier = (locale: string): string => {
+    const translationMap: { [key: string]: string } = {
+      'ar': 'ar.muyassar',
+      'en': 'en.sahih',
+      'tr': 'tr.diyanet',
+      'ur': 'ur.jalandhry',
+      'id': 'id.indonesian',
+      'ms': 'ms.basmeih',
+      'bn': 'bn.bengali',
+      'fr': 'fr.hamidullah',
+      'zh': 'zh.jian',
+      'it': 'it.piccardo',
+      'ja': 'ja.japanese',
+      'ko': 'ko.korean'
+    };
+    return translationMap[locale] || 'en.sahih';
+  };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [bookmarkedVerses, setBookmarkedVerses] = useState<BookmarkedVerse[]>([]);
   const [loading, setLoading] = useState(false);
@@ -160,7 +234,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                 <div className="flex items-center gap-3">
                   <BookmarkCheck className="w-6 h-6 text-islamic-gold" />
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {locale === 'ar' ? 'الآيات المفضلة' : 'Bookmarked Verses'}
+                    {t("bookmarks.bookmarked_verses")}
                   </h2>
                 </div>
                 <button
@@ -184,11 +258,43 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                   <div className="text-center py-12">
                     <Bookmark className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-600 dark:text-gray-400 text-lg">
-                      {locale === 'ar' ? 'لا توجد آيات مفضلة' : 'No bookmarked verses'}
+                      {t("bookmarks.no_bookmarks")}
                     </p>
-                    <p className="text-gray-500 dark:text-gray-500 text-sm mt-2">
-                      {locale === 'ar' ? 'ابدأ بإضافة آيات إلى المفضلة' : 'Start bookmarking verses to see them here'}
+                    <p className="text-gray-500 dark:text-gray-500 text-sm mt-2 mb-6">
+                      {t("bookmarks.start_bookmarking")}
                     </p>
+                    <button
+                      onClick={() => {
+                        onClose();
+                        setTimeout(() => {
+                          const quranSection = document.getElementById('quran');
+                          if (quranSection) {
+                            quranSection.scrollIntoView({ behavior: 'smooth' });
+                          } else {
+                            // If on a different page, navigate to main page with quran section
+                            const baseUrl = locale === 'ar' ? '/' : `/${locale}`;
+                            window.location.href = `${baseUrl}#quran`;
+                          }
+                        }, 300);
+                      }}
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-semibold rounded-full hover:bg-islamic-green transition-all duration-300"
+                    >
+                      {t("bookmarks.go_to_quran")}
+                      <motion.div
+                        animate={{ x: isRTL ? [-4, 0, -4] : [0, 4, 0] }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        {isRTL ? (
+                          <ChevronLeft className="w-5 h-5" />
+                        ) : (
+                          <ChevronRight className="w-5 h-5" />
+                        )}
+                      </motion.div>
+                    </button>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -203,47 +309,49 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                         <div className="flex items-start justify-between mb-4">
                           <div>
                             <h3 className="text-lg font-semibold text-islamic-gold mb-1">
-                              {verse.surahName} - {locale === 'ar' ? 'آية' : 'Ayah'} {verse.ayahNumber}
+                              {verse.surahName} - {t("quran.verse")} {verse.ayahNumber}
                             </h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">
-                              {locale === 'ar' ? 'سورة' : 'Surah'} {verse.surahNumber}
+                              {locale === 'ar' ? 'سورة' : locale === 'ur' ? 'سورہ' : 'Surah'} {verse.surahNumber}
                             </p>
                           </div>
                           <button
                             onClick={() => removeBookmark(verse.surahNumber, verse.ayahNumber)}
                             className="p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors"
-                            title={locale === 'ar' ? 'إزالة من المفضلة' : 'Remove bookmark'}
+                            title={t("bookmarks.remove_bookmark")}
                           >
                             <BookmarkCheck className="w-5 h-5 text-islamic-gold" fill="currentColor" />
                           </button>
                         </div>
                         
                         {verse.arabicText && (
-                          <div className="mb-3">
-                            <p 
-                              className="text-2xl font-arabic text-right leading-relaxed text-islamic-green dark:text-islamic-gold"
-                              style={{
-                                direction: 'rtl',
-                                fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif",
-                                lineHeight: '2.5'
-                              }}
-                            >
+                          <div className="mb-4">
+                            <div className="arabic-quran-text text-2xl md:text-3xl leading-relaxed text-right text-islamic-green dark:text-islamic-gold">
                               {verse.arabicText}
-                            </p>
+                            </div>
                           </div>
                         )}
                         
-                        {verse.translation && (
-                          <p className="text-gray-700 dark:text-gray-300 mb-4">
-                            {verse.translation}
-                          </p>
+                        {/* Translation */}
+                        {mounted && (
+                          <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
+                            <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                              {t("quran.translation") !== "quran.translation" ? t("quran.translation") : "Translation"} ({locale.toUpperCase()})
+                            </div>
+                            <AyahTranslation 
+                              surahNumber={verse.surahNumber} 
+                              ayahNumber={verse.ayahNumber} 
+                              translationId={getTranslationIdentifier(locale)}
+                              locale={locale}
+                            />
+                          </div>
                         )}
                         
                         <button
                           onClick={() => scrollToVerse(verse.surahNumber, verse.ayahNumber)}
                           className="text-sm text-islamic-gold hover:text-islamic-green transition-colors font-semibold"
                         >
-                          {locale === 'ar' ? '→ الانتقال إلى الآية' : '→ Go to verse'}
+                          → {t("bookmarks.go_to_verse")}
                         </button>
                       </motion.div>
                     ))}

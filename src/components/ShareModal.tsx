@@ -23,7 +23,7 @@ interface ShareModalProps {
 }
 
 export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: ShareModalProps) {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const { resolvedTheme } = useTheme();
   const [copied, setCopied] = useState(false);
   const [downloadingImage, setDownloadingImage] = useState(false);
@@ -105,7 +105,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     : `${siteUrl}/quran?surah=${verse?.surahNumber}&ayah=${verse?.ayahNumber}`;
   const shareText = mode === 'website'
     ? (typeof window !== 'undefined' ? document.title : 'Meshari\'s Ongoing Charity')
-    : `${verse?.surahName} - ${locale === 'ar' ? 'آية' : 'Ayah'} ${verse?.ayahNumber}\n\n${verse?.arabicText}${verse?.translation ? `\n\n${verse.translation}` : ''}`;
+    : `${verse?.surahName} - ${t("share.ayah")} ${verse?.ayahNumber}\n\n${verse?.arabicText}${verse?.translation ? `\n\n${verse.translation}` : ''}`;
   
   // Get OG image URL
   const ogImageUrl = mode === 'website' 
@@ -128,7 +128,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     
     const shareTitle = mode === 'website' 
       ? (typeof window !== 'undefined' ? document.title : 'Meshari\'s Ongoing Charity')
-      : `${verse?.surahName} - ${locale === 'ar' ? 'آية' : 'Ayah'} ${verse?.ayahNumber}`;
+      : `${verse?.surahName} - ${t("share.ayah")} ${verse?.ayahNumber}`;
     
     const urls: { [key: string]: string } = {
       twitter: `https://x.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
@@ -158,7 +158,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       // For Instagram, copy link to clipboard since it doesn't support direct URL sharing
       if (platform === 'instagram') {
         copyToClipboard();
-        alert(locale === 'ar' ? 'تم نسخ الرابط. يمكنك الآن لصقه في التطبيق.' : 'Link copied! You can now paste it in the app.');
+        alert(t("share.link_copied"));
       } else {
         window.open(urls[platform], '_blank', 'width=600,height=400');
       }
@@ -288,7 +288,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       document.body.removeChild(link);
     } catch (error) {
       console.error('Error downloading image:', error);
-      alert(locale === 'ar' ? 'حدث خطأ أثناء تحميل الصورة' : 'Error downloading image. Please try again.');
+      alert(t("share.error_download_image"));
     } finally {
       setDownloadingImage(false);
     }
@@ -424,7 +424,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       pdf.save(`${verse?.surahName?.replace(/\s+/g, '_')}_Ayah_${verse?.ayahNumber}.pdf`);
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      alert(locale === 'ar' ? 'حدث خطأ أثناء تحميل PDF' : 'Error downloading PDF. Please try again.');
+      alert(t("share.error_download_pdf"));
     } finally {
       setDownloadingPDF(false);
     }
@@ -458,8 +458,8 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                   <Share2 className="w-6 h-6 text-islamic-gold" />
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                     {mode === 'website' 
-                      ? (locale === 'ar' ? 'مشاركة الموقع' : 'Share Website')
-                      : (locale === 'ar' ? 'مشاركة الآية' : 'Share Verse')
+                      ? t("share.website_title")
+                      : t("share.verse_title")
                     }
                   </h2>
                 </div>
@@ -563,7 +563,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                           textAlign: 'right'
                         }}
                       >
-                        {locale === 'ar' ? 'آية' : 'Ayah'} {verse?.ayahNumber || ''} {verse?.juz ? `• ${locale === 'ar' ? 'جزء' : 'Juz'} ${verse.juz}` : ''}
+                        {t("share.ayah")} {verse?.ayahNumber || ''} {verse?.juz ? `• ${t("share.juz")} ${verse.juz}` : ''}
                       </p>
                     </div>
                   </div>
@@ -614,7 +614,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                           textAlign: 'right'
                         }}
                       >
-                        {locale === 'ar' ? 'التفسير' : 'Translation'}
+                        {t("share.translation")}
                       </p>
                       <p 
                         className={`text-base leading-relaxed font-arabic ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}
@@ -714,7 +714,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                 {mode === 'verse' && (
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-                    {locale === 'ar' ? 'تحميل كبطاقة' : 'Download as Card'}
+                    {t("share.download_as_card")}
                   </h3>
                   <div className="flex gap-3">
                     <button
@@ -727,7 +727,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                       ) : (
                         <>
                           <Download className="w-5 h-5" />
-                          <span>{locale === 'ar' ? 'تحميل PNG' : 'Download PNG'}</span>
+                          <span>{t("share.download_png")}</span>
                         </>
                       )}
                     </button>
@@ -741,7 +741,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                       ) : (
                         <>
                           <Download className="w-5 h-5" />
-                          <span>{locale === 'ar' ? 'تحميل PDF' : 'Download PDF'}</span>
+                          <span>{t("share.download_pdf")}</span>
                         </>
                       )}
                     </button>
@@ -752,7 +752,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                 {/* Link Share */}
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-                    {locale === 'ar' ? 'رابط المشاركة' : 'Share Link'}
+                    {t("share.share_link")}
                   </h3>
                   <div className="flex gap-2">
                     <input
@@ -772,12 +772,12 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                       {copied ? (
                         <>
                           <Check className="w-5 h-5" />
-                          {locale === 'ar' ? 'تم النسخ' : 'Copied!'}
+                          {t("share.copied")}
                         </>
                       ) : (
                         <>
                           <Copy className="w-5 h-5" />
-                          {locale === 'ar' ? 'نسخ' : 'Copy'}
+                          {t("share.copy")}
                         </>
                       )}
                     </button>
@@ -787,7 +787,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                 {/* Social Share */}
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
-                    {locale === 'ar' ? 'مشاركة على وسائل التواصل' : 'Share on Social Media'}
+                    {t("share.share_social")}
                   </h3>
                   <div className="flex justify-center gap-3 flex-wrap">
                     <button
@@ -841,7 +841,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                     <button
                       onClick={() => shareToSocial('email')}
                       className="w-12 h-12 flex items-center justify-center bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-all duration-300 hover:scale-110"
-                      title={locale === 'ar' ? 'بريد إلكتروني' : 'Email'}
+                      title={t("share.email")}
                     >
                       <Mail className="w-6 h-6" />
                     </button>
@@ -849,7 +849,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                       <button
                         onClick={() => shareToSocial('native')}
                         className="w-12 h-12 flex items-center justify-center bg-gradient-to-r from-islamic-gold to-islamic-green text-white rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 hover:scale-110"
-                        title={locale === 'ar' ? 'مشاركة' : 'Share'}
+                        title={t("share")}
                       >
                         <Share className="w-6 h-6" />
                       </button>

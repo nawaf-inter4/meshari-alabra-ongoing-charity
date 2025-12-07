@@ -373,13 +373,6 @@ export function generateMetadata(language: string = 'ar'): Metadata {
       siteName: "Meshari's Ongoing Charity",
       images: [
         {
-          url: `${siteUrl}/og-image?title=${encodeURIComponent(meta.title)}&description=${encodeURIComponent(meta.description)}&lang=${language}`,
-          width: 1200,
-          height: 630,
-          alt: meta.title,
-          type: "image/png",
-        },
-        {
           url: `${siteUrl}/og-image.png`,
           width: 1200,
           height: 630,

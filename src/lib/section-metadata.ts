@@ -256,13 +256,6 @@ export function generateSectionMetadata(
       siteName,
       images: [
         {
-          url: `${siteUrl}/og-image?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&lang=${currentLang}`,
-          width: 1200,
-          height: 630,
-          alt: title,
-          type: 'image/png',
-        },
-        {
           url: `${siteUrl}/og-image.png`,
           width: 1200,
           height: 630,

@@ -142,10 +142,11 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       siteName: "Meshari's Ongoing Charity",
       images: [
         {
-          url: `${siteUrl}/og-image?title=${encodeURIComponent(meta.ogTitle)}&description=${encodeURIComponent(meta.ogDescription)}&lang=${lang}`,
+          url: `${siteUrl}/og-image.png`,
           width: 1200,
           height: 630,
           alt: meta.ogTitle,
+          type: 'image/png',
         },
       ],
       locale: meta.locale,
@@ -155,7 +156,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       card: 'summary_large_image',
       title: meta.twitterTitle,
       description: meta.twitterDescription,
-      images: [`${siteUrl}/og-image?title=${encodeURIComponent(meta.twitterTitle)}&description=${encodeURIComponent(meta.twitterDescription)}&lang=${lang}`],
+      images: [`${siteUrl}/og-image.png`],
     },
     alternates: {
       canonical: currentUrl,

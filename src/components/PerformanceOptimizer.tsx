@@ -43,30 +43,13 @@ export default function PerformanceOptimizer() {
     };
 
     // Optimize fonts
+    // Note: Fonts are already loaded via <link> tags in layout.tsx
+    // This function is kept for potential future optimizations
+    // Updated: Removed fontPreloads array to fix ReferenceError
     const optimizeFonts = () => {
-      // Preload critical fonts
-      const fontPreloads = [
-        {
-          href: 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap',
-          as: 'style'
-        },
-        {
-          href: 'https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&display=swap',
-          as: 'style'
-        }
-      ];
-
-      fontPreloads.forEach(font => {
-        // Check if already preloaded
-        const existing = document.querySelector(`link[href="${font.href}"]`);
-        if (!existing) {
-          const link = document.createElement('link');
-          link.rel = 'preload';
-          link.href = font.href;
-          link.as = font.as;
-          document.head.appendChild(link);
-        }
-      });
+      // Fonts are preloaded in the HTML head via layout.tsx
+      // No additional client-side optimization needed
+      // This function intentionally does nothing to avoid errors
     };
 
     // Optimize third-party resources
