@@ -321,6 +321,8 @@ export default function TafseerSection() {
                   : 'text-gray-600 dark:text-gray-400 hover:text-islamic-gold'
               }`}
               suppressHydrationWarning
+              aria-label={t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
+              aria-pressed={searchMode === 'surah'}
             >
               {t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
             </button>
@@ -332,6 +334,8 @@ export default function TafseerSection() {
                   : 'text-gray-600 dark:text-gray-400 hover:text-islamic-gold'
               }`}
               suppressHydrationWarning
+              aria-label={t("tafseer.search_verse") !== "tafseer.search_verse" ? t("tafseer.search_verse") : "ابحث عن آية"}
+              aria-pressed={searchMode === 'verse'}
             >
               {t("tafseer.search_verse") !== "tafseer.search_verse" ? t("tafseer.search_verse") : "ابحث عن آية"}
             </button>
