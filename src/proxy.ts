@@ -28,20 +28,37 @@ function proxy(request: NextRequest) {
   }
   
   // Redirect /sections/... to /[lang]/sections/... if no language prefix
-  // This ensures all section URLs have a language prefix
+  // BUT: Use rewrite instead of redirect for client-side navigation to avoid double-click
+  // Check if this is a navigation request (not a direct URL access)
   if (pathSegments[0] === 'sections' && !isLanguagePrefix) {
-    // Try to get preferred language from cookie
-    const preferredLang = request.cookies.get('preferred-locale')?.value || 'ar';
-    const lang = supportedLanguages.includes(preferredLang) ? preferredLang : 'ar';
+    // Check if this is a client-side navigation via Next.js Link
+    const isClientNavigation = request.headers.get('x-middleware-rewrite') !== null ||
+                               request.headers.get('referer')?.includes(request.nextUrl.origin);
     
-    // Build new path with language prefix
-    const newPath = `/${lang}${pathname}`;
-    const url = request.nextUrl.clone();
-    url.pathname = newPath;
-    
-    const response = NextResponse.redirect(url);
-    applySecurityHeaders(response, request);
-    return response;
+    if (isClientNavigation) {
+      // For client-side navigation, rewrite instead of redirect to avoid double-click
+      const preferredLang = request.cookies.get('preferred-locale')?.value || 'ar';
+      const lang = supportedLanguages.includes(preferredLang) ? preferredLang : 'ar';
+      const newPath = `/${lang}${pathname}`;
+      const url = request.nextUrl.clone();
+      url.pathname = newPath;
+      
+      const response = NextResponse.rewrite(url);
+      response.headers.set('x-locale', lang);
+      applySecurityHeaders(response, request);
+      return response;
+    } else {
+      // For direct URL access or refresh, use redirect
+      const preferredLang = request.cookies.get('preferred-locale')?.value || 'ar';
+      const lang = supportedLanguages.includes(preferredLang) ? preferredLang : 'ar';
+      const newPath = `/${lang}${pathname}`;
+      const url = request.nextUrl.clone();
+      url.pathname = newPath;
+      
+      const response = NextResponse.redirect(url);
+      applySecurityHeaders(response, request);
+      return response;
+    }
   }
   
   const response = NextResponse.next();

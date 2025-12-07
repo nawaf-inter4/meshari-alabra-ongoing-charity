@@ -4,62 +4,22 @@ import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookOpen, Book, Heart, Clock, DollarSign, Compass, Users, Calendar, Star, Globe, Shield, Gift, Grid3X3 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useCallback } from "react";
 
 export default function SectionNavigation() {
   const { t, locale, direction } = useLanguage();
-  const router = useRouter();
 
-  // Prefetch section links on mount - but don't block navigation
-  useEffect(() => {
-    // Use requestIdleCallback to prefetch when browser is idle
-    const prefetchSections = () => {
-      const sections = [
-        { path: "/sections/quran" },
-        { path: "/sections/tafseer" },
-        { path: "/sections/dhikr" },
-        { path: "/sections/prayer-times" },
-        { path: "/sections/qibla" },
-        { path: "/sections/donation" },
-        { path: "/sections/supplications" },
-        { path: "/sections/hadith" },
-        { path: "/sections/youtube" },
-      ];
-
-      // Prefetch sections with language prefix when idle
-      sections.forEach((section) => {
-        const href = locale === 'ar' 
-          ? section.path 
-          : `/${locale}${section.path}`;
-        
-        // Prefetch when browser is idle to avoid blocking navigation
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(() => {
-            router.prefetch(href);
-          });
-        } else {
-          // Fallback for browsers without requestIdleCallback
-          setTimeout(() => router.prefetch(href), 100);
-        }
-      });
-    };
-
-    // Delay prefetching to ensure it doesn't block initial render
-    const timeoutId = setTimeout(prefetchSections, 1000);
-    return () => clearTimeout(timeoutId);
-  }, [locale, router]);
-
-  // Handle section navigation - don't interfere with Link navigation
-  const handleSectionClick = useCallback((e: React.MouseEvent) => {
-    // Don't prevent default - let Next.js Link handle navigation
-    // Just prefetch on hover, not on click
-  }, []);
+  // Remove all prefetching logic - let Next.js handle it automatically
+  // This prevents any interference with navigation
 
   // Helper function to get section href with language prefix
+  // Always include language prefix to avoid middleware redirects
   const getSectionHref = (sectionPath: string) => {
+    // Always include language prefix to prevent middleware redirect
+    // This ensures single-click navigation works
     if (locale === 'ar') {
-      return sectionPath; // Arabic: /sections/quran
+      // For Arabic, we can use /sections/... but middleware will redirect
+      // To avoid redirect, use /ar/sections/... for consistency
+      return `/ar${sectionPath}`;
     } else {
       return `/${locale}${sectionPath}`; // Other languages: /en/sections/quran
     }
@@ -188,8 +148,7 @@ export default function SectionNavigation() {
             >
               <Link
                 href={section.href}
-                onMouseEnter={() => router.prefetch(section.href)}
-                prefetch={false}
+                prefetch={true}
                 className="block"
                 aria-label={`${section.title} - ${section.description}`}
               >
