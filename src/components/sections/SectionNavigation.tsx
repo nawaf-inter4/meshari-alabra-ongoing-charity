@@ -3,11 +3,10 @@
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookOpen, Book, Heart, Clock, DollarSign, Compass, Users, Calendar, Star, Globe, Shield, Gift, Grid3X3 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SectionNavigation() {
   const { t, locale, direction } = useLanguage();
-  const router = useRouter();
 
   // Remove all prefetching logic - let Next.js handle it automatically
   // This prevents any interference with navigation
@@ -126,8 +125,14 @@ export default function SectionNavigation() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {sections.map((section, index) => (
+            <Link
+              key={section.id}
+              href={section.href}
+              prefetch={true}
+              className="block"
+              aria-label={`${section.title} - ${section.description}`}
+            >
               <motion.div
-                key={section.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
@@ -136,26 +141,11 @@ export default function SectionNavigation() {
                   delay: index * 0.1,
                   ease: [0.25, 0.1, 0.25, 1],
                 }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  // Navigate immediately - no delay, no double-click needed
-                  router.push(section.href);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    router.push(section.href);
-                  }
-                }}
-                role="button"
-                tabIndex={0}
                 className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold h-full flex flex-col cursor-pointer motion-safe"
                 style={{
                   willChange: 'transform, opacity',
                   transform: 'translateZ(0)',
                 }}
-                aria-label={`${section.title} - ${section.description}`}
               >
                 <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${section.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
                   <section.icon className="w-8 h-8 text-white" />
@@ -179,8 +169,9 @@ export default function SectionNavigation() {
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </div>
-              </motion.div>
+                  </div>
+                </motion.div>
+            </Link>
           ))}
         </div>
       </div>
