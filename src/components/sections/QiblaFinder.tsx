@@ -90,9 +90,9 @@ export default function QiblaFinder() {
         console.warn('Geolocation failed:', geoError);
         setLocationPermission("denied");
         
-        // Fallback to IP-based location
+        // Fallback to IP-based location (use proxy to avoid CORS)
         try {
-          const ipResponse = await fetch('https://ipapi.co/json/', {
+          const ipResponse = await fetch('/api/ip-location', {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
@@ -118,9 +118,9 @@ export default function QiblaFinder() {
         }
       }
     } else {
-      // Browser doesn't support geolocation, try IP
+      // Browser doesn't support geolocation, try IP (use proxy to avoid CORS)
       try {
-        const ipResponse = await fetch('https://ipapi.co/json/', {
+        const ipResponse = await fetch('/api/ip-location', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -226,9 +226,19 @@ export default function QiblaFinder() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-light-secondary dark:bg-dark-secondary rounded-2xl p-8 md:p-12 border-2 border-islamic-gold/30 glow"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ 
+            duration: 0.6, 
+            delay: 0.2,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+          className="bg-light-secondary dark:bg-dark-secondary rounded-2xl p-8 md:p-12 border-2 border-islamic-gold/30 glow motion-safe"
+          style={{
+            willChange: 'transform, opacity',
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+          }}
         >
           {!hasRequestedLocation ? (
             <div className="text-center py-12">

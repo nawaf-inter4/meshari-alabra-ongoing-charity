@@ -71,9 +71,9 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
     "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://vitals.vercel-insights.com https://www.googletagmanager.com https://www.google-analytics.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: https: blob:",
+    "img-src 'self' data: https: blob: https://hatscripts.github.io",
     "media-src 'self' https:",
-    "connect-src 'self' https://api.aladhan.com https://api.alquran.cloud https://api.quran.com https://ipapi.co https://cdn.jsdelivr.net https://vitals.vercel-insights.com https://www.google-analytics.com",
+    "connect-src 'self' https://api.aladhan.com https://api.alquran.cloud https://api.quran.com https://ipapi.co https://cdn.jsdelivr.net https://vitals.vercel-insights.com https://www.google-analytics.com https://fonts.googleapis.com https://fonts.gstatic.com https://hatscripts.github.io",
     "frame-src 'self' https://www.youtube.com",
     "object-src 'none'",
     "base-uri 'self'",
@@ -88,6 +88,11 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/icons/') || 
       request.nextUrl.pathname.startsWith('/_next/static/')) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    
+    // Ensure CSS files have correct Content-Type
+    if (request.nextUrl.pathname.endsWith('.css')) {
+      response.headers.set('Content-Type', 'text/css; charset=utf-8');
+    }
   }
 
   // Cache Control for images
@@ -104,7 +109,8 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
   if (request.nextUrl.pathname.match(/\.(mp3|ogg|wav|m4a)$/)) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
     response.headers.set('Accept-Ranges', 'bytes');
-    response.headers.delete('Content-Length'); // Remove Content-Length to fix 416 errors
+    // Keep Content-Length for proper range request handling
+    // The 416 error is likely due to incorrect Range header from client
   }
 
   // Cache Control for HTML
@@ -123,6 +129,19 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
     response.headers.set('Access-Control-Allow-Origin', '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  }
+
+  // PWA headers - Service Worker
+  if (request.nextUrl.pathname === '/sw.js') {
+    response.headers.set('Content-Type', 'application/javascript');
+    response.headers.set('Service-Worker-Allowed', '/');
+    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  }
+
+  // PWA headers - Manifest
+  if (request.nextUrl.pathname === '/manifest.json') {
+    response.headers.set('Content-Type', 'application/manifest+json');
+    response.headers.set('Cache-Control', 'public, max-age=3600');
   }
 }
 

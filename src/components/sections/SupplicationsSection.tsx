@@ -312,9 +312,17 @@ export default function SupplicationsSection() {
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="bg-light dark:bg-dark rounded-2xl p-6 md:p-8 border-2 border-islamic-gold/30 hover:border-islamic-gold transition-all duration-300"
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ 
+                duration: 0.6, 
+                delay: index * 0.1,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
+              className="bg-light dark:bg-dark rounded-2xl p-6 md:p-8 border-2 border-islamic-gold/30 hover:border-islamic-gold transition-all duration-300 motion-safe"
+              style={{
+                willChange: 'transform, opacity',
+                transform: 'translateZ(0)',
+              }}
             >
               <p 
                 className="text-2xl md:text-3xl font-arabic text-right leading-loose mb-4 text-islamic-green dark:text-islamic-gold py-2 px-4" 

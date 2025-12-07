@@ -7,12 +7,14 @@ export default function AccessibilityOptimizer() {
     // Add ARIA labels and roles
     const addAriaLabels = () => {
       // Add skip navigation
-      const skipLink = document.createElement('a');
-      skipLink.href = '#main-content';
-      skipLink.textContent = 'Skip to main content';
-      skipLink.className = 'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50';
-      skipLink.setAttribute('aria-label', 'Skip to main content');
-      document.body.insertBefore(skipLink, document.body.firstChild);
+      if (document.body) {
+        const skipLink = document.createElement('a');
+        skipLink.href = '#main-content';
+        skipLink.textContent = 'Skip to main content';
+        skipLink.className = 'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50';
+        skipLink.setAttribute('aria-label', 'Skip to main content');
+        document.body.insertBefore(skipLink, document.body.firstChild);
+      }
 
       // Add main content landmark
       const mainContent = document.querySelector('main');
@@ -144,20 +146,22 @@ export default function AccessibilityOptimizer() {
     // Add screen reader support
     const addScreenReaderSupport = () => {
       // Add live regions for dynamic content
-      const liveRegion = document.createElement('div');
-      liveRegion.setAttribute('aria-live', 'polite');
-      liveRegion.setAttribute('aria-atomic', 'true');
-      liveRegion.className = 'sr-only';
-      liveRegion.id = 'live-region';
-      document.body.appendChild(liveRegion);
+      if (document.body) {
+        const liveRegion = document.createElement('div');
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.className = 'sr-only';
+        liveRegion.id = 'live-region';
+        document.body.appendChild(liveRegion);
 
-      // Add status messages
-      const statusRegion = document.createElement('div');
-      statusRegion.setAttribute('aria-live', 'assertive');
-      statusRegion.setAttribute('aria-atomic', 'true');
-      statusRegion.className = 'sr-only';
-      statusRegion.id = 'status-region';
-      document.body.appendChild(statusRegion);
+        // Add status messages
+        const statusRegion = document.createElement('div');
+        statusRegion.setAttribute('aria-live', 'assertive');
+        statusRegion.setAttribute('aria-atomic', 'true');
+        statusRegion.className = 'sr-only';
+        statusRegion.id = 'status-region';
+        document.body.appendChild(statusRegion);
+      }
     };
 
     // Add form accessibility

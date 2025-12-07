@@ -295,12 +295,12 @@ export default function TafseerSection() {
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <Book className="w-8 h-8 text-islamic-gold" />
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">
-              {mounted && t("tafseer.title") !== "tafseer.title" ? t("tafseer.title") : "تفسير القرآن"}
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text" suppressHydrationWarning>
+              {t("tafseer.title") !== "tafseer.title" ? t("tafseer.title") : "تفسير القرآن"}
             </h2>
           </div>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
-            {mounted && t("tafseer.subtitle") !== "tafseer.subtitle" ? t("tafseer.subtitle") : "فهم معاني كلام الله"}
+          <p className="text-xl text-gray-600 dark:text-gray-400" suppressHydrationWarning>
+            {t("tafseer.subtitle") !== "tafseer.subtitle" ? t("tafseer.subtitle") : "فهم معاني كلام الله"}
           </p>
         </motion.div>
 
@@ -320,8 +320,9 @@ export default function TafseerSection() {
                   ? 'bg-islamic-gold text-white'
                   : 'text-gray-600 dark:text-gray-400 hover:text-islamic-gold'
               }`}
+              suppressHydrationWarning
             >
-              {mounted && t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
+              {t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
             </button>
             <button
               onClick={() => setSearchMode('verse')}
@@ -330,8 +331,9 @@ export default function TafseerSection() {
                   ? 'bg-islamic-gold text-white'
                   : 'text-gray-600 dark:text-gray-400 hover:text-islamic-gold'
               }`}
+              suppressHydrationWarning
             >
-              {mounted && t("tafseer.search_verse") !== "tafseer.search_verse" ? t("tafseer.search_verse") : "ابحث عن آية"}
+              {t("tafseer.search_verse") !== "tafseer.search_verse" ? t("tafseer.search_verse") : "ابحث عن آية"}
             </button>
           </div>
         </motion.div>
@@ -348,18 +350,21 @@ export default function TafseerSection() {
             <div className="grid md:grid-cols-3 gap-4">
               {/* Surah Selection */}
               <div className="relative" ref={surahsRef}>
-                <label className="block text-sm font-semibold mb-2">
-                  {mounted && t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
+                <label className="block text-sm font-semibold mb-2" suppressHydrationWarning>
+                  {t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
                 </label>
                 <div className="relative">
                   <button
                     onClick={() => setShowSurahs(!showSurahs)}
                     className="w-full p-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-left flex items-center justify-between"
+                    aria-label={t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
+                    aria-expanded={showSurahs}
+                    aria-haspopup="listbox"
                   >
-                    <span className="truncate">
-                      {selectedSurah ? `${selectedSurah.number}. ${selectedSurah.arabic}` : (mounted && t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة")}
+                    <span className="truncate" suppressHydrationWarning>
+                      {selectedSurah ? `${selectedSurah.number}. ${selectedSurah.arabic}` : (t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة")}
                     </span>
-                    <ChevronDown className="w-5 h-5 text-islamic-gold" />
+                    <ChevronDown className="w-5 h-5 text-islamic-gold" aria-hidden="true" />
                   </button>
                   
                   {showSurahs && (
@@ -369,6 +374,7 @@ export default function TafseerSection() {
                           key={surah.number}
                           onClick={() => handleSurahSelect(surah)}
                           className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                          aria-label={`${surah.number}. ${surah.arabic} - ${surah.name} - ${surah.verses} verses`}
                         >
                           <div className="font-semibold text-gray-900 dark:text-white">{surah.number}. {surah.arabic}</div>
                           <div className="text-sm text-gray-600 dark:text-gray-400">{surah.name} - {surah.verses} آيات</div>
@@ -381,16 +387,18 @@ export default function TafseerSection() {
 
               {/* Ayah Selection */}
               <div>
-                <label className="block text-sm font-semibold mb-2">
-                  {mounted && t("tafseer.verse_number") !== "tafseer.verse_number" ? t("tafseer.verse_number") : "رقم الآية"}
+                <label htmlFor="ayah-number-input" className="block text-sm font-semibold mb-2" suppressHydrationWarning>
+                  {t("tafseer.verse_number") !== "tafseer.verse_number" ? t("tafseer.verse_number") : "رقم الآية"}
                 </label>
                 <input
+                  id="ayah-number-input"
                   type="number"
                   min="1"
                   max={selectedSurah?.verses || 1}
                   value={selectedAyah}
                   onChange={(e) => setSelectedAyah(Number(e.target.value))}
                   className="w-full p-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none"
+                  aria-label={t("tafseer.verse_number") !== "tafseer.verse_number" ? t("tafseer.verse_number") : "رقم الآية"}
                 />
               </div>
 
@@ -400,9 +408,10 @@ export default function TafseerSection() {
                   onClick={handleSearch}
                   disabled={!selectedSurah || loading}
                   className="w-full flex items-center justify-center gap-2 p-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label={t("tafseer.search") !== "tafseer.search" ? t("tafseer.search") : "بحث"}
                 >
-                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
-                  {t("search")}
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" /> : <Search className="w-5 h-5" aria-hidden="true" />}
+                  <span suppressHydrationWarning>{t("search")}</span>
                 </button>
               </div>
             </div>
@@ -410,16 +419,18 @@ export default function TafseerSection() {
             <div className="grid md:grid-cols-3 gap-4">
               {/* Verse Search Input */}
               <div className="md:col-span-2 relative" ref={searchRef}>
-                <label className="block text-sm font-semibold mb-2">
-                  {mounted && t("tafseer.search_verse") !== "tafseer.search_verse" ? t("tafseer.search_verse") : "ابحث عن آية"} (مثال: 2:255 أو البقرة:255)
+                <label htmlFor="verse-search-input" className="block text-sm font-semibold mb-2" suppressHydrationWarning>
+                  {t("tafseer.search_verse") !== "tafseer.search_verse" ? t("tafseer.search_verse") : "ابحث عن آية"} (مثال: 2:255 أو البقرة:255)
                 </label>
                 <div className="relative">
                   <input
+                    id="verse-search-input"
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="مثال: 2:255 أو البقرة:255"
                     className="w-full p-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none"
+                    aria-label={t("tafseer.search_verse") !== "tafseer.search_verse" ? t("tafseer.search_verse") : "ابحث عن آية"}
                   />
                   {searchQuery && (
                     <button
@@ -463,16 +474,19 @@ export default function TafseerSection() {
 
           {/* Edition Selection */}
           <div className="mt-4 relative" ref={editionsRef}>
-            <label className="block text-sm font-semibold mb-2">
-              {mounted && t("tafseer.source") !== "tafseer.source" ? t("tafseer.source") : "مصدر التفسير"}
+            <label className="block text-sm font-semibold mb-2" suppressHydrationWarning>
+              {t("tafseer.source") !== "tafseer.source" ? t("tafseer.source") : "مصدر التفسير"}
             </label>
             <div className="relative">
               <button
                 onClick={() => setShowEditions(!showEditions)}
                 className="w-full p-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-left flex items-center justify-between"
+                aria-label={t("tafseer.source") !== "tafseer.source" ? `${t("tafseer.source")}: ${selectedEdition.name}` : `مصدر التفسير: ${selectedEdition.name}`}
+                aria-expanded={showEditions}
+                aria-haspopup="listbox"
               >
                 <span className="truncate">{selectedEdition.name}</span>
-                <ChevronDown className="w-5 h-5 text-islamic-gold" />
+                <ChevronDown className="w-5 h-5 text-islamic-gold" aria-hidden="true" />
               </button>
               
               {showEditions && (
@@ -487,6 +501,8 @@ export default function TafseerSection() {
                       className={`w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${
                         selectedEdition.id === edition.id ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white'
                       }`}
+                      aria-label={`${edition.name} by ${edition.author}`}
+                      aria-selected={selectedEdition.id === edition.id}
                     >
                       <div className="font-semibold">{edition.name}</div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">{edition.author}</div>

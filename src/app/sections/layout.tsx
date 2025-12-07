@@ -1,4 +1,6 @@
+import React from 'react';
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { LanguageProvider } from '@/components/LanguageProvider';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import AudioPlayer from '@/components/AudioPlayer';
@@ -9,13 +11,21 @@ export const metadata: Metadata = {
   description: 'Islamic charity and educational content',
 };
 
-export default function SectionsLayout({
+export default async function SectionsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const headersList = await headers();
+  const locale = headersList.get('x-locale') || 'ar';
+  const supportedLanguages = ['ar', 'en', 'ur', 'tr', 'id', 'ms', 'bn', 'fr', 'zh', 'it', 'ja', 'ko'];
+  const currentLang = supportedLanguages.includes(locale) ? locale : 'ar';
+  const isRTL = ['ar', 'he', 'fa', 'ur', 'yi', 'ps'].includes(currentLang);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://meshari.charity';
+  const sections = ['quran', 'tafseer', 'dhikr', 'prayer-times', 'qibla', 'donation', 'supplications', 'hadith', 'youtube'];
+  
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
+    <html lang={currentLang} dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
@@ -36,6 +46,25 @@ export default function SectionsLayout({
         <link rel="dns-prefetch" href="https://ipapi.co" />
         <link rel="dns-prefetch" href="https://img.youtube.com" />
         <link rel="dns-prefetch" href="https://i.ytimg.com" />
+        
+        {/* Prefetch critical section routes for blazing fast navigation */}
+        {currentLang === 'ar' ? (
+          <>
+            <link rel="prefetch" href="/sections/quran" as="document" />
+            <link rel="prefetch" href="/sections/tafseer" as="document" />
+            <link rel="prefetch" href="/sections/dhikr" as="document" />
+            <link rel="prefetch" href="/sections/prayer-times" as="document" />
+            <link rel="prefetch" href="/sections/qibla" as="document" />
+          </>
+        ) : (
+          <>
+            <link rel="prefetch" href={`/${currentLang}/sections/quran`} as="document" />
+            <link rel="prefetch" href={`/${currentLang}/sections/tafseer`} as="document" />
+            <link rel="prefetch" href={`/${currentLang}/sections/dhikr`} as="document" />
+            <link rel="prefetch" href={`/${currentLang}/sections/prayer-times`} as="document" />
+            <link rel="prefetch" href={`/${currentLang}/sections/qibla`} as="document" />
+          </>
+        )}
 
         {/* Preconnect for critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -65,6 +94,8 @@ export default function SectionsLayout({
         <meta name="theme-color" content="#0F172A" media="(prefers-color-scheme: dark)" />
         <meta name="msapplication-navbutton-color" content="#D4AF37" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        
+        {/* Hreflang tags are handled by generateSectionMetadata in each section page */}
         
         <script
           dangerouslySetInnerHTML={{
@@ -116,7 +147,7 @@ export default function SectionsLayout({
           enableSystem
           disableTransitionOnChange={false}
         >
-          <LanguageProvider>
+          <LanguageProvider initialLocale={currentLang}>
             {children}
             <AudioPlayer />
           </LanguageProvider>

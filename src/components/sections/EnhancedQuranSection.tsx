@@ -989,13 +989,17 @@ export default function EnhancedQuranSection() {
                       onClick={() => playAyah(selectedSurah, ayah.numberInSurah)}
                       className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-colors duration-300"
                       disabled={audioLoading && currentAyah === ayah.numberInSurah}
+                      aria-label={isPlaying && currentAyah === ayah.numberInSurah 
+                        ? (locale === 'ar' ? 'إيقاف التشغيل' : 'Pause audio')
+                        : (locale === 'ar' ? 'تشغيل الآية' : 'Play verse audio')
+                      }
                     >
                       {audioLoading && currentAyah === ayah.numberInSurah ? (
-                        <div className="w-5 h-5 border-2 border-islamic-gold border-t-transparent rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-islamic-gold border-t-transparent rounded-full animate-spin" aria-hidden="true" />
                       ) : isPlaying && currentAyah === ayah.numberInSurah ? (
-                        <Pause className="w-5 h-5 text-islamic-gold" />
+                        <Pause className="w-5 h-5 text-islamic-gold" aria-hidden="true" />
                       ) : (
-                        <Play className="w-5 h-5 text-islamic-gold" />
+                        <Play className="w-5 h-5 text-islamic-gold" aria-hidden="true" />
                       )}
                     </button>
                     
@@ -1006,21 +1010,24 @@ export default function EnhancedQuranSection() {
                           ? "bg-islamic-gold/20 hover:bg-islamic-gold/30"
                           : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600"
                       }`}
-                      title={isBookmarked(selectedSurah, ayah.numberInSurah) ? "Remove bookmark" : "Bookmark this verse"}
+                      aria-label={isBookmarked(selectedSurah, ayah.numberInSurah) 
+                        ? (locale === 'ar' ? 'إزالة الإشارة المرجعية' : 'Remove bookmark')
+                        : (locale === 'ar' ? 'إضافة إشارة مرجعية' : 'Bookmark this verse')
+                      }
                     >
                       {isBookmarked(selectedSurah, ayah.numberInSurah) ? (
-                        <BookmarkCheck className="w-5 h-5 text-islamic-gold" fill="currentColor" />
+                        <BookmarkCheck className="w-5 h-5 text-islamic-gold" fill="currentColor" aria-hidden="true" />
                       ) : (
-                        <Bookmark className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                        <Bookmark className="w-5 h-5 text-gray-600 dark:text-gray-400" aria-hidden="true" />
                       )}
                     </button>
                     
                     <button 
                       onClick={() => handleShare(ayah)}
                       className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-300"
-                      title={locale === 'ar' ? 'مشاركة الآية' : 'Share verse'}
+                      aria-label={locale === 'ar' ? 'مشاركة الآية' : 'Share verse'}
                     >
-                      <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" aria-hidden="true" />
                     </button>
                   </div>
                 </div>

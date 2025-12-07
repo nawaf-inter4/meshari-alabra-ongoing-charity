@@ -570,24 +570,11 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                   
                   {/* Quranic Verse Text */}
                   <div 
-                    className="mb-6 quran-text font-arabic"
+                    className="mb-6 arabic-quran-text text-2xl md:text-3xl leading-relaxed text-right"
                     style={{
                       direction: 'rtl',
                       textAlign: 'right',
-                      fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif",
-                      fontSize: '28px',
-                      lineHeight: '2.5',
                       color: isDarkMode ? '#f3f4f6' : '#111827',
-                      unicodeBidi: 'bidi-override',
-                      wordSpacing: '0.1em',
-                      letterSpacing: '0.02em',
-                      whiteSpace: 'normal',
-                      overflowWrap: 'normal',
-                      wordBreak: 'normal',
-                      hyphens: 'none',
-                      textRendering: 'optimizeLegibility',
-                      WebkitFontSmoothing: 'antialiased',
-                      MozOsxFontSmoothing: 'grayscale'
                     }}
                   >
                     {verse?.arabicText || ''}

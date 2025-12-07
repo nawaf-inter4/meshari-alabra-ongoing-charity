@@ -14,6 +14,9 @@ const nextConfig = {
       exclude: ['error', 'warn'],
     } : false,
   },
+  
+  // Output standalone for better optimization
+  output: 'standalone',
 
   // Enable Partial Pre-Rendering (PPR) - stable in Next.js 16
   // cacheComponents: true, // Temporarily disabled for build compatibility
@@ -49,6 +52,9 @@ const nextConfig = {
     return config;
   },
 
+  // External packages for server components
+  serverExternalPackages: ['react-pdf', 'pdfjs-dist'],
+  
   // Experimental features for better performance
   experimental: {
     // Optimize package imports (stable in Next.js 16)
@@ -136,6 +142,27 @@ const nextConfig = {
             key: 'Cache-Control',
             value: 'no-cache, no-store, must-revalidate',
           },
+          {
+            key: 'Content-Type',
+            value: 'application/javascript',
+          },
+          {
+            key: 'Service-Worker-Allowed',
+            value: '/',
+          },
+        ],
+      },
+      {
+        source: '/manifest.json',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/manifest+json',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600',
+          },
         ],
       },
       {
@@ -153,6 +180,19 @@ const nextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/audio/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Accept-Ranges',
+            value: 'bytes',
           },
         ],
       },

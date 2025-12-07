@@ -22,11 +22,42 @@ export default function PDFViewer({ pdfUrl, className = "" }: PDFViewerProps) {
   const [pdfModuleLoaded, setPdfModuleLoaded] = useState(false);
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState(1);
-  const [scale, setScale] = useState(1.5);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [containerWidth, setContainerWidth] = useState(800);
   
   const isRTL = direction === "rtl";
+  
+  // Calculate responsive scale and width based on screen size
+  const getResponsiveScale = () => {
+    if (typeof window === "undefined") return 1.5;
+    const width = window.innerWidth;
+    if (width < 640) return 0.8; // Mobile
+    if (width < 768) return 1.0; // Tablet
+    if (width < 1024) return 1.2; // Small desktop
+    return 1.5; // Desktop
+  };
+  
+  const [scale, setScale] = useState(getResponsiveScale());
+  
+  // Update container width and scale on resize
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    const updateDimensions = () => {
+      const width = window.innerWidth;
+      setContainerWidth(Math.min(width - 32, 1200)); // Max width with padding
+      setScale((prev) => {
+        const newScale = getResponsiveScale();
+        // Only update if significantly different to avoid constant updates
+        return Math.abs(prev - newScale) > 0.1 ? newScale : prev;
+      });
+    };
+    
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -108,51 +139,66 @@ export default function PDFViewer({ pdfUrl, className = "" }: PDFViewerProps) {
   }
 
   return (
-    <div className={`${className} flex flex-col items-center`}>
-      {/* Controls */}
-      <div className={`flex items-center justify-center gap-4 mb-4 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
-        <button
-          onClick={goToPrevPage}
-          disabled={pageNumber <= 1}
-          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          aria-label={isRTL ? "Next page" : "Previous page"}
-        >
-          {isRTL ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-        </button>
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Page {pageNumber} of {numPages || "..."}
-        </span>
-        <button
-          onClick={goToNextPage}
-          disabled={pageNumber >= (numPages || 1)}
-          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          aria-label={isRTL ? "Previous page" : "Next page"}
-        >
-          {isRTL ? <ChevronLeft className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-        </button>
-        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600" />
-        <button
-          onClick={() => setScale((prev) => Math.max(0.5, prev - 0.25))}
-          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-        >
-          <ZoomOut className="w-5 h-5" />
-        </button>
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">
-          {Math.round(scale * 100)}%
-        </span>
-        <button
-          onClick={() => setScale((prev) => Math.min(3, prev + 0.25))}
-          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-        >
-          <ZoomIn className="w-5 h-5" />
-        </button>
+    <div className={`${className} flex flex-col items-center w-full`}>
+      {/* Controls - Responsive layout */}
+      <div className={`w-full flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-4 p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
+        {/* Page Navigation */}
+        <div className={`flex items-center justify-center gap-2 sm:gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          {/* Forward (Next Page) - Left side */}
+          <button
+            onClick={goToNextPage}
+            disabled={pageNumber >= (numPages || 1)}
+            className="p-2 sm:p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Next page"
+          >
+            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+          <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+            Page {pageNumber} of {numPages || "..."}
+          </span>
+          {/* Back (Previous Page) - Right side */}
+          <button
+            onClick={goToPrevPage}
+            disabled={pageNumber <= 1}
+            className="p-2 sm:p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Previous page"
+          >
+            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+          </button>
+        </div>
+        
+        {/* Divider - hidden on mobile */}
+        <div className="hidden sm:block w-px h-6 bg-gray-300 dark:bg-gray-600" />
+        
+        {/* Zoom Controls */}
+        <div className={`flex items-center justify-center gap-2 sm:gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <button
+            onClick={() => setScale((prev) => Math.max(0.5, prev - 0.25))}
+            className="p-2 sm:p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Zoom out"
+          >
+            <ZoomOut className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
+          </button>
+          <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[50px] sm:min-w-[60px] text-center" aria-label={`Current zoom level: ${Math.round(scale * 100)}%`}>
+            {Math.round(scale * 100)}%
+          </span>
+          <button
+            onClick={() => setScale((prev) => Math.min(3, prev + 0.25))}
+            className="p-2 sm:p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Zoom in"
+          >
+            <ZoomIn className="w-4 h-4 sm:w-5 sm:h-5" aria-hidden="true" />
+          </button>
+        </div>
       </div>
 
-      {/* PDF Document */}
+      {/* PDF Document - Responsive container */}
       <div 
-        className="overflow-auto max-h-[70vh] bg-gray-100 dark:bg-gray-900 rounded-lg p-4"
+        className="w-full overflow-auto bg-gray-100 dark:bg-gray-900 rounded-lg p-2 sm:p-4"
         style={{ 
           overscrollBehavior: 'contain',
+          maxHeight: 'calc(100vh - 200px)',
+          minHeight: '400px',
         }}
         onWheel={(e) => {
           const target = e.currentTarget;
@@ -169,32 +215,38 @@ export default function PDFViewer({ pdfUrl, className = "" }: PDFViewerProps) {
           }
         }}
       >
-        <Document
-          file={fileConfig}
-          onLoadSuccess={onDocumentLoadSuccess}
-          onLoadError={onDocumentLoadError}
-          loading={
-            <div className="flex items-center justify-center w-full h-full min-h-[400px]">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-islamic-gold"></div>
-            </div>
-          }
-          error={
-            <div className="flex items-center justify-center w-full h-full min-h-[400px]">
-              <div className="text-center text-gray-500 dark:text-gray-400">
-                <p className="text-lg mb-2">Failed to load PDF</p>
-                <p className="text-sm">{errorMessage || "Please try opening it in a new tab"}</p>
+        <div className="flex justify-center">
+          <Document
+            file={fileConfig}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={onDocumentLoadError}
+            loading={
+              <div className="flex items-center justify-center w-full h-full min-h-[400px]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-islamic-gold"></div>
               </div>
-            </div>
-          }
-        >
-          <Page
-            pageNumber={pageNumber}
-            scale={scale}
-            renderTextLayer={true}
-            renderAnnotationLayer={true}
-            className="shadow-lg"
-          />
-        </Document>
+            }
+            error={
+              <div className="flex items-center justify-center w-full h-full min-h-[400px]">
+                <div className="text-center text-gray-500 dark:text-gray-400">
+                  <p className="text-lg mb-2">Failed to load PDF</p>
+                  <p className="text-sm">{errorMessage || "Please try opening it in a new tab"}</p>
+                </div>
+              </div>
+            }
+          >
+            <Page
+              pageNumber={pageNumber}
+              width={containerWidth}
+              renderTextLayer={true}
+              renderAnnotationLayer={true}
+              className="shadow-lg max-w-full h-auto"
+              style={{
+                maxWidth: '100%',
+                height: 'auto',
+              }}
+            />
+          </Document>
+        </div>
       </div>
     </div>
   );

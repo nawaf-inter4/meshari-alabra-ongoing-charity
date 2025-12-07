@@ -115,7 +115,8 @@ export default function PrayerTimesSection() {
   useEffect(() => {
     fetchPrayerTimes();
     updateHijriDate();
-    requestNotificationPermission();
+    // Note: Notification permission should only be requested on user interaction
+    // Removed automatic request to avoid console violations
     startPrayerTracking();
     
     return () => {
@@ -206,9 +207,9 @@ export default function PrayerTimesSection() {
       let city = 'Riyadh';
       let country = 'Saudi Arabia';
 
-      // Try to get user location via IP
+      // Try to get user location via IP (use proxy to avoid CORS)
       try {
-        const ipResponse = await fetch('https://ipapi.co/json/', {
+        const ipResponse = await fetch('/api/ip-location', {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -646,9 +647,16 @@ export default function PrayerTimesSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ 
+            duration: 0.6,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+          className="text-center mb-12 motion-safe"
+          style={{
+            willChange: 'transform, opacity',
+            transform: 'translateZ(0)',
+          }}
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <Clock className="w-8 h-8 text-islamic-gold" />
@@ -665,9 +673,17 @@ export default function PrayerTimesSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-center mb-8 p-6 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-full"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ 
+            duration: 0.6, 
+            delay: 0.2,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+          className="text-center mb-8 p-6 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-full motion-safe"
+          style={{
+            willChange: 'transform, opacity',
+            transform: 'translateZ(0)',
+          }}
         >
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{mounted ? (t("hijri.title") !== "hijri.title" ? t("hijri.title") : "التاريخ الهجري") : "التاريخ الهجري"}</p>
           <p className="text-2xl md:text-3xl font-bold text-islamic-gold">{hijriDate}</p>
@@ -794,9 +810,19 @@ export default function PrayerTimesSection() {
                 key={prayer.key}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.1 * index }}
-                className="bg-light-secondary dark:bg-dark-secondary rounded-full w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 flex flex-col items-center justify-center text-center border-2 border-transparent hover:border-islamic-gold transition-all duration-300 card-hover mx-auto"
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ 
+                  duration: 0.4, 
+                  delay: 0.1 * index,
+                  ease: [0.25, 0.1, 0.25, 1],
+                }}
+                className="bg-light-secondary dark:bg-dark-secondary rounded-full w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 flex flex-col items-center justify-center text-center border-2 border-transparent hover:border-islamic-gold transition-all duration-300 card-hover mx-auto motion-safe"
+                style={{
+                  willChange: 'transform, opacity',
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden',
+                }}
               >
                 <Bell className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-islamic-gold mb-1" />
                 <h3 className="font-bold text-xs sm:text-sm md:text-base mb-1 leading-tight">{prayer.name}</h3>
@@ -880,13 +906,13 @@ export default function PrayerTimesSection() {
         {/* Hidden Audio Element */}
         <audio
           ref={athanAudioRef}
-          preload="metadata"
+          preload="none"
           suppressHydrationWarning
           onEnded={() => setIsAthanPlaying(false)}
           onError={() => setIsAthanPlaying(false)}
         >
-          <source src="/audio/athan.mp3" type="audio/mpeg" />
-          <source src="/audio/athan.ogg" type="audio/ogg" />
+          <source src="/api/audio/athan.mp3" type="audio/mpeg" />
+          <source src="/api/audio/athan.ogg" type="audio/ogg" />
         </audio>
       </div>
     </section>

@@ -3,16 +3,44 @@
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookOpen, Book, Heart, Clock, DollarSign, Compass, Users, Calendar, Star, Globe, Shield, Gift, Grid3X3 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useCallback } from "react";
 
 export default function SectionNavigation() {
   const { t, locale, direction } = useLanguage();
+  const router = useRouter();
 
-  // Handle section navigation with full page reload to avoid React unmounting issues
-  const handleSectionClick = (e: React.MouseEvent, href: string) => {
-    e.preventDefault();
-    // Use full page navigation to avoid React hydration issues between different layouts
-    window.location.href = href;
-  };
+  // Prefetch all section links on mount for blazing fast navigation
+  useEffect(() => {
+    const sections = [
+      { path: "/sections/quran" },
+      { path: "/sections/tafseer" },
+      { path: "/sections/dhikr" },
+      { path: "/sections/prayer-times" },
+      { path: "/sections/qibla" },
+      { path: "/sections/donation" },
+      { path: "/sections/supplications" },
+      { path: "/sections/hadith" },
+      { path: "/sections/youtube" },
+    ];
+
+    // Prefetch all sections with language prefix
+    sections.forEach((section) => {
+      const href = locale === 'ar' 
+        ? section.path 
+        : `/${locale}${section.path}`;
+      
+      // Prefetch the route for instant navigation
+      router.prefetch(href);
+    });
+  }, [locale, router]);
+
+  // Handle section navigation with prefetching
+  const handleSectionClick = useCallback((e: React.MouseEvent, href: string) => {
+    // Prefetch on hover for even faster navigation
+    router.prefetch(href);
+  }, [router]);
 
   // Helper function to get section href with language prefix
   const getSectionHref = (sectionPath: string) => {
@@ -104,9 +132,16 @@ export default function SectionNavigation() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ 
+            duration: 0.6,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+          className="text-center mb-16 motion-safe"
+          style={{
+            willChange: 'transform, opacity',
+            transform: 'translateZ(0)',
+          }}
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <Grid3X3 className="w-8 h-8 text-islamic-gold" />
@@ -125,12 +160,23 @@ export default function SectionNavigation() {
               key={section.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ 
+                duration: 0.6, 
+                delay: index * 0.1,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
+              className="motion-safe"
+              style={{
+                willChange: 'transform, opacity',
+                transform: 'translateZ(0)',
+              }}
             >
-              <a
+              <Link
                 href={section.href}
                 onClick={(e) => handleSectionClick(e, section.href)}
+                onMouseEnter={() => router.prefetch(section.href)}
+                prefetch={true}
                 className="block"
               >
                 <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold h-full flex flex-col cursor-pointer">
@@ -158,7 +204,7 @@ export default function SectionNavigation() {
                     </svg>
                   </div>
                 </div>
-              </a>
+              </Link>
             </motion.div>
           ))}
         </div>

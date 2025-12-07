@@ -134,7 +134,7 @@ export default function HeroSection() {
         {starPositions.map((star) => (
           <motion.div
             key={`${starKey}-${star.id}`}
-            className="absolute"
+            className="absolute motion-safe"
             initial={{ opacity: 0, scale: 0 }}
             animate={{
               opacity: [0, 1, 0.8, 1],
@@ -146,10 +146,13 @@ export default function HeroSection() {
               repeat: Infinity,
               repeatType: "reverse",
               repeatDelay: Math.random() * 3 + 2,
+              ease: "easeInOut",
             }}
             style={{
-              left: `${star.x}px`,
-              top: `${star.y}px`,
+              transform: `translate3d(${star.x}px, ${star.y}px, 0)`,
+              willChange: 'transform, opacity',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
             }}
           >
             <Star 
@@ -167,8 +170,18 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="bg-light-secondary/80 dark:bg-dark-secondary/80 backdrop-blur-lg rounded-2xl p-8 border-2 border-islamic-gold/30 glow"
+          transition={{ 
+            duration: 0.8, 
+            delay: 0.2,
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
+          className="bg-light-secondary/80 dark:bg-dark-secondary/80 backdrop-blur-lg rounded-2xl p-8 border-2 border-islamic-gold/30 glow motion-safe"
+          style={{
+            willChange: 'transform, opacity',
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+          }}
           suppressHydrationWarning
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-3" suppressHydrationWarning>
@@ -207,14 +220,14 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-8"
         >
-          <div className="space-y-4">
+          <div className="space-y-6">
             {/* Bismillah */}
             <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold dark:text-islamic-green leading-relaxed`}>
               {getQuranVerse('bismillah')}
             </p>
             
             {/* Quran Verse */}
-            <p className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green dark:text-islamic-gold leading-loose max-w-4xl mx-auto`}>
+            <p className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green dark:text-islamic-gold leading-[2.5] max-w-4xl mx-auto`} style={{ lineHeight: '2.5' }}>
               {getQuranVerse('verse')}
             </p>
             
