@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { LanguageProvider } from '@/components/LanguageProvider';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import AudioPlayer from '@/components/AudioPlayer';
+import DynamicMetaTags from '@/components/DynamicMetaTags';
 import '../globals.css';
 
 export const metadata: Metadata = {
@@ -154,6 +155,7 @@ export default async function SectionsLayout({
           disableTransitionOnChange={false}
         >
           <LanguageProvider initialLocale={currentLang}>
+            <DynamicMetaTags />
             {children}
             <AudioPlayer />
           </LanguageProvider>

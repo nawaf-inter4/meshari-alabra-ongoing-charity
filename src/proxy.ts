@@ -7,20 +7,10 @@ function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const pathSegments = pathname.split('/').filter(Boolean);
   
-  // Skip middleware for service worker and manifest (handled by route handlers)
+  // Skip middleware for service worker and manifest (served directly from public/)
+  // These are excluded from the matcher, but we add an extra check here
   if (pathname === '/sw.js' || pathname === '/manifest.json') {
-    const response = NextResponse.next();
-    // Still apply security headers but don't interfere with route handlers
-    if (pathname === '/sw.js') {
-      response.headers.set('Content-Type', 'application/javascript');
-      response.headers.set('Service-Worker-Allowed', '/');
-      response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-    }
-    if (pathname === '/manifest.json') {
-      response.headers.set('Content-Type', 'application/manifest+json');
-      response.headers.set('Cache-Control', 'public, max-age=3600');
-    }
-    return response;
+    return NextResponse.next();
   }
   
   // Check if path starts with a language code
