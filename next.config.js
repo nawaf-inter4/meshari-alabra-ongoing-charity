@@ -63,6 +63,8 @@ const nextConfig = {
       'framer-motion',
       'next-themes',
       'react-i18next',
+      'date-fns',
+      'react-pdf',
     ],
     // Enable modern bundling optimizations
     webpackBuildWorker: true,

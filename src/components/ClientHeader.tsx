@@ -114,6 +114,7 @@ export default function ClientHeader() {
         <a
           href="#donation"
           className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-bold rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 shadow-lg hover:shadow-xl text-sm"
+          aria-label={t("donation.header_button") || "Donate"}
         >
           <Heart className="w-4 h-4" fill="currentColor" />
           <span className="hidden sm:inline">تبرع</span>
@@ -137,6 +138,7 @@ export default function ClientHeader() {
               href={getHomeUrl()}
               className="flex items-center gap-2 px-4 py-2 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 shadow-lg hover:shadow-xl text-sm"
               title={t("navigation.back_to_home")}
+              aria-label={t("navigation.back_to_home")}
             >
               <ArrowLeft 
                 className={`w-4 h-4 ${direction === 'rtl' ? 'rotate-180' : ''}`} 
@@ -146,6 +148,7 @@ export default function ClientHeader() {
             <a
               href="#donation"
               className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-bold rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 shadow-lg hover:shadow-xl text-sm"
+              aria-label={t("donation.header_button") || "Donate"}
             >
               <Heart className="w-4 h-4" fill="currentColor" />
               <span className="hidden sm:inline">{t("donation.header_button")}</span>
@@ -165,6 +168,7 @@ export default function ClientHeader() {
           onClick={() => setIsBookmarkModalOpen(true)}
           className="relative flex items-center justify-center w-10 h-10 bg-light-secondary dark:bg-dark-secondary rounded-full hover:bg-islamic-gold/20 transition-all duration-300 border border-gray-200 dark:border-gray-700"
           title={t("bookmarks.title") || "Bookmarks"}
+          aria-label={t("bookmarks.title") || "Bookmarks"}
         >
           <Bookmark className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           {bookmarkCount > 0 && (

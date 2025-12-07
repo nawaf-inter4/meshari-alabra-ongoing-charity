@@ -122,16 +122,28 @@ export default function DynamicMetaTags() {
     const baseUrl = 'https://meshari.charity';
     let canonicalUrl = baseUrl;
     
+    // Get the pathname without leading/trailing slashes
+    const cleanPath = pathname.replace(/^\/+|\/+$/g, '');
+    
     // Check if this is a section page
-    const isSectionPage = pathname.includes('/sections/');
+    const isSectionPage = cleanPath.includes('sections/');
     
     if (isSectionPage) {
-      // For section pages, use the full path with language prefix
-      const sectionPath = pathname.replace(/^\/(ar|en|ur|tr|id|ms|bn|fr|zh|it|ja|ko)?\/?/, '');
-      if (currentLang === 'ar') {
-        canonicalUrl = `${baseUrl}${sectionPath}`;
+      // For section pages, ensure we have the correct path with language prefix
+      // If pathname already has language prefix, use it; otherwise add it
+      const hasLangPrefix = /^\/(ar|en|ur|tr|id|ms|bn|fr|zh|it|ja|ko)\//.test(pathname);
+      
+      if (hasLangPrefix) {
+        // Path already has language prefix, use it as-is
+        canonicalUrl = `${baseUrl}${pathname}`;
       } else {
-        canonicalUrl = `${baseUrl}/${currentLang}${sectionPath}`;
+        // No language prefix, add it
+        const sectionPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
+        if (currentLang === 'ar') {
+          canonicalUrl = `${baseUrl}${sectionPath}`;
+        } else {
+          canonicalUrl = `${baseUrl}/${currentLang}${sectionPath}`;
+        }
       }
     } else {
       // For home pages, use language prefix
