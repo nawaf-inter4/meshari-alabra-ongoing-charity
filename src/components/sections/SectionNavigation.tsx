@@ -10,7 +10,12 @@ export default function SectionNavigation() {
   const router = useRouter();
 
   // SIMPLE navigation - just use router.push directly
-  const handleSectionClick = (sectionPath: string) => {
+  const handleSectionClick = (sectionPath: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    console.log('Navigating to:', sectionPath);
     router.push(sectionPath);
   };
 
@@ -129,7 +134,7 @@ export default function SectionNavigation() {
                 delay: index * 0.1,
                 ease: [0.25, 0.1, 0.25, 1],
               }}
-              onClick={() => handleSectionClick(section.href)}
+              onClick={(e) => handleSectionClick(section.href, e)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
