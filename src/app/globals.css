@@ -139,6 +139,25 @@ html[dir="rtl"] .font-arabic {
   unicode-bidi: bidi-override;
 }
 
+/* Override font-arabic for English text - ensure English surah names use LTR */
+h3:not(.font-arabic),
+h3.not-arabic-text {
+  font-family: 'Lexend Deca', sans-serif !important;
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: normal !important;
+  text-rendering: auto !important;
+  font-feature-settings: normal !important;
+  font-variant-ligatures: normal !important;
+  word-spacing: normal !important;
+}
+
+/* Override for centered surah headers */
+.text-center h3,
+.text-center h3:not(.font-arabic) {
+  text-align: center !important;
+}
+
 /* Quran Text with Special Unicode Characters */
 .quran-text {
   font-family: 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', 'Tajawal', serif !important;

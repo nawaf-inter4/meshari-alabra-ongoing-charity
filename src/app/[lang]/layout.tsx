@@ -246,9 +246,15 @@ export default async function LanguageLayout({
         <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         
-        {/* Preconnect for critical resources */}
+        {/* Preconnect for critical resources - Performance optimization */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://api.quran.com" />
+        <link rel="preconnect" href="https://api.alquran.cloud" />
+        
+        {/* Preload critical resources for faster LCP */}
+        <link rel="preload" href="/og-image.png" as="image" type="image/png" />
+        <link rel="preload" href="/icons/icon-192x192.svg" as="image" type="image/svg+xml" />
 
         {/* Load critical fonts with display=swap for performance */}
         <link

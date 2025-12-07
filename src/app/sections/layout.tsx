@@ -7,9 +7,12 @@ import AudioPlayer from '@/components/AudioPlayer';
 import DynamicMetaTags from '@/components/DynamicMetaTags';
 import '../globals.css';
 
+// Metadata is generated per-section in each section's page.tsx
+// This layout doesn't override section-specific metadata
 export const metadata: Metadata = {
   title: 'Meshari Alabra Ongoing Charity',
   description: 'Islamic charity and educational content',
+  // Canonical will be set by individual section pages via generateMetadata
 };
 
 export default async function SectionsLayout({
