@@ -55,5 +55,8 @@
     "next-sitemap": "^4.2.3",
     "sharp": "^0.34.5",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "@modelcontextprotocol/sdk": "^1.24.0"
   }
 }
