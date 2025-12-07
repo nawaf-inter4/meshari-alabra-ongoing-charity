@@ -209,68 +209,12 @@ export function LanguageProvider({
       }
     }
     
-    // Navigate with smooth fade-out transition
-    // This prevents the "removeChild" error when switching languages
+    // Navigate immediately - no DOM manipulation to avoid React errors
+    // Next.js router handles navigation smoothly without interfering with React
     console.log('🔄 Language change:', { from: locale, to: newLocale, currentPath, newPath });
     
-    // Add smooth fade-out transition
-    const body = document.body;
-    const html = document.documentElement;
-    
-    // Ensure transition is applied
-    body.style.transition = 'opacity 0.25s ease-out';
-    html.style.transition = 'opacity 0.25s ease-out';
-    
-    // Fade out
-    body.style.opacity = '0';
-    html.style.opacity = '0';
-    
-    // Add loading overlay for visual feedback
-    const loader = document.createElement('div');
-    loader.id = 'language-switch-loader';
-    loader.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 99999;
-      opacity: 0;
-      transition: opacity 0.2s ease-in;
-    `;
-    loader.innerHTML = `
-      <div style="
-        width: 50px;
-        height: 50px;
-        border: 4px solid rgba(212, 175, 55, 0.3);
-        border-top-color: #D4AF37;
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
-      "></div>
-      <style>
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      </style>
-    `;
-    document.body.appendChild(loader);
-    
-    // Show loader
-    requestAnimationFrame(() => {
-      loader.style.opacity = '1';
-    });
-    
-    // Navigate after fade-out completes
-    setTimeout(() => {
-      if (window.stop) {
-        window.stop();
-      }
-      window.location.replace(newPath);
-    }, 250);
+    // Use router.push directly - Next.js handles the transition
+    router.push(newPath);
   };
 
   const t = (key: string): string => {
