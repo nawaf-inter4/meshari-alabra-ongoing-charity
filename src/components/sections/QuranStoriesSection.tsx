@@ -204,13 +204,21 @@ export default function QuranStoriesSection() {
   };
 
   const handleDownload = (story: QuranStory) => {
-    const link = document.createElement('a');
-    link.href = story.pdfUrl;
-    link.download = story.fileName;
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (typeof document !== 'undefined' && document.body && document.body.parentNode) {
+      try {
+        const link = document.createElement('a');
+        link.href = story.pdfUrl;
+        link.download = story.fileName;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        if (link.parentNode) {
+          document.body.removeChild(link);
+        }
+      } catch (e) {
+        // Silently fail if DOM manipulation fails
+      }
+    }
   };
 
   const handleViewInBrowser = (story: QuranStory) => {

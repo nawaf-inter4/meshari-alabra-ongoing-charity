@@ -114,11 +114,15 @@ export default function MetaOptimizer({
         let element = document.querySelector(`meta[property="${tag.property}"]`);
         if (element) {
           element.setAttribute('content', tag.content);
-        } else {
-          element = document.createElement('meta');
-          element.setAttribute('property', tag.property);
-          element.setAttribute('content', tag.content);
-          document.head.appendChild(element);
+        } else if (document.head && document.head.parentNode) {
+          try {
+            element = document.createElement('meta');
+            element.setAttribute('property', tag.property);
+            element.setAttribute('content', tag.content);
+            document.head.appendChild(element);
+          } catch (e) {
+            // Silently fail if DOM manipulation fails
+          }
         }
       });
     };
@@ -139,11 +143,15 @@ export default function MetaOptimizer({
         let element = document.querySelector(`meta[name="${tag.name}"]`);
         if (element) {
           element.setAttribute('content', tag.content);
-        } else {
-          element = document.createElement('meta');
-          element.setAttribute('name', tag.name);
-          element.setAttribute('content', tag.content);
-          document.head.appendChild(element);
+        } else if (document.head && document.head.parentNode) {
+          try {
+            element = document.createElement('meta');
+            element.setAttribute('name', tag.name);
+            element.setAttribute('content', tag.content);
+            document.head.appendChild(element);
+          } catch (e) {
+            // Silently fail if DOM manipulation fails
+          }
         }
       });
     };
@@ -152,63 +160,91 @@ export default function MetaOptimizer({
     const updateLanguageAlternates = () => {
       const languages = ['ar', 'en', 'tr', 'ur', 'id', 'ms', 'bn', 'fr', 'zh', 'it', 'ja', 'ko'];
       
-      // Remove existing hreflang tags
-      const existingHreflang = document.querySelectorAll('link[rel="alternate"][hreflang]');
-      existingHreflang.forEach(link => link.remove());
+      if (document.head && document.head.parentNode) {
+        try {
+          // Remove existing hreflang tags
+          const existingHreflang = document.querySelectorAll('link[rel="alternate"][hreflang]');
+          existingHreflang.forEach(link => {
+            if (link.parentNode) {
+              link.remove();
+            }
+          });
 
-      // Add x-default
-      let xDefault = document.createElement('link');
-      xDefault.setAttribute('rel', 'alternate');
-      xDefault.setAttribute('hreflang', 'x-default');
-      xDefault.setAttribute('href', siteUrl);
-      document.head.appendChild(xDefault);
+          // Add x-default
+          let xDefault = document.createElement('link');
+          xDefault.setAttribute('rel', 'alternate');
+          xDefault.setAttribute('hreflang', 'x-default');
+          xDefault.setAttribute('href', siteUrl);
+          document.head.appendChild(xDefault);
 
-      // Add language alternates
-      languages.forEach(lang => {
-        let alternate = document.createElement('link');
-        alternate.setAttribute('rel', 'alternate');
-        alternate.setAttribute('hreflang', lang);
-        alternate.setAttribute('href', lang === 'ar' ? siteUrl : `${siteUrl}/${lang}`);
-        document.head.appendChild(alternate);
-      });
+          // Add language alternates
+          languages.forEach(lang => {
+            let alternate = document.createElement('link');
+            alternate.setAttribute('rel', 'alternate');
+            alternate.setAttribute('hreflang', lang);
+            alternate.setAttribute('href', lang === 'ar' ? siteUrl : `${siteUrl}/${lang}`);
+            document.head.appendChild(alternate);
+          });
+        } catch (e) {
+          // Silently fail if DOM manipulation fails
+        }
+      }
     };
 
     // Update robots meta
     const updateRobotsMeta = () => {
+      if (typeof document === 'undefined' || !document.head || !document.head.parentNode) return;
+      
       let robots = document.querySelector('meta[name="robots"]');
       if (robots) {
         robots.setAttribute('content', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1');
       } else {
-        robots = document.createElement('meta');
-        robots.setAttribute('name', 'robots');
-        robots.setAttribute('content', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1');
-        document.head.appendChild(robots);
+        try {
+          robots = document.createElement('meta');
+          robots.setAttribute('name', 'robots');
+          robots.setAttribute('content', 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1');
+          document.head.appendChild(robots);
+        } catch (e) {
+          // Silently fail if DOM manipulation fails
+        }
       }
     };
 
     // Update theme color
     const updateThemeColor = () => {
+      if (typeof document === 'undefined' || !document.head || !document.head.parentNode) return;
+      
       let themeColor = document.querySelector('meta[name="theme-color"]');
       if (themeColor) {
         themeColor.setAttribute('content', '#D4AF37');
       } else {
-        themeColor = document.createElement('meta');
-        themeColor.setAttribute('name', 'theme-color');
-        themeColor.setAttribute('content', '#D4AF37');
-        document.head.appendChild(themeColor);
+        try {
+          themeColor = document.createElement('meta');
+          themeColor.setAttribute('name', 'theme-color');
+          themeColor.setAttribute('content', '#D4AF37');
+          document.head.appendChild(themeColor);
+        } catch (e) {
+          // Silently fail if DOM manipulation fails
+        }
       }
     };
 
     // Update viewport meta
     const updateViewport = () => {
+      if (typeof document === 'undefined' || !document.head || !document.head.parentNode) return;
+      
       let viewport = document.querySelector('meta[name="viewport"]');
       if (viewport) {
         viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover');
       } else {
-        viewport = document.createElement('meta');
-        viewport.setAttribute('name', 'viewport');
-        viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover');
-        document.head.appendChild(viewport);
+        try {
+          viewport = document.createElement('meta');
+          viewport.setAttribute('name', 'viewport');
+          viewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover');
+          document.head.appendChild(viewport);
+        } catch (e) {
+          // Silently fail if DOM manipulation fails
+        }
       }
     };
 
