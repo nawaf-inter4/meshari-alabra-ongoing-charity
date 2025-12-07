@@ -15,22 +15,62 @@ export default function YouTubePlaylist({ playlistId }: YouTubePlaylistProps) {
   
   // Lazy load YouTube iframe only when in viewport
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setShouldLoad(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' } // Start loading 200px before viewport
-    );
-    
-    const container = document.getElementById('youtube-container');
-    if (container && container instanceof Element) {
-      observer.observe(container);
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      // Fallback: load immediately if IntersectionObserver not supported
+      setShouldLoad(true);
+      return;
     }
     
-    return () => observer.disconnect();
+    let observer: IntersectionObserver | null = null;
+    
+    try {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0]?.isIntersecting) {
+            setShouldLoad(true);
+            if (observer) {
+              observer.disconnect();
+            }
+          }
+        },
+        { rootMargin: '200px' } // Start loading 200px before viewport
+      );
+      
+      // Wait for DOM to be ready
+      const checkContainer = () => {
+        const container = document.getElementById('youtube-container');
+        if (container && container instanceof Node && container.parentNode) {
+          try {
+            observer?.observe(container);
+          } catch (e) {
+            // If observe fails, just load immediately
+            setShouldLoad(true);
+          }
+        } else {
+          // Retry after a short delay if container not found
+          setTimeout(checkContainer, 100);
+        }
+      };
+      
+      if (document.readyState === 'complete') {
+        checkContainer();
+      } else {
+        window.addEventListener('load', checkContainer);
+      }
+    } catch (e) {
+      // If IntersectionObserver fails, load immediately
+      setShouldLoad(true);
+    }
+    
+    return () => {
+      if (observer) {
+        try {
+          observer.disconnect();
+        } catch (e) {
+          // Ignore disconnect errors
+        }
+      }
+    };
   }, []);
 
   return (
