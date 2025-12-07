@@ -157,7 +157,9 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - sw.js (service worker - handled by route handler)
+     * - manifest.json (manifest - handled by route handler)
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!_next/static|_next/image|favicon.ico|sw.js|manifest.json).*)',
   ],
 };
