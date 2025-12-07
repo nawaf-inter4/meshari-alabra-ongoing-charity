@@ -134,6 +134,7 @@ export default function Footer() {
             <button
               onClick={handleShare}
               className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105"
+              aria-label={memoizedTranslations.share || "Share"}
             >
               <Share2 className="w-5 h-5" />
               {memoizedTranslations.share}
@@ -151,6 +152,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gray-800 dark:bg-gray-700 text-white font-bold rounded-full hover:bg-blue-500 transition-all duration-300 hover:scale-105"
+              aria-label={memoizedTranslations.socialXAccount || "Follow on X (Twitter)"}
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -163,6 +165,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gray-800 dark:bg-gray-700 text-white font-bold rounded-full hover:bg-gray-600 dark:hover:bg-gray-600 transition-all duration-300 hover:scale-105"
+              aria-label={memoizedTranslations.socialGithub || "View on GitHub"}
             >
               <Github className="w-5 h-5" />
               {memoizedTranslations.socialGithub}
@@ -198,10 +201,10 @@ export default function Footer() {
             {memoizedTranslations.footerTechnology}
           </p>
           <div className="mt-2 text-xs flex justify-center gap-4">
-            <a href="/sitemap.xml" className="text-islamic-gold hover:text-islamic-green transition-colors">
+            <a href="/sitemap.xml" className="text-islamic-gold hover:text-islamic-green transition-colors" aria-label={memoizedTranslations.footerSitemap || "Sitemap"}>
               {memoizedTranslations.footerSitemap}
             </a>
-            <a href="/llms.txt" className="text-islamic-gold hover:text-islamic-green transition-colors">
+            <a href="/llms.txt" className="text-islamic-gold hover:text-islamic-green transition-colors" aria-label={memoizedTranslations.footerLlmTxt || "LLMs.txt"}>
               {memoizedTranslations.footerLlmTxt}
             </a>
           </div>

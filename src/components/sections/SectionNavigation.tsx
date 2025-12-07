@@ -178,6 +178,7 @@ export default function SectionNavigation() {
                 onMouseEnter={() => router.prefetch(section.href)}
                 prefetch={true}
                 className="block"
+                aria-label={`${section.title} - ${section.description}`}
               >
                 <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold h-full flex flex-col cursor-pointer">
                   <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${section.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
