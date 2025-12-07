@@ -70,21 +70,15 @@ export default async function SectionsLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* Load critical fonts */}
+        {/* Load critical fonts - display=swap prevents blocking */}
         <link
           href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
         
-        {/* Load Arabic fonts for Quran text with extended character sets */}
+        {/* Load Arabic fonts for Quran text - display=swap prevents blocking */}
         <link
           href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Scheherazade+New:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-        
-        {/* Load additional Arabic fonts for better Unicode support */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
 

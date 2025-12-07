@@ -4,17 +4,9 @@ import { join } from 'path';
 
 export async function GET(request: NextRequest) {
   try {
-    // Read the service worker file from public directory (check backup first, then original)
-    let swPath = join(process.cwd(), 'public', 'sw.js.backup');
-    let swContent: string;
-    
-    try {
-      swContent = await readFile(swPath, 'utf-8');
-    } catch {
-      // Fallback to original location if backup doesn't exist
-      swPath = join(process.cwd(), 'public', 'sw.js');
-      swContent = await readFile(swPath, 'utf-8');
-    }
+    // Read the service worker file from public directory
+    const swPath = join(process.cwd(), 'public', 'sw.js');
+    const swContent = await readFile(swPath, 'utf-8');
 
     // Return with correct MIME type
     return new NextResponse(swContent, {
