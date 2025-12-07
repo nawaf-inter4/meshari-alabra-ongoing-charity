@@ -58,13 +58,13 @@ const nextConfig = {
   // Experimental features for better performance
   experimental: {
     // Optimize package imports (stable in Next.js 16)
+    // Note: react-pdf is excluded here because it's in serverExternalPackages
     optimizePackageImports: [
       'lucide-react',
       'framer-motion',
       'next-themes',
       'react-i18next',
       'date-fns',
-      'react-pdf',
     ],
     // Enable modern bundling optimizations
     webpackBuildWorker: true,

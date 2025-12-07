@@ -11,29 +11,43 @@ export default function SectionNavigation() {
   const { t, locale, direction } = useLanguage();
   const router = useRouter();
 
-  // Prefetch all section links on mount for blazing fast navigation
+  // Prefetch section links on mount - but don't block navigation
   useEffect(() => {
-    const sections = [
-      { path: "/sections/quran" },
-      { path: "/sections/tafseer" },
-      { path: "/sections/dhikr" },
-      { path: "/sections/prayer-times" },
-      { path: "/sections/qibla" },
-      { path: "/sections/donation" },
-      { path: "/sections/supplications" },
-      { path: "/sections/hadith" },
-      { path: "/sections/youtube" },
-    ];
+    // Use requestIdleCallback to prefetch when browser is idle
+    const prefetchSections = () => {
+      const sections = [
+        { path: "/sections/quran" },
+        { path: "/sections/tafseer" },
+        { path: "/sections/dhikr" },
+        { path: "/sections/prayer-times" },
+        { path: "/sections/qibla" },
+        { path: "/sections/donation" },
+        { path: "/sections/supplications" },
+        { path: "/sections/hadith" },
+        { path: "/sections/youtube" },
+      ];
 
-    // Prefetch all sections with language prefix
-    sections.forEach((section) => {
-      const href = locale === 'ar' 
-        ? section.path 
-        : `/${locale}${section.path}`;
-      
-      // Prefetch the route for instant navigation
-      router.prefetch(href);
-    });
+      // Prefetch sections with language prefix when idle
+      sections.forEach((section) => {
+        const href = locale === 'ar' 
+          ? section.path 
+          : `/${locale}${section.path}`;
+        
+        // Prefetch when browser is idle to avoid blocking navigation
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => {
+            router.prefetch(href);
+          });
+        } else {
+          // Fallback for browsers without requestIdleCallback
+          setTimeout(() => router.prefetch(href), 100);
+        }
+      });
+    };
+
+    // Delay prefetching to ensure it doesn't block initial render
+    const timeoutId = setTimeout(prefetchSections, 1000);
+    return () => clearTimeout(timeoutId);
   }, [locale, router]);
 
   // Handle section navigation - don't interfere with Link navigation
