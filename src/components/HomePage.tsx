@@ -28,7 +28,7 @@ export default function HomePage({ language }: HomePageProps) {
   // No need to call setLocale here as it can interfere with the language switcher
 
   return (
-    <main className="min-h-screen bg-light dark:bg-dark islamic-pattern">
+    <main id="main-content" role="main" aria-label="Main content" className="min-h-screen bg-light dark:bg-dark islamic-pattern">
       {/* Fixed Header with Theme, Language, and Donation */}
       <ClientHeader />
       

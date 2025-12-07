@@ -348,6 +348,14 @@ export default async function LanguageLayout({
         
       </head>
       <body className="antialiased">
+        {/* Skip to main content link - static HTML, no DOM manipulation */}
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50"
+          aria-label="Skip to main content"
+        >
+          Skip to main content
+        </a>
         <ErrorBoundary>
           <ThemeProvider
             attribute="class"
@@ -356,15 +364,14 @@ export default async function LanguageLayout({
             disableTransitionOnChange={false}
           >
             <LanguageProvider initialLocale={initialLanguage}>
-              {/* Temporarily disabled ALL DOM manipulation to fix navigation */}
-              {/* <DynamicMetaTags /> */}
+              {/* DOM manipulation components disabled - using server-side metadata instead */}
+              {/* Meta tags are handled by generateMetadata() functions in layouts/pages */}
+              {/* Accessibility features added directly in JSX (aria-labels, skip links) */}
+              {/* Performance optimizations done via Next.js config and JSX attributes */}
               {children}
               <AudioPlayer />
               <LocalSchemaMarkup />
               <AdvancedSEO />
-              {/* <PerformanceOptimizer /> */}
-              {/* <AccessibilityOptimizer /> */}
-              {/* <MetaOptimizer /> */}
               <AnalyticsWrapper />
             </LanguageProvider>
           </ThemeProvider>
