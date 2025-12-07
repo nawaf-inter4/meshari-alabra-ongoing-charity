@@ -6,14 +6,26 @@ export default function AccessibilityOptimizer() {
   useEffect(() => {
     // Add ARIA labels and roles
     const addAriaLabels = () => {
-      // Add skip navigation
-      if (document.body && document.body instanceof Node && !document.querySelector('a[href="#main-content"]')) {
-        const skipLink = document.createElement('a');
-        skipLink.href = '#main-content';
-        skipLink.textContent = 'Skip to main content';
-        skipLink.className = 'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50';
-        skipLink.setAttribute('aria-label', 'Skip to main content');
-        document.body.insertBefore(skipLink, document.body.firstChild);
+      // Add skip navigation - only if body exists and is mounted
+      if (typeof document !== 'undefined' && document.body && document.body.parentNode) {
+        const existingSkipLink = document.querySelector('a[href="#main-content"]');
+        if (!existingSkipLink) {
+          try {
+            const skipLink = document.createElement('a');
+            skipLink.href = '#main-content';
+            skipLink.textContent = 'Skip to main content';
+            skipLink.className = 'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50';
+            skipLink.setAttribute('aria-label', 'Skip to main content');
+            if (document.body.firstChild) {
+              document.body.insertBefore(skipLink, document.body.firstChild);
+            } else {
+              document.body.appendChild(skipLink);
+            }
+          } catch (e) {
+            // Silently fail if DOM manipulation fails
+            console.warn('Failed to add skip link:', e);
+          }
+        }
       }
 
       // Add main content landmark
@@ -145,26 +157,31 @@ export default function AccessibilityOptimizer() {
 
     // Add screen reader support
     const addScreenReaderSupport = () => {
-      // Add live regions for dynamic content
-      if (document.body && document.body instanceof Node) {
-        // Check if regions already exist to avoid duplicates
-        if (!document.getElementById('live-region')) {
-          const liveRegion = document.createElement('div');
-          liveRegion.setAttribute('aria-live', 'polite');
-          liveRegion.setAttribute('aria-atomic', 'true');
-          liveRegion.className = 'sr-only';
-          liveRegion.id = 'live-region';
-          document.body.appendChild(liveRegion);
-        }
+      // Add live regions for dynamic content - only if body exists and is mounted
+      if (typeof document !== 'undefined' && document.body && document.body.parentNode) {
+        try {
+          // Check if regions already exist to avoid duplicates
+          if (!document.getElementById('live-region')) {
+            const liveRegion = document.createElement('div');
+            liveRegion.setAttribute('aria-live', 'polite');
+            liveRegion.setAttribute('aria-atomic', 'true');
+            liveRegion.className = 'sr-only';
+            liveRegion.id = 'live-region';
+            document.body.appendChild(liveRegion);
+          }
 
-        // Add status messages
-        if (!document.getElementById('status-region')) {
-          const statusRegion = document.createElement('div');
-          statusRegion.setAttribute('aria-live', 'assertive');
-          statusRegion.setAttribute('aria-atomic', 'true');
-          statusRegion.className = 'sr-only';
-          statusRegion.id = 'status-region';
-          document.body.appendChild(statusRegion);
+          // Add status messages
+          if (!document.getElementById('status-region')) {
+            const statusRegion = document.createElement('div');
+            statusRegion.setAttribute('aria-live', 'assertive');
+            statusRegion.setAttribute('aria-atomic', 'true');
+            statusRegion.className = 'sr-only';
+            statusRegion.id = 'status-region';
+            document.body.appendChild(statusRegion);
+          }
+        } catch (e) {
+          // Silently fail if DOM manipulation fails
+          console.warn('Failed to add screen reader support:', e);
         }
       }
     };
@@ -237,16 +254,26 @@ export default function AccessibilityOptimizer() {
       });
     };
 
-    // Run all accessibility optimizations
-    addAriaLabels();
-    optimizeFocusManagement();
-    optimizeColorContrast();
-    addSemanticHTML();
-    addScreenReaderSupport();
-    addFormAccessibility();
-    addImageAccessibility();
-    addButtonAccessibility();
+    // Run all accessibility optimizations with error handling
+    try {
+      addAriaLabels();
+      optimizeFocusManagement();
+      optimizeColorContrast();
+      addSemanticHTML();
+      addScreenReaderSupport();
+      addFormAccessibility();
+      addImageAccessibility();
+      addButtonAccessibility();
+    } catch (e) {
+      // Silently fail if any optimization fails
+      console.warn('Accessibility optimization error:', e);
+    }
 
+    // Cleanup function to prevent React errors
+    return () => {
+      // Don't remove elements - let React handle cleanup
+      // Removing elements here causes React removeChild errors
+    };
   }, []);
 
   return null;
