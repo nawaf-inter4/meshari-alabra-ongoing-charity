@@ -12,9 +12,17 @@ interface YouTubePlaylistProps {
 export default function YouTubePlaylist({ playlistId }: YouTubePlaylistProps) {
   const { t } = useLanguage();
   const [shouldLoad, setShouldLoad] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  
+  // Track if component is mounted to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Lazy load YouTube iframe only when in viewport
   useEffect(() => {
+    if (!mounted) return;
+    
     if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
       // Fallback: load immediately if IntersectionObserver not supported
       setShouldLoad(true);
@@ -71,7 +79,7 @@ export default function YouTubePlaylist({ playlistId }: YouTubePlaylistProps) {
         }
       }
     };
-  }, []);
+  }, [mounted]);
 
   return (
     <section id="youtube" className="py-20 px-4">
@@ -138,7 +146,8 @@ export default function YouTubePlaylist({ playlistId }: YouTubePlaylistProps) {
             WebkitBackfaceVisibility: 'hidden',
           }}
         >
-          {shouldLoad ? (
+          {/* Always render placeholder on server, only show iframe after mount to prevent hydration mismatch */}
+          {mounted && shouldLoad ? (
             <iframe
               className="absolute top-0 left-0 w-full h-full"
               src={`https://www.youtube.com/embed/videoseries?list=${playlistId}&rel=0&modestbranding=1&playsinline=1`}
