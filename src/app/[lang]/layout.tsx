@@ -356,15 +356,15 @@ export default async function LanguageLayout({
             disableTransitionOnChange={false}
           >
             <LanguageProvider initialLocale={initialLanguage}>
-              <DynamicMetaTags />
+              {/* Temporarily disabled ALL DOM manipulation to fix navigation */}
+              {/* <DynamicMetaTags /> */}
               {children}
               <AudioPlayer />
               <LocalSchemaMarkup />
               <AdvancedSEO />
-              {/* Temporarily disabled to fix navigation removeChild errors */}
               {/* <PerformanceOptimizer /> */}
               {/* <AccessibilityOptimizer /> */}
-              <MetaOptimizer />
+              {/* <MetaOptimizer /> */}
               <AnalyticsWrapper />
             </LanguageProvider>
           </ThemeProvider>
