@@ -119,12 +119,21 @@ export default function DynamicMetaTags() {
     }
 
     // Update canonical URL - must point to the actual page, not homepage
-    // Only update if canonical doesn't already exist (server-side metadata should set it)
+    // Only update if canonical doesn't already exist or is pointing to root (incorrect)
     const baseUrl = 'https://meshari.charity';
     let existingCanonical = document.querySelector('link[rel="canonical"]');
+    const existingHref = existingCanonical?.getAttribute('href') || '';
     
-    // Only update canonical if it's pointing to root (incorrect) or doesn't exist
-    if (!existingCanonical || existingCanonical.getAttribute('href') === baseUrl || existingCanonical.getAttribute('href') === `${baseUrl}/`) {
+    // Only update canonical if:
+    // 1. It doesn't exist
+    // 2. It's pointing to root (incorrect)
+    // 3. It doesn't match the current pathname (incorrect)
+    const shouldUpdate = !existingCanonical || 
+                        existingHref === baseUrl || 
+                        existingHref === `${baseUrl}/` ||
+                        (!existingHref.includes(pathname) && pathname !== '/');
+    
+    if (shouldUpdate) {
       let canonicalUrl = baseUrl;
       
       // Get the pathname without leading/trailing slashes

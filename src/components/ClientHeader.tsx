@@ -159,8 +159,9 @@ export default function ClientHeader() {
           <a
             href="#donation"
             className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-bold rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 shadow-lg hover:shadow-xl text-sm"
+            aria-label={t("donation.header_button") || "Donate"}
           >
-            <Heart className="w-4 h-4" fill="currentColor" />
+            <Heart className="w-4 h-4" fill="currentColor" aria-hidden="true" />
             <span className="hidden sm:inline">{t("donation.header_button")}</span>
           </a>
         )}
