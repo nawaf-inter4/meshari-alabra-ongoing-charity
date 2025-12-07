@@ -11,8 +11,6 @@ export default function SectionNavigation() {
 
   // SIMPLE navigation - just use router.push directly
   const handleSectionClick = (sectionPath: string) => {
-    // Prevent any default behavior
-    // Just navigate directly
     router.push(sectionPath);
   };
 
@@ -22,7 +20,7 @@ export default function SectionNavigation() {
       title: t("quran.title"),
       description: t("quran.subtitle"),
       icon: BookOpen,
-      href: getSectionHref("/sections/quran"),
+      href: "/sections/quran",
       color: "from-islamic-blue to-islamic-green"
     },
     {
@@ -30,7 +28,7 @@ export default function SectionNavigation() {
       title: t("tafseer.title"),
       description: t("tafseer.subtitle"),
       icon: Book,
-      href: getSectionHref("/sections/tafseer"),
+      href: "/sections/tafseer",
       color: "from-islamic-green to-islamic-gold"
     },
     {
@@ -38,7 +36,7 @@ export default function SectionNavigation() {
       title: t("dhikr.title"),
       description: t("dhikr.subtitle"),
       icon: Heart,
-      href: getSectionHref("/sections/dhikr"),
+      href: "/sections/dhikr",
       color: "from-islamic-gold to-yellow-500"
     },
     {
@@ -46,7 +44,7 @@ export default function SectionNavigation() {
       title: t("prayer.title"),
       description: t("prayer.subtitle"),
       icon: Clock,
-      href: getSectionHref("/sections/prayer-times"),
+      href: "/sections/prayer-times",
       color: "from-purple-500 to-islamic-blue"
     },
     {
@@ -54,7 +52,7 @@ export default function SectionNavigation() {
       title: t("qibla.title"),
       description: t("qibla.subtitle"),
       icon: Compass,
-      href: getSectionHref("/sections/qibla"),
+      href: "/sections/qibla",
       color: "from-islamic-green to-teal-500"
     },
     {
@@ -62,7 +60,7 @@ export default function SectionNavigation() {
       title: t("donation.title"),
       description: t("donation.subtitle"),
       icon: DollarSign,
-      href: getSectionHref("/sections/donation"),
+      href: "/sections/donation",
       color: "from-red-500 to-pink-500"
     },
     {
@@ -70,7 +68,7 @@ export default function SectionNavigation() {
       title: t("supplications.title"),
       description: t("supplications.subtitle"),
       icon: Star,
-      href: getSectionHref("/sections/supplications"),
+      href: "/sections/supplications",
       color: "from-yellow-500 to-orange-500"
     },
     {
@@ -78,7 +76,7 @@ export default function SectionNavigation() {
       title: t("hadith.title"),
       description: t("hadith.subtitle"),
       icon: Shield,
-      href: getSectionHref("/sections/hadith"),
+      href: "/sections/hadith",
       color: "from-islamic-blue to-blue-600"
     },
     {
@@ -86,7 +84,7 @@ export default function SectionNavigation() {
       title: t("youtube.title"),
       description: t("youtube.description"),
       icon: Globe,
-      href: getSectionHref("/sections/youtube"),
+      href: "/sections/youtube",
       color: "from-red-600 to-red-500"
     }
   ];
