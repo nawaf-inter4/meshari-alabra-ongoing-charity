@@ -22,43 +22,32 @@ function proxy(request: NextRequest) {
     const response = NextResponse.rewrite(url);
     response.headers.set('x-locale', firstSegment);
     
+    // CRITICAL: Add header to indicate this is a client-side navigation
+    // This prevents middleware from interfering with Next.js Link navigation
+    response.headers.set('x-client-navigation', '1');
+    
     // Apply security headers
     applySecurityHeaders(response, request);
     return response;
   }
   
   // Redirect /sections/... to /[lang]/sections/... if no language prefix
-  // BUT: Use rewrite instead of redirect for client-side navigation to avoid double-click
-  // Check if this is a navigation request (not a direct URL access)
+  // ALWAYS use rewrite (never redirect) to avoid double-click issues
+  // Next.js Link handles client-side navigation, middleware should not redirect
   if (pathSegments[0] === 'sections' && !isLanguagePrefix) {
-    // Check if this is a client-side navigation via Next.js Link
-    const isClientNavigation = request.headers.get('x-middleware-rewrite') !== null ||
-                               request.headers.get('referer')?.includes(request.nextUrl.origin);
+    const preferredLang = request.cookies.get('preferred-locale')?.value || 'ar';
+    const lang = supportedLanguages.includes(preferredLang) ? preferredLang : 'ar';
+    const newPath = `/${lang}${pathname}`;
+    const url = request.nextUrl.clone();
+    url.pathname = newPath;
     
-    if (isClientNavigation) {
-      // For client-side navigation, rewrite instead of redirect to avoid double-click
-      const preferredLang = request.cookies.get('preferred-locale')?.value || 'ar';
-      const lang = supportedLanguages.includes(preferredLang) ? preferredLang : 'ar';
-      const newPath = `/${lang}${pathname}`;
-      const url = request.nextUrl.clone();
-      url.pathname = newPath;
-      
-      const response = NextResponse.rewrite(url);
-      response.headers.set('x-locale', lang);
-      applySecurityHeaders(response, request);
-      return response;
-    } else {
-      // For direct URL access or refresh, use redirect
-      const preferredLang = request.cookies.get('preferred-locale')?.value || 'ar';
-      const lang = supportedLanguages.includes(preferredLang) ? preferredLang : 'ar';
-      const newPath = `/${lang}${pathname}`;
-      const url = request.nextUrl.clone();
-      url.pathname = newPath;
-      
-      const response = NextResponse.redirect(url);
-      applySecurityHeaders(response, request);
-      return response;
-    }
+    // ALWAYS use rewrite - Next.js will handle the URL change client-side
+    // This prevents the double-click issue completely
+    const response = NextResponse.rewrite(url);
+    response.headers.set('x-locale', lang);
+    response.headers.set('x-client-navigation', '1');
+    applySecurityHeaders(response, request);
+    return response;
   }
   
   const response = NextResponse.next();
