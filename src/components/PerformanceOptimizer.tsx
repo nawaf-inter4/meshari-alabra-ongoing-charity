@@ -50,31 +50,42 @@ export default function PerformanceOptimizer() {
 
     // Implement resource hints and prefetch section routes
     const addResourceHints = () => {
-      const resourceHints = [
-        { rel: 'dns-prefetch', href: 'https://fonts.googleapis.com' },
-        { rel: 'dns-prefetch', href: 'https://fonts.gstatic.com' },
-        { rel: 'dns-prefetch', href: 'https://api.aladhan.com' },
-        { rel: 'dns-prefetch', href: 'https://api.alquran.cloud' },
-        { rel: 'dns-prefetch', href: 'https://api.quran.com' },
-        { rel: 'dns-prefetch', href: 'https://img.youtube.com' },
-        { rel: 'dns-prefetch', href: 'https://i.ytimg.com' },
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' }
-      ];
+      if (typeof document === 'undefined' || !document.head || !document.head.parentNode) return;
+      
+      try {
+        const resourceHints = [
+          { rel: 'dns-prefetch', href: 'https://fonts.googleapis.com' },
+          { rel: 'dns-prefetch', href: 'https://fonts.gstatic.com' },
+          { rel: 'dns-prefetch', href: 'https://api.aladhan.com' },
+          { rel: 'dns-prefetch', href: 'https://api.alquran.cloud' },
+          { rel: 'dns-prefetch', href: 'https://api.quran.com' },
+          { rel: 'dns-prefetch', href: 'https://img.youtube.com' },
+          { rel: 'dns-prefetch', href: 'https://i.ytimg.com' },
+          { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+          { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' }
+        ];
 
-      resourceHints.forEach(hint => {
-        // Check if link already exists to avoid duplicates
-        const existing = document.querySelector(`link[rel="${hint.rel}"][href="${hint.href}"]`);
-        if (!existing) {
-          const link = document.createElement('link');
-          link.rel = hint.rel;
-          link.href = hint.href;
-          if (hint.crossOrigin) {
-            link.crossOrigin = hint.crossOrigin;
+        resourceHints.forEach(hint => {
+          // Check if link already exists to avoid duplicates
+          const existing = document.querySelector(`link[rel="${hint.rel}"][href="${hint.href}"]`);
+          if (!existing && document.head && document.head.parentNode) {
+            try {
+              const link = document.createElement('link');
+              link.rel = hint.rel;
+              link.href = hint.href;
+              if (hint.crossOrigin) {
+                link.crossOrigin = hint.crossOrigin;
+              }
+              document.head.appendChild(link);
+            } catch (e) {
+              // Silently fail if DOM manipulation fails
+            }
           }
-          document.head.appendChild(link);
-        }
-      });
+        });
+      } catch (e) {
+        // Silently fail if DOM manipulation fails
+        console.warn('Failed to add resource hints:', e);
+      }
 
       // Prefetch critical section routes for instant navigation
       const criticalSections = [
@@ -94,12 +105,16 @@ export default function PerformanceOptimizer() {
       criticalSections.forEach(section => {
         const href = currentLang === 'ar' ? section : `/${currentLang}${section}`;
         const existing = document.querySelector(`link[rel="prefetch"][href="${href}"]`);
-        if (!existing) {
-          const link = document.createElement('link');
-          link.rel = 'prefetch';
-          link.href = href;
-          link.as = 'document';
-          document.head.appendChild(link);
+        if (!existing && document.head && document.head.parentNode) {
+          try {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = href;
+            link.as = 'document';
+            document.head.appendChild(link);
+          } catch (e) {
+            // Silently fail if DOM manipulation fails
+          }
         }
       });
     };
@@ -109,15 +124,24 @@ export default function PerformanceOptimizer() {
       // Optimize LCP (Largest Contentful Paint)
       const optimizeLCP = () => {
         // Preload hero images
-        const heroImages = document.querySelectorAll('[data-hero-image]');
-        heroImages.forEach(img => {
-          const htmlImg = img as HTMLImageElement;
-          const link = document.createElement('link');
-          link.rel = 'preload';
-          link.href = htmlImg.src;
-          link.as = 'image';
-          document.head.appendChild(link);
-        });
+        if (typeof document !== 'undefined' && document.head && document.head.parentNode) {
+          try {
+            const heroImages = document.querySelectorAll('[data-hero-image]');
+            heroImages.forEach(img => {
+              if (!img.parentNode) return; // Skip if element is not in DOM
+              const htmlImg = img as HTMLImageElement;
+              if (htmlImg.src && document.head && document.head.parentNode) {
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.href = htmlImg.src;
+                link.as = 'image';
+                document.head.appendChild(link);
+              }
+            });
+          } catch (e) {
+            // Silently fail if DOM manipulation fails
+          }
+        }
       };
 
       // Optimize FID (First Input Delay)
@@ -146,13 +170,24 @@ export default function PerformanceOptimizer() {
       optimizeCLS();
     };
 
-    // Run optimizations
-    preloadCriticalResources();
-    optimizeImages();
-    optimizeFonts();
-    optimizeThirdPartyResources();
-    addResourceHints();
-    optimizeCoreWebVitals();
+    // Run optimizations with error handling
+    try {
+      preloadCriticalResources();
+      optimizeImages();
+      optimizeFonts();
+      optimizeThirdPartyResources();
+      addResourceHints();
+      optimizeCoreWebVitals();
+    } catch (e) {
+      // Silently fail if any optimization fails
+      console.warn('Performance optimization error:', e);
+    }
+
+    // Cleanup function to prevent React errors
+    return () => {
+      // Don't remove elements - let React handle cleanup
+      // Removing elements here causes React removeChild errors
+    };
 
     // Add performance monitoring
     if ('performance' in window && 'PerformanceObserver' in window) {
