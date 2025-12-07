@@ -211,10 +211,12 @@ export function generateSectionMetadata(
     : "Meshari's Ongoing Charity";
   
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://meshari.charity';
-  // Canonical URL should always include language prefix to avoid duplicates
-  // Sections are accessible at /sections/{id} but canonical should be /{lang}/sections/{id}
-  const basePath = currentLang === 'ar' ? '' : `/${currentLang}`;
-  const canonicalUrl = `${siteUrl}${basePath}/sections/${sectionId}`;
+  // Canonical URL should match the actual route structure
+  // For Arabic: /sections/{id}, For others: /{lang}/sections/{id}
+  // Always include language prefix to ensure correct canonical
+  const canonicalUrl = currentLang === 'ar' 
+    ? `${siteUrl}/sections/${sectionId}`
+    : `${siteUrl}/${currentLang}/sections/${sectionId}`;
   
   // Generate alternate language URLs with proper hreflang
   const alternates: Record<string, string> = {};

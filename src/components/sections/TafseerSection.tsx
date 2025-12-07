@@ -436,8 +436,9 @@ export default function TafseerSection() {
                     <button
                       onClick={() => setSearchQuery("")}
                       className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      aria-label={t("clear") || "Clear search"}
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-4 h-4" aria-hidden="true" />
                     </button>
                   )}
                 </div>
@@ -449,6 +450,7 @@ export default function TafseerSection() {
                         key={surah.number}
                         onClick={() => handleSurahSelect(surah)}
                         className="w-full px-4 py-3 text-left hover:bg-islamic-gold/10 transition-colors duration-300"
+                        aria-label={`${surah.number}. ${surah.arabic} - ${surah.name} - ${surah.verses} verses`}
                       >
                         <div className="font-semibold">{surah.number}. {surah.arabic}</div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">{surah.name} - {surah.verses} آيات</div>
@@ -464,8 +466,9 @@ export default function TafseerSection() {
                   onClick={handleVerseSearch}
                   disabled={!searchQuery || loading}
                   className="w-full flex items-center justify-center gap-2 p-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label={t("search") || "Search"}
                 >
-                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" /> : <Search className="w-5 h-5" aria-hidden="true" />}
                   {t("search")}
                 </button>
               </div>
