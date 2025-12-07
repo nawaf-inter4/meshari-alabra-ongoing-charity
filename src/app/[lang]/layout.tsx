@@ -364,10 +364,8 @@ export default async function LanguageLayout({
             disableTransitionOnChange={false}
           >
             <LanguageProvider initialLocale={initialLanguage}>
-              {/* DOM manipulation components disabled - using server-side metadata instead */}
-              {/* Meta tags are handled by generateMetadata() functions in layouts/pages */}
-              {/* Accessibility features added directly in JSX (aria-labels, skip links) */}
-              {/* Performance optimizations done via Next.js config and JSX attributes */}
+              {/* Dynamic meta tags for client-side language switching */}
+              <DynamicMetaTags />
               {children}
               <AudioPlayer />
               <LocalSchemaMarkup />

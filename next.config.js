@@ -55,7 +55,9 @@ const nextConfig = {
   },
 
   // External packages for server components
-  serverExternalPackages: ['react-pdf', 'pdfjs-dist'],
+  // Note: react-pdf is only used in client components, so it doesn't need to be externalized
+  // Removing it eliminates CSS import warnings
+  serverExternalPackages: ['pdfjs-dist'],
   
   // Experimental features for better performance
   experimental: {
