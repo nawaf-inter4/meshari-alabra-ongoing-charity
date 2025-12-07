@@ -40,7 +40,13 @@ export default function MetaOptimizer({
       metaDescription = document.createElement('meta');
       metaDescription.setAttribute('name', 'description');
       metaDescription.setAttribute('content', description);
-      document.head.appendChild(metaDescription);
+      if (document.head && document.head.parentNode) {
+        try {
+          document.head.appendChild(metaDescription);
+        } catch (e) {
+          // Silently fail if DOM manipulation fails
+        }
+      }
     }
 
     // Update meta keywords
@@ -51,7 +57,13 @@ export default function MetaOptimizer({
       metaKeywords = document.createElement('meta');
       metaKeywords.setAttribute('name', 'keywords');
       metaKeywords.setAttribute('content', meta.keywords.join(', '));
-      document.head.appendChild(metaKeywords);
+      if (document.head && document.head.parentNode) {
+        try {
+          document.head.appendChild(metaKeywords);
+        } catch (e) {
+          // Silently fail if DOM manipulation fails
+        }
+      }
     }
 
     // Update canonical URL
@@ -62,7 +74,13 @@ export default function MetaOptimizer({
       canonical = document.createElement('link');
       canonical.setAttribute('rel', 'canonical');
       canonical.setAttribute('href', currentUrl);
-      document.head.appendChild(canonical);
+      if (document.head && document.head.parentNode) {
+        try {
+          document.head.appendChild(canonical);
+        } catch (e) {
+          // Silently fail if DOM manipulation fails
+        }
+      }
     }
 
     // Update Open Graph tags

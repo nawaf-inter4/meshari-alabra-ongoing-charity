@@ -158,14 +158,18 @@ export default function DynamicMetaTags() {
         canonicalUrl = currentLang === 'ar' ? `${baseUrl}${actualPath}` : `${baseUrl}/${currentLang}${actualPath}`;
       }
       
-      if (existingCanonical) {
+      if (existingCanonical && existingCanonical.parentNode) {
         existingCanonical.setAttribute('href', canonicalUrl);
-      } else {
-        // Create canonical tag if it doesn't exist
-        const canonical = document.createElement('link');
-        canonical.setAttribute('rel', 'canonical');
-        canonical.setAttribute('href', canonicalUrl);
-        document.head.appendChild(canonical);
+      } else if (typeof document !== 'undefined' && document.head && document.head.parentNode) {
+        try {
+          // Create canonical tag if it doesn't exist
+          const canonical = document.createElement('link');
+          canonical.setAttribute('rel', 'canonical');
+          canonical.setAttribute('href', canonicalUrl);
+          document.head.appendChild(canonical);
+        } catch (e) {
+          // Silently fail if DOM manipulation fails
+        }
       }
     }
 
