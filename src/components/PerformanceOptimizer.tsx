@@ -157,24 +157,50 @@ export default function PerformanceOptimizer() {
     // Add performance monitoring
     if ('performance' in window && 'PerformanceObserver' in window) {
       try {
-        // Monitor Core Web Vitals
-        const observer = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.entryType === 'largest-contentful-paint') {
-              console.log('LCP:', entry.startTime);
+        // Monitor LCP (Largest Contentful Paint)
+        try {
+          const lcpObserver = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              const lcpEntry = entry as any;
+              if (lcpEntry.startTime) {
+                console.log('LCP:', lcpEntry.startTime);
+              }
             }
-            if (entry.entryType === 'first-input') {
-              const fidEntry = entry as any;
-              console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
-            }
-            if (entry.entryType === 'layout-shift') {
-              const clsEntry = entry as any;
-              console.log('CLS:', clsEntry.value);
-            }
-          }
-        });
+          });
+          lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+        } catch (e) {
+          // LCP observer not supported
+        }
 
-        observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
+        // Monitor FID (First Input Delay)
+        try {
+          const fidObserver = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              const fidEntry = entry as any;
+              if (fidEntry.processingStart && fidEntry.startTime) {
+                console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
+              }
+            }
+          });
+          fidObserver.observe({ type: 'first-input', buffered: true });
+        } catch (e) {
+          // FID observer not supported
+        }
+
+        // Monitor CLS (Cumulative Layout Shift)
+        try {
+          const clsObserver = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+              const clsEntry = entry as any;
+              if (clsEntry.value !== undefined) {
+                console.log('CLS:', clsEntry.value);
+              }
+            }
+          });
+          clsObserver.observe({ type: 'layout-shift', buffered: true });
+        } catch (e) {
+          // CLS observer not supported
+        }
       } catch (error) {
         // Silently handle PerformanceObserver errors
         console.warn('PerformanceObserver not supported:', error);
