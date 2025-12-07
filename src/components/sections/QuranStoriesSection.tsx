@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { BookOpen, Download, Eye, FileText, Heart, Star, ExternalLink } from "lucide-react";
+import PDFThumbnail from "../PDFThumbnail";
+import PDFViewer from "../PDFViewer";
 
 interface QuranStory {
   id: string;
@@ -259,21 +261,19 @@ export default function QuranStoriesSection() {
               className="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-islamic-gold"
             >
               {/* PDF Preview */}
-              <div className="relative h-48 bg-gradient-to-br from-islamic-gold/20 to-islamic-green/20 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-islamic-gold/10 to-islamic-green/10 flex items-center justify-center">
-                  <div className="text-center">
-                    <FileText className="w-16 h-16 text-islamic-gold mb-2" />
-                    <div className="text-lg font-bold text-gray-800 dark:text-white px-4">
-                      {story.title[locale as keyof typeof story.title] || story.title.ar}
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                      PDF Document
-                    </div>
-                  </div>
+              <div className="relative h-48 overflow-hidden bg-gray-100 dark:bg-gray-900">
+                {/* Try PDF.js thumbnail first, fallback to object tag */}
+                <div className="absolute inset-0">
+                  <PDFThumbnail
+                    pdfUrl={story.pdfUrl}
+                    className="w-full h-full"
+                    width={400}
+                    height={192}
+                  />
                 </div>
                 
                 {/* Overlay on hover */}
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
                   <div className="flex space-x-3">
                     <button
                       onClick={() => handleStoryClick(story)}
@@ -356,22 +356,33 @@ export default function QuranStoriesSection() {
               </div>
               
               <div className="p-6">
-                {/* PDF Preview Placeholder */}
-                <div className="aspect-video bg-gradient-to-br from-islamic-gold/20 to-islamic-green/20 rounded-2xl mb-4 flex items-center justify-center">
-                  <div className="text-center">
-                    <FileText className="w-20 h-20 text-islamic-gold mx-auto mb-4" />
-                    <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
-                      {selectedStory.title[locale as keyof typeof selectedStory.title] || selectedStory.title.ar}
-                    </h4>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">
-                      {selectedStory.description[locale as keyof typeof selectedStory.description] || selectedStory.description.ar}
-                    </p>
-                    <div className="flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-                      <FileText className="w-4 h-4" />
-                      <span>{selectedStory.pages} {mounted && t("quran_stories.pages") !== "quran_stories.pages" ? t("quran_stories.pages") : "صفحة"}</span>
-                      <span>•</span>
-                      <span>{selectedStory.readingTime?.replace('min', mounted && t("quran_stories.reading_time") !== "quran_stories.reading_time" ? t("quran_stories.reading_time") : "دقيقة") || "5 دقيقة"}</span>
+                {/* PDF Preview - Use react-pdf viewer */}
+                <div className="rounded-2xl mb-4 overflow-hidden bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+                  {pdfPreviewUrl ? (
+                    <PDFViewer pdfUrl={pdfPreviewUrl} className="w-full" />
+                  ) : (
+                    <div className="w-full h-full min-h-[400px] flex items-center justify-center">
+                      <div className="text-center text-gray-500 dark:text-gray-400">
+                        <FileText className="w-20 h-20 mx-auto mb-4 text-islamic-gold" />
+                        <p>Loading PDF preview...</p>
+                      </div>
                     </div>
+                  )}
+                </div>
+                
+                {/* Story Info */}
+                <div className="text-center mb-4">
+                  <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                    {selectedStory.title[locale as keyof typeof selectedStory.title] || selectedStory.title.ar}
+                  </h4>
+                  <p className="text-gray-600 dark:text-gray-300 mb-2">
+                    {selectedStory.description[locale as keyof typeof selectedStory.description] || selectedStory.description.ar}
+                  </p>
+                  <div className="flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                    <FileText className="w-4 h-4" />
+                    <span>{selectedStory.pages} {mounted && t("quran_stories.pages") !== "quran_stories.pages" ? t("quran_stories.pages") : "صفحة"}</span>
+                    <span>•</span>
+                    <span>{selectedStory.readingTime?.replace('min', mounted && t("quran_stories.reading_time") !== "quran_stories.reading_time" ? t("quran_stories.reading_time") : "دقيقة") || "5 دقيقة"}</span>
                   </div>
                 </div>
                 

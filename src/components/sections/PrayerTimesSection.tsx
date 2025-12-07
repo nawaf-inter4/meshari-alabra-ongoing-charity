@@ -880,6 +880,8 @@ export default function PrayerTimesSection() {
         {/* Hidden Audio Element */}
         <audio
           ref={athanAudioRef}
+          preload="metadata"
+          suppressHydrationWarning
           onEnded={() => setIsAthanPlaying(false)}
           onError={() => setIsAthanPlaying(false)}
         >

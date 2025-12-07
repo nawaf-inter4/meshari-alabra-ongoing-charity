@@ -62,6 +62,39 @@ export default function DynamicMetaTags() {
       ogDescription.setAttribute('content', descriptions[currentLang as keyof typeof descriptions] || descriptions.ar);
     }
 
+    // Update OG Image tag
+    const ogImage = document.querySelector('meta[property="og:image"]');
+    if (ogImage) {
+      ogImage.setAttribute('content', 'https://meshari.charity/og-image.png');
+    } else {
+      // Create OG image tag if it doesn't exist
+      const meta = document.createElement('meta');
+      meta.setAttribute('property', 'og:image');
+      meta.setAttribute('content', 'https://meshari.charity/og-image.png');
+      document.head.appendChild(meta);
+    }
+
+    // Update OG Image Width and Height
+    const ogImageWidth = document.querySelector('meta[property="og:image:width"]');
+    if (ogImageWidth) {
+      ogImageWidth.setAttribute('content', '1200');
+    } else {
+      const meta = document.createElement('meta');
+      meta.setAttribute('property', 'og:image:width');
+      meta.setAttribute('content', '1200');
+      document.head.appendChild(meta);
+    }
+
+    const ogImageHeight = document.querySelector('meta[property="og:image:height"]');
+    if (ogImageHeight) {
+      ogImageHeight.setAttribute('content', '630');
+    } else {
+      const meta = document.createElement('meta');
+      meta.setAttribute('property', 'og:image:height');
+      meta.setAttribute('content', '630');
+      document.head.appendChild(meta);
+    }
+
     // Update Twitter Card tags
     const twitterTitle = document.querySelector('meta[name="twitter:title"]');
     if (twitterTitle) {
@@ -71,6 +104,18 @@ export default function DynamicMetaTags() {
     const twitterDescription = document.querySelector('meta[name="twitter:description"]');
     if (twitterDescription) {
       twitterDescription.setAttribute('content', descriptions[currentLang as keyof typeof descriptions] || descriptions.ar);
+    }
+
+    // Update Twitter Image tag
+    const twitterImage = document.querySelector('meta[name="twitter:image"]');
+    if (twitterImage) {
+      twitterImage.setAttribute('content', 'https://meshari.charity/og-image.png');
+    } else {
+      // Create Twitter image tag if it doesn't exist
+      const meta = document.createElement('meta');
+      meta.setAttribute('name', 'twitter:image');
+      meta.setAttribute('content', 'https://meshari.charity/og-image.png');
+      document.head.appendChild(meta);
     }
 
     // Update canonical URL
