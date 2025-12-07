@@ -182,37 +182,49 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
         const fontFamily = computedStyle.fontFamily;
         
         // Wait for fonts to be actually rendered - check with actual text
-        if (document.fonts) {
-          // Create a test element with the same styles
-          const testEl = document.createElement('span');
-          testEl.style.position = 'absolute';
-          testEl.style.visibility = 'hidden';
-          testEl.style.fontFamily = fontFamily;
-          testEl.style.fontSize = computedStyle.fontSize;
-          testEl.textContent = verse?.arabicText?.substring(0, 20) || '';
-          document.body.appendChild(testEl);
-          
-          // Force reflow
-          void testEl.offsetHeight;
-          
-          // Check if fonts are loaded
-          let attempts = 0;
-          while (attempts < 15) {
-            const amiriLoaded = document.fonts.check(`16px "Amiri"`);
-            const scheherazadeLoaded = document.fonts.check(`16px "Scheherazade New"`);
+        if (document.fonts && typeof document !== 'undefined' && document.body && document.body.parentNode) {
+          let testEl: HTMLSpanElement | null = null;
+          try {
+            // Create a test element with the same styles
+            testEl = document.createElement('span');
+            testEl.style.position = 'absolute';
+            testEl.style.visibility = 'hidden';
+            testEl.style.fontFamily = fontFamily;
+            testEl.style.fontSize = computedStyle.fontSize;
+            testEl.textContent = verse?.arabicText?.substring(0, 20) || '';
+            document.body.appendChild(testEl);
             
-            if (amiriLoaded && scheherazadeLoaded) {
-              // Double check with the actual computed font
-              const testComputed = window.getComputedStyle(testEl);
-              if (testComputed.fontFamily.includes('Amiri') || testComputed.fontFamily.includes('Scheherazade')) {
-                break;
+            // Force reflow
+            void testEl.offsetHeight;
+            
+            // Check if fonts are loaded
+            let attempts = 0;
+            while (attempts < 15 && testEl && testEl.parentNode) {
+              const amiriLoaded = document.fonts.check(`16px "Amiri"`);
+              const scheherazadeLoaded = document.fonts.check(`16px "Scheherazade New"`);
+              
+              if (amiriLoaded && scheherazadeLoaded) {
+                // Double check with the actual computed font
+                const testComputed = window.getComputedStyle(testEl);
+                if (testComputed.fontFamily.includes('Amiri') || testComputed.fontFamily.includes('Scheherazade')) {
+                  break;
+                }
+              }
+              await new Promise(resolve => setTimeout(resolve, 100));
+              attempts++;
+            }
+          } catch (e) {
+            // Silently fail if DOM manipulation fails
+          } finally {
+            // Safely remove test element if it still exists
+            if (testEl && testEl.parentNode) {
+              try {
+                document.body.removeChild(testEl);
+              } catch (e) {
+                // Element may have already been removed
               }
             }
-            await new Promise(resolve => setTimeout(resolve, 100));
-            attempts++;
           }
-          
-          document.body.removeChild(testEl);
           
           // Final wait to ensure rendering is complete
           await new Promise(resolve => setTimeout(resolve, 300));
@@ -319,37 +331,49 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
         const fontFamily = computedStyle.fontFamily;
         
         // Wait for fonts to be actually rendered - check with actual text
-        if (document.fonts) {
-          // Create a test element with the same styles
-          const testEl = document.createElement('span');
-          testEl.style.position = 'absolute';
-          testEl.style.visibility = 'hidden';
-          testEl.style.fontFamily = fontFamily;
-          testEl.style.fontSize = computedStyle.fontSize;
-          testEl.textContent = verse?.arabicText?.substring(0, 20) || '';
-          document.body.appendChild(testEl);
-          
-          // Force reflow
-          void testEl.offsetHeight;
-          
-          // Check if fonts are loaded
-          let attempts = 0;
-          while (attempts < 15) {
-            const amiriLoaded = document.fonts.check(`16px "Amiri"`);
-            const scheherazadeLoaded = document.fonts.check(`16px "Scheherazade New"`);
+        if (document.fonts && typeof document !== 'undefined' && document.body && document.body.parentNode) {
+          let testEl: HTMLSpanElement | null = null;
+          try {
+            // Create a test element with the same styles
+            testEl = document.createElement('span');
+            testEl.style.position = 'absolute';
+            testEl.style.visibility = 'hidden';
+            testEl.style.fontFamily = fontFamily;
+            testEl.style.fontSize = computedStyle.fontSize;
+            testEl.textContent = verse?.arabicText?.substring(0, 20) || '';
+            document.body.appendChild(testEl);
             
-            if (amiriLoaded && scheherazadeLoaded) {
-              // Double check with the actual computed font
-              const testComputed = window.getComputedStyle(testEl);
-              if (testComputed.fontFamily.includes('Amiri') || testComputed.fontFamily.includes('Scheherazade')) {
-                break;
+            // Force reflow
+            void testEl.offsetHeight;
+            
+            // Check if fonts are loaded
+            let attempts = 0;
+            while (attempts < 15 && testEl && testEl.parentNode) {
+              const amiriLoaded = document.fonts.check(`16px "Amiri"`);
+              const scheherazadeLoaded = document.fonts.check(`16px "Scheherazade New"`);
+              
+              if (amiriLoaded && scheherazadeLoaded) {
+                // Double check with the actual computed font
+                const testComputed = window.getComputedStyle(testEl);
+                if (testComputed.fontFamily.includes('Amiri') || testComputed.fontFamily.includes('Scheherazade')) {
+                  break;
+                }
+              }
+              await new Promise(resolve => setTimeout(resolve, 100));
+              attempts++;
+            }
+          } catch (e) {
+            // Silently fail if DOM manipulation fails
+          } finally {
+            // Safely remove test element if it still exists
+            if (testEl && testEl.parentNode) {
+              try {
+                document.body.removeChild(testEl);
+              } catch (e) {
+                // Element may have already been removed
               }
             }
-            await new Promise(resolve => setTimeout(resolve, 100));
-            attempts++;
           }
-          
-          document.body.removeChild(testEl);
           
           // Final wait to ensure rendering is complete
           await new Promise(resolve => setTimeout(resolve, 300));
