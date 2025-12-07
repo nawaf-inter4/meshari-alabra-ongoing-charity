@@ -56,11 +56,16 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             }
             
             // Load font using FontFace API with Google Fonts URL
+            // Use correct font URLs for proper diacritics support
             const fontUrl = fontFamily === 'Amiri' 
               ? 'https://fonts.gstatic.com/s/amiri/v27/J7aRnpd8CGxBHqUpvrI.woff2'
               : 'https://fonts.gstatic.com/s/scheherazadenew/v8/4UaHrEghqB_RMo6uD_0A3dHBBs5nYQzBpBMRVJ9D.woff2';
             
-            const font = new FontFace(fontFamily, `url(${fontUrl})`);
+            // Set font feature settings for proper Arabic diacritics
+            const font = new FontFace(fontFamily, `url(${fontUrl})`, {
+              display: 'swap',
+              featureSettings: '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1'
+            });
             await font.load();
             if (document.fonts) {
               document.fonts.add(font);
@@ -171,9 +176,229 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     if (!elementToCapture || !verse) return;
     
     setDownloadingImage(true);
+    
+    // Clone the preview card to a temporary container for clean capture
+    // This ensures we only capture the card, not the modal overlay
+    let clonedElement: HTMLElement | null = null;
+    let tempContainer: HTMLDivElement | null = null;
+    
     try {
+      // Create a temporary container off-screen with proper styling context
+      tempContainer = document.createElement('div');
+      tempContainer.style.position = 'fixed';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.top = '-9999px';
+      tempContainer.style.width = elementToCapture.offsetWidth + 'px';
+      tempContainer.style.zIndex = '-1';
+      tempContainer.style.visibility = 'visible';
+      tempContainer.style.opacity = '1';
+      // Ensure container has the same background to preserve colors
+      tempContainer.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff';
+      document.body.appendChild(tempContainer);
+      
+      // Clone the element with all styles and classes preserved
+      // Use deep clone to preserve all text nodes and special Unicode characters
+      clonedElement = elementToCapture.cloneNode(true) as HTMLElement;
+      
+      // CRITICAL: Don't modify text content - cloneNode(true) already preserves it correctly
+      // Modifying textContent can corrupt bidirectional text and reverse English text
+      // The cloneNode operation preserves text nodes in their correct order
+      
+      // Preserve all CSS classes from the original
+      clonedElement.className = elementToCapture.className;
+      
+      // Copy all inline styles from the original
+      if (elementToCapture.getAttribute('style')) {
+        clonedElement.setAttribute('style', elementToCapture.getAttribute('style') || '');
+      }
+      
+      // Copy computed styles comprehensively
+      const computedStyles = window.getComputedStyle(elementToCapture);
+      const importantStyles = [
+        'backgroundColor', 'color', 'fontFamily', 'fontSize', 'fontWeight', 'lineHeight',
+        'padding', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+        'margin', 'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
+        'border', 'borderWidth', 'borderColor', 'borderStyle', 'borderRadius',
+        'boxShadow', 'width', 'minWidth', 'maxWidth', 'height', 'minHeight', 'maxHeight',
+        'textAlign', 'direction', 'display', 'position', 'visibility', 'opacity',
+        'transform', 'transformOrigin', 'zIndex', 'overflow', 'overflowX', 'overflowY'
+      ];
+      
+      importantStyles.forEach(prop => {
+        try {
+          const value = (computedStyles as any)[prop];
+          if (value && value !== 'none' && value !== 'normal' && value !== 'auto' && clonedElement) {
+            (clonedElement.style as any)[prop] = value;
+          }
+        } catch (e) {
+          // Ignore read-only properties
+        }
+      });
+      
+      // Ensure critical styles are set
+      clonedElement.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff';
+      clonedElement.style.position = 'relative';
+      clonedElement.style.display = 'block';
+      clonedElement.style.visibility = 'visible';
+      clonedElement.style.opacity = '1';
+      clonedElement.style.width = elementToCapture.offsetWidth + 'px';
+      
+      // Recursively copy styles for all child elements to preserve styling
+      const copyStylesRecursively = (original: Element, cloned: Element) => {
+        const originalComputed = window.getComputedStyle(original);
+        const clonedEl = cloned as HTMLElement;
+        
+        // Copy classes (critical for CSS rules)
+        clonedEl.className = original.className;
+        
+        // Copy inline styles
+        if (original.getAttribute('style')) {
+          clonedEl.setAttribute('style', original.getAttribute('style') || '');
+        }
+        
+        // For Arabic text elements, explicitly copy all font rendering properties
+        if (original.classList.contains('arabic-quran-text') || original.classList.contains('font-arabic') || original.classList.contains('quran-text')) {
+          // Critical Arabic font rendering properties
+          clonedEl.style.fontFamily = originalComputed.fontFamily;
+          clonedEl.style.textRendering = originalComputed.textRendering || 'optimizeLegibility';
+          // CRITICAL: Set font feature settings for proper Arabic diacritics rendering
+          const fontFeatures = '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1';
+          clonedEl.style.fontFeatureSettings = originalComputed.fontFeatureSettings || fontFeatures;
+          const originalComputedAny = originalComputed as any;
+          clonedEl.style.setProperty('-webkit-font-feature-settings', originalComputedAny.webkitFontFeatureSettings || fontFeatures);
+          clonedEl.style.setProperty('-moz-font-feature-settings', originalComputedAny.mozFontFeatureSettings || fontFeatures);
+          clonedEl.style.setProperty('font-feature-settings', fontFeatures, 'important');
+          clonedEl.style.fontVariantLigatures = originalComputed.fontVariantLigatures || 'common-ligatures contextual';
+          clonedEl.style.fontKerning = originalComputed.fontKerning || 'normal';
+          clonedEl.style.fontSynthesis = originalComputed.fontSynthesis || 'none';
+          (clonedEl.style as any).webkitFontSmoothing = originalComputedAny.webkitFontSmoothing || 'antialiased';
+          (clonedEl.style as any).mozOsxFontSmoothing = originalComputedAny.mozOsxFontSmoothing || 'grayscale';
+          // CRITICAL: Only set direction for Arabic text elements, not all elements
+          // Setting bidi-override on non-Arabic text can reverse English text
+          if (original.classList.contains('arabic-quran-text') || original.classList.contains('quran-text')) {
+            clonedEl.style.direction = originalComputed.direction || 'rtl';
+            clonedEl.style.unicodeBidi = originalComputed.unicodeBidi || 'bidi-override';
+          } else {
+            // For non-Arabic text, use normal direction
+            clonedEl.style.direction = originalComputed.direction || 'ltr';
+            clonedEl.style.unicodeBidi = originalComputed.unicodeBidi || 'normal';
+          }
+          clonedEl.style.textTransform = originalComputed.textTransform || 'none';
+          clonedEl.style.wordSpacing = originalComputed.wordSpacing || '0.1em';
+          clonedEl.style.letterSpacing = originalComputed.letterSpacing || '0.02em';
+          clonedEl.style.lineHeight = originalComputed.lineHeight || '2.5';
+          clonedEl.style.fontSize = originalComputed.fontSize;
+          clonedEl.style.fontWeight = originalComputed.fontWeight;
+          clonedEl.style.color = originalComputed.color;
+        }
+        
+        // Copy critical computed styles for all elements
+        importantStyles.forEach(prop => {
+          try {
+            // Skip direction and unicodeBidi - we handle them separately above
+            if (prop === 'direction' || prop === 'unicodeBidi') {
+              return;
+            }
+            const value = (originalComputed as any)[prop];
+            if (value && value !== 'none' && value !== 'normal' && value !== 'auto') {
+              (clonedEl.style as any)[prop] = value;
+            }
+          } catch (e) {
+            // Ignore read-only properties
+          }
+        });
+        
+        // For non-Arabic text elements, ensure correct direction
+        // BUT preserve centering for watermark elements
+        const isWatermarkElement = original.textContent?.includes('meshari.charity') || 
+                                   original.textContent?.includes('صدقة جارية') ||
+                                   original.textContent?.includes('Ongoing charity') ||
+                                   original.parentElement?.textContent?.includes('meshari.charity');
+        
+        if (!original.classList.contains('arabic-quran-text') && 
+            !original.classList.contains('quran-text') && 
+            !original.classList.contains('font-arabic')) {
+          // Check if element contains English or LTR text
+          const textContent = original.textContent || '';
+          // If text doesn't contain Arabic characters, use LTR
+          const hasArabic = /[\u0600-\u06FF]/.test(textContent);
+          if (!hasArabic) {
+            clonedEl.style.direction = 'ltr';
+            clonedEl.style.unicodeBidi = isWatermarkElement ? 'plaintext' : 'normal';
+            clonedEl.style.textAlign = isWatermarkElement ? 'center' : 'left';
+            // Use English font for English text
+            if (!clonedEl.style.fontFamily.includes('Lexend')) {
+              clonedEl.style.fontFamily = "'Lexend Deca', sans-serif";
+            }
+            // For watermark, ensure proper centering and keep on one line
+            if (isWatermarkElement) {
+              clonedEl.style.width = 'auto';
+              clonedEl.style.margin = originalComputed.margin || '0 auto';
+              clonedEl.style.display = 'block';
+              clonedEl.style.whiteSpace = 'nowrap'; // Keep watermark text on one line
+              clonedEl.style.overflow = 'visible'; // Allow text to be visible
+            }
+          } else {
+            // Has Arabic text - use RTL with Arabic fonts and proper rendering
+            clonedEl.style.direction = 'rtl';
+            clonedEl.style.textAlign = isWatermarkElement ? 'center' : 'right';
+            clonedEl.style.unicodeBidi = isWatermarkElement ? 'plaintext' : 'bidi-override';
+            clonedEl.style.fontFamily = originalComputed.fontFamily || "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif";
+            clonedEl.style.textRendering = 'optimizeLegibility';
+            clonedEl.style.setProperty('-webkit-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+            clonedEl.style.setProperty('-moz-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+            clonedEl.style.setProperty('-webkit-font-smoothing', 'antialiased');
+            clonedEl.style.setProperty('-moz-osx-font-smoothing', 'grayscale');
+            clonedEl.style.fontVariantLigatures = 'common-ligatures contextual';
+            clonedEl.style.fontKerning = 'normal';
+            // For watermark, ensure proper centering and keep on one line
+            if (isWatermarkElement) {
+              clonedEl.style.width = 'auto';
+              clonedEl.style.margin = originalComputed.margin || '0 auto';
+              clonedEl.style.display = 'block';
+              clonedEl.style.whiteSpace = 'nowrap'; // Keep watermark text on one line
+              clonedEl.style.overflow = 'visible'; // Allow text to be visible
+            }
+          }
+        }
+        
+        // Recursively process children
+        const originalChildren = Array.from(original.children);
+        const clonedChildren = Array.from(cloned.children);
+        originalChildren.forEach((origChild, index) => {
+          if (clonedChildren[index]) {
+            copyStylesRecursively(origChild, clonedChildren[index]);
+          }
+        });
+      };
+      
+      copyStylesRecursively(elementToCapture, clonedElement);
+      
+      // CRITICAL: Ensure cloned element has no references to modal
+      // Remove any data attributes or classes that might reference the modal
+      clonedElement.removeAttribute('data-modal');
+      clonedElement.removeAttribute('data-overlay');
+      
+      // Ensure cloned element is completely isolated
+      clonedElement.style.position = 'relative';
+      clonedElement.style.zIndex = '1';
+      clonedElement.style.isolation = 'isolate';
+      
+      tempContainer.appendChild(clonedElement);
+      
+      // Wait for fonts and rendering - give more time for styles to apply
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      // Force a reflow to ensure all styles are computed
+      void clonedElement.offsetHeight;
+      void tempContainer.offsetHeight;
+      
+      // Use cloned element for font checking
+      const elementForFontCheck = clonedElement || elementToCapture;
+      
       // Force fonts to be loaded by checking computed styles and forcing a reflow
-      const arabicTextElement = elementToCapture.querySelector('.quran-text') as HTMLElement;
+      const arabicTextElement = elementForFontCheck.querySelector('.arabic-quran-text') as HTMLElement || 
+                                 elementForFontCheck.querySelector('.quran-text') as HTMLElement;
       if (arabicTextElement) {
         // Force a reflow to ensure fonts are applied
         void arabicTextElement.offsetHeight;
@@ -227,7 +452,73 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
           }
           
           // Final wait to ensure rendering is complete
-          await new Promise(resolve => setTimeout(resolve, 300));
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Additional wait for fonts to be fully loaded in cloned element
+          if (clonedElement) {
+            // Ensure fonts are loaded by checking font status
+            if (document.fonts && document.fonts.ready) {
+              await document.fonts.ready;
+            }
+            
+            // Wait additional time for Arabic fonts specifically - CRITICAL for diacritics
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Force fonts to load by creating test elements with Arabic text and diacritics
+            const arabicEl = clonedElement.querySelector('.arabic-quran-text') as HTMLElement;
+            if (arabicEl && verse?.arabicText) {
+              // Create a test span with Arabic text including diacritics to force font loading
+              const testSpan = document.createElement('span');
+              testSpan.style.position = 'absolute';
+              testSpan.style.visibility = 'hidden';
+              testSpan.style.fontFamily = "'Amiri', 'Scheherazade New', serif";
+              testSpan.style.fontSize = '24px';
+              testSpan.style.fontFeatureSettings = '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1';
+              testSpan.style.setProperty('-webkit-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+              testSpan.style.setProperty('-moz-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+              testSpan.textContent = verse.arabicText.substring(0, 50);
+              document.body.appendChild(testSpan);
+              
+              // Wait for fonts to load with diacritics support
+              let fontAttempts = 0;
+              while (fontAttempts < 25) {
+                const amiriLoaded = document.fonts.check('24px "Amiri"');
+                const scheherazadeLoaded = document.fonts.check('24px "Scheherazade New"');
+                if (amiriLoaded && scheherazadeLoaded) {
+                  // Double check by measuring the test element
+                  void testSpan.offsetHeight;
+                  const computed = window.getComputedStyle(testSpan);
+                  if (computed.fontFamily.includes('Amiri') || computed.fontFamily.includes('Scheherazade')) {
+                    break;
+                  }
+                }
+                await new Promise(resolve => setTimeout(resolve, 100));
+                fontAttempts++;
+              }
+              
+              // Clean up test element
+              if (testSpan.parentNode) {
+                try {
+                  document.body.removeChild(testSpan);
+                } catch (e) {
+                  // Silently fail
+                }
+              }
+              
+              // Force multiple reflows to ensure all styles and fonts are applied
+              void arabicEl.offsetHeight;
+              void arabicEl.offsetWidth;
+              void clonedElement.offsetHeight;
+              void clonedElement.offsetWidth;
+              
+              // Additional wait for rendering with diacritics
+              await new Promise(resolve => setTimeout(resolve, 300));
+            } else {
+              // Force reflows even if no Arabic text
+              void clonedElement.offsetHeight;
+              void clonedElement.offsetWidth;
+            }
+          }
         }
       }
       
@@ -250,8 +541,18 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
         }
       }
       
-      // Use html-to-image with explicit font embedding
-      const dataUrl = await toPng(elementToCapture, {
+      // Use html-to-image with explicit font embedding and CORS support
+      // useCORS: true enables cross-origin resource loading (needed for Google Fonts in production)
+      // allowTaint: false prevents tainted canvas (security)
+      // Use cloned element for clean capture without modal interference
+      // CRITICAL: Only capture the cloned element itself, nothing else
+      const elementForCapture = clonedElement || elementToCapture;
+      
+      // Ensure we're only capturing the cloned element, not any parent containers
+      // The cloned element should be the direct child of tempContainer
+      const finalElement = clonedElement || elementToCapture;
+      
+      const dataUrl = await toPng(finalElement, {
         backgroundColor: bgColor,
         pixelRatio: 2,
         quality: 1,
@@ -263,6 +564,9 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             font-weight: 400;
             font-display: swap;
             src: url('https://fonts.gstatic.com/s/amiri/v27/J7aRnpd8CGxBHqUpvrI.woff2') format('woff2');
+            font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
           }
           @font-face {
             font-family: 'Amiri';
@@ -270,6 +574,9 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             font-weight: 700;
             font-display: swap;
             src: url('https://fonts.gstatic.com/s/amiri/v27/J7aRnpd8CGxBHqUpvrI.woff2') format('woff2');
+            font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
           }
           @font-face {
             font-family: 'Scheherazade New';
@@ -277,6 +584,9 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             font-weight: 400;
             font-display: swap;
             src: url('https://fonts.gstatic.com/s/scheherazadenew/v8/4UaHrEghqB_RMo6uD_0A3dHBBs5nYQzBpBMRVJ9D.woff2') format('woff2');
+            font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
           }
           @font-face {
             font-family: 'Scheherazade New';
@@ -284,10 +594,58 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             font-weight: 700;
             font-display: swap;
             src: url('https://fonts.gstatic.com/s/scheherazadenew/v8/4UaHrEghqB_RMo6uD_0A3dHBBs5nYQzBpBMRVJ9D.woff2') format('woff2');
+            font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+          }
+          .arabic-quran-text, .font-arabic, .quran-text {
+            font-family: 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+            font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+            -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+            -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+            font-variant-ligatures: common-ligatures contextual !important;
+            text-rendering: optimizeLegibility !important;
+            direction: rtl !important;
+            unicode-bidi: bidi-override !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
           }
         `,
         filter: (node) => {
-          return true;
+          // CRITICAL: Only include the cloned element and its children
+          // Exclude tempContainer, body, html, and any other parent elements
+          if (clonedElement) {
+            // Exclude document, body, html, and tempContainer
+            if (node === (document as any) || node === document.body || node === document.documentElement || node === tempContainer) {
+              return false;
+            }
+            // Exclude any parent of clonedElement that is not clonedElement itself
+            if (node !== clonedElement && !clonedElement.contains(node)) {
+              // Check if node is a parent of clonedElement
+              let parent = clonedElement.parentNode;
+              while (parent) {
+                if (parent === node) {
+                  return false; // This node is a parent, exclude it
+                }
+                parent = parent.parentNode;
+              }
+            }
+            // Only include the cloned element and its children
+            return node === clonedElement || clonedElement.contains(node);
+          }
+          // Fallback: if no cloned element, only include the preview card
+          // But exclude modal overlay and backdrop
+          if (node === elementToCapture || elementToCapture.contains(node)) {
+            // Exclude modal backdrop and overlay
+            const className = (node as Element)?.className || '';
+            if (typeof className === 'string') {
+              if (className.includes('fixed inset-0') && className.includes('z-50')) {
+                return false;
+              }
+            }
+            return true;
+          }
+          return false;
         }
       });
       
@@ -315,8 +673,26 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       }
     } catch (error) {
       console.error('Error downloading image:', error);
-      alert(t("share.error_download_image"));
+      // Log more details in production for debugging
+      if (process.env.NODE_ENV === 'production') {
+        console.error('Download error details:', {
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+          elementExists: !!previewCardRef.current,
+          fontsLoaded,
+          mounted
+        });
+      }
+      alert(t("share.error_download_image") || "Failed to download image. Please try again.");
     } finally {
+      // Clean up cloned element and temporary container
+      if (tempContainer && tempContainer.parentNode) {
+        try {
+          document.body.removeChild(tempContainer);
+        } catch (e) {
+          // Silently fail if already removed
+        }
+      }
       setDownloadingImage(false);
     }
   };
@@ -327,9 +703,229 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     if (!elementToCapture || !verse) return;
     
     setDownloadingPDF(true);
+    
+    // Clone the preview card to a temporary container for clean capture
+    // This ensures we only capture the card, not the modal overlay
+    let clonedElement: HTMLElement | null = null;
+    let tempContainer: HTMLDivElement | null = null;
+    
     try {
+      // Create a temporary container off-screen with proper styling context
+      tempContainer = document.createElement('div');
+      tempContainer.style.position = 'fixed';
+      tempContainer.style.left = '-9999px';
+      tempContainer.style.top = '-9999px';
+      tempContainer.style.width = elementToCapture.offsetWidth + 'px';
+      tempContainer.style.zIndex = '-1';
+      tempContainer.style.visibility = 'visible';
+      tempContainer.style.opacity = '1';
+      // Ensure container has the same background to preserve colors
+      tempContainer.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff';
+      document.body.appendChild(tempContainer);
+      
+      // Clone the element with all styles and classes preserved
+      // Use deep clone to preserve all text nodes and special Unicode characters
+      clonedElement = elementToCapture.cloneNode(true) as HTMLElement;
+      
+      // CRITICAL: Don't modify text content - cloneNode(true) already preserves it correctly
+      // Modifying textContent can corrupt bidirectional text and reverse English text
+      // The cloneNode operation preserves text nodes in their correct order
+      
+      // Preserve all CSS classes from the original
+      clonedElement.className = elementToCapture.className;
+      
+      // Copy all inline styles from the original
+      if (elementToCapture.getAttribute('style')) {
+        clonedElement.setAttribute('style', elementToCapture.getAttribute('style') || '');
+      }
+      
+      // Copy computed styles comprehensively
+      const computedStyles = window.getComputedStyle(elementToCapture);
+      const importantStyles = [
+        'backgroundColor', 'color', 'fontFamily', 'fontSize', 'fontWeight', 'lineHeight',
+        'padding', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
+        'margin', 'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
+        'border', 'borderWidth', 'borderColor', 'borderStyle', 'borderRadius',
+        'boxShadow', 'width', 'minWidth', 'maxWidth', 'height', 'minHeight', 'maxHeight',
+        'textAlign', 'direction', 'display', 'position', 'visibility', 'opacity',
+        'transform', 'transformOrigin', 'zIndex', 'overflow', 'overflowX', 'overflowY'
+      ];
+      
+      importantStyles.forEach(prop => {
+        try {
+          const value = (computedStyles as any)[prop];
+          if (value && value !== 'none' && value !== 'normal' && value !== 'auto' && clonedElement) {
+            (clonedElement.style as any)[prop] = value;
+          }
+        } catch (e) {
+          // Ignore read-only properties
+        }
+      });
+      
+      // Ensure critical styles are set
+      clonedElement.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff';
+      clonedElement.style.position = 'relative';
+      clonedElement.style.display = 'block';
+      clonedElement.style.visibility = 'visible';
+      clonedElement.style.opacity = '1';
+      clonedElement.style.width = elementToCapture.offsetWidth + 'px';
+      
+      // Recursively copy styles for all child elements to preserve styling
+      const copyStylesRecursively = (original: Element, cloned: Element) => {
+        const originalComputed = window.getComputedStyle(original);
+        const clonedEl = cloned as HTMLElement;
+        
+        // Copy classes (critical for CSS rules)
+        clonedEl.className = original.className;
+        
+        // Copy inline styles
+        if (original.getAttribute('style')) {
+          clonedEl.setAttribute('style', original.getAttribute('style') || '');
+        }
+        
+        // For Arabic text elements, explicitly copy all font rendering properties
+        if (original.classList.contains('arabic-quran-text') || original.classList.contains('font-arabic') || original.classList.contains('quran-text')) {
+          // Critical Arabic font rendering properties
+          clonedEl.style.fontFamily = originalComputed.fontFamily;
+          clonedEl.style.textRendering = originalComputed.textRendering || 'optimizeLegibility';
+          // CRITICAL: Set font feature settings for proper Arabic diacritics rendering
+          const fontFeatures = '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1';
+          clonedEl.style.fontFeatureSettings = originalComputed.fontFeatureSettings || fontFeatures;
+          const originalComputedAny = originalComputed as any;
+          clonedEl.style.setProperty('-webkit-font-feature-settings', originalComputedAny.webkitFontFeatureSettings || fontFeatures);
+          clonedEl.style.setProperty('-moz-font-feature-settings', originalComputedAny.mozFontFeatureSettings || fontFeatures);
+          clonedEl.style.setProperty('font-feature-settings', fontFeatures, 'important');
+          clonedEl.style.fontVariantLigatures = originalComputed.fontVariantLigatures || 'common-ligatures contextual';
+          clonedEl.style.fontKerning = originalComputed.fontKerning || 'normal';
+          clonedEl.style.fontSynthesis = originalComputed.fontSynthesis || 'none';
+          (clonedEl.style as any).webkitFontSmoothing = originalComputedAny.webkitFontSmoothing || 'antialiased';
+          (clonedEl.style as any).mozOsxFontSmoothing = originalComputedAny.mozOsxFontSmoothing || 'grayscale';
+          // CRITICAL: Only set direction for Arabic text elements, not all elements
+          // Setting bidi-override on non-Arabic text can reverse English text
+          if (original.classList.contains('arabic-quran-text') || original.classList.contains('quran-text')) {
+            clonedEl.style.direction = originalComputed.direction || 'rtl';
+            clonedEl.style.unicodeBidi = originalComputed.unicodeBidi || 'bidi-override';
+          } else {
+            // For non-Arabic text, use normal direction
+            clonedEl.style.direction = originalComputed.direction || 'ltr';
+            clonedEl.style.unicodeBidi = originalComputed.unicodeBidi || 'normal';
+          }
+          clonedEl.style.textTransform = originalComputed.textTransform || 'none';
+          clonedEl.style.wordSpacing = originalComputed.wordSpacing || '0.1em';
+          clonedEl.style.letterSpacing = originalComputed.letterSpacing || '0.02em';
+          clonedEl.style.lineHeight = originalComputed.lineHeight || '2.5';
+          clonedEl.style.fontSize = originalComputed.fontSize;
+          clonedEl.style.fontWeight = originalComputed.fontWeight;
+          clonedEl.style.color = originalComputed.color;
+        }
+        
+        // Copy critical computed styles for all elements
+        importantStyles.forEach(prop => {
+          try {
+            // Skip direction and unicodeBidi - we handle them separately above
+            if (prop === 'direction' || prop === 'unicodeBidi') {
+              return;
+            }
+            const value = (originalComputed as any)[prop];
+            if (value && value !== 'none' && value !== 'normal' && value !== 'auto') {
+              (clonedEl.style as any)[prop] = value;
+            }
+          } catch (e) {
+            // Ignore read-only properties
+          }
+        });
+        
+        // For non-Arabic text elements, ensure correct direction
+        // BUT preserve centering for watermark elements
+        const isWatermarkElement = original.textContent?.includes('meshari.charity') || 
+                                   original.textContent?.includes('صدقة جارية') ||
+                                   original.textContent?.includes('Ongoing charity') ||
+                                   original.parentElement?.textContent?.includes('meshari.charity');
+        
+        if (!original.classList.contains('arabic-quran-text') && 
+            !original.classList.contains('quran-text') && 
+            !original.classList.contains('font-arabic')) {
+          // Check if element contains English or LTR text
+          const textContent = original.textContent || '';
+          // If text doesn't contain Arabic characters, use LTR
+          const hasArabic = /[\u0600-\u06FF]/.test(textContent);
+          if (!hasArabic) {
+            clonedEl.style.direction = 'ltr';
+            clonedEl.style.unicodeBidi = isWatermarkElement ? 'plaintext' : 'normal';
+            clonedEl.style.textAlign = isWatermarkElement ? 'center' : 'left';
+            // Use English font for English text
+            if (!clonedEl.style.fontFamily.includes('Lexend')) {
+              clonedEl.style.fontFamily = "'Lexend Deca', sans-serif";
+            }
+            // For watermark, ensure proper centering and keep on one line
+            if (isWatermarkElement) {
+              clonedEl.style.width = 'auto';
+              clonedEl.style.margin = originalComputed.margin || '0 auto';
+              clonedEl.style.display = 'block';
+              clonedEl.style.whiteSpace = 'nowrap'; // Keep watermark text on one line
+              clonedEl.style.overflow = 'visible'; // Allow text to be visible
+            }
+          } else {
+            // Has Arabic text - use RTL with Arabic fonts and proper rendering
+            clonedEl.style.direction = 'rtl';
+            clonedEl.style.textAlign = isWatermarkElement ? 'center' : 'right';
+            clonedEl.style.unicodeBidi = isWatermarkElement ? 'plaintext' : 'bidi-override';
+            clonedEl.style.fontFamily = originalComputed.fontFamily || "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif";
+            clonedEl.style.textRendering = 'optimizeLegibility';
+            clonedEl.style.setProperty('-webkit-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+            clonedEl.style.setProperty('-moz-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+            clonedEl.style.setProperty('-webkit-font-smoothing', 'antialiased');
+            clonedEl.style.setProperty('-moz-osx-font-smoothing', 'grayscale');
+            clonedEl.style.fontVariantLigatures = 'common-ligatures contextual';
+            clonedEl.style.fontKerning = 'normal';
+            // For watermark, ensure proper centering and keep on one line
+            if (isWatermarkElement) {
+              clonedEl.style.width = 'auto';
+              clonedEl.style.margin = originalComputed.margin || '0 auto';
+              clonedEl.style.display = 'block';
+              clonedEl.style.whiteSpace = 'nowrap'; // Keep watermark text on one line
+              clonedEl.style.overflow = 'visible'; // Allow text to be visible
+            }
+          }
+        }
+        
+        // Recursively process children
+        const originalChildren = Array.from(original.children);
+        const clonedChildren = Array.from(cloned.children);
+        originalChildren.forEach((origChild, index) => {
+          if (clonedChildren[index]) {
+            copyStylesRecursively(origChild, clonedChildren[index]);
+          }
+        });
+      };
+      
+      copyStylesRecursively(elementToCapture, clonedElement);
+      
+      // CRITICAL: Ensure cloned element has no references to modal
+      // Remove any data attributes or classes that might reference the modal
+      clonedElement.removeAttribute('data-modal');
+      clonedElement.removeAttribute('data-overlay');
+      
+      // Ensure cloned element is completely isolated
+      clonedElement.style.position = 'relative';
+      clonedElement.style.zIndex = '1';
+      clonedElement.style.isolation = 'isolate';
+      
+      tempContainer.appendChild(clonedElement);
+      
+      // Wait for fonts and rendering - give more time for styles to apply
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      // Force a reflow to ensure all styles are computed
+      void clonedElement.offsetHeight;
+      void tempContainer.offsetHeight;
+      
+      // Use cloned element for font checking
+      const elementForFontCheck = clonedElement || elementToCapture;
+      
       // Force fonts to be loaded by checking computed styles and forcing a reflow
-      const arabicTextElement = elementToCapture.querySelector('.quran-text') as HTMLElement;
+      const arabicTextElement = elementForFontCheck.querySelector('.arabic-quran-text') as HTMLElement || 
+                                 elementForFontCheck.querySelector('.quran-text') as HTMLElement;
       if (arabicTextElement) {
         // Force a reflow to ensure fonts are applied
         void arabicTextElement.offsetHeight;
@@ -383,15 +979,91 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
           }
           
           // Final wait to ensure rendering is complete
-          await new Promise(resolve => setTimeout(resolve, 300));
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Additional wait for fonts to be fully loaded in cloned element
+          if (clonedElement) {
+            // Ensure fonts are loaded by checking font status
+            if (document.fonts && document.fonts.ready) {
+              await document.fonts.ready;
+            }
+            
+            // Wait additional time for Arabic fonts specifically - CRITICAL for diacritics
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Force fonts to load by creating test elements with Arabic text and diacritics
+            const arabicEl = clonedElement.querySelector('.arabic-quran-text') as HTMLElement;
+            if (arabicEl && verse?.arabicText) {
+              // Create a test span with Arabic text including diacritics to force font loading
+              const testSpan = document.createElement('span');
+              testSpan.style.position = 'absolute';
+              testSpan.style.visibility = 'hidden';
+              testSpan.style.fontFamily = "'Amiri', 'Scheherazade New', serif";
+              testSpan.style.fontSize = '24px';
+              testSpan.style.fontFeatureSettings = '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1';
+              testSpan.style.setProperty('-webkit-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+              testSpan.style.setProperty('-moz-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+              testSpan.textContent = verse.arabicText.substring(0, 50);
+              document.body.appendChild(testSpan);
+              
+              // Wait for fonts to load with diacritics support
+              let fontAttempts = 0;
+              while (fontAttempts < 25) {
+                const amiriLoaded = document.fonts.check('24px "Amiri"');
+                const scheherazadeLoaded = document.fonts.check('24px "Scheherazade New"');
+                if (amiriLoaded && scheherazadeLoaded) {
+                  // Double check by measuring the test element
+                  void testSpan.offsetHeight;
+                  const computed = window.getComputedStyle(testSpan);
+                  if (computed.fontFamily.includes('Amiri') || computed.fontFamily.includes('Scheherazade')) {
+                    break;
+                  }
+                }
+                await new Promise(resolve => setTimeout(resolve, 100));
+                fontAttempts++;
+              }
+              
+              // Clean up test element
+              if (testSpan.parentNode) {
+                try {
+                  document.body.removeChild(testSpan);
+                } catch (e) {
+                  // Silently fail
+                }
+              }
+              
+              // Force multiple reflows to ensure all styles and fonts are applied
+              void arabicEl.offsetHeight;
+              void arabicEl.offsetWidth;
+              void clonedElement.offsetHeight;
+              void clonedElement.offsetWidth;
+              
+              // Additional wait for rendering with diacritics
+              await new Promise(resolve => setTimeout(resolve, 300));
+            } else {
+              // Force reflows even if no Arabic text
+              void clonedElement.offsetHeight;
+              void clonedElement.offsetWidth;
+            }
+          }
         }
       }
       
       // Determine background color based on theme
       const bgColor = isDarkMode ? '#1f2937' : '#ffffff';
       
-      // Use html-to-image with explicit font embedding
-      const dataUrl = await toPng(elementToCapture, {
+      // Use html-to-image with explicit font embedding and CORS support
+      // useCORS: true enables cross-origin resource loading (needed for Google Fonts in production)
+      // allowTaint: false prevents tainted canvas (security)
+      // Use cloned element for clean capture without modal interference
+      // CRITICAL: Only capture the cloned element itself, nothing else
+      const elementForCapture = clonedElement || elementToCapture;
+      
+      // Ensure we're only capturing the cloned element, not any parent containers
+      // The cloned element should be the direct child of tempContainer
+      const finalElement = clonedElement || elementToCapture;
+      
+      const dataUrl = await toPng(finalElement, {
         backgroundColor: bgColor,
         pixelRatio: 2,
         quality: 1,
@@ -403,6 +1075,9 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             font-weight: 400;
             font-display: swap;
             src: url('https://fonts.gstatic.com/s/amiri/v27/J7aRnpd8CGxBHqUpvrI.woff2') format('woff2');
+            font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
           }
           @font-face {
             font-family: 'Amiri';
@@ -410,6 +1085,9 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             font-weight: 700;
             font-display: swap;
             src: url('https://fonts.gstatic.com/s/amiri/v27/J7aRnpd8CGxBHqUpvrI.woff2') format('woff2');
+            font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
           }
           @font-face {
             font-family: 'Scheherazade New';
@@ -417,6 +1095,9 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             font-weight: 400;
             font-display: swap;
             src: url('https://fonts.gstatic.com/s/scheherazadenew/v8/4UaHrEghqB_RMo6uD_0A3dHBBs5nYQzBpBMRVJ9D.woff2') format('woff2');
+            font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
           }
           @font-face {
             font-family: 'Scheherazade New';
@@ -424,10 +1105,58 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             font-weight: 700;
             font-display: swap;
             src: url('https://fonts.gstatic.com/s/scheherazadenew/v8/4UaHrEghqB_RMo6uD_0A3dHBBs5nYQzBpBMRVJ9D.woff2') format('woff2');
+            font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+            -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1;
+          }
+          .arabic-quran-text, .font-arabic, .quran-text {
+            font-family: 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+            font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+            -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+            -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+            font-variant-ligatures: common-ligatures contextual !important;
+            text-rendering: optimizeLegibility !important;
+            direction: rtl !important;
+            unicode-bidi: bidi-override !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
           }
         `,
         filter: (node) => {
-          return true;
+          // CRITICAL: Only include the cloned element and its children
+          // Exclude tempContainer, body, html, and any other parent elements
+          if (clonedElement) {
+            // Exclude document, body, html, and tempContainer
+            if (node === (document as any) || node === document.body || node === document.documentElement || node === tempContainer) {
+              return false;
+            }
+            // Exclude any parent of clonedElement that is not clonedElement itself
+            if (node !== clonedElement && !clonedElement.contains(node)) {
+              // Check if node is a parent of clonedElement
+              let parent = clonedElement.parentNode;
+              while (parent) {
+                if (parent === node) {
+                  return false; // This node is a parent, exclude it
+                }
+                parent = parent.parentNode;
+              }
+            }
+            // Only include the cloned element and its children
+            return node === clonedElement || clonedElement.contains(node);
+          }
+          // Fallback: if no cloned element, only include the preview card
+          // But exclude modal overlay and backdrop
+          if (node === elementToCapture || elementToCapture.contains(node)) {
+            // Exclude modal backdrop and overlay
+            const className = (node as Element)?.className || '';
+            if (typeof className === 'string') {
+              if (className.includes('fixed inset-0') && className.includes('z-50')) {
+                return false;
+              }
+            }
+            return true;
+          }
+          return false;
         }
       });
       
@@ -440,10 +1169,15 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       }
       
       // Create image element to get dimensions
+      // Set crossOrigin for CORS support (even for data URLs, this ensures proper handling)
       const img = new Image();
+      img.crossOrigin = 'anonymous'; // Enable CORS for image loading
       await new Promise((resolve, reject) => {
         img.onload = resolve;
-        img.onerror = reject;
+        img.onerror = (error) => {
+          console.error('Image load error:', error);
+          reject(error);
+        };
         img.src = dataUrl;
       });
       
@@ -463,8 +1197,26 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       pdf.save(`${verse?.surahName?.replace(/\s+/g, '_')}_Ayah_${verse?.ayahNumber}.pdf`);
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      alert(t("share.error_download_pdf"));
+      // Log more details in production for debugging
+      if (process.env.NODE_ENV === 'production') {
+        console.error('PDF download error details:', {
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+          elementExists: !!previewCardRef.current,
+          fontsLoaded,
+          mounted
+        });
+      }
+      alert(t("share.error_download_pdf") || "Failed to download PDF. Please try again.");
     } finally {
+      // Clean up cloned element and temporary container
+      if (tempContainer && tempContainer.parentNode) {
+        try {
+          document.body.removeChild(tempContainer);
+        } catch (e) {
+          // Silently fail if already removed
+        }
+      }
       setDownloadingPDF(false);
     }
   };
@@ -540,81 +1292,147 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                     }`}
                     style={{
                       backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-                      position: 'relative'
+                      position: 'relative',
+                      // Ensure no font-arabic is inherited
+                      fontFamily: 'inherit',
+                      direction: 'inherit'
                     }}
                   >
                   {/* Header with Verse Number Badge in Top Right */}
-                  <div className="relative mb-6" style={{ direction: 'rtl', textAlign: 'right' }}>
-                    {/* Verse Number Badge - Top Right */}
-                    <div 
-                      className="w-10 h-10 bg-islamic-gold/20 rounded-full flex items-center justify-center text-islamic-gold font-bold"
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        right: 0,
-                        width: '40px',
-                        height: '40px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        margin: 0,
-                        padding: 0,
-                        backgroundColor: 'rgba(212, 175, 55, 0.2)',
-                        borderRadius: '50%'
-                      }}
-                    >
-                      <span 
-                        style={{
-                          color: '#D4AF37',
-                          fontSize: '16px',
-                          fontWeight: 'bold',
-                          lineHeight: '1',
-                          margin: 0,
-                          padding: 0,
-                          textAlign: 'center',
-                          width: '100%',
-                          height: '100%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
-                        }}
-                      >
-                        {verse?.ayahNumber || ''}
-                      </span>
-                    </div>
+                  {(() => {
+                    const surahNameHasArabic = /[\u0600-\u06FF]/.test(verse?.surahName || '');
+                    const ayahJuzText = `${t("share.ayah")} ${verse?.ayahNumber || ''} ${verse?.juz ? `• ${t("share.juz")} ${verse.juz}` : ''}`;
+                    const ayahJuzHasArabic = /[\u0600-\u06FF]/.test(ayahJuzText);
                     
-                    {/* Surah Name and Details */}
-                    <div style={{ paddingRight: '60px' }}>
-                      <h3 
-                        className={`text-xl font-bold mb-1 font-arabic ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-                        style={{
-                          fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif",
-                          direction: 'rtl',
-                          textAlign: 'right'
-                        }}
-                      >
-                        {verse?.surahName || ''}
-                      </h3>
-                      <p 
-                        className={`text-sm font-arabic ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
-                        style={{
-                          fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif",
-                          direction: 'rtl',
-                          textAlign: 'right'
-                        }}
-                      >
-                        {t("share.ayah")} {verse?.ayahNumber || ''} {verse?.juz ? `• ${t("share.juz")} ${verse.juz}` : ''}
-                      </p>
-                    </div>
-                  </div>
+                    return (
+                      <div className="relative mb-6" style={{ 
+                        direction: 'ltr' // Always LTR for container
+                      }}>
+                        {/* Verse Number Badge - Top Right (always positioned right) */}
+                        <div 
+                          className="w-10 h-10 bg-islamic-gold/20 rounded-full flex items-center justify-center text-islamic-gold font-bold"
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            right: 0,
+                            width: '40px',
+                            height: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            margin: 0,
+                            padding: 0,
+                            backgroundColor: 'rgba(212, 175, 55, 0.2)',
+                            borderRadius: '50%',
+                            zIndex: 1
+                          }}
+                        >
+                          <span 
+                            style={{
+                              color: '#D4AF37',
+                              fontSize: '16px',
+                              fontWeight: 'bold',
+                              lineHeight: '1',
+                              margin: 0,
+                              padding: 0,
+                              textAlign: 'center',
+                              width: '100%',
+                              height: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                          >
+                            {verse?.ayahNumber || ''}
+                          </span>
+                        </div>
+                        
+                        {/* Surah Name and Details - Positioned beside the badge */}
+                        <div style={{ 
+                          // Badge is always on the right (absolute positioned), so always use paddingRight to leave space
+                          paddingRight: '60px',
+                          width: '100%',
+                          boxSizing: 'border-box',
+                          display: 'block',
+                          textAlign: surahNameHasArabic ? 'right' : 'left',
+                          // For Arabic: ensure text aligns to the right beside the badge
+                          // For English: text aligns to the left
+                          direction: 'ltr' // Container always LTR to position badge correctly
+                        }}>
+                          <div>
+                            <h3 
+                              className={`text-xl font-bold mb-0 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                              style={{
+                                fontFamily: surahNameHasArabic
+                                  ? "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif"
+                                  : "'Lexend Deca', sans-serif",
+                                direction: surahNameHasArabic ? 'rtl' : 'ltr',
+                                textAlign: surahNameHasArabic ? 'right' : 'left',
+                                unicodeBidi: surahNameHasArabic ? 'bidi-override' : 'normal',
+                                // Explicitly override any font-arabic class styles - CRITICAL for English names like "Al-Faatiha"
+                                textRendering: surahNameHasArabic ? 'optimizeLegibility' : 'auto',
+                                fontFeatureSettings: surahNameHasArabic ? '"liga" 1, "clig" 1, "calt" 1, "kern" 1' : 'normal',
+                                fontVariantLigatures: surahNameHasArabic ? 'common-ligatures' : 'normal',
+                                wordSpacing: surahNameHasArabic ? '0.1em' : 'normal',
+                                letterSpacing: surahNameHasArabic ? '0.02em' : 'normal',
+                                lineHeight: surahNameHasArabic ? '2.5' : 'normal',
+                                // Force override any inherited font-arabic styles
+                                fontKerning: surahNameHasArabic ? 'normal' : 'auto',
+                                fontSynthesis: surahNameHasArabic ? 'none' : 'auto',
+                                // Ensure proper positioning for English names - positioned beside the badge
+                                margin: '0',
+                                padding: '0',
+                                display: 'block',
+                                width: '100%',
+                                boxSizing: 'border-box'
+                              } as React.CSSProperties}
+                            >
+                              {verse?.surahName || ''}
+                            </h3>
+                            {/* Ayah and Juz info - directly below surah name */}
+                            <p 
+                              className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
+                              style={{
+                                fontFamily: ayahJuzHasArabic
+                                  ? "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif"
+                                  : "'Lexend Deca', sans-serif",
+                                direction: ayahJuzHasArabic ? 'rtl' : 'ltr',
+                                textAlign: ayahJuzHasArabic ? 'right' : 'left',
+                                marginTop: '4px',
+                                marginBottom: '0',
+                                display: 'block'
+                              }}
+                            >
+                              {ayahJuzText}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
                   
                   {/* Quranic Verse Text */}
                   <div 
                     className="mb-6 arabic-quran-text text-2xl md:text-3xl leading-relaxed text-right"
                     style={{
+                      fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', serif",
                       direction: 'rtl',
                       textAlign: 'right',
                       color: isDarkMode ? '#f3f4f6' : '#111827',
+                      textRendering: 'optimizeLegibility',
+                      fontFeatureSettings: '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1',
+                      fontVariantLigatures: 'common-ligatures contextual',
+                      fontKerning: 'normal',
+                      fontSynthesis: 'none',
+                      unicodeBidi: 'bidi-override'
+                    } as React.CSSProperties}
+                    ref={(el) => {
+                      if (el) {
+                        el.style.setProperty('-webkit-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+                        el.style.setProperty('-moz-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+                        el.style.setProperty('-webkit-font-smoothing', 'antialiased');
+                        el.style.setProperty('-moz-osx-font-smoothing', 'grayscale');
+                      }
                     }}
                   >
                     {verse?.arabicText || ''}
@@ -631,34 +1449,59 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                   />
                   
                   {/* Tafseer Section */}
-                  {verse?.translation && (
-                    <div className="mb-6 font-arabic" style={{ direction: 'rtl', textAlign: 'right' }}>
-                      <p 
-                        className={`text-sm mb-3 font-semibold font-arabic ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
-                        style={{
-                          fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif",
-                          direction: 'rtl',
-                          textAlign: 'right'
-                        }}
-                      >
-                        {t("share.translation")}
-                      </p>
-                      <p 
-                        className={`text-base leading-relaxed font-arabic ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}
-                        style={{
-                          fontFamily: "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif",
-                          direction: 'rtl',
-                          textAlign: 'right',
-                          whiteSpace: 'pre-wrap',
-                          overflowWrap: 'normal',
-                          wordBreak: 'keep-all',
-                          lineHeight: '1.8'
-                        }}
-                      >
-                        {verse?.translation || ''}
-                      </p>
-                    </div>
-                  )}
+                  {verse?.translation && (() => {
+                    // Detect if translation contains Arabic text
+                    const hasArabic = /[\u0600-\u06FF]/.test(verse.translation);
+                    const isArabicTranslation = hasArabic || locale === 'ar';
+                    
+                    return (
+                      <div className="mb-6" style={{ 
+                        direction: isArabicTranslation ? 'rtl' : 'ltr', 
+                        textAlign: isArabicTranslation ? 'right' : 'left' 
+                      }}>
+                        <p 
+                          className={`text-sm mb-3 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                          style={{
+                            fontFamily: isArabicTranslation 
+                              ? "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif"
+                              : "'Lexend Deca', sans-serif",
+                            direction: isArabicTranslation ? 'rtl' : 'ltr',
+                            textAlign: isArabicTranslation ? 'right' : 'left'
+                          }}
+                        >
+                          {t("share.translation")}
+                        </p>
+                        <p 
+                          className={`text-base leading-relaxed ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}
+                          style={{
+                            fontFamily: isArabicTranslation 
+                              ? "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif"
+                              : "'Lexend Deca', sans-serif",
+                            direction: isArabicTranslation ? 'rtl' : 'ltr',
+                            textAlign: isArabicTranslation ? 'right' : 'left',
+                            whiteSpace: 'pre-wrap',
+                            overflowWrap: 'normal',
+                            wordBreak: 'keep-all',
+                            lineHeight: '1.8',
+                            textRendering: isArabicTranslation ? 'optimizeLegibility' : 'auto',
+                            fontFeatureSettings: isArabicTranslation ? '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1' : 'normal',
+                            fontVariantLigatures: isArabicTranslation ? 'common-ligatures contextual' : 'normal',
+                            unicodeBidi: isArabicTranslation ? 'bidi-override' : 'normal'
+                          } as React.CSSProperties}
+                          ref={(el) => {
+                            if (el && isArabicTranslation) {
+                              el.style.setProperty('-webkit-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+                              el.style.setProperty('-moz-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
+                              el.style.setProperty('-webkit-font-smoothing', 'antialiased');
+                              el.style.setProperty('-moz-osx-font-smoothing', 'grayscale');
+                            }
+                          }}
+                        >
+                          {verse?.translation || ''}
+                        </p>
+                      </div>
+                    );
+                  })()}
                   
                   {/* Separator */}
                   <div 
@@ -670,27 +1513,36 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                     }}
                   />
                   
-                  {/* Watermark */}
+                  {/* Watermark - Centered */}
                   <div 
-                    className="text-center"
                     style={{
-                      textAlign: 'center',
                       width: '100%',
+                      marginTop: '16px',
+                      paddingTop: '16px',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      boxSizing: 'border-box'
                     }}
                   >
                     <p 
                       className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}
                       style={{
-                        fontFamily: locale === 'ar' ? "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif" : "inherit",
+                        fontFamily: locale === 'ar' ? "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif" : "'Lexend Deca', sans-serif",
                         direction: locale === 'ar' ? 'rtl' : 'ltr',
                         lineHeight: '1.5',
                         textAlign: 'center',
                         margin: '0 auto',
-                        width: '100%'
+                        width: 'auto',
+                        maxWidth: '100%',
+                        display: 'block',
+                        padding: '0',
+                        alignSelf: 'center',
+                        unicodeBidi: 'plaintext', // This helps center RTL text properly
+                        whiteSpace: 'nowrap', // Keep Arabic watermark on one line
+                        overflow: 'visible' // Allow text to be visible even if it extends
                       }}
                     >
                       {locale === 'ar' 
@@ -723,12 +1575,16 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                     <p 
                       className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}
                       style={{
-                        fontFamily: "inherit",
+                        fontFamily: "'Lexend Deca', sans-serif",
                         direction: 'ltr',
                         lineHeight: '1.5',
                         textAlign: 'center',
                         margin: '4px auto 0',
-                        width: '100%'
+                        width: 'auto',
+                        maxWidth: '100%',
+                        display: 'block',
+                        padding: '0',
+                        alignSelf: 'center'
                       }}
                     >
                       meshari.charity

@@ -159,7 +159,17 @@ export default function QuranSection() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-center mb-8 p-8 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-2xl border-2 border-islamic-gold/30"
           >
-            <h3 className="text-3xl md:text-4xl font-bold text-islamic-gold mb-2">
+            <h3 
+              className="text-3xl md:text-4xl font-bold text-islamic-gold mb-2" 
+              style={{ 
+                textAlign: 'center !important' as any,
+                display: 'block',
+                width: '100%',
+                direction: /[\u0600-\u06FF]/.test(currentSurah.name) ? 'rtl' : 'ltr',
+                unicodeBidi: /[\u0600-\u06FF]/.test(currentSurah.name) ? 'plaintext' : 'normal',
+                margin: '0 auto'
+              }}
+            >
               {currentSurah.name}
             </h3>
             <p className="text-xl text-gray-600 dark:text-gray-400">

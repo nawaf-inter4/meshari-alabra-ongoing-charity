@@ -246,7 +246,7 @@ export default function DynamicMetaTags() {
     }
 
     // Update canonical URL - must point to the actual page, not homepage
-    // Only update if canonical doesn't already exist or is pointing to root (incorrect)
+    // Always ensure canonical points to the correct page URL
     const baseUrl = 'https://meshari.charity';
     let existingCanonical = document.querySelector('link[rel="canonical"]');
     const existingHref = existingCanonical?.getAttribute('href') || '';
@@ -256,35 +256,41 @@ export default function DynamicMetaTags() {
     const isHomePage = actualPath === '/' || actualPath.match(/^\/(ar|en|ur|tr|id|ms|bn|fr|zh|it|ja|ko)$/);
     // isSectionPage is already defined earlier in this useEffect
     
-    // Only update canonical if:
-    // 1. It doesn't exist
-    // 2. It's pointing to root (incorrect for section pages)
-    // 3. It doesn't match the current pathname (incorrect)
+    // Always calculate the correct canonical URL
+    let canonicalUrl = baseUrl;
+    
+    // For home pages, use language prefix
+    if (isHomePage) {
+      canonicalUrl = currentLang === 'ar' ? baseUrl : `${baseUrl}/${currentLang}`;
+    } else if (isSectionPage) {
+      // For section pages, use the actual pathname (sections are at /sections/... not /[lang]/sections/...)
+      // But canonical should include language prefix for SEO
+      const sectionPath = actualPath.startsWith('/') ? actualPath : `/${actualPath}`;
+      // Remove any existing language prefix from path if present
+      const cleanPath = sectionPath.replace(/^\/(ar|en|ur|tr|id|ms|bn|fr|zh|it|ja|ko)\//, '/');
+      if (currentLang === 'ar') {
+        canonicalUrl = `${baseUrl}${cleanPath}`;
+      } else {
+        // Add language prefix for non-Arabic
+        canonicalUrl = `${baseUrl}/${currentLang}${cleanPath}`;
+      }
+    } else {
+      // Other pages - remove language prefix if present and add correct one
+      const cleanPath = actualPath.replace(/^\/(ar|en|ur|tr|id|ms|bn|fr|zh|it|ja|ko)/, '') || '/';
+      if (cleanPath === '/') {
+        canonicalUrl = currentLang === 'ar' ? baseUrl : `${baseUrl}/${currentLang}`;
+      } else {
+        canonicalUrl = currentLang === 'ar' ? `${baseUrl}${cleanPath}` : `${baseUrl}/${currentLang}${cleanPath}`;
+      }
+    }
+    
+    // Always update canonical to ensure it's correct (not pointing to root for non-home pages)
     const shouldUpdate = !existingCanonical || 
-                        (existingHref === baseUrl || existingHref === `${baseUrl}/`) ||
-                        (!isHomePage && !existingHref.includes(actualPath));
+                        existingHref !== canonicalUrl ||
+                        (existingHref === baseUrl && !isHomePage) ||
+                        (existingHref === `${baseUrl}/` && !isHomePage);
     
     if (shouldUpdate) {
-      let canonicalUrl = baseUrl;
-      
-      // For home pages, use language prefix
-      if (isHomePage) {
-        canonicalUrl = currentLang === 'ar' ? baseUrl : `${baseUrl}/${currentLang}`;
-      } else if (isSectionPage) {
-        // For section pages, use the actual pathname (sections are at /sections/... not /[lang]/sections/...)
-        // But canonical should include language prefix for SEO
-        const sectionPath = actualPath.startsWith('/') ? actualPath : `/${actualPath}`;
-        if (currentLang === 'ar') {
-          canonicalUrl = `${baseUrl}${sectionPath}`;
-        } else {
-          // Add language prefix for non-Arabic
-          canonicalUrl = `${baseUrl}/${currentLang}${sectionPath}`;
-        }
-      } else {
-        // Other pages
-        canonicalUrl = currentLang === 'ar' ? `${baseUrl}${actualPath}` : `${baseUrl}/${currentLang}${actualPath}`;
-      }
-      
       if (existingCanonical && existingCanonical.parentNode) {
         existingCanonical.setAttribute('href', canonicalUrl);
       } else if (typeof document !== 'undefined' && document.head && document.head.parentNode) {

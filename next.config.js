@@ -69,6 +69,9 @@ const nextConfig = {
       'next-themes',
       'react-i18next',
       'date-fns',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-select',
     ],
     // Enable modern bundling optimizations
     webpackBuildWorker: true,
@@ -78,6 +81,8 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '2mb',
     },
+    // Enable partial prerendering for better performance
+    ppr: false, // Disabled for now, can enable later
   },
 
   // Turbopack configuration
@@ -85,12 +90,17 @@ const nextConfig = {
     root: __dirname,
   },
 
-  // Image optimization
+  // Image optimization - Performance critical
   images: {
-    formats: ['image/avif', 'image/webp'],
+    formats: ['image/avif', 'image/webp'], // AVIF and WebP for better compression
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
+    // Optimize images for better performance
+    unoptimized: false,
+    // Enable image optimization
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: 'https',
@@ -209,7 +219,7 @@ const nextConfig = {
     ];
   },
 
-  // Compress output
+  // Compress output (gzip/brotli)
   compress: true,
 
   // Generate ETags
@@ -220,8 +230,6 @@ const nextConfig = {
 
   // Production source maps (disable for smaller builds)
   productionBrowserSourceMaps: false,
-
-  // Optimize for serverless (removed standalone for Vercel compatibility)
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

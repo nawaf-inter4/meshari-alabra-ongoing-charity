@@ -73,6 +73,15 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
   // Cross-Origin-Opener-Policy (COOP) for origin isolation
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
   
+  // Performance: Compression headers (Next.js handles compression, but we ensure it's enabled)
+  // Accept-Encoding is handled by the server, but we can hint at preferred compression
+  const acceptEncoding = request.headers.get('accept-encoding') || '';
+  if (acceptEncoding.includes('br')) {
+    response.headers.set('Vary', 'Accept-Encoding');
+  } else if (acceptEncoding.includes('gzip')) {
+    response.headers.set('Vary', 'Accept-Encoding');
+  }
+  
   // Content Security Policy
   // Note: unsafe-inline and unsafe-eval are needed for Next.js inline scripts and webpack
   // We don't use strict-dynamic because it conflicts with unsafe-inline for Next.js
