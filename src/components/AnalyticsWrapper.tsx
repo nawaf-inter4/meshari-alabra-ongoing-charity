@@ -1,27 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-
+// Disable analytics in development to prevent 404 errors
+// Analytics will only work in production on Vercel
 export default function AnalyticsWrapper() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // Only render analytics after component mounts to avoid MutationObserver errors
-    setMounted(true);
-  }, []);
-
-  // Don't render in development or if not mounted
-  if (process.env.NODE_ENV !== 'production' || !mounted) {
+  // Only render in production on Vercel
+  if (process.env.NODE_ENV !== 'production') {
     return null;
   }
 
-  return (
-    <>
-      <Analytics />
-      <SpeedInsights />
-    </>
-  );
+  // Check if we're on Vercel
+  if (typeof window !== 'undefined') {
+    const isVercel = window.location.hostname.includes('vercel.app') || 
+                     window.location.hostname.includes('meshari.charity');
+    
+    if (!isVercel) {
+      return null;
+    }
+  }
+
+  // Dynamically import to avoid build errors
+  try {
+    const { Analytics } = require('@vercel/analytics/react');
+    const { SpeedInsights } = require('@vercel/speed-insights/next');
+    
+    return (
+      <>
+        <Analytics />
+        <SpeedInsights />
+      </>
+    );
+  } catch (error) {
+    // Silently fail if analytics can't be loaded
+    return null;
+  }
 }
 
