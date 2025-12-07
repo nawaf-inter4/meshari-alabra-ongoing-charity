@@ -80,11 +80,12 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
   // Cross-Origin-Opener-Policy (COOP) for origin isolation
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
   
-  // Content Security Policy - Improved with strict-dynamic
-  // Note: unsafe-inline is still needed for Next.js inline scripts, but we use strict-dynamic
+  // Content Security Policy
+  // Note: unsafe-inline and unsafe-eval are needed for Next.js inline scripts and webpack
+  // We don't use strict-dynamic because it conflicts with unsafe-inline for Next.js
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' https://vercel.live https://vitals.vercel-insights.com https://www.googletagmanager.com https://www.google-analytics.com",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://vitals.vercel-insights.com https://www.googletagmanager.com https://www.google-analytics.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https: blob: https://hatscripts.github.io",
