@@ -12,18 +12,13 @@ export default function SectionNavigation() {
   // Remove all prefetching logic - let Next.js handle it automatically
   // This prevents any interference with navigation
 
-  // Helper function to get section href with language prefix
-  // Always include language prefix to avoid middleware redirects
+  // Helper function to get section href
+  // Use direct /sections/... paths - middleware will handle language
+  // This ensures Next.js Link navigation works correctly
   const getSectionHref = (sectionPath: string) => {
-    // Always include language prefix to prevent middleware redirect
-    // This ensures single-click navigation works
-    if (locale === 'ar') {
-      // For Arabic, we can use /sections/... but middleware will redirect
-      // To avoid redirect, use /ar/sections/... for consistency
-      return `/ar${sectionPath}`;
-    } else {
-      return `/${locale}${sectionPath}`; // Other languages: /en/sections/quran
-    }
+    // Use direct path without language prefix
+    // Middleware will set x-locale header for language detection
+    return sectionPath; // e.g., /sections/quran
   };
 
   const sections = [
