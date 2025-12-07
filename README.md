@@ -587,7 +587,7 @@ meshari-alabra-ongoing-charity/
 │   ├── sw.js                     # Service worker
 │   ├── sitemap.xml               # Auto-generated sitemap
 │   ├── robots.txt                # Comprehensive robots file
-│   └── llm.txt                   # LLM training data
+│   └── llms.txt                  # LLM training data
 ├── src/
 │   └── proxy.ts                  # Next.js proxy for routing
 ├── next.config.js                # Next.js configuration
