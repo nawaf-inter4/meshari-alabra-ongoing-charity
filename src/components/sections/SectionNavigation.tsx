@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 export default function SectionNavigation() {
   const { t, locale, direction } = useLanguage();
+  const router = useRouter();
 
   // Remove all prefetching logic - let Next.js handle it automatically
   // This prevents any interference with navigation
@@ -124,9 +125,7 @@ export default function SectionNavigation() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sections.map((section, index) => {
-            const router = useRouter();
-            return (
+          {sections.map((section, index) => (
               <motion.div
                 key={section.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -182,8 +181,7 @@ export default function SectionNavigation() {
                   </svg>
                 </div>
               </motion.div>
-            );
-          })}
+          ))}
         </div>
       </div>
     </section>
