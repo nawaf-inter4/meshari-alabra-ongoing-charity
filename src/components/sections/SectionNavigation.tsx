@@ -131,6 +131,11 @@ export default function SectionNavigation() {
               prefetch={true}
               className="block"
               aria-label={`${section.title} - ${section.description}`}
+              onClick={(e) => {
+                // Ensure navigation happens immediately
+                // Don't prevent default - let Link handle it
+                e.stopPropagation();
+              }}
             >
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -145,6 +150,7 @@ export default function SectionNavigation() {
                 style={{
                   willChange: 'transform, opacity',
                   transform: 'translateZ(0)',
+                  pointerEvents: 'auto', // Ensure clicks work
                 }}
               >
                 <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${section.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
