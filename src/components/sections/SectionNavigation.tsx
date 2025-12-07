@@ -3,21 +3,17 @@
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookOpen, Book, Heart, Clock, DollarSign, Compass, Users, Calendar, Star, Globe, Shield, Gift, Grid3X3 } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SectionNavigation() {
   const { t, locale, direction } = useLanguage();
+  const router = useRouter();
 
-  // Remove all prefetching logic - let Next.js handle it automatically
-  // This prevents any interference with navigation
-
-  // Helper function to get section href
-  // Use direct /sections/... paths - middleware will handle language
-  // This ensures Next.js Link navigation works correctly
-  const getSectionHref = (sectionPath: string) => {
-    // Use direct path without language prefix
-    // Middleware will set x-locale header for language detection
-    return sectionPath; // e.g., /sections/quran
+  // SIMPLE navigation - just use router.push directly
+  const handleSectionClick = (sectionPath: string) => {
+    // Prevent any default behavior
+    // Just navigate directly
+    router.push(sectionPath);
   };
 
   const sections = [
@@ -125,34 +121,32 @@ export default function SectionNavigation() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {sections.map((section, index) => (
-            <Link
+            <motion.div
               key={section.id}
-              href={section.href}
-              prefetch={true}
-              className="block"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ 
+                duration: 0.6, 
+                delay: index * 0.1,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
+              onClick={() => handleSectionClick(section.href)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleSectionClick(section.href);
+                }
+              }}
+              role="button"
+              tabIndex={0}
               aria-label={`${section.title} - ${section.description}`}
-              onClick={(e) => {
-                // Ensure navigation happens immediately
-                // Don't prevent default - let Link handle it
-                e.stopPropagation();
+              className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold h-full flex flex-col cursor-pointer motion-safe"
+              style={{
+                willChange: 'transform, opacity',
+                transform: 'translateZ(0)',
               }}
             >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: index * 0.1,
-                  ease: [0.25, 0.1, 0.25, 1],
-                }}
-                className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold h-full flex flex-col cursor-pointer motion-safe"
-                style={{
-                  willChange: 'transform, opacity',
-                  transform: 'translateZ(0)',
-                  pointerEvents: 'auto', // Ensure clicks work
-                }}
-              >
                 <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${section.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
                   <section.icon className="w-8 h-8 text-white" />
                 </div>
@@ -176,8 +170,7 @@ export default function SectionNavigation() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                   </div>
-                </motion.div>
-            </Link>
+            </motion.div>
           ))}
         </div>
       </div>
