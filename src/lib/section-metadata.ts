@@ -212,8 +212,9 @@ export function generateSectionMetadata(
   
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://meshari.charity';
   // Canonical URL should match the actual route structure
-  // For Arabic: /sections/{id}, For others: /{lang}/sections/{id}
-  // Always include language prefix to ensure correct canonical
+  // Sections are accessible at /sections/{id} (actual route)
+  // But canonical should include language prefix for SEO: /{lang}/sections/{id}
+  // This ensures proper canonical URLs for all languages
   const canonicalUrl = currentLang === 'ar' 
     ? `${siteUrl}/sections/${sectionId}`
     : `${siteUrl}/${currentLang}/sections/${sectionId}`;

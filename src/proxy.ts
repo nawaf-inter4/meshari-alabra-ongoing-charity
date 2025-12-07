@@ -7,6 +7,22 @@ function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const pathSegments = pathname.split('/').filter(Boolean);
   
+  // Skip middleware for service worker and manifest (handled by route handlers)
+  if (pathname === '/sw.js' || pathname === '/manifest.json') {
+    const response = NextResponse.next();
+    // Still apply security headers but don't interfere with route handlers
+    if (pathname === '/sw.js') {
+      response.headers.set('Content-Type', 'application/javascript');
+      response.headers.set('Service-Worker-Allowed', '/');
+      response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+    if (pathname === '/manifest.json') {
+      response.headers.set('Content-Type', 'application/manifest+json');
+      response.headers.set('Cache-Control', 'public, max-age=3600');
+    }
+    return response;
+  }
+  
   // Check if path starts with a language code
   const firstSegment = pathSegments[0];
   const isLanguagePrefix = supportedLanguages.includes(firstSegment);
@@ -22,30 +38,20 @@ function proxy(request: NextRequest) {
     const response = NextResponse.rewrite(url);
     response.headers.set('x-locale', firstSegment);
     
-    // CRITICAL: Add header to indicate this is a client-side navigation
-    // This prevents middleware from interfering with Next.js Link navigation
-    response.headers.set('x-client-navigation', '1');
-    
     // Apply security headers
     applySecurityHeaders(response, request);
     return response;
   }
   
-  // Redirect /sections/... to /[lang]/sections/... if no language prefix
-  // ALWAYS use rewrite (never redirect) to avoid double-click issues
-  // Next.js Link handles client-side navigation, middleware should not redirect
+  // Handle /sections/... routes - keep pathname, just set language header
+  // The route files are at /sections/... not /[lang]/sections/...
   if (pathSegments[0] === 'sections' && !isLanguagePrefix) {
     const preferredLang = request.cookies.get('preferred-locale')?.value || 'ar';
     const lang = supportedLanguages.includes(preferredLang) ? preferredLang : 'ar';
-    const newPath = `/${lang}${pathname}`;
-    const url = request.nextUrl.clone();
-    url.pathname = newPath;
     
-    // ALWAYS use rewrite - Next.js will handle the URL change client-side
-    // This prevents the double-click issue completely
-    const response = NextResponse.rewrite(url);
+    // Keep the same pathname (/sections/...) but set language header
+    const response = NextResponse.next();
     response.headers.set('x-locale', lang);
-    response.headers.set('x-client-navigation', '1');
     applySecurityHeaders(response, request);
     return response;
   }
@@ -71,10 +77,14 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
   response.headers.set('Referrer-Policy', 'origin-when-cross-origin');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=*');
   
-  // Content Security Policy
+  // Cross-Origin-Opener-Policy (COOP) for origin isolation
+  response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  
+  // Content Security Policy - Improved with strict-dynamic
+  // Note: unsafe-inline is still needed for Next.js inline scripts, but we use strict-dynamic
   const csp = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live https://vitals.vercel-insights.com https://www.googletagmanager.com https://www.google-analytics.com",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' https://vercel.live https://vitals.vercel-insights.com https://www.googletagmanager.com https://www.google-analytics.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https: blob: https://hatscripts.github.io",
@@ -137,18 +147,7 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   }
 
-  // PWA headers - Service Worker
-  if (request.nextUrl.pathname === '/sw.js') {
-    response.headers.set('Content-Type', 'application/javascript');
-    response.headers.set('Service-Worker-Allowed', '/');
-    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-  }
-
-  // PWA headers - Manifest
-  if (request.nextUrl.pathname === '/manifest.json') {
-    response.headers.set('Content-Type', 'application/manifest+json');
-    response.headers.set('Cache-Control', 'public, max-age=3600');
-  }
+  // PWA headers are handled in the main proxy function before applySecurityHeaders
 }
 
 export const config = {
