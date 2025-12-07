@@ -361,8 +361,9 @@ export default async function LanguageLayout({
               <AudioPlayer />
               <LocalSchemaMarkup />
               <AdvancedSEO />
-              <PerformanceOptimizer />
-              <AccessibilityOptimizer />
+              {/* Temporarily disabled to fix navigation removeChild errors */}
+              {/* <PerformanceOptimizer /> */}
+              {/* <AccessibilityOptimizer /> */}
               <MetaOptimizer />
               <AnalyticsWrapper />
             </LanguageProvider>
