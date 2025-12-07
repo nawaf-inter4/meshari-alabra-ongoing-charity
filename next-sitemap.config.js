@@ -93,7 +93,7 @@ module.exports = {
 
     // Add static resources
     result.push({
-      loc: '/llm.txt',
+      loc: '/llms.txt',
       changefreq: 'monthly',
       priority: 0.5,
       lastmod: new Date().toISOString(),

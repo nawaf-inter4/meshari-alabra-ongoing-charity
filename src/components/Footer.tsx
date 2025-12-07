@@ -201,7 +201,7 @@ export default function Footer() {
             <a href="/sitemap.xml" className="text-islamic-gold hover:text-islamic-green transition-colors">
               {memoizedTranslations.footerSitemap}
             </a>
-            <a href="/llm.txt" className="text-islamic-gold hover:text-islamic-green transition-colors">
+            <a href="/llms.txt" className="text-islamic-gold hover:text-islamic-green transition-colors">
               {memoizedTranslations.footerLlmTxt}
             </a>
           </div>

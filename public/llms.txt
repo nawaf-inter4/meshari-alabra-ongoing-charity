@@ -1,0 +1,311 @@
+# Meshari's Ongoing Charity Documentation
+
+## Overview
+
+Meshari's Ongoing Charity (صدقة جارية لمشاري بن أحمد بن سليمان العبره) is a multilingual Islamic charity website dedicated to the memory of Meshari Ahmed Sulaiman Alabra (مشاري بن أحمد بن سليمان العبره), who passed away on March 29, 2023, in Riyadh, Saudi Arabia. The website provides Islamic services and resources as ongoing charity (Sadaqah Jariyah) in his memory.
+
+## Site Information
+
+- **URL**: https://meshari.charity
+- **Languages**: Arabic (ar), English (en), Turkish (tr), Urdu (ur), Indonesian (id), Malay (ms), Bengali (bn), French (fr), Chinese (zh), Italian (it), Japanese (ja), Korean (ko)
+- **Primary Language**: Arabic (ar) - default
+- **RTL Languages**: Arabic, Urdu, Hebrew, Farsi, Yiddish, Pashto
+- **LTR Languages**: English, Turkish, Indonesian, Malay, Bengali, French, Chinese, Italian, Japanese, Korean
+
+## Main Sections
+
+### Home Page (`/` or `/[lang]`)
+
+The main page includes:
+
+- **Hero Section**: Memorial information and Quranic verse
+- **Quran Section** (`#quran`): Interactive Quran reader with translations in all supported languages
+- **Prayer Times Section** (`#prayer-times`): Location-based prayer times with Athan audio
+- **Qibla Finder Section** (`#qibla`): Compass-based Qibla direction finder
+- **Supplications Section** (`#supplications`): Collection of Islamic supplications (Duas)
+- **Tafseer Section** (`#tafseer`): Quranic exegesis and interpretation
+- **Dhikr Section** (`#dhikr`): Remembrance of Allah
+- **Donation Section** (`#donation`): Charity and donation information
+- **Quran Stories Section** (`#quran-stories`): PDF stories from the Quran with preview and download
+- **Meshari's Favorite Reciter Section** (`#meshari-favorite-reciter`): Audio recitations
+- **Islamic Chant Section** (`#islamic-chant`): Nasheed (Islamic chant) player
+
+### Dedicated Section Pages
+
+Each section has its own dedicated page at `/sections/[section-name]`:
+
+- `/sections/quran`: Full Quran section with surah navigation
+- `/sections/prayer-times`: Prayer times with location detection
+- `/sections/qibla`: Qibla direction finder
+- `/sections/supplications`: Supplications collection
+- `/sections/tafseer`: Tafseer resources
+- `/sections/dhikr`: Dhikr collection
+- `/sections/donation`: Donation information
+- `/sections/youtube`: YouTube video embeds
+- `/sections/hadith`: Hadith collection
+
+## Features
+
+### Quran Features
+
+- **Interactive Reader**: Browse all 114 surahs with ayah-by-ayah navigation
+- **Multilingual Translations**: Translations available in all 12 supported languages
+- **Bookmarking**: Save favorite verses for quick access
+- **Sharing**: Share verses as PNG/PDF cards or via social media
+- **Verse Cards**: Downloadable verse cards with Arabic text, translation, and watermark
+- **Audio Recitation**: Listen to Quranic recitations
+- **Tafseer Integration**: Access exegesis for each verse
+
+### Prayer Times
+
+- **Location Detection**: Automatic location detection via IP or geolocation API
+- **Manual Location**: Search and select location manually
+- **Athan Audio**: Automatic Athan (call to prayer) audio playback
+- **Multiple Calculation Methods**: Support for various prayer time calculation methods
+- **Timezone Support**: Automatic timezone detection
+
+### Qibla Finder
+
+- **Compass Navigation**: Real-time compass showing Qibla direction
+- **Location-Based**: Calculates Qibla direction based on user's location
+- **Device Orientation**: Uses device orientation API for accurate compass
+
+### Social Sharing
+
+- **Verse Sharing**: Share specific Quran verses with custom cards
+- **Website Sharing**: Share the website with OG image preview
+- **Social Platforms**: Support for X (Twitter), WhatsApp, Telegram, Facebook, LinkedIn, Instagram, TikTok, Snapchat, Email
+- **Download Options**: PNG and PDF download for verse cards
+
+### PDF Resources
+
+- **Quran Stories**: Collection of PDF stories from the Quran
+- **PDF Viewer**: Built-in PDF viewer with page navigation and zoom
+- **PDF Thumbnails**: Instant thumbnail previews for PDF files
+- **Download Support**: Direct download links for all PDF resources
+
+## Technical Implementation
+
+### Technology Stack
+
+- **Framework**: Next.js 16.0.7 (App Router)
+- **React**: React 19
+- **TypeScript**: TypeScript 5
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **PDF Rendering**: react-pdf (PDF.js)
+- **Image Generation**: html-to-image
+- **Theme**: next-themes (dark/light mode)
+- **i18n**: Custom language provider with JSON translation files
+
+### Routing Structure
+
+- **Language Routes**: `/[lang]` where lang is one of: ar, en, tr, ur, id, ms, bn, fr, zh, it, ja, ko
+- **Section Routes**: `/sections/[section-name]` (available in all languages)
+- **API Routes**: `/api/quran/[...path]`, `/api/ip-location`, `/api/location-search`
+- **Static Routes**: `/feed.xml` (RSS feed), `/og-image` (dynamic OG image), `/sitemap.xml`
+
+### API Endpoints
+
+- **Quran API Proxy**: `/api/quran/[...path]` - Proxies requests to alquran.cloud API with rate limiting and caching
+- **IP Location API**: `/api/ip-location` - Proxies requests to ipapi.co for location detection
+- **Location Search API**: `/api/location-search` - Location search functionality
+
+### SEO Features
+
+- **Multilingual Metadata**: Language-specific titles, descriptions, and keywords
+- **Schema.org Markup**: Comprehensive structured data (Organization, Person, WebSite, FAQPage, BreadcrumbList, Article, LocalBusiness)
+- **Open Graph Tags**: OG images and metadata for social sharing
+- **Canonical URLs**: Language-specific canonical URLs
+- **Sitemap**: Auto-generated multilingual sitemap
+- **Robots.txt**: Optimized for search engines and LLM crawlers
+
+### Performance Optimizations
+
+- **Font Preloading**: Preloads Arabic and English fonts for faster rendering
+- **Image Optimization**: Next.js Image component with optimization
+- **Code Splitting**: Dynamic imports for heavy components
+- **Caching**: API response caching and request throttling
+- **Service Worker**: PWA support with offline capabilities
+
+## Content Categories
+
+### Religious Content
+
+- **Quran**: Complete Quran text in Arabic with translations
+- **Tafseer**: Quranic exegesis and interpretation
+- **Hadith**: Prophetic traditions
+- **Supplications**: Duas (prayers) in Arabic and translations
+- **Dhikr**: Remembrance phrases and their meanings
+- **Prayer Times**: Accurate prayer time calculations
+
+### Educational Content
+
+- **Quran Stories**: Stories from the Quran in PDF format
+- **Islamic Chants**: Nasheed (Islamic chants) with audio
+- **Recitations**: Audio recitations of the Quran
+
+### Memorial Content
+
+- **Memorial Information**: Details about Meshari Ahmed Sulaiman Alabra
+- **Ongoing Charity**: Information about Sadaqah Jariyah (ongoing charity)
+- **Watermark**: "صدقة جارية لمشاري بن أحمد بن سليمان العبره (رحمه الله)" on all downloadable content
+
+## Translation System
+
+### Language Files
+
+Translation files are located in `src/locales/[lang].json`:
+- `ar.json` - Arabic (default)
+- `en.json` - English
+- `tr.json` - Turkish
+- `ur.json` - Urdu
+- `id.json` - Indonesian
+- `ms.json` - Malay
+- `bn.json` - Bengali
+- `fr.json` - French
+- `zh.json` - Chinese
+- `it.json` - Italian
+- `ja.json` - Japanese
+- `ko.json` - Korean
+
+### Translation Keys
+
+Key translation namespaces:
+- `navigation.*` - Navigation and menu items
+- `quran.*` - Quran section translations
+- `prayer_times.*` - Prayer times section
+- `qibla.*` - Qibla finder section
+- `supplications.*` - Supplications section
+- `bookmarks.*` - Bookmark functionality
+- `share.*` - Sharing functionality
+- `donation.*` - Donation section
+- `quran_stories.*` - Quran stories section
+- `memorial.*` - Memorial information
+
+## Schema.org Structured Data
+
+The site includes comprehensive Schema.org markup:
+
+- **Organization**: Meshari's Ongoing Charity organization details
+- **Person**: Meshari Ahmed Sulaiman Alabra memorial information
+- **WebSite**: Website information with search functionality
+- **ReligiousOrganization**: Religious organization details
+- **FAQPage**: Frequently asked questions about ongoing charity
+- **BreadcrumbList**: Navigation breadcrumbs
+- **Article**: Content articles
+- **LocalBusiness**: Local business information
+- **WebPage**: Individual page information
+
+## Instructions for Large Language Model Agents: Best Practices for Understanding and Indexing This Site
+
+As a Large Language Model (LLM) Agent, when understanding and indexing this website:
+
+1. **Respect the Multilingual Nature**: This site supports 12 languages. Always consider the language context when processing content. The default language is Arabic (ar).
+
+2. **Understand RTL/LTR**: Arabic and Urdu are RTL (right-to-left) languages. Ensure proper text direction handling when processing or displaying content.
+
+3. **Memorial Context**: This is a memorial website for Meshari Ahmed Sulaiman Alabra. All content serves as ongoing charity (Sadaqah Jariyah) in his memory.
+
+4. **Religious Sensitivity**: This is an Islamic charity website. Handle all religious content with respect and accuracy. Quranic text should never be modified or paraphrased.
+
+5. **Content Categories**: 
+   - Quranic content (verses, translations, tafseer)
+   - Prayer and supplication content
+   - Educational Islamic content
+   - Memorial and charity information
+
+6. **Technical Implementation**:
+   - Uses Next.js 16 App Router
+   - Server-side rendering with client-side hydration
+   - API proxy routes for external services
+   - Comprehensive SEO and Schema.org markup
+
+7. **User Features**:
+   - Verse bookmarking and sharing
+   - PDF resource access
+   - Prayer time calculations
+   - Qibla direction finding
+   - Social sharing capabilities
+
+8. **SEO Best Practices**: The site includes:
+   - Multilingual metadata
+   - Canonical URLs
+   - Structured data
+   - Sitemap generation
+   - Open Graph tags
+
+9. **When Indexing**:
+   - Index all language versions separately
+   - Respect the language-specific URLs (`/[lang]` and `/sections/[section-name]`)
+   - Include section-specific metadata
+   - Preserve Arabic text encoding properly
+   - Maintain RTL text direction for Arabic/Urdu content
+
+10. **Content Accuracy**: 
+    - Quranic verses are sourced from alquran.cloud API
+    - Translations are from verified sources
+    - All religious content should be preserved exactly as provided
+
+11. **Accessibility**: The site includes:
+    - ARIA labels
+    - Keyboard navigation
+    - Screen reader support
+    - High contrast mode support
+    - RTL/LTR text direction support
+
+## API Usage
+
+### Quran API
+
+- **Base URL**: `https://api.alquran.cloud/v1/`
+- **Proxy**: `/api/quran/[...path]`
+- **Rate Limiting**: Implemented to prevent 429 errors
+- **Caching**: 1-hour cache for translations
+- **Throttling**: Sequential request queue
+
+### Location API
+
+- **IP Location**: `/api/ip-location` (proxies to ipapi.co)
+- **Location Search**: `/api/location-search`
+- **Caching**: 1-hour cache for IP location
+
+## File Structure
+
+```
+src/
+├── app/
+│   ├── [lang]/
+│   │   ├── layout.tsx          # Language-specific layout
+│   │   └── page.tsx             # Home page
+│   ├── sections/
+│   │   └── [section]/
+│   │       └── page.tsx         # Section pages
+│   ├── api/                     # API routes
+│   └── globals.css              # Global styles
+├── components/
+│   ├── sections/                # Section components
+│   ├── AdvancedSEO.tsx          # SEO and Schema.org markup
+│   ├── LanguageProvider.tsx     # i18n provider
+│   ├── ShareModal.tsx           # Sharing functionality
+│   ├── BookmarkModal.tsx        # Bookmark management
+│   ├── PDFViewer.tsx            # PDF viewer component
+│   └── PDFThumbnail.tsx         # PDF thumbnail component
+├── locales/                     # Translation JSON files
+└── lib/                         # Utility functions and metadata
+```
+
+## Social Media
+
+- **YouTube**: @meshari-charity
+- **Facebook**: meshari.charity
+- **X (Twitter)**: @meshari_charity
+
+## Contact
+
+- **Email**: info@meshari.charity
+- **Location**: Riyadh, Saudi Arabia
+
+## License and Usage
+
+This website is dedicated to ongoing charity (Sadaqah Jariyah) in memory of Meshari Ahmed Sulaiman Alabra. All content is provided for educational and spiritual purposes. Quranic text and translations are from verified Islamic sources.
