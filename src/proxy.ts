@@ -46,7 +46,10 @@ function proxy(request: NextRequest) {
   // Handle /sections/... routes - keep pathname, just set language header
   // The route files are at /sections/... not /[lang]/sections/...
   if (pathSegments[0] === 'sections' && !isLanguagePrefix) {
-    const preferredLang = request.cookies.get('preferred-locale')?.value || 'ar';
+    // Try to get language from URL referer or cookie
+    const referer = request.headers.get('referer') || '';
+    const refererLang = referer.match(/\/(ar|en|ur|tr|id|ms|bn|fr|zh|it|ja|ko)(?:\/|$)/)?.[1];
+    const preferredLang = refererLang || request.cookies.get('preferred-locale')?.value || 'ar';
     const lang = supportedLanguages.includes(preferredLang) ? preferredLang : 'ar';
     
     // Keep the same pathname (/sections/...) but set language header
