@@ -232,12 +232,7 @@ export default async function LanguageLayout({
         <link rel="dns-prefetch" href="https://img.youtube.com" />
         <link rel="dns-prefetch" href="https://i.ytimg.com" />
         
-        {/* Prefetch critical section routes for blazing fast navigation */}
-        <link rel="prefetch" href="/sections/quran" as="document" />
-        <link rel="prefetch" href="/sections/tafseer" as="document" />
-        <link rel="prefetch" href="/sections/dhikr" as="document" />
-        <link rel="prefetch" href="/sections/prayer-times" as="document" />
-        <link rel="prefetch" href="/sections/qibla" as="document" />
+        {/* Don't prefetch sections in head - let client-side handle it to avoid blocking */}
 
         {/* PWA Manifest */}
         <link rel="manifest" href="/manifest.json" />

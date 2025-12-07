@@ -36,11 +36,11 @@ export default function SectionNavigation() {
     });
   }, [locale, router]);
 
-  // Handle section navigation with prefetching
-  const handleSectionClick = useCallback((e: React.MouseEvent, href: string) => {
-    // Prefetch on hover for even faster navigation
-    router.prefetch(href);
-  }, [router]);
+  // Handle section navigation - don't interfere with Link navigation
+  const handleSectionClick = useCallback((e: React.MouseEvent) => {
+    // Don't prevent default - let Next.js Link handle navigation
+    // Just prefetch on hover, not on click
+  }, []);
 
   // Helper function to get section href with language prefix
   const getSectionHref = (sectionPath: string) => {
@@ -174,9 +174,8 @@ export default function SectionNavigation() {
             >
               <Link
                 href={section.href}
-                onClick={(e) => handleSectionClick(e, section.href)}
                 onMouseEnter={() => router.prefetch(section.href)}
-                prefetch={true}
+                prefetch={false}
                 className="block"
                 aria-label={`${section.title} - ${section.description}`}
               >
