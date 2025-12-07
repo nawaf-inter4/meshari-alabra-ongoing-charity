@@ -280,12 +280,20 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       });
       
       // Download the image
-      const link = document.createElement('a');
-      link.download = `${verse?.surahName?.replace(/\s+/g, '_')}_Ayah_${verse?.ayahNumber}.png`;
-      link.href = dataUrl;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (typeof document !== 'undefined' && document.body && document.body.parentNode) {
+        try {
+          const link = document.createElement('a');
+          link.download = `${verse?.surahName?.replace(/\s+/g, '_')}_Ayah_${verse?.ayahNumber}.png`;
+          link.href = dataUrl;
+          document.body.appendChild(link);
+          link.click();
+          if (link.parentNode) {
+            document.body.removeChild(link);
+          }
+        } catch (e) {
+          // Silently fail if DOM manipulation fails
+        }
+      }
     } catch (error) {
       console.error('Error downloading image:', error);
       alert(t("share.error_download_image"));
