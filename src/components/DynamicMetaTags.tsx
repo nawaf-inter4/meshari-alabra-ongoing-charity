@@ -119,46 +119,51 @@ export default function DynamicMetaTags() {
     }
 
     // Update canonical URL - must point to the actual page, not homepage
+    // Only update if canonical doesn't already exist (server-side metadata should set it)
     const baseUrl = 'https://meshari.charity';
-    let canonicalUrl = baseUrl;
+    let existingCanonical = document.querySelector('link[rel="canonical"]');
     
-    // Get the pathname without leading/trailing slashes
-    const cleanPath = pathname.replace(/^\/+|\/+$/g, '');
-    
-    // Check if this is a section page
-    const isSectionPage = cleanPath.includes('sections/');
-    
-    if (isSectionPage) {
-      // For section pages, ensure we have the correct path with language prefix
-      // If pathname already has language prefix, use it; otherwise add it
-      const hasLangPrefix = /^\/(ar|en|ur|tr|id|ms|bn|fr|zh|it|ja|ko)\//.test(pathname);
+    // Only update canonical if it's pointing to root (incorrect) or doesn't exist
+    if (!existingCanonical || existingCanonical.getAttribute('href') === baseUrl || existingCanonical.getAttribute('href') === `${baseUrl}/`) {
+      let canonicalUrl = baseUrl;
       
-      if (hasLangPrefix) {
-        // Path already has language prefix, use it as-is
-        canonicalUrl = `${baseUrl}${pathname}`;
-      } else {
-        // No language prefix, add it
-        const sectionPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
-        if (currentLang === 'ar') {
-          canonicalUrl = `${baseUrl}${sectionPath}`;
+      // Get the pathname without leading/trailing slashes
+      const cleanPath = pathname.replace(/^\/+|\/+$/g, '');
+      
+      // Check if this is a section page
+      const isSectionPage = cleanPath.includes('sections/');
+      
+      if (isSectionPage) {
+        // For section pages, ensure we have the correct path with language prefix
+        // If pathname already has language prefix, use it; otherwise add it
+        const hasLangPrefix = /^\/(ar|en|ur|tr|id|ms|bn|fr|zh|it|ja|ko)\//.test(pathname);
+        
+        if (hasLangPrefix) {
+          // Path already has language prefix, use it as-is
+          canonicalUrl = `${baseUrl}${pathname}`;
         } else {
-          canonicalUrl = `${baseUrl}/${currentLang}${sectionPath}`;
+          // No language prefix, add it
+          const sectionPath = pathname.startsWith('/') ? pathname : `/${pathname}`;
+          if (currentLang === 'ar') {
+            canonicalUrl = `${baseUrl}${sectionPath}`;
+          } else {
+            canonicalUrl = `${baseUrl}/${currentLang}${sectionPath}`;
+          }
         }
+      } else {
+        // For home pages, use language prefix
+        canonicalUrl = currentLang === 'ar' ? baseUrl : `${baseUrl}/${currentLang}`;
       }
-    } else {
-      // For home pages, use language prefix
-      canonicalUrl = currentLang === 'ar' ? baseUrl : `${baseUrl}/${currentLang}`;
-    }
-    
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (canonical) {
-      canonical.setAttribute('href', canonicalUrl);
-    } else {
-      // Create canonical tag if it doesn't exist
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      canonical.setAttribute('href', canonicalUrl);
-      document.head.appendChild(canonical);
+      
+      if (existingCanonical) {
+        existingCanonical.setAttribute('href', canonicalUrl);
+      } else {
+        // Create canonical tag if it doesn't exist
+        const canonical = document.createElement('link');
+        canonical.setAttribute('rel', 'canonical');
+        canonical.setAttribute('href', canonicalUrl);
+        document.head.appendChild(canonical);
+      }
     }
 
   }, [pathname]);

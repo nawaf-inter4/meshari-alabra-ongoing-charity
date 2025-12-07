@@ -1,0 +1,235 @@
+// Service Worker for PWA - Enhanced Version
+const CACHE_VERSION = 'meshari-charity-v2.0.0';
+const CACHE_NAME = `${CACHE_VERSION}`;
+const RUNTIME_CACHE = 'runtime-cache-v1';
+const IMAGE_CACHE = 'image-cache-v1';
+const FONT_CACHE = 'font-cache-v1';
+
+// Assets to cache on install
+const PRECACHE_ASSETS = [
+  '/',
+  '/manifest.json',
+  '/og-image.png',
+  '/favicon.ico',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
+];
+
+// Install event - Cache critical assets
+self.addEventListener('install', (event) => {
+  console.log('[SW] Installing service worker...');
+  event.waitUntil(
+    Promise.allSettled([
+      caches.open(CACHE_NAME).then((cache) => {
+        console.log('[SW] Caching precache assets');
+        // Use Promise.allSettled to handle individual failures
+        return Promise.allSettled(
+          PRECACHE_ASSETS.map(url => 
+            cache.add(new Request(url, { cache: 'reload' })).catch((err) => {
+              console.warn(`[SW] Failed to cache ${url}:`, err);
+              return null; // Continue even if one asset fails
+            })
+          )
+        );
+      }),
+      self.skipWaiting(), // Activate immediately
+    ]).then(() => {
+      console.log('[SW] Service worker installed');
+    }).catch((error) => {
+      console.error('[SW] Install error:', error);
+      // Still activate even if caching fails
+      self.skipWaiting();
+    })
+  );
+});
+
+// Activate event - Clean up old caches
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Activating service worker...');
+  event.waitUntil(
+    Promise.all([
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME && 
+                cacheName !== RUNTIME_CACHE && 
+                cacheName !== IMAGE_CACHE && 
+                cacheName !== FONT_CACHE) {
+              console.log('[SW] Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      }),
+      self.clients.claim(), // Take control of all pages immediately
+      self.skipWaiting(), // Activate immediately
+    ])
+  );
+});
+
+// Listen for skip waiting message
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+// Fetch event - Network first, fallback to cache
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Skip non-GET requests
+  if (request.method !== 'GET') {
+    return;
+  }
+
+  // Skip chrome-extension and other protocols
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
+
+  // Skip external domains - let browser handle them (CSP will allow)
+  // Only cache same-origin resources
+  if (url.origin !== self.location.origin) {
+    // For external resources, just fetch without caching
+    event.respondWith(fetch(request).catch(() => {
+      // If fetch fails, return a fallback
+      return new Response('', { status: 503 });
+    }));
+    return;
+  }
+
+  // API routes - Network only
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  // Static assets - Cache first
+  if (url.pathname.startsWith('/_next/static/') || 
+      url.pathname.startsWith('/icons/') ||
+      url.pathname.startsWith('/audio/')) {
+    event.respondWith(cacheFirst(request, CACHE_NAME));
+    return;
+  }
+
+  // Images - Cache first with separate cache (only same-origin)
+  if (request.destination === 'image' || 
+      url.pathname.match(/\.(jpg|jpeg|png|gif|webp|svg|ico)$/i)) {
+    event.respondWith(cacheFirst(request, IMAGE_CACHE));
+    return;
+  }
+
+  // Fonts - Cache first (only same-origin)
+  if (request.destination === 'font' || 
+      url.pathname.match(/\.(woff|woff2|ttf|eot)$/i)) {
+    event.respondWith(cacheFirst(request, FONT_CACHE));
+    return;
+  }
+
+  // HTML pages - Network first, fallback to cache
+  if (request.destination === 'document' || 
+      request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(networkFirst(request, RUNTIME_CACHE));
+    return;
+  }
+
+  // Default - Network first
+  event.respondWith(networkFirst(request, RUNTIME_CACHE));
+});
+
+// Cache first strategy
+async function cacheFirst(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(request);
+  
+  if (cached) {
+    return cached;
+  }
+
+  try {
+    const response = await fetch(request);
+    // Only cache successful, complete responses (not 206 partial responses)
+    if (response.ok && response.status !== 206) {
+      // Clone response before caching
+      const responseToCache = response.clone();
+      // Only cache if response is complete
+      if (responseToCache.body) {
+        cache.put(request, responseToCache).catch((err) => {
+          // Silently fail if caching fails (e.g., quota exceeded)
+          console.warn('[SW] Cache put failed:', err);
+        });
+      }
+    }
+    return response;
+  } catch (error) {
+    // Silently handle CSP violations and other fetch errors
+    // Return offline page for HTML requests
+    if (request.headers.get('accept')?.includes('text/html')) {
+      return cache.match('/offline.html') || new Response('Offline', { status: 503 });
+    }
+    // For other requests, return empty response
+    return new Response('', { status: 503 });
+  }
+}
+
+// Network first strategy
+async function networkFirst(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  
+  try {
+    const response = await fetch(request);
+    // Only cache successful, complete responses (not 206 partial responses)
+    if (response.ok && response.status !== 206) {
+      // Clone response before caching
+      const responseToCache = response.clone();
+      // Only cache if response is complete
+      if (responseToCache.body) {
+        cache.put(request, responseToCache).catch((err) => {
+          // Silently fail if caching fails (e.g., quota exceeded, CSP violation)
+          console.warn('[SW] Cache put failed:', err);
+        });
+      }
+    }
+    return response;
+  } catch (error) {
+    // Silently handle CSP violations and other fetch errors
+    console.log('[SW] Network failed, trying cache:', request.url);
+    const cached = await cache.match(request);
+    if (cached) {
+      return cached;
+    }
+    
+    // Return offline page for HTML requests
+    if (request.headers.get('accept')?.includes('text/html')) {
+      return cache.match('/offline.html') || new Response('Offline', { status: 503 });
+    }
+    
+    // For other requests, return empty response instead of throwing
+    return new Response('', { status: 503 });
+  }
+}
+
+// Handle push notifications
+self.addEventListener('push', (event) => {
+  const data = event.data?.json() || { title: 'Meshari Charity', body: 'New update available' };
+  
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: '/icons/icon-192x192.png',
+      badge: '/icons/icon-72x72.png',
+      tag: 'meshari-notification',
+      requireInteraction: false,
+    })
+  );
+});
+
+// Handle notification clicks
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow('/')
+  );
+});
