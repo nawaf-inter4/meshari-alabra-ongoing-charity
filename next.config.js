@@ -13,6 +13,8 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
+    // Remove legacy JavaScript polyfills for modern browsers
+    // This reduces bundle size by not transpiling modern JS features
   },
   
   // Output standalone for better optimization
@@ -70,6 +72,10 @@ const nextConfig = {
     webpackBuildWorker: true,
     // Enable modern bundling
     esmExternals: true,
+    // Optimize server components
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
 
   // Turbopack configuration

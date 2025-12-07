@@ -254,12 +254,24 @@ export default async function LanguageLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap"
           rel="stylesheet"
+          media="print"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap"
+          rel="stylesheet"
+          media="screen"
         />
         
-        {/* Load Arabic fonts for Quran text with display=swap - optimized */}
+        {/* Load Arabic fonts for Quran text with display=swap - defer non-critical */}
         <link
           href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Scheherazade+New:wght@400;500;600;700&display=swap"
           rel="stylesheet"
+          media="print"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Scheherazade+New:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+          media="screen"
         />
 
         {/* Viewport optimization */}
