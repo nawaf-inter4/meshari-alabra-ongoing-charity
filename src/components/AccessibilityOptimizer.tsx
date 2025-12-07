@@ -7,7 +7,7 @@ export default function AccessibilityOptimizer() {
     // Add ARIA labels and roles
     const addAriaLabels = () => {
       // Add skip navigation
-      if (document.body) {
+      if (document.body && document.body instanceof Node && !document.querySelector('a[href="#main-content"]')) {
         const skipLink = document.createElement('a');
         skipLink.href = '#main-content';
         skipLink.textContent = 'Skip to main content';
@@ -146,21 +146,26 @@ export default function AccessibilityOptimizer() {
     // Add screen reader support
     const addScreenReaderSupport = () => {
       // Add live regions for dynamic content
-      if (document.body) {
-        const liveRegion = document.createElement('div');
-        liveRegion.setAttribute('aria-live', 'polite');
-        liveRegion.setAttribute('aria-atomic', 'true');
-        liveRegion.className = 'sr-only';
-        liveRegion.id = 'live-region';
-        document.body.appendChild(liveRegion);
+      if (document.body && document.body instanceof Node) {
+        // Check if regions already exist to avoid duplicates
+        if (!document.getElementById('live-region')) {
+          const liveRegion = document.createElement('div');
+          liveRegion.setAttribute('aria-live', 'polite');
+          liveRegion.setAttribute('aria-atomic', 'true');
+          liveRegion.className = 'sr-only';
+          liveRegion.id = 'live-region';
+          document.body.appendChild(liveRegion);
+        }
 
         // Add status messages
-        const statusRegion = document.createElement('div');
-        statusRegion.setAttribute('aria-live', 'assertive');
-        statusRegion.setAttribute('aria-atomic', 'true');
-        statusRegion.className = 'sr-only';
-        statusRegion.id = 'status-region';
-        document.body.appendChild(statusRegion);
+        if (!document.getElementById('status-region')) {
+          const statusRegion = document.createElement('div');
+          statusRegion.setAttribute('aria-live', 'assertive');
+          statusRegion.setAttribute('aria-atomic', 'true');
+          statusRegion.className = 'sr-only';
+          statusRegion.id = 'status-region';
+          document.body.appendChild(statusRegion);
+        }
       }
     };
 

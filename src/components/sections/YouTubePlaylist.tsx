@@ -26,7 +26,7 @@ export default function YouTubePlaylist({ playlistId }: YouTubePlaylistProps) {
     );
     
     const container = document.getElementById('youtube-container');
-    if (container) {
+    if (container && container instanceof Element) {
       observer.observe(container);
     }
     
