@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { getTranslations } from "../lib/translations";
 
 // Import all translations statically
@@ -49,6 +49,7 @@ export function LanguageProvider({
   children: React.ReactNode;
   initialLocale?: string;
 }) {
+  const router = useRouter();
   // Initialize locale from prop, URL, localStorage, or default to 'ar'
   const pathname = usePathname();
   const supportedLanguages = ['ar', 'en', 'ur', 'tr', 'id', 'ms', 'bn', 'fr', 'zh', 'it', 'ja', 'ko'];
