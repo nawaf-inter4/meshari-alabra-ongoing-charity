@@ -172,14 +172,14 @@ export default function Footer() {
 
         {/* Quranic Verse */}
         <div className="text-center mb-8">
-          <div className="space-y-4">
+          <div className="space-y-6">
             {/* Bismillah */}
             <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold dark:text-islamic-green leading-relaxed`}>
               {getQuranVerse('bismillah')}
             </p>
             
             {/* Quran Verse */}
-            <p className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green dark:text-islamic-gold leading-loose max-w-4xl mx-auto`}>
+            <p className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green dark:text-islamic-gold leading-[2.5] max-w-4xl mx-auto`} style={{ lineHeight: '2.5' }}>
               {getQuranVerse('verse')}
             </p>
             

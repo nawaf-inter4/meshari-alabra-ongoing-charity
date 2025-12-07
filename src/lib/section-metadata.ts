@@ -211,10 +211,12 @@ export function generateSectionMetadata(
     : "Meshari's Ongoing Charity";
   
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://meshari.charity';
+  // Canonical URL should always include language prefix to avoid duplicates
+  // Sections are accessible at /sections/{id} but canonical should be /{lang}/sections/{id}
   const basePath = currentLang === 'ar' ? '' : `/${currentLang}`;
   const canonicalUrl = `${siteUrl}${basePath}/sections/${sectionId}`;
   
-  // Generate alternate language URLs
+  // Generate alternate language URLs with proper hreflang
   const alternates: Record<string, string> = {};
   supportedLanguages.forEach(l => {
     if (l === 'ar') {
@@ -223,6 +225,9 @@ export function generateSectionMetadata(
       alternates[l] = `${siteUrl}/${l}/sections/${sectionId}`;
     }
   });
+  
+  // Add x-default pointing to Arabic version
+  alternates['x-default'] = `${siteUrl}/sections/${sectionId}`;
 
   // Get comprehensive keywords for this section and language
   const sectionSpecificKeywords = sectionKeywords[sectionId]?.[currentLang] || [];
@@ -336,6 +341,7 @@ export function generateSectionSchema(
   return {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
+    '@id': `${url}#section`,
     name: `${title} | ${siteName}`,
     description,
     url,

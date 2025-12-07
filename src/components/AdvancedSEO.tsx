@@ -22,10 +22,11 @@ export default function AdvancedSEO({
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://meshari.charity';
   const currentUrl = canonicalUrl || (lang === 'ar' ? siteUrl : `${siteUrl}/${lang}`);
 
-  // Enhanced Organization Schema
+  // Enhanced Organization Schema - Unique @id to prevent duplicates
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${siteUrl}/#organization`,
     "name": meta.schema.name,
     "description": meta.schema.description,
     "url": currentUrl,
@@ -57,10 +58,11 @@ export default function AdvancedSEO({
       : "Providing Islamic services and ongoing charity in memory of Meshari Alabra"
   };
 
-  // Enhanced Website Schema
+  // Enhanced Website Schema - Unique @id per language
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${currentUrl}#website`,
     "name": meta.schema.name,
     "description": meta.schema.description,
     "url": currentUrl,
@@ -118,10 +120,11 @@ export default function AdvancedSEO({
     }
   };
 
-  // Enhanced Person Schema
+  // Enhanced Person Schema - Unique @id
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": `${siteUrl}/#person`,
     "name": "Meshari Ahmed Sulaiman Alabra",
     "alternateName": "مشاري بن أحمد بن سليمان العبره",
     "description": lang === 'ar' 
@@ -148,10 +151,11 @@ export default function AdvancedSEO({
     }
   };
 
-  // Enhanced Religious Organization Schema
+  // Enhanced Religious Organization Schema - Unique @id
   const religiousOrganizationSchema = {
     "@context": "https://schema.org",
     "@type": "ReligiousOrganization",
+    "@id": `${siteUrl}/#religious-organization`,
     "name": meta.schema.name,
     "description": meta.schema.description,
     "url": currentUrl,
@@ -200,10 +204,11 @@ export default function AdvancedSEO({
     }
   };
 
-  // Enhanced FAQ Schema
+  // Enhanced FAQ Schema - Unique @id per language
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": `${currentUrl}#faq`,
     "mainEntity": [
       {
         "@type": "Question",
@@ -238,10 +243,11 @@ export default function AdvancedSEO({
     ]
   };
 
-  // Enhanced Breadcrumb Schema
+  // Enhanced Breadcrumb Schema - Unique @id per language
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@id": `${currentUrl}#breadcrumb`,
     "itemListElement": [
       {
         "@type": "ListItem",
@@ -258,10 +264,11 @@ export default function AdvancedSEO({
     ]
   };
 
-  // Enhanced Local Business Schema
+  // Enhanced Local Business Schema - Unique @id
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
+    "@id": `${siteUrl}/#local-business`,
     "name": meta.schema.name,
     "description": meta.schema.description,
     "url": currentUrl,
@@ -291,10 +298,11 @@ export default function AdvancedSEO({
     }
   };
 
-  // Enhanced Article Schema for content
+  // Enhanced Article Schema for content - Unique @id per language
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
+    "@id": `${currentUrl}#article`,
     "headline": pageTitle || meta.title,
     "description": pageDescription || meta.description,
     "author": {
@@ -323,10 +331,11 @@ export default function AdvancedSEO({
     }
   };
 
-  // LLM and AI Optimization Schema
+  // LLM and AI Optimization Schema - Unique @id per language
   const llmOptimizationSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
+    "@id": `${currentUrl}#llm-optimization`,
     "name": pageTitle || meta.title,
     "description": pageDescription || meta.description,
     "url": currentUrl,

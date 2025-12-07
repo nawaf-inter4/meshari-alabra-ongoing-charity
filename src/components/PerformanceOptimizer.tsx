@@ -4,26 +4,11 @@ import { useEffect } from "react";
 
 export default function PerformanceOptimizer() {
   useEffect(() => {
-    // Preload critical resources
+    // Preload critical resources - removed to avoid preload warnings
+    // Resources are already loaded via manifest and meta tags
     const preloadCriticalResources = () => {
-      const criticalResources = [
-        { href: '/icons/icon-192x192.png', as: 'image', type: 'image/png' },
-        { href: '/icons/icon-512x512.png', as: 'image', type: 'image/png' },
-        { href: '/og-image.png', as: 'image', type: 'image/png' }
-      ];
-
-      criticalResources.forEach(resource => {
-        // Check if already preloaded
-        const existing = document.querySelector(`link[href="${resource.href}"]`);
-        if (!existing) {
-          const link = document.createElement('link');
-          link.rel = 'preload';
-          link.href = resource.href;
-          link.as = resource.as;
-          link.type = resource.type;
-          document.head.appendChild(link);
-        }
-      });
+      // Removed preloads to avoid "preloaded but not used" warnings
+      // Icons are loaded via manifest.json and meta tags
     };
 
     // Optimize images
@@ -63,7 +48,7 @@ export default function PerformanceOptimizer() {
       });
     };
 
-    // Implement resource hints
+    // Implement resource hints and prefetch section routes
     const addResourceHints = () => {
       const resourceHints = [
         { rel: 'dns-prefetch', href: 'https://fonts.googleapis.com' },
@@ -78,13 +63,44 @@ export default function PerformanceOptimizer() {
       ];
 
       resourceHints.forEach(hint => {
-        const link = document.createElement('link');
-        link.rel = hint.rel;
-        link.href = hint.href;
-        if (hint.crossOrigin) {
-          link.crossOrigin = hint.crossOrigin;
+        // Check if link already exists to avoid duplicates
+        const existing = document.querySelector(`link[rel="${hint.rel}"][href="${hint.href}"]`);
+        if (!existing) {
+          const link = document.createElement('link');
+          link.rel = hint.rel;
+          link.href = hint.href;
+          if (hint.crossOrigin) {
+            link.crossOrigin = hint.crossOrigin;
+          }
+          document.head.appendChild(link);
         }
-        document.head.appendChild(link);
+      });
+
+      // Prefetch critical section routes for instant navigation
+      const criticalSections = [
+        '/sections/quran',
+        '/sections/tafseer',
+        '/sections/dhikr',
+        '/sections/prayer-times',
+        '/sections/qibla',
+      ];
+
+      // Get current language from URL
+      const pathSegments = window.location.pathname.split('/').filter(Boolean);
+      const currentLang = pathSegments[0] && ['ar', 'en', 'ur', 'tr', 'id', 'ms', 'bn', 'fr', 'zh', 'it', 'ja', 'ko'].includes(pathSegments[0])
+        ? pathSegments[0]
+        : 'ar';
+
+      criticalSections.forEach(section => {
+        const href = currentLang === 'ar' ? section : `/${currentLang}${section}`;
+        const existing = document.querySelector(`link[rel="prefetch"][href="${href}"]`);
+        if (!existing) {
+          const link = document.createElement('link');
+          link.rel = 'prefetch';
+          link.href = href;
+          link.as = 'document';
+          document.head.appendChild(link);
+        }
       });
     };
 
@@ -139,25 +155,30 @@ export default function PerformanceOptimizer() {
     optimizeCoreWebVitals();
 
     // Add performance monitoring
-    if ('performance' in window) {
-      // Monitor Core Web Vitals
-      const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === 'largest-contentful-paint') {
-            console.log('LCP:', entry.startTime);
+    if ('performance' in window && 'PerformanceObserver' in window) {
+      try {
+        // Monitor Core Web Vitals
+        const observer = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.entryType === 'largest-contentful-paint') {
+              console.log('LCP:', entry.startTime);
+            }
+            if (entry.entryType === 'first-input') {
+              const fidEntry = entry as any;
+              console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
+            }
+            if (entry.entryType === 'layout-shift') {
+              const clsEntry = entry as any;
+              console.log('CLS:', clsEntry.value);
+            }
           }
-          if (entry.entryType === 'first-input') {
-            const fidEntry = entry as any;
-            console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
-          }
-          if (entry.entryType === 'layout-shift') {
-            const clsEntry = entry as any;
-            console.log('CLS:', clsEntry.value);
-          }
-        }
-      });
+        });
 
-      observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
+        observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
+      } catch (error) {
+        // Silently handle PerformanceObserver errors
+        console.warn('PerformanceObserver not supported:', error);
+      }
     }
 
   }, []);

@@ -11,8 +11,7 @@ import MetaOptimizer from "@/components/MetaOptimizer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AudioPlayer from "@/components/AudioPlayer";
 import DynamicMetaTags from "@/components/DynamicMetaTags";
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+import AnalyticsWrapper from "@/components/AnalyticsWrapper";
 
 // Language-specific metadata
 const languageMetadata = {
@@ -132,9 +131,18 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://meshari.charity';
   const currentUrl = lang === 'ar' ? siteUrl : `${siteUrl}/${lang}`;
 
+  // Import keywords from metadata.ts
+  const { generateMetadata: generateMainMetadata } = await import('@/lib/metadata');
+  const fullMetadata = generateMainMetadata(lang);
+
   return {
     title: meta.title,
     description: meta.description,
+    keywords: fullMetadata.keywords,
+    authors: fullMetadata.authors,
+    creator: fullMetadata.creator,
+    publisher: fullMetadata.publisher,
+    metadataBase: fullMetadata.metadataBase,
     openGraph: {
       title: meta.ogTitle,
       description: meta.ogDescription,
@@ -157,9 +165,37 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
       title: meta.twitterTitle,
       description: meta.twitterDescription,
       images: [`${siteUrl}/og-image.png`],
+      site: '@alabrameshari',
+      creator: '@alabrameshari',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
     alternates: {
       canonical: currentUrl,
+      languages: {
+        'ar': '/',
+        'en': '/en',
+        'tr': '/tr',
+        'ur': '/ur',
+        'id': '/id',
+        'ms': '/ms',
+        'bn': '/bn',
+        'fr': '/fr',
+        'zh': '/zh',
+        'it': '/it',
+        'ja': '/ja',
+        'ko': '/ko',
+        'x-default': '/',
+      },
     },
   };
 }
@@ -174,9 +210,10 @@ export default async function LanguageLayout({
   const { lang } = await params;
   const supportedLanguages = ['ar', 'en', 'ur', 'tr', 'id', 'ms', 'bn', 'fr', 'zh', 'it', 'ja', 'ko'];
   const initialLanguage = supportedLanguages.includes(lang) ? lang : 'ar';
+  const isRTL = ['ar', 'he', 'fa', 'ur', 'yi', 'ps'].includes(initialLanguage);
 
   return (
-    <html suppressHydrationWarning>
+    <html lang={initialLanguage} dir={isRTL ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <head>
         {/* Favicon */}
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -194,27 +231,39 @@ export default async function LanguageLayout({
         <link rel="dns-prefetch" href="https://ipapi.co" />
         <link rel="dns-prefetch" href="https://img.youtube.com" />
         <link rel="dns-prefetch" href="https://i.ytimg.com" />
+        
+        {/* Prefetch critical section routes for blazing fast navigation */}
+        <link rel="prefetch" href="/sections/quran" as="document" />
+        <link rel="prefetch" href="/sections/tafseer" as="document" />
+        <link rel="prefetch" href="/sections/dhikr" as="document" />
+        <link rel="prefetch" href="/sections/prayer-times" as="document" />
+        <link rel="prefetch" href="/sections/qibla" as="document" />
 
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#D4AF37" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Meshari's Charity" />
+        <meta name="application-name" content="Meshari's Charity" />
+        <meta name="msapplication-TileColor" content="#D4AF37" />
+        <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        
         {/* Preconnect for critical resources */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* Load critical fonts */}
+        {/* Load critical fonts with display=swap for performance */}
         <link
           href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&family=Tajawal:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
         
-        
-        {/* Load Arabic fonts for Quran text with extended character sets */}
+        {/* Load Arabic fonts for Quran text with display=swap - optimized */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Scheherazade+New:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-        
-        {/* Load additional Arabic fonts for better Unicode support */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Scheherazade+New:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
 
@@ -308,8 +357,7 @@ export default async function LanguageLayout({
               <PerformanceOptimizer />
               <AccessibilityOptimizer />
               <MetaOptimizer />
-              {process.env.NODE_ENV === 'production' && <Analytics />}
-              {process.env.NODE_ENV === 'production' && <SpeedInsights />}
+              <AnalyticsWrapper />
             </LanguageProvider>
           </ThemeProvider>
         </ErrorBoundary>

@@ -181,9 +181,17 @@ export default function QuranSection() {
                 key={ayah.number}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="bg-light dark:bg-dark rounded-xl p-6 border-2 border-transparent hover:border-islamic-gold transition-all duration-300"
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ 
+                  duration: 0.4, 
+                  delay: index * 0.05,
+                  ease: [0.25, 0.1, 0.25, 1],
+                }}
+                className="bg-light dark:bg-dark rounded-xl p-6 border-2 border-transparent hover:border-islamic-gold transition-all duration-300 motion-safe"
+                style={{
+                  willChange: 'transform, opacity',
+                  transform: 'translateZ(0)',
+                }}
               >
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-islamic-gold flex items-center justify-center text-white font-bold">

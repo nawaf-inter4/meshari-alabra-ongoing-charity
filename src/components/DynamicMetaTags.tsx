@@ -118,12 +118,35 @@ export default function DynamicMetaTags() {
       document.head.appendChild(meta);
     }
 
-    // Update canonical URL
-    const canonical = document.querySelector('link[rel="canonical"]');
+    // Update canonical URL - must point to the actual page, not homepage
+    const baseUrl = 'https://meshari.charity';
+    let canonicalUrl = baseUrl;
+    
+    // Check if this is a section page
+    const isSectionPage = pathname.includes('/sections/');
+    
+    if (isSectionPage) {
+      // For section pages, use the full path with language prefix
+      const sectionPath = pathname.replace(/^\/(ar|en|ur|tr|id|ms|bn|fr|zh|it|ja|ko)?\/?/, '');
+      if (currentLang === 'ar') {
+        canonicalUrl = `${baseUrl}${sectionPath}`;
+      } else {
+        canonicalUrl = `${baseUrl}/${currentLang}${sectionPath}`;
+      }
+    } else {
+      // For home pages, use language prefix
+      canonicalUrl = currentLang === 'ar' ? baseUrl : `${baseUrl}/${currentLang}`;
+    }
+    
+    let canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) {
-      const baseUrl = 'https://meshari.charity';
-      const canonicalUrl = currentLang === 'ar' ? baseUrl : `${baseUrl}/${currentLang}`;
       canonical.setAttribute('href', canonicalUrl);
+    } else {
+      // Create canonical tag if it doesn't exist
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      canonical.setAttribute('href', canonicalUrl);
+      document.head.appendChild(canonical);
     }
 
   }, [pathname]);
