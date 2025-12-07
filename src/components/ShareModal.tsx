@@ -293,17 +293,24 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       
       // Download the image
       if (typeof document !== 'undefined' && document.body && document.body.parentNode) {
+        let link: HTMLAnchorElement | null = null;
         try {
-          const link = document.createElement('a');
+          link = document.createElement('a');
           link.download = `${verse?.surahName?.replace(/\s+/g, '_')}_Ayah_${verse?.ayahNumber}.png`;
           link.href = dataUrl;
           document.body.appendChild(link);
           link.click();
-          if (link.parentNode) {
-            document.body.removeChild(link);
-          }
         } catch (e) {
           // Silently fail if DOM manipulation fails
+        } finally {
+          // Safely remove link if it still exists
+          if (link && link.parentNode) {
+            try {
+              document.body.removeChild(link);
+            } catch (e) {
+              // Element may have already been removed
+            }
+          }
         }
       }
     } catch (error) {
