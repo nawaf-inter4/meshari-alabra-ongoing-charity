@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Metadata } from 'next';
-import { headers } from 'next/headers';
 import { LanguageProvider } from '@/components/LanguageProvider';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import AudioPlayer from '@/components/AudioPlayer';
@@ -15,16 +14,12 @@ export const metadata: Metadata = {
   // Canonical will be set by individual section pages via generateMetadata
 };
 
-export default async function SectionsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const headersList = await headers();
-  const locale = headersList.get('x-locale') || 'ar';
+// MIGRATED: Removed headers() call - LanguageProvider will detect locale from URL client-side
+// Default to Arabic for initial render, LanguageProvider handles client-side detection
+function SectionsLayoutContent({ children }: { children: React.ReactNode }) {
   const supportedLanguages = ['ar', 'en', 'ur', 'tr', 'id', 'ms', 'bn', 'fr', 'zh', 'it', 'ja', 'ko'];
-  const currentLang = supportedLanguages.includes(locale) ? locale : 'ar';
-  const isRTL = ['ar', 'he', 'fa', 'ur', 'yi', 'ps'].includes(currentLang);
+  const currentLang = 'ar'; // Default locale - LanguageProvider will update from URL
+  const isRTL = true; // Default to RTL for Arabic
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://meshari.charity';
   const sections = ['quran', 'tafseer', 'dhikr', 'prayer-times', 'qibla', 'donation', 'supplications', 'hadith', 'youtube'];
   
@@ -165,5 +160,25 @@ export default async function SectionsLayout({
         </ThemeProvider>
       </body>
     </html>
+  );
+}
+
+export default function SectionsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense fallback={
+      <html lang="ar" dir="rtl" suppressHydrationWarning>
+        <body className="antialiased bg-light dark:bg-dark">
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-islamic-gold"></div>
+          </div>
+        </body>
+      </html>
+    }>
+      <SectionsLayoutContent>{children}</SectionsLayoutContent>
+    </Suspense>
   );
 }

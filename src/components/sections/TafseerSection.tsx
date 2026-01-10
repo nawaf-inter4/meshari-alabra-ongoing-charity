@@ -295,7 +295,7 @@ export default function TafseerSection() {
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <Book className="w-8 h-8 text-islamic-gold" />
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text" suppressHydrationWarning>
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-normal py-2" suppressHydrationWarning>
               {t("tafseer.title") !== "tafseer.title" ? t("tafseer.title") : "تفسير القرآن"}
             </h2>
           </div>
@@ -411,7 +411,7 @@ export default function TafseerSection() {
                 <button
                   onClick={handleSearch}
                   disabled={!selectedSurah || loading}
-                  className="w-full flex items-center justify-center gap-2 p-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-2 p-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed glow"
                   aria-label={t("tafseer.search") !== "tafseer.search" ? t("tafseer.search") : "بحث"}
                 >
                   {loading ? <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" /> : <Search className="w-5 h-5" aria-hidden="true" />}
@@ -469,7 +469,7 @@ export default function TafseerSection() {
                 <button
                   onClick={handleVerseSearch}
                   disabled={!searchQuery || loading}
-                  className="w-full flex items-center justify-center gap-2 p-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full flex items-center justify-center gap-2 p-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed glow"
                   aria-label={t("search") || "Search"}
                 >
                   {loading ? <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" /> : <Search className="w-5 h-5" aria-hidden="true" />}

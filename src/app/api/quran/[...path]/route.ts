@@ -13,6 +13,7 @@ export async function GET(
       method: 'GET',
       headers: {
         'Accept': 'application/json',
+        'Accept-Encoding': 'gzip, deflate, br',
         'User-Agent': 'Meshari-Alabra-Charity/1.0',
       },
       // Add timeout
@@ -20,14 +21,31 @@ export async function GET(
     });
 
     if (!response.ok) {
-      // Log the error but return a proper error response
+      // Try to get error details, but don't log 404s as errors (they're expected for "no results")
       const errorText = await response.text().catch(() => 'Unknown error');
-      console.error(`Quran API error (${response.status}):`, errorText);
+      
+      // Only log non-404 errors
+      if (response.status !== 404) {
+        console.error(`Quran API error (${response.status}):`, errorText.substring(0, 200));
+      }
+      
+      // For 404, return a cleaner response
+      if (response.status === 404) {
+        return NextResponse.json(
+          { 
+            code: 404,
+            status: 'NOT FOUND',
+            data: 'Nothing matching your search was found..'
+          },
+          { status: 404 }
+        );
+      }
+      
       return NextResponse.json(
         { 
           error: 'Failed to fetch from Quran API',
           status: response.status,
-          message: errorText 
+          message: errorText.substring(0, 200) // Limit error message length
         },
         { status: response.status }
       );

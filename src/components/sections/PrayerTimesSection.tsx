@@ -660,7 +660,7 @@ export default function PrayerTimesSection() {
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <Clock className="w-8 h-8 text-islamic-gold" />
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
               {mounted ? (t("prayer.title") !== "prayer.title" ? t("prayer.title") : "مواقيت الصلاة") : "مواقيت الصلاة"}
             </h2>
           </div>
@@ -846,7 +846,7 @@ export default function PrayerTimesSection() {
                 setLoading(true);
                 fetchPrayerTimes();
               }}
-              className="px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300"
+              className="px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 glow"
             >
               {t("retry")}
             </button>

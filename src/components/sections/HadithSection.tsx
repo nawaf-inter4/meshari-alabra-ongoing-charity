@@ -12,7 +12,7 @@ interface Hadith {
 }
 
 export default function HadithSection() {
-  const { t } = useLanguage();
+  const { t, direction } = useLanguage();
   const [hadith, setHadith] = useState<Hadith | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -171,7 +171,7 @@ export default function HadithSection() {
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <BookMarked className="w-8 h-8 text-islamic-gold" />
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
               {t("hadith.title")}
             </h2>
           </div>
@@ -188,7 +188,7 @@ export default function HadithSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-8"
         >
-          <h3 className="text-lg font-semibold mb-4 text-center text-gray-700 dark:text-gray-300">
+          <h3 className={`text-lg font-semibold mb-4 text-center text-gray-700 dark:text-gray-300 ${direction === 'rtl' ? 'font-arabic' : ''}`}>
             {t("hadith.categories.title")}
           </h3>
           <div className="flex justify-center gap-2 mb-6 flex-wrap">
@@ -198,7 +198,7 @@ export default function HadithSection() {
                 onClick={() => setSelectedCategory(category.id)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                   selectedCategory === category.id
-                    ? "bg-islamic-gold text-white shadow-lg"
+                    ? "bg-islamic-gold text-white shadow-lg glow"
                     : "bg-light-secondary dark:bg-dark-secondary hover:bg-islamic-gold/20 text-gray-700 dark:text-gray-300"
                 }`}
               >
@@ -209,7 +209,7 @@ export default function HadithSection() {
           <div className="text-center">
             <button
               onClick={getRandomHadith}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105 glow"
             >
               <RefreshCw className="w-5 h-5" />
               {t("hadith.random_button")}

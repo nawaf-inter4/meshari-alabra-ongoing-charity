@@ -128,7 +128,7 @@ export default function PDFViewer({ pdfUrl, className = "" }: PDFViewerProps) {
               href={pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 bg-islamic-gold text-white rounded-full hover:bg-islamic-green transition-colors text-sm"
+              className="px-4 py-2 bg-islamic-gold text-white rounded-full hover:bg-islamic-green transition-colors text-sm glow"
             >
               Open in New Tab
             </a>

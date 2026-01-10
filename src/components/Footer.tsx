@@ -18,22 +18,33 @@ export default function Footer() {
   }, []);
 
   // Memoize translations to prevent unnecessary re-renders
-  const memoizedTranslations = useMemo(() => ({
-    memorialName: t("memorial.name"),
-    memorialDeath: t("memorial.death"),
-    footerDescription: t("footer.description"),
-    share: t("share"),
-    socialXAccount: t("social.x_account"),
-    socialGithub: t("social.github"),
-    footerCharity: t("footer.charity"),
-    footerAllRights: t("footer.all_rights"),
-    footerTechnology: t("footer.technology"),
-    footerSitemap: t("footer.sitemap"),
-    footerLlmTxt: t("footer.llm_txt")
-  }), [t]);
+  // CRITICAL: Use consistent values to prevent hydration mismatch
+  const memoizedTranslations = useMemo(() => {
+    // Always use the translation function, but ensure it returns consistent values
+    const getTrans = (key: string, fallback: string) => {
+      const trans = t(key);
+      // If translation returns the key itself, use fallback
+      return trans === key ? fallback : trans;
+    };
+    
+    return {
+      memorialName: getTrans("memorial.name", locale === 'ar' ? "مشاري بن أحمد بن سليمان العبره" : "Meshari bin Ahmed bin Suleiman Al-Abra"),
+      memorialDeath: getTrans("memorial.death", locale === 'ar' ? "(رحمه الله)" : "(May Allah have mercy on him)"),
+      footerDescription: getTrans("footer.description", locale === 'ar' ? "هذا الموقع صدقة جارية" : "This website is an ongoing charity"),
+      share: getTrans("share", locale === 'ar' ? "مشاركة" : "Share"),
+      socialXAccount: getTrans("social.x_account", locale === 'ar' ? "تابعنا على X" : "Follow on X"),
+      socialGithub: getTrans("social.github", locale === 'ar' ? "على GitHub" : "On GitHub"),
+      // CRITICAL: Use full text to match translation file - this prevents hydration mismatch
+      footerCharity: getTrans("footer.charity", locale === 'ar' ? "صدقة جارية لمشاري بن أحمد بن سليمان العبره (رحمه الله)" : "Ongoing charity for Meshari bin Ahmed bin Suleiman Al-Abra (May Allah have mercy on him)"),
+      footerAllRights: getTrans("footer.all_rights", locale === 'ar' ? "جميع الحقوق محفوظة © {{year}}" : "All rights reserved © {{year}}"),
+      footerTechnology: getTrans("footer.technology", locale === 'ar' ? "مبني بـ Next.js و React" : "Built with Next.js and React"),
+      footerSitemap: getTrans("footer.sitemap", locale === 'ar' ? "خريطة الموقع" : "Sitemap"),
+      footerLlmTxt: getTrans("footer.llm_txt", "llms.txt")
+    };
+  }, [t, locale]);
   
-  // Get current year - using static year to avoid PPR issues
-  const currentYear = "2025";
+  // Get current year - dynamically get the current year
+  const currentYear = mounted ? new Date().getFullYear().toString() : "2026";
   
   // Fallback function for translations
   const getTranslation = (key: string, fallback: string) => {
@@ -114,7 +125,7 @@ export default function Footer() {
         {/* Memorial */}
         <div className="text-center mb-8">
           <Heart className="w-12 h-12 text-islamic-gold mx-auto mb-4" fill="currentColor" />
-          <h3 className="text-2xl md:text-3xl font-bold mb-2 gradient-text leading-tight py-1">
+          <h3 className={`text-2xl md:text-3xl font-bold mb-2 gradient-text leading-tight py-1 ${safeDirection === 'rtl' ? 'font-arabic' : ''}`}>
             {memoizedTranslations.memorialName}
           </h3>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
@@ -133,7 +144,7 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={handleShare}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105 glow"
               aria-label={memoizedTranslations.share || "Share"}
             >
               <Share2 className="w-5 h-5" />
@@ -195,8 +206,8 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-          <p className="mb-2">{memoizedTranslations.footerCharity}</p>
-          <p>{memoizedTranslations.footerAllRights.replace(/\{\{year\}\}/g, currentYear)}</p>
+          <p className="mb-2" suppressHydrationWarning>{memoizedTranslations.footerCharity}</p>
+          <p suppressHydrationWarning>{memoizedTranslations.footerAllRights.replace(/\{\{year\}\}/g, currentYear)}</p>
           <p className="mt-4 text-xs">
             {memoizedTranslations.footerTechnology}
           </p>
@@ -204,8 +215,8 @@ export default function Footer() {
             <a href="/sitemap.xml" className="text-islamic-gold hover:text-islamic-green transition-colors" aria-label={memoizedTranslations.footerSitemap || "Sitemap"}>
               {memoizedTranslations.footerSitemap}
             </a>
-            <a href="/llms.txt" className="text-islamic-gold hover:text-islamic-green transition-colors" aria-label={memoizedTranslations.footerLlmTxt || "LLMs.txt"}>
-              {memoizedTranslations.footerLlmTxt}
+            <a href="/llms.txt" className="text-islamic-gold hover:text-islamic-green transition-colors" aria-label="llms.txt">
+              llms.txt
             </a>
           </div>
         </div>

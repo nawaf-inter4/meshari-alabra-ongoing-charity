@@ -20,7 +20,7 @@ interface Surah {
 }
 
 export default function QuranSection() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
   const [surahs, setSurahs] = useState<Surah[]>([]);
   const [selectedSurah, setSelectedSurah] = useState<number>(1);
   const [ayahs, setAyahs] = useState<Ayah[]>([]);
@@ -97,7 +97,7 @@ export default function QuranSection() {
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <BookOpen className="w-8 h-8 text-islamic-gold" />
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
               {mounted && t("quran.title") !== "quran.title" ? t("quran.title") : "القرآن الكريم"}
             </h2>
           </div>
@@ -151,33 +151,42 @@ export default function QuranSection() {
         </motion.div>
 
         {/* Surah Header */}
-        {currentSurah && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-center mb-8 p-8 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-2xl border-2 border-islamic-gold/30"
-          >
-            <h3 
-              className="text-3xl md:text-4xl font-bold text-islamic-gold mb-2" 
-              style={{ 
-                textAlign: 'center !important' as any,
-                display: 'block',
-                width: '100%',
-                direction: /[\u0600-\u06FF]/.test(currentSurah.name) ? 'rtl' : 'ltr',
-                unicodeBidi: /[\u0600-\u06FF]/.test(currentSurah.name) ? 'plaintext' : 'normal',
-                margin: '0 auto'
-              }}
+        {currentSurah && (() => {
+          const surahName = locale === 'ar' ? currentSurah.name : currentSurah.englishName;
+          const revelationTypeTranslated = currentSurah.revelationType === 'Medinan' 
+            ? t('quran.medinan') 
+            : t('quran.meccan');
+          return (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-center mb-8 p-8 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-2xl border-2 border-islamic-gold/30"
             >
-              {currentSurah.name}
-            </h3>
-            <p className="text-xl text-gray-600 dark:text-gray-400">
-              {currentSurah.englishName} - {currentSurah.revelationType}
-            </p>
-            <div className="text-5xl my-6">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-          </motion.div>
-        )}
+              <h3 
+                className="text-3xl md:text-4xl font-bold text-islamic-gold mb-20" 
+                style={{ 
+                  textAlign: 'center !important' as any,
+                  display: 'block',
+                  width: '100%',
+                  direction: /[\u0600-\u06FF]/.test(currentSurah.name) ? 'rtl' : 'ltr',
+                  unicodeBidi: /[\u0600-\u06FF]/.test(currentSurah.name) ? 'plaintext' : 'normal',
+                  margin: '0 auto',
+                  fontFamily: 'Amiri',
+                  paddingTop: '10px',
+                  paddingBottom: '10px'
+                }}
+              >
+                {currentSurah.name}
+              </h3>
+              <p className="text-xl text-gray-600 dark:text-gray-400">
+                {revelationTypeTranslated}
+              </p>
+              <div className="text-5xl my-6">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+            </motion.div>
+          );
+        })()}
 
         {/* Ayahs */}
         {loading ? (

@@ -251,7 +251,7 @@ export default function QiblaFinder() {
               </p>
               <button
                 onClick={getQiblaDirection}
-                className="px-8 py-4 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105 shadow-lg flex items-center gap-2 mx-auto"
+                className="px-8 py-4 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105 glow flex items-center gap-2 mx-auto"
               >
                 <Navigation className="w-5 h-5" />
                 {t("qibla.find_direction") || "Find Qibla Direction"}
@@ -276,7 +276,7 @@ export default function QiblaFinder() {
               <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">{error}</p>
               <button
                 onClick={getQiblaDirection}
-                className="px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300"
+                className="px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 glow"
               >
                 {t("qibla.retry") || "Retry"}
               </button>

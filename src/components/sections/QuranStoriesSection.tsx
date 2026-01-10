@@ -176,7 +176,7 @@ const actualPdfFiles = [
 ];
 
 export default function QuranStoriesSection() {
-  const { t, locale } = useLanguage();
+  const { t, locale, direction } = useLanguage();
   const [selectedStory, setSelectedStory] = useState<QuranStory | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string>("");
@@ -187,15 +187,26 @@ export default function QuranStoriesSection() {
   }, []);
 
   // Convert actual PDF files to QuranStory format
-  const quranStories: QuranStory[] = actualPdfFiles.map((file, index) => ({
-    id: `story-${index + 1}`,
-    title: file.title,
-    description: file.description,
-    pdfUrl: `/stories/${encodeURIComponent(file.fileName)}`,
-    fileName: file.fileName,
-    pages: Math.floor(Math.random() * 20) + 10, // Random pages between 10-30
-    readingTime: `${Math.floor(Math.random() * 10) + 5} min` // Random time between 5-15 min
-  }));
+  // Calculate reading time based on pages (realistic reading speed: 1-1.2 minutes per page)
+  const calculateReadingTime = (pages: number): string => {
+    // Use 1.1 minutes per page as a realistic average for comfortable reading
+    const minutes = Math.max(1, Math.round(pages * 1.1));
+    return `${minutes} min`;
+  };
+
+  const quranStories: QuranStory[] = actualPdfFiles.map((file, index) => {
+    // More realistic page estimates for typical PDF stories
+    const estimatedPages = [8, 12, 10, 14][index] || 10;
+    return {
+      id: `story-${index + 1}`,
+      title: file.title,
+      description: file.description,
+      pdfUrl: `/stories/${encodeURIComponent(file.fileName)}`,
+      fileName: file.fileName,
+      pages: estimatedPages,
+      readingTime: calculateReadingTime(estimatedPages)
+    };
+  });
 
   const handleStoryClick = (story: QuranStory) => {
     setSelectedStory(story);
@@ -292,7 +303,7 @@ export default function QuranStoriesSection() {
                     </button>
                     <button
                       onClick={() => handleViewInBrowser(story)}
-                      className="bg-islamic-gold text-white px-4 py-2 rounded-full hover:bg-islamic-green transition-colors duration-200 flex items-center space-x-2"
+                      className="bg-islamic-gold text-white px-4 py-2 rounded-full hover:bg-islamic-green transition-colors duration-200 flex items-center space-x-2 glow"
                     >
                       <BookOpen className="w-4 h-4" />
                       <span>{t("quran_stories.read")}</span>
@@ -316,7 +327,7 @@ export default function QuranStoriesSection() {
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
+                <h3 className={`text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 ${direction === 'rtl' ? 'font-arabic' : ''}`}>
                   {story.title[locale as keyof typeof story.title] || story.title.ar}
                 </h3>
 
@@ -334,7 +345,7 @@ export default function QuranStoriesSection() {
                   
                   <button
                     onClick={() => handleDownload(story)}
-                    className="bg-gradient-to-r from-islamic-gold to-islamic-green text-white px-6 py-3 rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 flex items-center space-x-2 text-sm font-medium"
+                    className="bg-gradient-to-r from-islamic-gold to-islamic-green text-white px-6 py-3 rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 flex items-center space-x-2 text-sm font-medium glow"
                   >
                     <Download className="w-4 h-4" />
                     <span>{t("quran_stories.download")}</span>
@@ -380,7 +391,7 @@ export default function QuranStoriesSection() {
                 
                 {/* Story Info */}
                 <div className="text-center mb-4">
-                  <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                  <h4 className={`text-xl font-bold text-gray-800 dark:text-white mb-2 ${direction === 'rtl' ? 'font-arabic' : ''}`}>
                     {selectedStory.title[locale as keyof typeof selectedStory.title] || selectedStory.title.ar}
                   </h4>
                   <p className="text-gray-600 dark:text-gray-300 mb-2">
@@ -397,7 +408,7 @@ export default function QuranStoriesSection() {
                 <div className="flex space-x-4">
                   <button
                     onClick={() => handleViewInBrowser(selectedStory)}
-                    className="flex-1 bg-gradient-to-r from-islamic-gold to-islamic-green text-white px-6 py-3 rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 flex items-center justify-center space-x-2 font-medium"
+                    className="flex-1 bg-gradient-to-r from-islamic-gold to-islamic-green text-white px-6 py-3 rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 flex items-center justify-center space-x-2 font-medium glow"
                   >
                     <ExternalLink className="w-5 h-5" />
                     <span>{locale === 'ar' ? 'فتح في المتصفح' : 'Open in Browser'}</span>

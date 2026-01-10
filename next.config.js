@@ -20,8 +20,8 @@ const nextConfig = {
   // Output standalone for better optimization
   output: 'standalone',
 
-  // Enable Partial Pre-Rendering (PPR) - stable in Next.js 16
-  // cacheComponents: true, // Temporarily disabled for build compatibility
+  // Enable Cache Components - stable in Next.js 16.1.1
+  cacheComponents: true,
 
   // Strong cache invalidation strategy
   onDemandEntries: {
@@ -81,8 +81,7 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '2mb',
     },
-    // Enable partial prerendering for better performance
-    ppr: false, // Disabled for now, can enable later
+    // ppr removed - replaced by cacheComponents (enabled at root level)
   },
 
   // Turbopack configuration
@@ -115,8 +114,6 @@ const nextConfig = {
         hostname: 'hatscripts.github.io',
       },
     ],
-    dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
   // Headers for security and caching

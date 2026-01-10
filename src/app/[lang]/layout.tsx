@@ -355,10 +355,12 @@ export default async function LanguageLayout({
       </head>
       <body className="antialiased">
         {/* Skip to main content link - static HTML, no DOM manipulation */}
+        {/* suppressHydrationWarning prevents mismatch with AccessibilityOptimizer */}
         <a 
           href="#main-content" 
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50"
           aria-label="Skip to main content"
+          suppressHydrationWarning
         >
           Skip to main content
         </a>

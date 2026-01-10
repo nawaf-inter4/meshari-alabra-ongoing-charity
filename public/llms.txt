@@ -88,7 +88,7 @@ Each section has its own dedicated page at `/sections/[section-name]`:
 
 ### Technology Stack
 
-- **Framework**: Next.js 16.0.7 (App Router)
+- **Framework**: Next.js 16.1.1 (App Router)
 - **React**: React 19
 - **TypeScript**: TypeScript 5
 - **Styling**: Tailwind CSS

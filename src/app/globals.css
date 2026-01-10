@@ -140,8 +140,8 @@ html[dir="rtl"] .font-arabic {
 }
 
 /* Override font-arabic for English text - ensure English surah names use LTR */
-h3:not(.font-arabic),
-h3.not-arabic-text {
+h3:not(.font-arabic):not(.font-tajawal),
+h3.not-arabic-text:not(.font-tajawal) {
   font-family: 'Lexend Deca', sans-serif !important;
   direction: ltr !important;
   text-align: left !important;
@@ -150,6 +150,11 @@ h3.not-arabic-text {
   font-feature-settings: normal !important;
   font-variant-ligatures: normal !important;
   word-spacing: normal !important;
+}
+
+/* Tajawal font for h3 elements */
+h3.font-tajawal {
+  font-family: 'Tajawal', sans-serif !important;
 }
 
 /* Override for centered surah headers */
@@ -256,6 +261,11 @@ html[dir="rtl"] .quran-text {
 html[dir="rtl"] .arabic-quran-text {
   direction: rtl !important;
   unicode-bidi: bidi-override !important;
+}
+
+/* Font family override for font-semibold elements in grid containers */
+.grid.md\:grid-cols-2 .font-semibold {
+  font-family: 'Amiri' !important;
 }
 
 /* Scrollbar Styling - Hidden by default, visible on scroll/hover */

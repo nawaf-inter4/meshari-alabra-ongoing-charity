@@ -46,7 +46,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                 this.setState({ hasError: false, error: undefined });
                 window.location.reload();
               }}
-              className="px-6 py-3 bg-islamic-gold text-white font-semibold rounded-full hover:bg-islamic-green transition-colors"
+              className="px-6 py-3 bg-islamic-gold text-white font-semibold rounded-full hover:bg-islamic-green transition-colors glow"
             >
               تحديث الصفحة
             </button>

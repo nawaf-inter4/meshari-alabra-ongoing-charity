@@ -138,11 +138,11 @@ export default function SectionNavigation() {
                   <section.icon className="w-8 h-8 text-white" />
                 </div>
                 
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-islamic-gold transition-colors duration-300">
+                <h3 className={`text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-islamic-gold transition-colors duration-300 ${direction === 'rtl' ? 'text-right font-arabic' : 'text-left'}`} style={{ direction: direction === 'rtl' ? 'rtl' : 'ltr' }}>
                   {section.title}
                 </h3>
                 
-                <p className="text-gray-600 dark:text-gray-400 mb-4 flex-grow">
+                <p className={`text-gray-600 dark:text-gray-400 mb-4 flex-grow ${direction === 'rtl' ? 'text-right font-arabic' : 'text-left'}`} style={{ direction: direction === 'rtl' ? 'rtl' : 'ltr' }}>
                   {section.description}
                 </p>
                 

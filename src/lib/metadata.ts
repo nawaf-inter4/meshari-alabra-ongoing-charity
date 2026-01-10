@@ -341,6 +341,10 @@ export function generateMetadata(language: string = 'ar'): Metadata {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://meshari.charity';
   const canonicalUrl = language === 'ar' ? siteUrl : `${siteUrl}/${language}`;
   
+  // Use static year to avoid new Date() issue with Cache Components
+  // Year will be updated manually when needed
+  const currentYear = '2025';
+
   return {
     title: meta.title,
     description: meta.description,
@@ -416,7 +420,7 @@ export function generateMetadata(language: string = 'ar'): Metadata {
       'rating': 'general',
       'distribution': 'global',
       'audience': 'all',
-      'copyright': `© ${new Date().getFullYear()} Meshari's Ongoing Charity`,
+      'copyright': `© ${currentYear} Meshari's Ongoing Charity`,
       'reply-to': 'info@meshari.charity',
       'author': 'Family of Meshari Alabra',
       'coverage': 'Worldwide',

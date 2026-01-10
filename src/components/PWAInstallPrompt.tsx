@@ -134,7 +134,7 @@ The app will then be installed on your device!`);
               <div className="flex gap-2">
                 <button
                   onClick={handleInstallClick}
-                  className="flex-1 bg-islamic-gold hover:bg-islamic-green text-white text-xs font-medium py-2 px-3 rounded-full transition-colors duration-200 flex items-center justify-center gap-1"
+                  className="flex-1 bg-islamic-gold hover:bg-islamic-green text-white text-xs font-medium py-2 px-3 rounded-full transition-colors duration-200 flex items-center justify-center gap-1 glow"
                 >
                   <Download className="w-3 h-3" />
                   Install

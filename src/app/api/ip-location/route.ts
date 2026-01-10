@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// MIGRATED: Removed export const dynamic - API routes are dynamic by default with Cache Components
+// This route fetches external data, so it remains dynamic (default behavior)
+
 export async function GET() {
   try {
     const response = await fetch('https://ipapi.co/json/', {

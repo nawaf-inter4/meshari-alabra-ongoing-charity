@@ -38,7 +38,7 @@ export default function DonationSection() {
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <Heart className="w-8 h-8 text-islamic-gold" fill="currentColor" />
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
               {t("donation.title")}
             </h2>
           </div>
@@ -94,7 +94,7 @@ export default function DonationSection() {
               href="https://ehsan.sa/campaign/6FC11E15DA"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue text-white font-bold text-lg rounded-full hover:scale-105 transition-transform duration-300 shadow-lg"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue text-white font-bold text-lg rounded-full hover:scale-105 transition-transform duration-300 glow"
             >
               <Heart className="w-6 h-6" fill="currentColor" />
               {t("donation.button")}

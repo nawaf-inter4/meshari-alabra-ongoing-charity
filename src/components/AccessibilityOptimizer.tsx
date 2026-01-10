@@ -6,27 +6,9 @@ export default function AccessibilityOptimizer() {
   useEffect(() => {
     // Add ARIA labels and roles
     const addAriaLabels = () => {
-      // Add skip navigation - only if body exists and is mounted
-      if (typeof document !== 'undefined' && document.body && document.body.parentNode) {
-        const existingSkipLink = document.querySelector('a[href="#main-content"]');
-        if (!existingSkipLink) {
-          try {
-            const skipLink = document.createElement('a');
-            skipLink.href = '#main-content';
-            skipLink.textContent = 'Skip to main content';
-            skipLink.className = 'sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50';
-            skipLink.setAttribute('aria-label', 'Skip to main content');
-            if (document.body.firstChild) {
-              document.body.insertBefore(skipLink, document.body.firstChild);
-            } else {
-              document.body.appendChild(skipLink);
-            }
-          } catch (e) {
-            // Silently fail if DOM manipulation fails
-            console.warn('Failed to add skip link:', e);
-          }
-        }
-      }
+      // Skip link is already in the layout - don't add it here to avoid hydration mismatch
+      // The skip link is server-rendered in layout.tsx for better SSR and accessibility
+      // This prevents hydration errors when AccessibilityOptimizer runs on the client
 
       // Add main content landmark
       const mainContent = document.querySelector('main');

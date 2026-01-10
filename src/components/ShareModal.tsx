@@ -192,6 +192,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       tempContainer.style.zIndex = '-1';
       tempContainer.style.visibility = 'visible';
       tempContainer.style.opacity = '1';
+      // CRITICAL: Set overflow to visible to prevent clipping of Arabic text
+      tempContainer.style.overflow = 'visible';
+      tempContainer.style.overflowX = 'visible';
+      tempContainer.style.overflowY = 'visible';
       // Ensure container has the same background to preserve colors
       tempContainer.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff';
       document.body.appendChild(tempContainer);
@@ -212,16 +216,18 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
         clonedElement.setAttribute('style', elementToCapture.getAttribute('style') || '');
       }
       
-      // Copy computed styles comprehensively
+      // Copy computed styles comprehensively - include ALL spacing and typography properties
       const computedStyles = window.getComputedStyle(elementToCapture);
       const importantStyles = [
         'backgroundColor', 'color', 'fontFamily', 'fontSize', 'fontWeight', 'lineHeight',
+        'letterSpacing', 'wordSpacing', 'whiteSpace', 'overflowWrap', 'wordBreak',
         'padding', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft',
         'margin', 'marginTop', 'marginRight', 'marginBottom', 'marginLeft',
         'border', 'borderWidth', 'borderColor', 'borderStyle', 'borderRadius',
         'boxShadow', 'width', 'minWidth', 'maxWidth', 'height', 'minHeight', 'maxHeight',
         'textAlign', 'direction', 'display', 'position', 'visibility', 'opacity',
-        'transform', 'transformOrigin', 'zIndex', 'overflow', 'overflowX', 'overflowY'
+        'transform', 'transformOrigin', 'zIndex', 'overflow', 'overflowX', 'overflowY',
+        'justifyContent', 'alignItems', 'flexDirection', 'flexWrap', 'boxSizing' // CRITICAL: Include flexbox properties
       ];
       
       importantStyles.forEach(prop => {
@@ -235,13 +241,21 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
         }
       });
       
-      // Ensure critical styles are set
+      // Ensure critical styles are set - use EXACT computed values to match rendered version
       clonedElement.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff';
       clonedElement.style.position = 'relative';
       clonedElement.style.display = 'block';
       clonedElement.style.visibility = 'visible';
       clonedElement.style.opacity = '1';
-      clonedElement.style.width = elementToCapture.offsetWidth + 'px';
+      // CRITICAL: Use exact computed width to match rendered version
+      const computedWidth = computedStyles.width;
+      clonedElement.style.width = computedWidth || (elementToCapture.offsetWidth + 'px');
+      // CRITICAL: Copy exact padding to match spacing
+      clonedElement.style.padding = computedStyles.padding;
+      clonedElement.style.paddingTop = computedStyles.paddingTop;
+      clonedElement.style.paddingRight = computedStyles.paddingRight;
+      clonedElement.style.paddingBottom = computedStyles.paddingBottom;
+      clonedElement.style.paddingLeft = computedStyles.paddingLeft;
       
       // Recursively copy styles for all child elements to preserve styling
       const copyStylesRecursively = (original: Element, cloned: Element) => {
@@ -292,6 +306,50 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
           clonedEl.style.color = originalComputed.color;
         }
         
+        // CRITICAL: For surah name container div, preserve flexbox positioning to match rendered version
+        const isSurahNameContainer = original.getAttribute('style')?.includes('justify-content: flex-end') ||
+                                    (originalComputed.display === 'flex' && 
+                                     originalComputed.justifyContent === 'flex-end' &&
+                                     originalComputed.paddingRight === '48px');
+        
+        if (isSurahNameContainer) {
+          // CRITICAL: Preserve flexbox properties to position surah name on the right beside badge
+          clonedEl.style.display = 'flex';
+          clonedEl.style.justifyContent = 'flex-end';
+          clonedEl.style.alignItems = 'flex-start';
+          clonedEl.style.paddingRight = '48px';
+          clonedEl.style.width = '100%';
+          clonedEl.style.boxSizing = 'border-box';
+          clonedEl.style.direction = 'ltr';
+        }
+        
+        // CRITICAL: For tafsir/translation paragraphs, preserve ALL exact styles to match rendered version
+        const isTafsirParagraph = (original.classList.contains('text-base') && 
+                                   original.classList.contains('leading-relaxed')) ||
+                                  original.textContent?.includes('يُصَدِّقون') ||
+                                  original.textContent?.includes('الإيمان');
+        
+        if (isTafsirParagraph) {
+          // Copy ALL computed styles exactly to match rendered version
+          clonedEl.style.fontSize = originalComputed.fontSize;
+          clonedEl.style.lineHeight = originalComputed.lineHeight;
+          clonedEl.style.letterSpacing = originalComputed.letterSpacing;
+          clonedEl.style.wordSpacing = originalComputed.wordSpacing;
+          clonedEl.style.whiteSpace = originalComputed.whiteSpace;
+          clonedEl.style.overflowWrap = originalComputed.overflowWrap;
+          clonedEl.style.wordBreak = originalComputed.wordBreak;
+          clonedEl.style.padding = originalComputed.padding;
+          clonedEl.style.paddingTop = originalComputed.paddingTop;
+          clonedEl.style.paddingRight = originalComputed.paddingRight;
+          clonedEl.style.paddingBottom = originalComputed.paddingBottom;
+          clonedEl.style.paddingLeft = originalComputed.paddingLeft;
+          clonedEl.style.margin = originalComputed.margin;
+          clonedEl.style.marginTop = originalComputed.marginTop;
+          clonedEl.style.marginRight = originalComputed.marginRight;
+          clonedEl.style.marginBottom = originalComputed.marginBottom;
+          clonedEl.style.marginLeft = originalComputed.marginLeft;
+        }
+        
         // Copy critical computed styles for all elements
         importantStyles.forEach(prop => {
           try {
@@ -300,13 +358,26 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
               return;
             }
             const value = (originalComputed as any)[prop];
-            if (value && value !== 'none' && value !== 'normal' && value !== 'auto') {
+            // CRITICAL: Always copy flexbox properties and boxSizing to preserve layout
+            if (prop === 'justifyContent' || prop === 'alignItems' || prop === 'flexDirection' || prop === 'flexWrap' || prop === 'boxSizing') {
+              if (value) {
+                (clonedEl.style as any)[prop] = value;
+              }
+            } else if (value && value !== 'none' && value !== 'normal' && value !== 'auto' && value !== '0px') {
               (clonedEl.style as any)[prop] = value;
             }
           } catch (e) {
             // Ignore read-only properties
           }
         });
+        
+        // CRITICAL: Always copy fontSize, lineHeight, letterSpacing, wordSpacing for text elements to match rendered
+        if (original.tagName === 'P' || original.tagName === 'DIV' || original.tagName === 'H3' || original.tagName === 'SPAN') {
+          clonedEl.style.fontSize = originalComputed.fontSize;
+          clonedEl.style.lineHeight = originalComputed.lineHeight;
+          clonedEl.style.letterSpacing = originalComputed.letterSpacing;
+          clonedEl.style.wordSpacing = originalComputed.wordSpacing;
+        }
         
         // For non-Arabic text elements, ensure correct direction
         // BUT preserve centering for watermark elements
@@ -383,6 +454,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       clonedElement.style.position = 'relative';
       clonedElement.style.zIndex = '1';
       clonedElement.style.isolation = 'isolate';
+      // CRITICAL: Set overflow to visible to prevent truncation of Arabic text
+      clonedElement.style.overflow = 'visible';
+      clonedElement.style.overflowX = 'visible';
+      clonedElement.style.overflowY = 'visible';
       
       tempContainer.appendChild(clonedElement);
       
@@ -392,6 +467,11 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       // Force a reflow to ensure all styles are computed
       void clonedElement.offsetHeight;
       void tempContainer.offsetHeight;
+      
+      // CRITICAL: Set container height to scrollHeight + buffer to include all content (prevents truncation)
+      const scrollHeight = clonedElement.scrollHeight;
+      tempContainer.style.height = (scrollHeight + 60) + 'px'; // Add 60px buffer to ensure all text is visible
+      tempContainer.style.minHeight = (scrollHeight + 60) + 'px';
       
       // Use cloned element for font checking
       const elementForFontCheck = clonedElement || elementToCapture;
@@ -819,6 +899,50 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
           clonedEl.style.color = originalComputed.color;
         }
         
+        // CRITICAL: For surah name container div, preserve flexbox positioning to match rendered version
+        const isSurahNameContainer = original.getAttribute('style')?.includes('justify-content: flex-end') ||
+                                    (originalComputed.display === 'flex' && 
+                                     originalComputed.justifyContent === 'flex-end' &&
+                                     originalComputed.paddingRight === '48px');
+        
+        if (isSurahNameContainer) {
+          // CRITICAL: Preserve flexbox properties to position surah name on the right beside badge
+          clonedEl.style.display = 'flex';
+          clonedEl.style.justifyContent = 'flex-end';
+          clonedEl.style.alignItems = 'flex-start';
+          clonedEl.style.paddingRight = '48px';
+          clonedEl.style.width = '100%';
+          clonedEl.style.boxSizing = 'border-box';
+          clonedEl.style.direction = 'ltr';
+        }
+        
+        // CRITICAL: For tafsir/translation paragraphs, preserve ALL exact styles to match rendered version
+        const isTafsirParagraph = (original.classList.contains('text-base') && 
+                                   original.classList.contains('leading-relaxed')) ||
+                                  original.textContent?.includes('يُصَدِّقون') ||
+                                  original.textContent?.includes('الإيمان');
+        
+        if (isTafsirParagraph) {
+          // Copy ALL computed styles exactly to match rendered version
+          clonedEl.style.fontSize = originalComputed.fontSize;
+          clonedEl.style.lineHeight = originalComputed.lineHeight;
+          clonedEl.style.letterSpacing = originalComputed.letterSpacing;
+          clonedEl.style.wordSpacing = originalComputed.wordSpacing;
+          clonedEl.style.whiteSpace = originalComputed.whiteSpace;
+          clonedEl.style.overflowWrap = originalComputed.overflowWrap;
+          clonedEl.style.wordBreak = originalComputed.wordBreak;
+          clonedEl.style.padding = originalComputed.padding;
+          clonedEl.style.paddingTop = originalComputed.paddingTop;
+          clonedEl.style.paddingRight = originalComputed.paddingRight;
+          clonedEl.style.paddingBottom = originalComputed.paddingBottom;
+          clonedEl.style.paddingLeft = originalComputed.paddingLeft;
+          clonedEl.style.margin = originalComputed.margin;
+          clonedEl.style.marginTop = originalComputed.marginTop;
+          clonedEl.style.marginRight = originalComputed.marginRight;
+          clonedEl.style.marginBottom = originalComputed.marginBottom;
+          clonedEl.style.marginLeft = originalComputed.marginLeft;
+        }
+        
         // Copy critical computed styles for all elements
         importantStyles.forEach(prop => {
           try {
@@ -827,13 +951,26 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
               return;
             }
             const value = (originalComputed as any)[prop];
-            if (value && value !== 'none' && value !== 'normal' && value !== 'auto') {
+            // CRITICAL: Always copy flexbox properties and boxSizing to preserve layout
+            if (prop === 'justifyContent' || prop === 'alignItems' || prop === 'flexDirection' || prop === 'flexWrap' || prop === 'boxSizing') {
+              if (value) {
+                (clonedEl.style as any)[prop] = value;
+              }
+            } else if (value && value !== 'none' && value !== 'normal' && value !== 'auto' && value !== '0px') {
               (clonedEl.style as any)[prop] = value;
             }
           } catch (e) {
             // Ignore read-only properties
           }
         });
+        
+        // CRITICAL: Always copy fontSize, lineHeight, letterSpacing, wordSpacing for text elements to match rendered
+        if (original.tagName === 'P' || original.tagName === 'DIV' || original.tagName === 'H3' || original.tagName === 'SPAN') {
+          clonedEl.style.fontSize = originalComputed.fontSize;
+          clonedEl.style.lineHeight = originalComputed.lineHeight;
+          clonedEl.style.letterSpacing = originalComputed.letterSpacing;
+          clonedEl.style.wordSpacing = originalComputed.wordSpacing;
+        }
         
         // For non-Arabic text elements, ensure correct direction
         // BUT preserve centering for watermark elements
@@ -910,6 +1047,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       clonedElement.style.position = 'relative';
       clonedElement.style.zIndex = '1';
       clonedElement.style.isolation = 'isolate';
+      // CRITICAL: Set overflow to visible to prevent truncation of Arabic text
+      clonedElement.style.overflow = 'visible';
+      clonedElement.style.overflowX = 'visible';
+      clonedElement.style.overflowY = 'visible';
       
       tempContainer.appendChild(clonedElement);
       
@@ -919,6 +1060,11 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       // Force a reflow to ensure all styles are computed
       void clonedElement.offsetHeight;
       void tempContainer.offsetHeight;
+      
+      // CRITICAL: Set container height to scrollHeight + buffer to include all content (prevents truncation)
+      const scrollHeight = clonedElement.scrollHeight;
+      tempContainer.style.height = (scrollHeight + 60) + 'px'; // Add 60px buffer to ensure all text is visible
+      tempContainer.style.minHeight = (scrollHeight + 60) + 'px';
       
       // Use cloned element for font checking
       const elementForFontCheck = clonedElement || elementToCapture;
@@ -1349,14 +1495,13 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                         
                         {/* Surah Name and Details - Positioned beside the badge */}
                         <div style={{ 
-                          // Badge is always on the right (absolute positioned), so always use paddingRight to leave space
-                          paddingRight: '60px',
+                          // Container for positioning - no padding, h3 will position itself at the right
                           width: '100%',
                           boxSizing: 'border-box',
-                          display: 'block',
-                          textAlign: surahNameHasArabic ? 'right' : 'left',
-                          // For Arabic: ensure text aligns to the right beside the badge
-                          // For English: text aligns to the left
+                          display: 'flex',
+                          justifyContent: 'flex-end',
+                          alignItems: 'flex-start',
+                          paddingRight: '48px', // Space for badge (40px) + small gap (8px)
                           direction: 'ltr' // Container always LTR to position badge correctly
                         }}>
                           <div>
@@ -1379,11 +1524,11 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                                 // Force override any inherited font-arabic styles
                                 fontKerning: surahNameHasArabic ? 'normal' : 'auto',
                                 fontSynthesis: surahNameHasArabic ? 'none' : 'auto',
-                                // Ensure proper positioning for English names - positioned beside the badge
+                                // Positioned at the start (right side) beside the badge
                                 margin: '0',
                                 padding: '0',
                                 display: 'block',
-                                width: '100%',
+                                width: 'auto',
                                 boxSizing: 'border-box'
                               } as React.CSSProperties}
                             >
@@ -1424,7 +1569,12 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                       fontVariantLigatures: 'common-ligatures contextual',
                       fontKerning: 'normal',
                       fontSynthesis: 'none',
-                      unicodeBidi: 'bidi-override'
+                      unicodeBidi: 'bidi-override',
+                      overflow: 'visible', // CRITICAL: Prevent truncation of Arabic text
+                      overflowX: 'visible',
+                      overflowY: 'visible',
+                      wordWrap: 'break-word', // Allow long words to wrap
+                      whiteSpace: 'normal' // Allow text to wrap naturally
                     } as React.CSSProperties}
                     ref={(el) => {
                       if (el) {
@@ -1596,7 +1746,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                 {/* Download Options - Only show for verse mode */}
                 {mode === 'verse' && (
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+                  <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white font-tajawal" style={{ 
+                    direction: locale === 'ar' ? 'rtl' : 'ltr',
+                    textAlign: locale === 'ar' ? 'right' : 'left'
+                  }}>
                     {t("share.download_as_card")}
                   </h3>
                   <div className="flex gap-3">
@@ -1636,7 +1789,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
 
                 {/* Link Share */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+                  <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white font-tajawal" style={{ 
+                    direction: locale === 'ar' ? 'rtl' : 'ltr',
+                    textAlign: locale === 'ar' ? 'right' : 'left'
+                  }}>
                     {t("share.share_link")}
                   </h3>
                   <div className="flex gap-2">
@@ -1672,7 +1828,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
 
                 {/* Social Share */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+                  <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white font-tajawal" style={{ 
+                    direction: locale === 'ar' ? 'rtl' : 'ltr',
+                    textAlign: locale === 'ar' ? 'right' : 'left'
+                  }}>
                     {t("share.share_social")}
                   </h3>
                   <div className="flex justify-center gap-3 flex-wrap">

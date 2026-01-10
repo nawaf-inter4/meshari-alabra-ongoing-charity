@@ -100,7 +100,7 @@ export default function YouTubePlaylist({ playlistId }: YouTubePlaylistProps) {
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <Play className="w-8 h-8 text-islamic-gold" fill="currentColor" />
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
               {t("youtube.title")}
             </h2>
           </div>

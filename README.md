@@ -112,7 +112,7 @@ Images:           24 hours (with stale-while-revalidate)
 ## 🛠️ Tech Stack
 
 **Framework & Language:**
-- **Next.js 16.0.7** (App Router) - Latest stable version with Server Components
+- **Next.js 16.1.1** (App Router) - Latest stable version with Server Components
 - **React 19** - With concurrent features
 - **TypeScript 5** - Type safety
 - **Turbopack** - 7x faster development builds

@@ -35,25 +35,38 @@ export default function HeroSection() {
     setStarKey(prev => prev + 1);
   }, [direction]);
 
-  // Generate star positions
-  const generateStarPositions = () => {
-    return [...Array(20)].map((_, i) => ({
-      id: i,
-      x: Math.random() * (dimensions.width - 100) + 50, // Keep stars within bounds
-      y: Math.random() * (dimensions.height - 100) + 50, // Keep stars within bounds
-      delay: i * 0.2,
-    }));
-  };
-
   const [starPositions, setStarPositions] = useState<Array<{id: number, x: number, y: number, delay: number}>>([]);
 
+  // Generate star positions - only on client to prevent hydration mismatch
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const generateStarPositions = () => {
+      return [...Array(20)].map((_, i) => ({
+        id: i,
+        x: Math.random() * (dimensions.width - 100) + 50, // Keep stars within bounds
+        y: Math.random() * (dimensions.height - 100) + 50, // Keep stars within bounds
+        delay: i * 0.2,
+      }));
+    };
+
     setMounted(true);
-    setStarPositions(generateStarPositions());
+    // Generate stars after mount
+    setTimeout(() => {
+      setStarPositions(generateStarPositions());
+    }, 0);
   }, []);
 
   useEffect(() => {
-    if (mounted) {
+    if (mounted && typeof window !== 'undefined') {
+      const generateStarPositions = () => {
+        return [...Array(20)].map((_, i) => ({
+          id: i,
+          x: Math.random() * (dimensions.width - 100) + 50,
+          y: Math.random() * (dimensions.height - 100) + 50,
+          delay: i * 0.2,
+        }));
+      };
       setStarPositions(generateStarPositions());
     }
   }, [dimensions, direction, starKey, mounted]);
@@ -129,39 +142,41 @@ export default function HeroSection() {
       style={{ paddingTop: 'max(7rem, env(safe-area-inset-top, 7rem))' }}
       suppressHydrationWarning
     >
-      {/* Animated Background Stars */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {starPositions.map((star) => (
-          <motion.div
-            key={`${starKey}-${star.id}`}
-            className="absolute motion-safe"
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0, 1, 0.8, 1],
-              scale: [0, 1, 0.8, 1],
-            }}
-            transition={{
-              duration: 2,
-              delay: star.delay,
-              repeat: Infinity,
-              repeatType: "reverse",
-              repeatDelay: Math.random() * 3 + 2,
-              ease: "easeInOut",
-            }}
-            style={{
-              transform: `translate3d(${star.x}px, ${star.y}px, 0)`,
-              willChange: 'transform, opacity',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-            }}
-          >
-            <Star 
-              size={Math.random() * 3 + 1} 
-              className="text-islamic-gold/60 fill-current" 
-            />
-          </motion.div>
-        ))}
-      </div>
+      {/* Animated Background Stars - Only render after mount to prevent hydration mismatch */}
+      {mounted && (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" suppressHydrationWarning>
+          {starPositions.length > 0 && starPositions.map((star) => (
+            <motion.div
+              key={`${starKey}-${star.id}`}
+              className="absolute motion-safe"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{
+                opacity: [0, 1, 0.8, 1],
+                scale: [0, 1, 0.8, 1],
+              }}
+              transition={{
+                duration: 2,
+                delay: star.delay,
+                repeat: Infinity,
+                repeatType: "reverse",
+                repeatDelay: (star.id % 5) * 0.6 + 2, // Use deterministic delay based on id to prevent hydration issues
+                ease: "easeInOut",
+              }}
+              style={{
+                transform: `translate3d(${star.x}px, ${star.y}px, 0)`,
+                willChange: 'transform, opacity',
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
+              }}
+            >
+              <Star 
+                size={(star.id % 3) + 1.5} 
+                className="text-islamic-gold/60 fill-current" 
+              />
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="relative z-10 max-w-4xl mx-auto text-center">
@@ -205,7 +220,7 @@ export default function HeroSection() {
               href="/mehsari (دعاء).pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-semibold rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-semibold rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 transform hover:scale-105 glow"
             >
               <FileText className="w-5 h-5" />
               <span>{t("hero.supplications_button")}</span>

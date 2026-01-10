@@ -72,6 +72,14 @@
   "quran.play": "استماع",
   "quran.pause": "إيقاف",
   "quran.translation": "التفسير",
+  "quran.medinan": "سورة مدنية",
+  "quran.meccan": "سورة مكية",
+  "quran.search": "ابحث في القرآن الكريم",
+  "quran.search_placeholder": "ابحث في القرآن الكريم...",
+  "quran.search_results": "نتائج البحث",
+  "quran.no_results": "لا توجد نتائج",
+  "quran.searching": "جاري البحث...",
+  "quran.clear_search": "مسح البحث",
 
   "tafseer.title": "تفسير القرآن",
   "tafseer.subtitle": "فهم معاني كلام الله",
@@ -121,7 +129,7 @@
 
   "footer.title": "رحمه الله وغفر له",
   "footer.description": "اللهم اجعل القرآن الكريم شفيعاً لأخي مشاري يوم القيامة، واجعل كل حرف منه نوراً في قبره",
-  "footer.charity": "صدقة جارية",
+  "footer.charity": "صدقة جارية لمشاري بن أحمد بن سليمان العبره (رحمه الله)",
   "footer.all_rights": "جميع الحقوق محفوظة © {{year}}",
   "footer.technology": "تم تطويره في سبيل الله باستخدام تقنيات الويب الحديثة",
 

@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import { headers } from 'next/headers';
 import DonationSection from '@/components/sections/DonationSection';
 import ClientHeader from '@/components/ClientHeader';
 import Footer from '@/components/Footer';
@@ -7,10 +6,12 @@ import SectionSchema from '@/components/SectionSchema';
 import { generateSectionMetadata } from '@/lib/section-metadata';
 import { Suspense } from 'react';
 
-export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const locale = headersList.get('x-locale') || 'ar';
-  return generateSectionMetadata('donation', locale);
+// MIGRATED: Removed headers() call - use default locale for metadata
+// Metadata is now static to work with Cache Components
+export function generateMetadata(): Metadata {
+  // Use default locale 'ar' for metadata generation
+  // Language-specific content is handled client-side
+  return generateSectionMetadata('donation', 'ar');
 }
 
 export default function DonationPage() {

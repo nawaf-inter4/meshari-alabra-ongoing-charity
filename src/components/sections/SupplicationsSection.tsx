@@ -276,7 +276,7 @@ export default function SupplicationsSection() {
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <BookOpen className="w-8 h-8 text-islamic-gold" />
-            <h2 className="text-4xl md:text-5xl font-bold gradient-text">
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
               {mounted ? t("supplications.title") : "الأدعية"}
             </h2>
           </div>
@@ -294,7 +294,7 @@ export default function SupplicationsSection() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                   activeTab === tab.id
-                    ? "bg-islamic-gold text-white shadow-lg scale-105"
+                    ? "bg-islamic-gold text-white shadow-lg scale-105 glow"
                     : "bg-light dark:bg-dark hover:bg-islamic-gold/20 text-gray-700 dark:text-gray-300"
                 }`}
               >

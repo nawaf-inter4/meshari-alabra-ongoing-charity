@@ -47,19 +47,19 @@ export default function HomePage({ language }: HomePageProps) {
       
       {/* Lazy-loaded sections with Suspense for better performance */}
       <Suspense fallback={<SectionLoader />}>
-        <YouTubePlaylist playlistId="PLozaqJ9egxJegXbK52PNLLlvWf4K5g-Cb" />
+        <EnhancedQuranSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <DonationSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
-        <PrayerTimesSection />
+        <YouTubePlaylist playlistId="PLozaqJ9egxJegXbK52PNLLlvWf4K5g-Cb" />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <SupplicationsSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
-        <EnhancedQuranSection />
+        <PrayerTimesSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <TafseerSection />

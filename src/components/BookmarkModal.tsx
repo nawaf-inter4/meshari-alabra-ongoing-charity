@@ -277,7 +277,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                           }
                         }, 300);
                       }}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-semibold rounded-full hover:bg-islamic-green transition-all duration-300"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-semibold rounded-full hover:bg-islamic-green transition-all duration-300 glow"
                     >
                       {t("bookmarks.go_to_quran")}
                       <motion.div

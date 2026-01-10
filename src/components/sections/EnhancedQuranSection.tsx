@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
-import { BookOpen, ChevronDown, Play, Pause, Volume2, Download, Share2, Bookmark, BookmarkCheck } from "lucide-react";
+import { BookOpen, ChevronDown, Play, Pause, Volume2, Download, Share2, Bookmark, BookmarkCheck, Search, X } from "lucide-react";
 import ShareModal from "../ShareModal";
 
 interface Ayah {
@@ -279,7 +279,22 @@ export default function EnhancedQuranSection() {
   const { t, locale } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [surahs, setSurahs] = useState<Surah[]>([]);
-  const [selectedSurah, setSelectedSurah] = useState<number>(1);
+  
+  // Read URL params early to set initial surah
+  const getInitialSurah = () => {
+    if (typeof window === 'undefined') return 1;
+    const searchParams = new URLSearchParams(window.location.search);
+    const surahParam = searchParams.get('surah');
+    if (surahParam) {
+      const surah = parseInt(surahParam, 10);
+      if (!isNaN(surah) && surah >= 1 && surah <= 114) {
+        return surah;
+      }
+    }
+    return 1;
+  };
+  
+  const [selectedSurah, setSelectedSurah] = useState<number>(getInitialSurah());
   const [ayahs, setAyahs] = useState<Ayah[]>([]);
   const [loading, setLoading] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -303,10 +318,20 @@ export default function EnhancedQuranSection() {
     juz?: number;
     page?: number;
   } | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [skipAnimations, setSkipAnimations] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const reciterDropdownRef = useRef<HTMLDivElement>(null);
+  const searchAbortControllerRef = useRef<AbortController | null>(null);
+  const urlParamsProcessedRef = useRef(false);
+  const targetSurahRef = useRef<number | null>(null);
+  const targetAyahRef = useRef<number | null>(null);
 
   // Language-based translation mapping
   const getTranslationIdentifier = (locale: string): string => {
@@ -440,6 +465,327 @@ export default function EnhancedQuranSection() {
     }
   }, [locale, mounted]);
 
+  // Search function - optimized for instant results with Arabic text
+  const handleSearch = async (keyword: string, signal?: AbortSignal) => {
+    if (!keyword.trim()) {
+      setSearchResults([]);
+      setShowSearchResults(false);
+      setSearchLoading(false);
+      return;
+    }
+    
+    try {
+      // Search using language code - this is more reliable than edition-specific search
+      // For Arabic queries, search in Arabic. For others, search in user's language
+      const isArabicQuery = /[\u0600-\u06FF]/.test(keyword);
+      const searchLanguage = isArabicQuery ? 'ar' : (locale === 'ar' ? 'ar' : locale);
+      
+      // Use language code for search (more reliable than edition-specific)
+      const searchUrl = `/api/quran/search/${encodeURIComponent(keyword)}/all/${searchLanguage}`;
+      
+      let response: Response;
+      try {
+        response = await fetch(searchUrl, {
+          headers: {
+            'Accept-Encoding': 'gzip, deflate, br',
+          },
+          signal, // Support request cancellation
+        });
+      } catch (fetchError: any) {
+        // Handle network errors
+        if (fetchError.name === 'AbortError' || signal?.aborted) {
+          return;
+        }
+        console.error('Search network error:', fetchError);
+        setSearchResults([]);
+        setSearchLoading(false);
+        return;
+      }
+      
+      // Check if request was aborted
+      if (signal?.aborted) {
+        return;
+      }
+      
+      // Handle 404 gracefully - just means no results found
+      if (response.status === 404) {
+        setSearchResults([]);
+        setSearchLoading(false);
+        return;
+      }
+      
+      if (!response.ok) {
+        // Try fallback search if first one fails (for Arabic queries)
+        if (isArabicQuery) {
+          // Try searching in quran-simple as fallback
+          const fallbackUrl = `/api/quran/search/${encodeURIComponent(keyword)}/all/quran-simple`;
+          try {
+            const fallbackResponse = await fetch(fallbackUrl, {
+              headers: {
+                'Accept-Encoding': 'gzip, deflate, br',
+              },
+              signal,
+            });
+            
+            if (signal?.aborted) return;
+            
+            if (fallbackResponse.ok) {
+              response = fallbackResponse; // Use fallback response
+            } else {
+              setSearchResults([]);
+              setSearchLoading(false);
+              return;
+            }
+          } catch (fallbackError: any) {
+            if (fallbackError.name !== 'AbortError' && !signal?.aborted) {
+              console.error('Search fallback failed:', fallbackError);
+            }
+            setSearchResults([]);
+            setSearchLoading(false);
+            return;
+          }
+        } else {
+          // Not Arabic query - handle error normally
+          try {
+            const errorData = await response.json();
+            const errorMessage = errorData?.error || errorData?.message || errorData?.status;
+            if (errorMessage && 
+                !errorMessage.includes('Nothing matching') && 
+                !errorMessage.includes('NOT FOUND') &&
+                response.status !== 404) {
+              console.error('Search API error:', errorMessage);
+            }
+          } catch (e) {
+            if (response.status !== 404) {
+              console.error('Search API error:', `HTTP ${response.status}`);
+            }
+          }
+          setSearchResults([]);
+          setSearchLoading(false);
+          return;
+        }
+      }
+      
+      const data = await response.json();
+      
+      // Check for API error response
+      if (data.error || (data.code && data.code !== 200)) {
+        // Handle 404 or no results gracefully
+        if (data.code === 404 || data.status === 'NOT FOUND' || data.data === 'Nothing matching your search was found..') {
+          setSearchResults([]);
+          setSearchLoading(false);
+          return;
+        }
+        // Only log if there's actual error content
+        const errorMessage = data.error || data.status || data.message;
+        if (errorMessage) {
+          console.error('Search API error:', errorMessage);
+        }
+        setSearchResults([]);
+        setSearchLoading(false);
+        return;
+      }
+      
+      if (data.code === 200 && data.data) {
+        let matches: any[] = [];
+        
+        // Handle different response structures
+        if (data.data.matches && Array.isArray(data.data.matches)) {
+          matches = data.data.matches;
+        } else if (Array.isArray(data.data)) {
+          matches = data.data;
+        } else if (data.data.count !== undefined && data.data.count === 0) {
+          // No results found
+          setSearchResults([]);
+          setSearchLoading(false);
+          return;
+        }
+        
+        if (matches.length === 0) {
+          setSearchResults([]);
+          setSearchLoading(false);
+          return;
+        }
+        
+        // CRITICAL: Always fetch the ACTUAL Quranic ayah text for each result
+        // The search might return tafseer/translation, so we MUST fetch the real ayah
+        // Show structure immediately, then fetch Arabic text
+        const initialResults = matches.map((match) => {
+          const surahNumber = match.surah?.number || match.surahNumber;
+          const ayahNumber = match.numberInSurah || match.ayah || match.number;
+          
+          return {
+            ...match,
+            arabicText: '', // Will be fetched
+            translation: match.text || '', // Temporary: might be translation or tafseer
+            surahNumber,
+            ayahNumber,
+          };
+        });
+        
+        // Set initial results immediately for instant display
+        setSearchResults(initialResults);
+        setSearchLoading(false);
+        
+        // Fetch ACTUAL Quranic ayah text for ALL results in parallel (non-blocking)
+        Promise.all(
+          initialResults.map(async (result, index) => {
+            if (!result.surahNumber || !result.ayahNumber || signal?.aborted) return;
+            
+            try {
+              // ALWAYS fetch the actual Quranic ayah text from quran-uthmani
+              const arabicResponse = await fetch(`/api/quran/ayah/${result.surahNumber}:${result.ayahNumber}/quran-uthmani`, {
+                headers: {
+                  'Accept-Encoding': 'gzip, deflate, br',
+                },
+                signal,
+              });
+              
+              if (arabicResponse.ok && !signal?.aborted) {
+                const arabicData = await arabicResponse.json();
+                if (arabicData.code === 200 && arabicData.data && arabicData.data.text) {
+                  // Update with ACTUAL Quranic ayah text
+                  setSearchResults(prev => {
+                    const updated = [...prev];
+                    if (updated[index] && !signal?.aborted) {
+                      updated[index] = { 
+                        ...updated[index], 
+                        arabicText: arabicData.data.text // Real Quranic text
+                      };
+                    }
+                    return updated;
+                  });
+                }
+              }
+            } catch (error: any) {
+              // Silently fail
+              if (error.name !== 'AbortError' && !signal?.aborted) {
+                // Only log unexpected errors
+              }
+            }
+          })
+        ).catch(() => {
+          // Ignore errors
+        });
+        
+        const finalResults = initialResults;
+        
+        // Fetch translations in background (non-blocking) for non-Arabic users
+        if (locale !== 'ar' && finalResults.length > 0 && !signal?.aborted) {
+          const translationId = getTranslationIdentifier(locale);
+          
+          // Fetch translations in batches to avoid overwhelming the API
+          const batchSize = 10;
+          for (let i = 0; i < finalResults.length && !signal?.aborted; i += batchSize) {
+            const batch = finalResults.slice(i, i + batchSize);
+            
+            Promise.all(
+              batch.map(async (result, batchIndex) => {
+                if (!result.surahNumber || !result.ayahNumber || signal?.aborted) return;
+                
+                try {
+                  const translationResponse = await fetch(`/api/quran/ayah/${result.surahNumber}:${result.ayahNumber}/${translationId}`, {
+                    headers: {
+                      'Accept-Encoding': 'gzip, deflate, br',
+                    },
+                    signal, // Support cancellation
+                  });
+                  
+                  if (translationResponse.ok && !signal?.aborted) {
+                    const translationData = await translationResponse.json();
+                    if (translationData.code === 200 && translationData.data && translationData.data.text) {
+                      // Update the specific result with translation
+                      const globalIndex = i + batchIndex;
+                      setSearchResults(prev => {
+                        const updated = [...prev];
+                        if (updated[globalIndex] && !signal?.aborted) {
+                          updated[globalIndex] = { ...updated[globalIndex], translation: translationData.data.text };
+                        }
+                        return updated;
+                      });
+                    }
+                  }
+                } catch (error: any) {
+                  // Silently fail - translation is optional
+                  // AbortError is expected when search is cancelled, don't log it
+                  if (error.name !== 'AbortError' && !signal?.aborted) {
+                    // Only log unexpected errors
+                  }
+                }
+              })
+            ).catch(() => {
+              // Ignore errors in background translation fetching
+            });
+            
+            // Small delay between batches to avoid rate limiting
+            if (i + batchSize < finalResults.length && !signal?.aborted) {
+              await new Promise(resolve => setTimeout(resolve, 50));
+            }
+          }
+        }
+      } else {
+        setSearchResults([]);
+        setSearchLoading(false);
+      }
+    } catch (error: any) {
+      // Don't log AbortError - it's expected when user types quickly or query changes
+      // AbortError is a normal part of request cancellation, not a real error
+      if (error.name === 'AbortError' || signal?.aborted) {
+        // Request was cancelled, which is expected - do nothing
+        return;
+      }
+      
+      // Only log and handle real errors
+      console.error('Search error:', error);
+      setSearchResults([]);
+      setSearchLoading(false);
+    }
+  };
+
+  // Instant search - no debounce for instant feedback
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults([]);
+      setShowSearchResults(false);
+      setSearchLoading(false);
+      // Cancel any pending search
+      if (searchAbortControllerRef.current) {
+        searchAbortControllerRef.current.abort();
+        searchAbortControllerRef.current = null;
+      }
+      return;
+    }
+
+    // Cancel previous search if still pending
+    if (searchAbortControllerRef.current) {
+      searchAbortControllerRef.current.abort();
+    }
+
+    // Create new abort controller for this search
+    const abortController = new AbortController();
+    searchAbortControllerRef.current = abortController;
+
+    // Show loading immediately for instant feedback
+    setSearchLoading(true);
+    setShowSearchResults(true);
+
+    // Search immediately - no debounce for instant results
+    handleSearch(searchQuery, abortController.signal);
+
+    return () => {
+      // Cleanup: abort search if component unmounts or query changes
+      // This is expected behavior when user types quickly
+      try {
+        if (!abortController.signal.aborted) {
+          abortController.abort();
+        }
+      } catch (e) {
+        // Ignore any errors from aborting - it's expected behavior
+      }
+    };
+  }, [searchQuery]);
+
+  // Handle click outside search results
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -448,38 +794,134 @@ export default function EnhancedQuranSection() {
       if (reciterDropdownRef.current && !reciterDropdownRef.current.contains(event.target as Node)) {
         setIsReciterDropdownOpen(false);
       }
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSearchResults(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Helper function to scroll to a specific ayah
+  const scrollToAyahElement = (ayahNumber: number, retries = 30) => {
+    const ayahElement = document.querySelector(`[data-ayah-number="${ayahNumber}"]`);
+    if (ayahElement) {
+      // Scroll to the ayah
+      ayahElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      
+      // Highlight the ayah
+      ayahElement.classList.add('ring-4', 'ring-islamic-gold', 'ring-opacity-50', 'transition-all', 'duration-300');
+      setTimeout(() => {
+        ayahElement.classList.remove('ring-4', 'ring-islamic-gold', 'ring-opacity-50');
+      }, 3000);
+      return true;
+    } else if (retries > 0) {
+      // Retry if element not found yet (ayahs still loading)
+      setTimeout(() => scrollToAyahElement(ayahNumber, retries - 1), 200);
+      return false;
+    }
+    return false;
+  };
+
+  // Read URL parameters on mount
+  useEffect(() => {
+    if (typeof window === 'undefined' || !mounted) return;
+    
+    const searchParams = new URLSearchParams(window.location.search);
+    const surahParam = searchParams.get('surah');
+    const ayahParam = searchParams.get('ayah');
+    
+    if (surahParam && ayahParam) {
+      const surah = parseInt(surahParam, 10);
+      const ayah = parseInt(ayahParam, 10);
+      
+      if (!isNaN(surah) && !isNaN(ayah) && surah >= 1 && surah <= 114 && ayah >= 1) {
+        // Store target in refs
+        targetSurahRef.current = surah;
+        targetAyahRef.current = ayah;
+      }
+    }
+  }, [mounted]);
+
+  // Process URL params once surahs are loaded - set the target surah
+  useEffect(() => {
+    if (!mounted || surahs.length === 0) return;
+    if (!targetSurahRef.current || !targetAyahRef.current) return;
+    if (urlParamsProcessedRef.current) return;
+    
+    const targetSurah = targetSurahRef.current;
+    
+    // Verify the target surah exists in the surahs list
+    const surahExists = surahs.some(s => s.number === targetSurah);
+    if (!surahExists) {
+      urlParamsProcessedRef.current = true;
+      return;
+    }
+    
+    // Only set if different from current selection
+    if (selectedSurah !== targetSurah) {
+      // Set the selected surah to trigger ayah loading
+      urlParamsProcessedRef.current = true;
+      setSelectedSurah(targetSurah);
+    } else {
+      urlParamsProcessedRef.current = true;
+    }
+  }, [mounted, surahs.length]);
+
+  // Watch for ayahs to load and scroll to target ayah
+  useEffect(() => {
+    if (!mounted || !targetSurahRef.current || !targetAyahRef.current) return;
+    
+    // Check if we're on the target surah and ayahs are loaded
+    if (selectedSurah === targetSurahRef.current && ayahs.length > 0) {
+      const targetAyah = targetAyahRef.current;
+      // Wait a bit for DOM to render
+      setTimeout(() => {
+        if (scrollToAyahElement(targetAyah)) {
+          // Successfully scrolled, clear refs
+          targetSurahRef.current = null;
+          targetAyahRef.current = null;
+        }
+      }, 300);
+    }
+  }, [mounted, selectedSurah, ayahs.length]);
+
+  // Function to navigate to a specific surah and ayah
+  const navigateToAyah = (surah: number, ayah: number) => {
+    if (!mounted || !surah || !ayah) return;
+    
+    // Validate surah and ayah numbers
+    if (surah < 1 || surah > 114 || ayah < 1) return;
+    
+    // Set target refs for navigation
+    targetSurahRef.current = surah;
+    targetAyahRef.current = ayah;
+    urlParamsProcessedRef.current = false; // Reset to allow navigation
+    
+    // If surah is different, set it to trigger ayah loading
+    if (selectedSurah !== surah) {
+      setSelectedSurah(surah);
+    } else {
+      // If same surah, just scroll to ayah
+      setTimeout(() => {
+        scrollToAyahElement(ayah);
+      }, 100);
+    }
+  };
+
   // Listen for navigation to ayah events
   useEffect(() => {
     const handleNavigateToAyah = (event: CustomEvent) => {
       const { surah, ayah } = event.detail;
-      if (surah && ayah) {
-        setSelectedSurah(surah);
-        // Wait for ayahs to load, then scroll to the ayah
-        setTimeout(() => {
-          const ayahElement = document.querySelector(`[data-ayah-number="${ayah}"]`);
-          if (ayahElement) {
-            ayahElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            // Highlight the ayah briefly
-            ayahElement.classList.add('ring-4', 'ring-islamic-gold', 'ring-opacity-50');
-            setTimeout(() => {
-              ayahElement.classList.remove('ring-4', 'ring-islamic-gold', 'ring-opacity-50');
-            }, 2000);
-          }
-        }, 500);
-      }
+      navigateToAyah(surah, ayah);
     };
 
     window.addEventListener('navigate-to-ayah', handleNavigateToAyah as EventListener);
     return () => {
       window.removeEventListener('navigate-to-ayah', handleNavigateToAyah as EventListener);
     };
-  }, []);
+  }, [mounted, selectedSurah]);
 
   const fetchSurahs = async () => {
     try {
@@ -518,6 +960,22 @@ export default function EnhancedQuranSection() {
       // Response status checked
       
       if (!response.ok) {
+        // Handle rate limiting (429) with a user-friendly message
+        if (response.status === 429) {
+          console.warn('Rate limit reached. Please wait a moment before trying again.');
+          // Try static fallback if available
+          if (STATIC_AYAHS[surahNumber]) {
+            setAyahs(STATIC_AYAHS[surahNumber]);
+            setUsingStaticFallback(true);
+            setLoading(false);
+            return;
+          }
+          // If no static fallback, set empty and let the fallback logic handle it
+          setAyahs([]);
+          setUsingStaticFallback(false);
+          setLoading(false);
+          return;
+        }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
@@ -790,7 +1248,7 @@ export default function EnhancedQuranSection() {
               >
                 <span className={`text-left flex items-center gap-2 ${locale === 'ar' ? 'flex-row-reverse' : 'flex-row'}`}>
                   <div className="flex flex-col">
-                    <div className="font-semibold">
+                    <div className="font-semibold" style={{ fontFamily: 'Amiri' }}>
                       {currentSurah ? `${currentSurah.number}. ${locale === 'ar' ? currentSurah.name : currentSurah.englishName}` : "Select Surah"}
                     </div>
                     {currentSurah && (
@@ -818,7 +1276,7 @@ export default function EnhancedQuranSection() {
                       }`}
                     >
                       <div className={`flex items-center justify-between ${locale === 'ar' ? 'flex-row-reverse' : 'flex-row'}`}>
-                        <div className="font-semibold">{surah.number}. {locale === 'ar' ? surah.name : surah.englishName}</div>
+                        <div className="font-semibold" style={{ fontFamily: 'Amiri' }}>{surah.number}. {locale === 'ar' ? surah.name : surah.englishName}</div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">{locale === 'ar' ? surah.englishName : surah.name} • {surah.numberOfAyahs} verses</div>
                       </div>
                     </button>
@@ -840,7 +1298,7 @@ export default function EnhancedQuranSection() {
               >
                 <span className={`flex items-center gap-2 ${locale === 'ar' ? 'flex-row-reverse' : 'flex-row'}`}>
                   <div className="flex flex-col">
-                    <div className="font-semibold">
+                    <div className="font-semibold" style={{ fontFamily: 'Amiri' }}>
                       {(() => {
                         const reciter = reciters.find(r => r.identifier === selectedReciter);
                         if (!reciter) {
@@ -885,7 +1343,7 @@ export default function EnhancedQuranSection() {
                     >
                   <div className={`flex items-center gap-2 ${locale === 'ar' ? 'flex-row-reverse' : 'flex-row'}`}>
                     <div className="flex flex-col">
-                      <div className="font-semibold">
+                      <div className="font-semibold" style={{ fontFamily: 'Amiri' }}>
                         {locale === 'ar' ? reciter.name : reciter.englishName}
                       </div>
                       <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -908,10 +1366,157 @@ export default function EnhancedQuranSection() {
         </motion.div>
         )}
 
+        {/* Search Bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-8"
+          ref={searchRef}
+        >
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={mounted && t("quran.search_placeholder") !== "quran.search_placeholder" ? t("quran.search_placeholder") : (locale === 'ar' ? 'ابحث في القرآن الكريم...' : 'Search in the Quran...')}
+              className="w-full pl-12 pr-12 py-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none text-lg"
+              aria-label={mounted && t("quran.search") !== "quran.search" ? t("quran.search") : (locale === 'ar' ? 'ابحث في القرآن الكريم' : 'Search in the Quran')}
+            />
+            {searchQuery && (
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setSearchResults([]);
+                  setShowSearchResults(false);
+                }}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                aria-label={mounted && t("quran.clear_search") !== "quran.clear_search" ? t("quran.clear_search") : (locale === 'ar' ? 'مسح البحث' : 'Clear search')}
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+
+          {/* Search Results */}
+          {showSearchResults && (searchLoading || searchResults.length > 0 || searchQuery) && (
+            <div className="mt-4 bg-light-secondary dark:bg-dark-secondary rounded-2xl border-2 border-islamic-gold/30 p-4 max-h-96 overflow-y-auto">
+              {searchLoading ? (
+                <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+                  {mounted && t("quran.searching") !== "quran.searching" ? t("quran.searching") : (locale === 'ar' ? 'جاري البحث...' : 'Searching...')}
+                </div>
+              ) : searchResults.length > 0 ? (
+                <div className="space-y-3">
+                  <div className="text-sm font-semibold text-islamic-gold mb-3">
+                    {mounted && t("quran.search_results") !== "quran.search_results" ? `${t("quran.search_results")} (${searchResults.length})` : (locale === 'ar' ? `نتائج البحث (${searchResults.length})` : `Search Results (${searchResults.length})`)}
+                  </div>
+                  {searchResults.map((result, index) => {
+                    const surahNumber = result.surah?.number || result.surahNumber || result.number;
+                    const ayahNumber = result.numberInSurah || result.ayah || result.number;
+                    const surah = surahs.find(s => s.number === surahNumber);
+                    const surahName = surah ? (locale === 'ar' ? surah.name : surah.englishName) : (result.surah?.name || `Surah ${surahNumber}`);
+                    
+                    // Get Arabic text - prioritize arabicText field, then check if text is Arabic
+                    const arabicText = result.arabicText || (result.text && /[\u0600-\u06FF]/.test(result.text) ? result.text : '');
+                    // Get translation - use text if it's not Arabic, or use translation field
+                    const translationText = result.translation || (result.text && !/[\u0600-\u06FF]/.test(result.text) ? result.text : '');
+                    
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          if (surahNumber && ayahNumber) {
+                            // Disable animations for instant display when navigating from search
+                            setSkipAnimations(true);
+                            setSelectedSurah(surahNumber);
+                            setSearchQuery("");
+                            setShowSearchResults(false);
+                            
+                            // Wait for surah to load, then scroll to specific ayah
+                            // Use retry mechanism to ensure ayahs are loaded and rendered
+                            const scrollToAyah = (retries = 20) => {
+                              const ayahElement = document.querySelector(`[data-ayah-number="${ayahNumber}"]`);
+                              if (ayahElement) {
+                                // Scroll to the ayah immediately (no smooth scroll delay)
+                                ayahElement.scrollIntoView({ behavior: 'auto', block: 'center' });
+                                
+                                // Small delay then smooth scroll for better UX
+                                setTimeout(() => {
+                                  ayahElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                }, 50);
+                                
+                                // Highlight the ayah with animation
+                                ayahElement.classList.add('ring-4', 'ring-islamic-gold', 'ring-opacity-50', 'transition-all', 'duration-300');
+                                setTimeout(() => {
+                                  ayahElement.classList.remove('ring-4', 'ring-islamic-gold', 'ring-opacity-50');
+                                }, 3000);
+                                
+                                // Re-enable animations after a short delay
+                                setTimeout(() => {
+                                  setSkipAnimations(false);
+                                }, 1000);
+                              } else if (retries > 0) {
+                                // Retry if element not found yet (ayahs still loading)
+                                setTimeout(() => scrollToAyah(retries - 1), 100);
+                              } else {
+                                // If we couldn't find it, re-enable animations anyway
+                                setSkipAnimations(false);
+                              }
+                            };
+                            
+                            // Start scrolling immediately - no delay needed since animations are disabled
+                            setTimeout(() => scrollToAyah(), 100);
+                          }
+                        }}
+                        className="p-4 rounded-xl bg-light dark:bg-dark border border-islamic-gold/20 hover:border-islamic-gold cursor-pointer transition-all"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="font-semibold text-islamic-gold">
+                            {surahName} - {mounted && t("quran.verse") !== "quran.verse" ? t("quran.verse") : (locale === 'ar' ? 'آية' : 'Ayah')} {ayahNumber}
+                          </div>
+                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                            {mounted && t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah").split(' ')[0] : (locale === 'ar' ? 'سورة' : 'Surah')} {surahNumber}
+                          </div>
+                        </div>
+                        {/* Always show Arabic text if available - this is the actual Quranic ayah */}
+                        {arabicText ? (
+                          <div className="text-right font-arabic text-xl leading-relaxed mb-3 p-3 bg-light dark:bg-dark rounded-lg" dir="rtl" style={{ fontFamily: 'Amiri', lineHeight: '2.5' }}>
+                            {arabicText}
+                          </div>
+                        ) : (
+                          // If no Arabic text yet, show loading or fetch it
+                          <div className="text-center py-2 text-gray-500 text-sm">
+                            {mounted && t("quran.searching") !== "quran.searching" ? t("quran.searching") : (locale === 'ar' ? 'جاري تحميل النص العربي...' : 'Loading Arabic text...')}
+                          </div>
+                        )}
+                        {/* Show translation below Arabic text if available */}
+                        {translationText && translationText !== arabicText && (
+                          <div className="text-gray-600 dark:text-gray-400 text-sm mt-2 p-2 bg-light-secondary dark:bg-dark-secondary rounded" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+                            {translationText}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : searchQuery && !searchLoading ? (
+                <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+                  {mounted && t("quran.no_results") !== "quran.no_results" ? t("quran.no_results") : (locale === 'ar' ? 'لا توجد نتائج' : 'No results found')}
+                </div>
+              ) : null}
+            </div>
+          )}
+        </motion.div>
+
         {/* Surah Header */}
         {currentSurah && (() => {
           const surahName = locale === 'ar' ? currentSurah.name : currentSurah.englishName;
           const hasArabic = /[\u0600-\u06FF]/.test(surahName);
+          const revelationTypeTranslated = currentSurah.revelationType === 'Medinan' 
+            ? t('quran.medinan') 
+            : t('quran.meccan');
           return (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -921,20 +1526,23 @@ export default function EnhancedQuranSection() {
               className="text-center mb-8 p-8 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-2xl border-2 border-islamic-gold/30"
             >
               <h3 
-                className="text-3xl md:text-4xl font-bold text-islamic-gold mb-2" 
+                className="text-3xl md:text-4xl font-bold text-islamic-gold mb-20" 
                 style={{ 
                   textAlign: 'center !important' as any,
                   display: 'block',
                   width: '100%',
                   direction: hasArabic ? 'rtl' : 'ltr',
                   unicodeBidi: hasArabic ? 'plaintext' : 'normal',
-                  margin: '0 auto'
+                  margin: '0 auto',
+                  fontFamily: 'Amiri',
+                  paddingTop: '10px',
+                  paddingBottom: '10px'
                 }}
               >
                 {surahName}
               </h3>
               <p className="text-xl text-gray-600 dark:text-gray-400">
-                {surahName} - {currentSurah.revelationType}
+                {revelationTypeTranslated}
               </p>
             </motion.div>
           );
@@ -974,6 +1582,21 @@ export default function EnhancedQuranSection() {
             <div className="text-center mb-4 text-sm text-gray-500">
               Found {ayahs.length} verses
             </div>
+            {/* Bismillah - only show for surahs other than Al-Fatihah */}
+            {selectedSurah !== 1 && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6 }}
+                className="text-center mb-8 text-lg text-islamic-green dark:text-islamic-gold motion-safe"
+                style={{
+                  willChange: 'opacity',
+                  transform: 'translateZ(0)',
+                }}
+              >
+                ﷽
+              </motion.p>
+            )}
             {usingStaticFallback && (
               <div className="text-center mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-600 rounded-lg">
                 <p className="text-sm text-yellow-800 dark:text-yellow-200">
@@ -985,10 +1608,10 @@ export default function EnhancedQuranSection() {
               <motion.div
                 key={ayah.number}
                 data-ayah-number={ayah.numberInSurah}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={skipAnimations ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                whileInView={skipAnimations ? {} : { opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                transition={skipAnimations ? { duration: 0 } : { duration: 0.6, delay: index * 0.1 }}
                 className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700"
               >
                 <div className="flex items-start justify-between mb-4">
@@ -1051,7 +1674,18 @@ export default function EnhancedQuranSection() {
 
                 {/* Arabic Text */}
                 <div className="arabic-quran-text text-2xl md:text-3xl leading-relaxed mb-4 text-right">
-                  {ayah.text}
+                  {(() => {
+                    let text = ayah.text;
+                    // Remove Bismillah from ayah 1 (except Al-Fatihah)
+                    if (selectedSurah !== 1 && ayah.numberInSurah === 1) {
+                      // Remove the exact Bismillah text
+                      text = text.replace('بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ', '').trim();
+                      text = text.replace('بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ', '').trim();
+                      text = text.replace('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ', '').trim();
+                      text = text.replace('بسم الله الرحمن الرحيم', '').trim();
+                    }
+                    return text;
+                  })()}
                 </div>
 
                 {/* Translation */}
