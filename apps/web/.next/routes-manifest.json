@@ -1,0 +1,282 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/:path*",
+      "headers": [
+        {
+          "key": "X-DNS-Prefetch-Control",
+          "value": "on"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(self)"
+        }
+      ],
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/javascript"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ],
+      "regex": "^/sw\\.js(?:/)?$"
+    },
+    {
+      "source": "/manifest.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ],
+      "regex": "^/manifest\\.json(?:/)?$"
+    },
+    {
+      "source": "/_next/static/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ],
+      "regex": "^/_next/static(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/icons/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ],
+      "regex": "^/icons(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/audio/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "Accept-Ranges",
+          "value": "bytes"
+        }
+      ],
+      "regex": "^/audio(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    }
+  ],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/api/audio/[...path]",
+      "regex": "^/api/audio/(.+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPpath": "nxtPpath"
+      },
+      "namedRegex": "^/api/audio/(?<nxtPpath>.+?)(?:/)?$"
+    },
+    {
+      "page": "/api/quran/[...path]",
+      "regex": "^/api/quran/(.+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPpath": "nxtPpath"
+      },
+      "namedRegex": "^/api/quran/(?<nxtPpath>.+?)(?:/)?$"
+    },
+    {
+      "page": "/[lang]",
+      "regex": "^/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPlang": "nxtPlang"
+      },
+      "namedRegex": "^/(?<nxtPlang>[^/]+?)(?:/)?$",
+      "prefetchSegmentDataRoutes": [
+        {
+          "destination": "/[lang].segments/$d$lang$segment",
+          "source": "^/(?<nxtPlang>[^/]+?)\\.segments/\\$d\\$lang(?<segment>/__PAGE__\\.segment\\.rsc|\\.segment\\.rsc)(?:/)?$",
+          "routeKeys": {
+            "nxtPlang": "nxtPlang"
+          }
+        }
+      ]
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/ip-location",
+      "regex": "^/api/ip\\-location(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/ip\\-location(?:/)?$"
+    },
+    {
+      "page": "/api/location-search",
+      "regex": "^/api/location\\-search(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/location\\-search(?:/)?$"
+    },
+    {
+      "page": "/feed.xml",
+      "regex": "^/feed\\.xml(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/feed\\.xml(?:/)?$"
+    },
+    {
+      "page": "/og-image",
+      "regex": "^/og\\-image(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/og\\-image(?:/)?$"
+    },
+    {
+      "page": "/sections/dhikr",
+      "regex": "^/sections/dhikr(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sections/dhikr(?:/)?$"
+    },
+    {
+      "page": "/sections/donation",
+      "regex": "^/sections/donation(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sections/donation(?:/)?$"
+    },
+    {
+      "page": "/sections/hadith",
+      "regex": "^/sections/hadith(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sections/hadith(?:/)?$"
+    },
+    {
+      "page": "/sections/prayer-times",
+      "regex": "^/sections/prayer\\-times(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sections/prayer\\-times(?:/)?$"
+    },
+    {
+      "page": "/sections/qibla",
+      "regex": "^/sections/qibla(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sections/qibla(?:/)?$"
+    },
+    {
+      "page": "/sections/quran",
+      "regex": "^/sections/quran(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sections/quran(?:/)?$"
+    },
+    {
+      "page": "/sections/supplications",
+      "regex": "^/sections/supplications(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sections/supplications(?:/)?$"
+    },
+    {
+      "page": "/sections/tafseer",
+      "regex": "^/sections/tafseer(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sections/tafseer(?:/)?$"
+    },
+    {
+      "page": "/sections/youtube",
+      "regex": "^/sections/youtube(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sections/youtube(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": true,
+    "dynamicRSCPrerender": true
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  },
+  "ppr": {
+    "chain": {
+      "headers": {
+        "next-resume": "1"
+      }
+    }
+  }
+}

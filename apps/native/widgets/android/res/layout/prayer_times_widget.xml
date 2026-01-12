@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0F172A"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Prayer Times"
+        android:textColor="#D4AF37"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/prayer_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fajr: 05:30"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/prayer_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dhuhr: 12:15"
+        android:textColor="#D4AF37"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/prayer_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Asr: 15:45"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/prayer_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Maghrib: 18:20"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/prayer_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Isha: 19:45"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp" />
+
+</LinearLayout>

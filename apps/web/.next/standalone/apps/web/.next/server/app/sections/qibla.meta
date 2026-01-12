@@ -1,0 +1,17 @@
+{
+  "status": 200,
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/sections/layout,_N_T_/sections/qibla/layout,_N_T_/sections/qibla/page,_N_T_/sections/qibla"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/sections/qibla/__PAGE__",
+    "/sections/qibla",
+    "/sections",
+    "/_index",
+    "/_head"
+  ]
+}

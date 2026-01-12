@@ -1,0 +1,607 @@
+.container {
+  padding: 20px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0F172A 0%, #1e293b 100%);
+  color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.header h1 {
+  margin: 0;
+  color: #D4AF37;
+  font-size: 28px;
+}
+
+.main {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Responsive design for desktop */
+@media (max-width: 768px) {
+  .main {
+    padding: 20px 16px;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+  }
+  
+  .section {
+    padding: 16px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .main {
+    max-width: 1600px;
+    padding: 60px 40px;
+  }
+  
+  .header h1 {
+    font-size: 36px;
+  }
+  
+  .section h2 {
+    font-size: 28px;
+  }
+}
+
+.section {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.section h2 {
+  color: #D4AF37;
+  margin-bottom: 16px;
+}
+
+.section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.section li {
+  padding: 8px 0;
+  font-size: 16px;
+}
+
+.prayer-times {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.prayer-times h2 {
+  color: #D4AF37;
+  margin-bottom: 16px;
+}
+
+.prayer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prayer-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 8px;
+}
+
+.qibla-finder {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.qibla-finder h2 {
+  color: #D4AF37;
+  margin-bottom: 20px;
+}
+
+.compass {
+  width: 200px;
+  height: 200px;
+  border: 3px solid #D4AF37;
+  border-radius: 50%;
+  margin: 20px auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 80px solid #D4AF37;
+  position: absolute;
+  top: 10px;
+  transform-origin: center 100px;
+}
+
+.dhikr-counter {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.dhikr-counter h2 {
+  color: #D4AF37;
+  margin-bottom: 20px;
+}
+
+.dhikr-selector {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.dhikr-selector button {
+  padding: 8px 16px;
+  border: 2px solid #D4AF37;
+  background: transparent;
+  color: #D4AF37;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dhikr-selector button.active {
+  background: #D4AF37;
+  color: #0F172A;
+}
+
+.counter-display {
+  margin: 24px 0;
+}
+
+.arabic-text {
+  font-size: 32px;
+  color: #D4AF37;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.count {
+  font-size: 48px;
+  color: white;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
+.label {
+  font-size: 16px;
+  color: white;
+}
+
+.counter-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.increment {
+  width: 64px;
+  height: 64px;
+  border-radius: 32px;
+  background: #D4AF37;
+  color: #0F172A;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.reset {
+  padding: 12px 24px;
+  border: 1px solid white;
+  background: transparent;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.milestone {
+  margin-top: 16px;
+  padding: 12px;
+  background: #D4AF37;
+  color: #0F172A;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.quran-section {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.quran-section h2 {
+  color: #D4AF37;
+  margin-bottom: 20px;
+}
+
+.quran-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  height: 600px;
+}
+
+.surah-list h3 {
+  color: #D4AF37;
+  margin-bottom: 12px;
+}
+
+.surah-scroll {
+  overflow-y: auto;
+  max-height: 550px;
+}
+
+.surah-scroll button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: rgba(15, 23, 42, 0.5);
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.surah-scroll button:hover,
+.surah-scroll button.active {
+  border-color: #D4AF37;
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.verses-display h3 {
+  color: #D4AF37;
+  margin-bottom: 16px;
+}
+
+.verses-scroll {
+  overflow-y: auto;
+  max-height: 550px;
+}
+
+.verse {
+  padding: 16px;
+  margin-bottom: 12px;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 8px;
+}
+
+.verse-number {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background: #D4AF37;
+  color: #0F172A;
+  border-radius: 16px;
+  text-align: center;
+  line-height: 32px;
+  font-weight: bold;
+  margin-right: 12px;
+}
+
+.verse-text {
+  font-size: 18px;
+  line-height: 32px;
+  color: white;
+  text-align: right;
+  margin: 12px 0;
+}
+
+.verse-translation {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.donation-section {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.donation-section h2 {
+  color: #D4AF37;
+  margin-bottom: 12px;
+}
+
+.donation-section p {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.donate-button {
+  padding: 16px 32px;
+  background: #D4AF37;
+  color: #0F172A;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.donate-button:hover {
+  opacity: 0.9;
+}
+
+.hero-section {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 40px 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.hero-section h1 {
+  color: #D4AF37;
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.hero-section p {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #D4AF37;
+  color: #0F172A;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.supplications-section {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.supplications-section h2 {
+  color: #D4AF37;
+  margin-bottom: 20px;
+}
+
+.supplications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.supplication-card {
+  background: rgba(15, 23, 42, 0.5);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.supplication-arabic {
+  font-size: 20px;
+  color: white;
+  text-align: right;
+  margin-bottom: 12px;
+  line-height: 32px;
+}
+
+.supplication-transliteration {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+  margin-bottom: 8px;
+}
+
+.supplication-translation {
+  font-size: 16px;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.supplication-reference {
+  font-size: 12px;
+  color: #D4AF37;
+  font-weight: 600;
+}
+
+.hadith-section {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.hadith-section h2 {
+  color: #D4AF37;
+  margin-bottom: 20px;
+}
+
+.hadith-card {
+  background: rgba(15, 23, 42, 0.5);
+  padding: 24px;
+  border-radius: 8px;
+}
+
+.hadith-arabic {
+  font-size: 24px;
+  color: white;
+  text-align: right;
+  margin-bottom: 16px;
+  line-height: 36px;
+}
+
+.hadith-translation {
+  font-size: 18px;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.hadith-source {
+  font-size: 14px;
+  color: #D4AF37;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.next-button {
+  padding: 12px 24px;
+  background: #D4AF37;
+  color: #0F172A;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.next-button:hover {
+  opacity: 0.9;
+}
+
+.youtube-section {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 24px;
+  border-radius: 12px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.youtube-section h2 {
+  color: #D4AF37;
+  margin-bottom: 12px;
+}
+
+.youtube-section p {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.playlist-button {
+  padding: 16px 32px;
+  background: #D4AF37;
+  color: #0F172A;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.playlist-button:hover {
+  opacity: 0.9;
+}
+
+.footer {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 32px 24px;
+  border-radius: 12px;
+  margin: 40px 0 20px;
+  text-align: center;
+  border-top: 1px solid #D4AF37;
+}
+
+.footer p {
+  color: white;
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.footer-links a {
+  color: #D4AF37;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.copyright {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 16px;
+}
+
+/* Responsive grid layouts */
+@media (min-width: 1400px) {
+  .main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  
+  .hero-section {
+    grid-column: 1 / -1;
+  }
+  
+  .footer {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1024px) {
+  .quran-layout {
+    grid-template-columns: 250px 1fr;
+    height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .quran-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .surah-list {
+    max-height: 200px;
+    margin-bottom: 20px;
+  }
+  
+  .verses-display {
+    max-height: 400px;
+  }
+}

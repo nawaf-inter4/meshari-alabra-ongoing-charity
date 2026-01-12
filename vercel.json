@@ -1,8 +1,9 @@
 {
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
+  "buildCommand": "cd ../.. && npm run build --filter=web",
+  "devCommand": "cd ../.. && npm run dev --filter=web",
   "installCommand": "npm install",
   "framework": "nextjs",
+  "rootDirectory": "apps/web",
   "build": {
     "env": {
       "NEXT_TURBOPACK": "1"

@@ -1,0 +1,25 @@
+[package]
+name = "desktop"
+version = "1.0.0"
+description = "Meshari's Continuous Charity Desktop App"
+authors = ["you"]
+license = ""
+repository = ""
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.0", features = ["shell-open", "fs-read-file", "fs-read-dir", "notification-all", "window-all"] }
+tauri-plugin-shell = { version = "2.0", features = ["open"] }
+tauri-plugin-fs = { version = "2.0", features = ["read-file", "read-dir", "write-file"] }
+tauri-plugin-notification = { version = "2.0", features = ["all"] }
+tauri-plugin-window-state = { version = "2.0", features = ["save-window-state"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", features = ["json"] }
+
+[features]
+default = ["custom-protocol"]

@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../../../apps/web/src/app/layout.tsx"],"sourcesContent":["export default function RootLayout({\n  children,\n}: Readonly<{\n  children: React.ReactNode;\n}>) {\n  return children;\n}"],"names":[],"mappings":"uCAAe,SAAS,EAAW,UACjC,CAAQ,CAGR,EACA,OAAO,CACT"}

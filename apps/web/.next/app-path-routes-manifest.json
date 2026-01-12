@@ -1,0 +1,21 @@
+{
+  "/[lang]/page": "/[lang]",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/audio/[...path]/route": "/api/audio/[...path]",
+  "/api/ip-location/route": "/api/ip-location",
+  "/api/location-search/route": "/api/location-search",
+  "/api/quran/[...path]/route": "/api/quran/[...path]",
+  "/feed.xml/route": "/feed.xml",
+  "/og-image/route": "/og-image",
+  "/page": "/",
+  "/sections/dhikr/page": "/sections/dhikr",
+  "/sections/donation/page": "/sections/donation",
+  "/sections/hadith/page": "/sections/hadith",
+  "/sections/prayer-times/page": "/sections/prayer-times",
+  "/sections/qibla/page": "/sections/qibla",
+  "/sections/quran/page": "/sections/quran",
+  "/sections/supplications/page": "/sections/supplications",
+  "/sections/tafseer/page": "/sections/tafseer",
+  "/sections/youtube/page": "/sections/youtube"
+}

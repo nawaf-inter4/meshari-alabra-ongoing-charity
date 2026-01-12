@@ -40,3 +40,10 @@ next-env.d.ts
 **/public/worker-*
 **/public/sw.js
 **/public/fallback-*.js
+
+# Turborepo
+.turbo
+
+# Rust (for Tauri desktop app - future)
+**/target/
+**/Cargo.lock

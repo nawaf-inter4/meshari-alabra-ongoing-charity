@@ -1,0 +1,3 @@
+module.exports=[35112,(a,b,c)=>{"use strict";b.exports=a.r(42602).vendored["react-ssr"].ReactDOM},55638,a=>{"use strict";a.i(66281);var b=a.i(87924);let c=(0,a.i(19721).default)(async()=>{},{loadableGenerated:{modules:[98743]},loading:()=>(0,b.jsx)("div",{className:"min-h-screen flex items-center justify-center",children:(0,b.jsx)("div",{className:"animate-spin rounded-full h-32 w-32 border-b-2 border-islamic-gold"})}),ssr:!1});function d(){return(0,b.jsx)(c,{playlistId:"PL5YnzBdhLdkXy12BLR-2mjj9qrPg4QL-N"})}a.s(["default",()=>d])},52143,a=>{a.v(b=>Promise.all(["server/chunks/ssr/[externals]_path_e30b8067._.js","server/chunks/ssr/[root-of-the-server]__187f831e._.js"].map(b=>a.l(b))).then(()=>b(32596)))}];
+
+//# sourceMappingURL=_390463df._.js.map

@@ -1,0 +1,17 @@
+{
+  "status": 200,
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/sections/layout,_N_T_/sections/hadith/layout,_N_T_/sections/hadith/page,_N_T_/sections/hadith"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/sections/hadith/__PAGE__",
+    "/sections/hadith",
+    "/sections",
+    "/_index",
+    "/_head"
+  ]
+}

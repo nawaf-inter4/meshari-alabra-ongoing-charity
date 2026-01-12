@@ -1,0 +1,18 @@
+{
+  "status": 200,
+  "headers": {
+    "link": "</_next/static/chunks/3b5793c2d8e85831.css>; rel=preload; as=\"style\"",
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/[lang]/layout,_N_T_/[lang]/page"
+  },
+  "postponed": "1337:45[[\"lang\",[\"%%drp:lang:d365264fa4332%%\",\"d\"]]][0,{\"nextSegmentId\":0,\"rootFormatContext\":{\"insertionMode\":0,\"selectedValue\":null,\"tagScope\":0,\"viewTransition\":null},\"progressiveChunkSize\":12800,\"resumableState\":{\"idPrefix\":\"\",\"nextFormID\":0,\"streamingFormat\":0,\"bootstrapScripts\":[{\"src\":\"/_next/static/chunks/8328e00cc6fa3f71.js\"}],\"instructions\":0,\"hasBody\":false,\"hasHtml\":false,\"unknownResources\":{\"font\":{}},\"dnsResources\":{},\"connectResources\":{\"default\":{},\"anonymous\":{},\"credentials\":{}},\"imageResources\":{},\"styleResources\":{\"/_next/static/chunks/3b5793c2d8e85831.css\":[]},\"scriptResources\":{},\"moduleUnknownResources\":{},\"moduleScriptResources\":{}},\"replayNodes\":[[\"sS\",0,[[\"Context\",0,[[\"Context\",0,[[\"ServerInsertedHTMLProvider\",0,[[\"Context\",0,[[\"oC\",0,[[\"om\",0,[[\"oh\",0,[[\"op\",0,[[\"ox\",0,[[\"Fragment\",0,[[\"Context\",2,[[\"Context\",0,[[\"Context\",0,[[\"Context\",0,[[\"Context\",0,[[\"Context\",0,[[\"Context\",0,[[\"om\",0,[[\"oh\",0,[[\"op\",0,[[\"ac\",0,[[\"au\",0,[[\"oR\",\"/lang|%%drp:lang:d365264fa4332%%|d/__PAGE__\",[[\"Fragment\",\"h\",[[\"div\",2,[[\"__next_metadata_boundary__\",0,[[\"Suspense\",0,[],0,[\"Suspense Fallback\",0,[],null],0]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],null]],\"replaySlots\":-1}]null",
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/$d$lang/__PAGE__",
+    "/$d$lang",
+    "/_index",
+    "/_head"
+  ]
+}
