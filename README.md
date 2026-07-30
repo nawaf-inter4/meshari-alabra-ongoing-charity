@@ -7,6 +7,11 @@
 ![PWA](https://img.shields.io/badge/PWA-Enabled-green?style=for-the-badge)
 ![Performance](https://img.shields.io/badge/Performance-Optimized-gold?style=for-the-badge)
 
+[![CI](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/actions/workflows/ci.yml/badge.svg)](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/actions/workflows/ci.yml)
+[![Release](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/actions/workflows/release.yml/badge.svg)](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/actions/workflows/release.yml)
+[![GitHub release](https://img.shields.io/github/v/release/nawaf-inter4/meshari-alabra-ongoing-charity)](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
 **A blazing-fast, multilingual Islamic landing page dedicated to the memory of Meshari Ahmed Sulaiman Alabra (مشاري بن أحمد بن سليمان العبره)**
 
 *March 29, 2023 - May Allah have mercy on him*
@@ -607,7 +612,7 @@ meshari-alabra-ongoing-charity/
 
 ## 🤝 Contributing
 
-This is a memorial project. If you'd like to contribute improvements:
+This is a memorial project. If you'd like to contribute improvements, please read the full [contribution guide](./CONTRIBUTING.md).
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -620,6 +625,8 @@ This is a memorial project. If you'd like to contribute improvements:
 - ESLint passes (`npm run lint`)
 - Build succeeds (`npm run build`)
 - Respects the memorial nature of the project
+
+Commits follow the [Conventional Commits](https://www.conventionalcommits.org/) format. Release Please maintains a release pull request automatically; merging it updates `CHANGELOG.md` and `package.json`, creates a semantic `vX.Y.Z` tag, and publishes a GitHub release.
 
 ---
 
@@ -639,7 +646,7 @@ If this project helps you or inspires you to create something similar:
 
 This project is dedicated to the memory of **Meshari Ahmed Sulaiman Alabra** and is meant to be a source of ongoing charity (Sadaqah Jariyah).
 
-Feel free to use, modify, and distribute this code to create similar memorial pages or Islamic landing pages. The code is provided as-is, with the hope that it benefits others.
+The source code is available under the [MIT License](./LICENSE). You may use, modify, and distribute it to create similar memorial pages or Islamic landing pages. The code is provided as-is, with the hope that it benefits others.
 
 ---
 

@@ -11,10 +11,10 @@ let Page: any = null;
 let pdfjs: any = null;
 
 if (typeof window !== "undefined") {
-  import("react-pdf").then((module) => {
-    Document = module.Document;
-    Page = module.Page;
-    pdfjs = module.pdfjs;
+  import("react-pdf").then((pdfModule) => {
+    Document = pdfModule.Document;
+    Page = pdfModule.Page;
+    pdfjs = pdfModule.pdfjs;
     // Set up PDF.js worker - use local file for reliability
     pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`;
   });
@@ -42,10 +42,10 @@ export default function PDFThumbnail({
     if (typeof window !== "undefined") {
       const loadModule = async () => {
         try {
-          const module = await import("react-pdf");
-          Document = module.Document;
-          Page = module.Page;
-          pdfjs = module.pdfjs;
+          const pdfModule = await import("react-pdf");
+          Document = pdfModule.Document;
+          Page = pdfModule.Page;
+          pdfjs = pdfModule.pdfjs;
           pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`;
           setPdfModuleLoaded(true);
         } catch (err) {

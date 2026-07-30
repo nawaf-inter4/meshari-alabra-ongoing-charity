@@ -1,5 +1,8 @@
 "use client";
 
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 // Disable analytics in development to prevent 404 errors
 // Analytics will only work in production on Vercel
 export default function AnalyticsWrapper() {
@@ -18,20 +21,11 @@ export default function AnalyticsWrapper() {
     }
   }
 
-  // Dynamically import to avoid build errors
-  try {
-    const { Analytics } = require('@vercel/analytics/react');
-    const { SpeedInsights } = require('@vercel/speed-insights/next');
-    
-    return (
-      <>
-        <Analytics />
-        <SpeedInsights />
-      </>
-    );
-  } catch (error) {
-    // Silently fail if analytics can't be loaded
-    return null;
-  }
+  return (
+    <>
+      <Analytics />
+      <SpeedInsights />
+    </>
+  );
 }
 
