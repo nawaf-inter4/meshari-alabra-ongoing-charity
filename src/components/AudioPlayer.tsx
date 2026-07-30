@@ -8,32 +8,42 @@ export default function AudioPlayer() {
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Autoplay on page load
+  // Browsers permit muted autoplay. Restore the memorial ambience immediately,
+  // then unmute as before; if autoplay is blocked, start on the first gesture.
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Simple autoplay
+    let unmuteTimer: ReturnType<typeof setTimeout> | undefined;
+    const startAfterGesture = () => {
+      audio.muted = false;
+      void audio.play().then(() => {
+        setIsPlaying(true);
+        setIsMuted(false);
+      }).catch(() => undefined);
+      document.removeEventListener("pointerdown", startAfterGesture);
+      document.removeEventListener("keydown", startAfterGesture);
+    };
+
     audio.muted = true;
-    audio.play().then(() => {
+    setIsMuted(true);
+    void audio.play().then(() => {
       setIsPlaying(true);
-      setTimeout(() => {
+      unmuteTimer = setTimeout(() => {
         audio.muted = false;
         setIsMuted(false);
       }, 2000);
     }).catch(() => {
-      // If blocked, wait for user click
-      const handleClick = () => {
-        audio.muted = false;
-        audio.play();
-        setIsPlaying(true);
-        setIsMuted(false);
-        document.removeEventListener('click', handleClick);
-      };
-      document.addEventListener('click', handleClick);
+      document.addEventListener("pointerdown", startAfterGesture, { once: true });
+      document.addEventListener("keydown", startAfterGesture, { once: true });
     });
-  }, []);
 
+    return () => {
+      if (unmuteTimer) clearTimeout(unmuteTimer);
+      document.removeEventListener("pointerdown", startAfterGesture);
+      document.removeEventListener("keydown", startAfterGesture);
+    };
+  }, []);
   // Stop audio when YouTube plays
   useEffect(() => {
     const handleVideoPlay = (event: Event) => {
@@ -106,6 +116,7 @@ export default function AudioPlayer() {
 
           <button
             onClick={togglePlayPause}
+            aria-label={isPlaying ? "Pause background audio" : "Play background audio"}
             className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-all duration-300"
           >
             {isPlaying ? (
@@ -117,6 +128,7 @@ export default function AudioPlayer() {
 
           <button
             onClick={toggleMute}
+            aria-label={isMuted ? "Unmute background audio" : "Mute background audio"}
             className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-all duration-300"
           >
             {isMuted ? (

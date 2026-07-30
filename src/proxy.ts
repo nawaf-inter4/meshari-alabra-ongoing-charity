@@ -1,54 +1,89 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { isSupportedLocale, localeDirection, siteConfig, type SupportedLocale } from '@/config/site';
+import { isSectionId } from '@/lib/routes';
+import { translate } from '@/lib/translations';
 
-const supportedLanguages = ['ar', 'en', 'ur', 'tr', 'id', 'ms', 'bn', 'fr', 'zh', 'it', 'ja', 'ko'];
+function escapeHtml(value: string) {
+  return value.replace(/[&<>'"]/g, (character) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
+  })[character] || character);
+}
+
+function notFoundResponse(request: NextRequest, lang: SupportedLocale) {
+  const direction = localeDirection(lang);
+  const home = translate(lang, 'navigation.back_to_home');
+  const html = `<!doctype html><html lang="${lang}" dir="${direction}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>404</title></head><body><main><h1>404</h1><p>${escapeHtml(siteConfig.identity.shortName)}</p><a href="/${lang}">${escapeHtml(home)}</a></main></body></html>`;
+  const response = new NextResponse(html, {
+    status: 404,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'X-Robots-Tag': 'noindex, nofollow',
+      'Cache-Control': 'no-store',
+    },
+  });
+  applySecurityHeaders(response, request);
+  response.headers.set('Cache-Control', 'no-store');
+  return response;
+}
+
+function isUtilityPath(pathname: string) {
+  return pathname === '/' ||
+    pathname === '/robots.txt' ||
+    pathname === '/sitemap.xml' ||
+    pathname === '/feed.xml' ||
+    pathname === '/manifest.webmanifest' ||
+    pathname === '/sw.js' ||
+    pathname === '/offline.html' ||
+    pathname === '/llms.txt' ||
+    pathname === '/health' ||
+    pathname === '/og-image' ||
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/icons/') ||
+    pathname.startsWith('/fonts/') ||
+    pathname.startsWith('/stories/') ||
+    /\.[a-z0-9]+$/i.test(pathname);
+}
 
 function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const pathSegments = pathname.split('/').filter(Boolean);
-  
-  // Skip middleware for service worker and manifest (served directly from public/)
-  // These are excluded from the matcher, but we add an extra check here
-  if (pathname === '/sw.js' || pathname === '/manifest.json') {
+
+  if (isUtilityPath(pathname)) {
     return NextResponse.next();
   }
-  
-  // Check if path starts with a language code
-  const firstSegment = pathSegments[0];
-  const isLanguagePrefix = supportedLanguages.includes(firstSegment);
-  
-  // Handle /[lang]/sections/... routes - rewrite to /sections/... internally
-  // This allows sections to work with language prefixes in the URL
-  if (isLanguagePrefix && pathSegments[1] === 'sections') {
-    const sectionPath = '/' + pathSegments.slice(1).join('/');
+
+  // Preserve legacy links while consolidating every section under a real,
+  // locale-prefixed server route.
+  if (pathname === '/sections' || pathname.startsWith('/sections/')) {
+    const section = pathname.split('/').filter(Boolean)[1];
+    if (pathname !== '/sections' && (!section || !isSectionId(section) || pathname !== `/sections/${section}`)) {
+      return notFoundResponse(request, siteConfig.identity.defaultLocale);
+    }
     const url = request.nextUrl.clone();
-    url.pathname = sectionPath;
-    
-    // Set language header so components can detect it
-    const response = NextResponse.rewrite(url);
-    response.headers.set('x-locale', firstSegment);
-    
-    // Apply security headers
+    url.pathname = pathname === '/sections'
+      ? `/${siteConfig.identity.defaultLocale}`
+      : `/${siteConfig.identity.defaultLocale}${pathname}`;
+    const response = NextResponse.redirect(url, 308);
     applySecurityHeaders(response, request);
     return response;
   }
-  
-  // Handle /sections/... routes - keep pathname, just set language header
-  // The route files are at /sections/... not /[lang]/sections/...
-  if (pathSegments[0] === 'sections' && !isLanguagePrefix) {
-    // Try to get language from URL referer or cookie
-    const referer = request.headers.get('referer') || '';
-    const refererLang = referer.match(/\/(ar|en|ur|tr|id|ms|bn|fr|zh|it|ja|ko)(?:\/|$)/)?.[1];
-    const preferredLang = refererLang || request.cookies.get('preferred-locale')?.value || 'ar';
-    const lang = supportedLanguages.includes(preferredLang) ? preferredLang : 'ar';
-    
-    // Keep the same pathname (/sections/...) but set language header
-    const response = NextResponse.next();
-    response.headers.set('x-locale', lang);
-    applySecurityHeaders(response, request);
-    return response;
+
+  const segments = pathname.split('/').filter(Boolean);
+  const locale = segments[0];
+  if (!locale || !isSupportedLocale(locale)) {
+    return notFoundResponse(request, siteConfig.identity.defaultLocale);
   }
-  
+
+  if (segments.length > 1) {
+    const validSectionPath = segments.length === 3 &&
+      segments[1] === 'sections' &&
+      isSectionId(segments[2]);
+    if (!validSectionPath) {
+      return notFoundResponse(request, locale);
+    }
+  }
+
   const response = NextResponse.next();
 
   // Apply security headers
@@ -98,7 +133,7 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    "upgrade-insecure-requests"
+    ...(process.env.NODE_ENV === 'production' ? ["upgrade-insecure-requests"] : [])
   ].join('; ');
   
   response.headers.set('Content-Security-Policy', csp);
@@ -143,14 +178,6 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
     response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   }
 
-  // CORS headers for API routes
-  if (request.nextUrl.pathname.startsWith('/api/')) {
-    response.headers.set('Access-Control-Allow-Origin', '*');
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  }
-
-  // PWA headers are handled in the main proxy function before applySecurityHeaders
 }
 
 export const config = {
@@ -161,8 +188,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - sw.js (service worker - handled by route handler)
-     * - manifest.json (manifest - handled by route handler)
+     * - manifest.webmanifest (generated PWA manifest)
      */
-    '/((?!_next/static|_next/image|favicon.ico|sw.js|manifest.json).*)',
+    '/((?!_next/static|_next/image|favicon.ico|sw.js|manifest.webmanifest).*)',
   ],
 };

@@ -1,119 +1,130 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FileText } from "lucide-react";
-import "react-pdf/dist/Page/AnnotationLayer.css";
-import "react-pdf/dist/Page/TextLayer.css";
-
-// Dynamically import react-pdf only on client to avoid SSR issues
-let Document: any = null;
-let Page: any = null;
-let pdfjs: any = null;
-
-if (typeof window !== "undefined") {
-  import("react-pdf").then((pdfModule) => {
-    Document = pdfModule.Document;
-    Page = pdfModule.Page;
-    pdfjs = pdfModule.pdfjs;
-    // Set up PDF.js worker - use local file for reliability
-    pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`;
-  });
-}
 
 interface PDFThumbnailProps {
   pdfUrl: string;
   className?: string;
   width?: number;
   height?: number;
+  priority?: boolean;
 }
 
-export default function PDFThumbnail({ 
-  pdfUrl, 
-  className = "", 
+export default function PDFThumbnail({
+  pdfUrl,
+  className = "",
   width = 400,
-  height = 300 
+  height = 300,
+  priority = false,
 }: PDFThumbnailProps) {
-  const [mounted, setMounted] = useState(false);
-  const [pdfModuleLoaded, setPdfModuleLoaded] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [shouldRender, setShouldRender] = useState(priority);
+  const [rendered, setRendered] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    // Load react-pdf module immediately
-    if (typeof window !== "undefined") {
-      const loadModule = async () => {
-        try {
-          const pdfModule = await import("react-pdf");
-          Document = pdfModule.Document;
-          Page = pdfModule.Page;
-          pdfjs = pdfModule.pdfjs;
-          pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`;
-          setPdfModuleLoaded(true);
-        } catch (err) {
-          console.error("Failed to load react-pdf:", err);
+    const container = containerRef.current;
+    if (!container || shouldRender) return;
+
+    const reveal = () => setShouldRender(true);
+    const revealIfNear = () => {
+      const bounds = container.getBoundingClientRect();
+      if (bounds.top <= window.innerHeight + 600 && bounds.bottom >= -600) reveal();
+    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) reveal();
+      },
+      { rootMargin: "600px" },
+    );
+
+    observer.observe(container);
+    window.addEventListener("scroll", revealIfNear, { passive: true });
+    window.addEventListener("resize", revealIfNear);
+    revealIfNear();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", revealIfNear);
+      window.removeEventListener("resize", revealIfNear);
+    };
+  }, [priority, shouldRender]);
+
+  useEffect(() => {
+    if (!shouldRender) return;
+
+    let cancelled = false;
+    let loadingTask: { promise: Promise<any>; destroy: () => Promise<void> } | null = null;
+    let renderTask: { cancel: () => void; promise: Promise<void> } | null = null;
+
+    const renderThumbnail = async () => {
+      try {
+        const pdfModule = await import("pdfjs-dist");
+        pdfModule.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+        loadingTask = pdfModule.getDocument({ url: pdfUrl, withCredentials: false });
+        const pdf = await loadingTask.promise;
+        const page = await pdf.getPage(1);
+        if (cancelled || !canvasRef.current) return;
+
+        const baseViewport = page.getViewport({ scale: 1 });
+        const scale = Math.min(width / baseViewport.width, height / baseViewport.height);
+        const viewport = page.getViewport({ scale });
+        const canvas = canvasRef.current;
+        const context = canvas.getContext("2d");
+        if (!context) throw new Error("Canvas rendering is unavailable");
+
+        const pixelRatio = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(viewport.width * pixelRatio);
+        canvas.height = Math.floor(viewport.height * pixelRatio);
+        canvas.style.width = `${Math.floor(viewport.width)}px`;
+        canvas.style.height = `${Math.floor(viewport.height)}px`;
+
+        const currentRenderTask = page.render({
+          canvas,
+          canvasContext: context,
+          viewport,
+          transform: pixelRatio === 1 ? undefined : [pixelRatio, 0, 0, pixelRatio, 0, 0],
+        });
+        renderTask = currentRenderTask;
+        await currentRenderTask.promise;
+        if (!cancelled) setRendered(true);
+      } catch (error) {
+        if (!cancelled && !(error instanceof Error && error.name === "RenderingCancelledException")) {
+          console.error("Failed to render PDF thumbnail:", error);
+          setFailed(true);
         }
-      };
-      loadModule();
-    }
-  }, []);
+      }
+    };
 
-  // Memoize file object to prevent unnecessary reloads
-  const fileConfig = useMemo(() => ({
-    url: pdfUrl,
-    httpHeaders: {
-      'Accept': 'application/pdf',
-    },
-    withCredentials: false,
-  }), [pdfUrl]);
+    void renderThumbnail();
 
-  // Memoize options to prevent unnecessary reloads
-  const pdfOptions = useMemo(() => ({
-    cMapUrl: 'https://unpkg.com/pdfjs-dist@3.11.174/cmaps/',
-    cMapPacked: true,
-    standardFontDataUrl: 'https://unpkg.com/pdfjs-dist@3.11.174/standard_fonts/',
-  }), []);
+    return () => {
+      cancelled = true;
+      renderTask?.cancel();
+      void loadingTask?.destroy();
+    };
+  }, [height, pdfUrl, shouldRender, width]);
 
-  // Show placeholder only if not mounted
-  if (!mounted) {
-    return (
-      <div className={`${className} bg-gradient-to-br from-islamic-gold/20 to-islamic-green/20 flex items-center justify-center`}>
-        <FileText className="w-12 h-12 text-islamic-gold/50" />
-      </div>
-    );
-  }
-
-  // If module not loaded yet, show placeholder but start loading
-  if (!pdfModuleLoaded || !Document || !Page) {
-    return (
-      <div className={`${className} bg-gradient-to-br from-islamic-gold/20 to-islamic-green/20 flex items-center justify-center`}>
-        <FileText className="w-12 h-12 text-islamic-gold/50" />
-      </div>
-    );
-  }
-
-  // Render PDF immediately - no loading state blocking
   return (
-    <div className={`${className} relative overflow-hidden bg-gray-100 dark:bg-gray-900 flex items-center justify-center`}>
-      <Document
-        file={fileConfig}
-        className="w-full h-full flex items-center justify-center"
-        error={
-          <div className="flex items-center justify-center w-full h-full">
-            <div className="text-center text-gray-500 dark:text-gray-400">
-              <FileText className="w-12 h-12 mx-auto mb-2 text-islamic-gold" />
-              <p className="text-sm">PDF Preview</p>
-            </div>
+    <div
+      ref={containerRef}
+      className={`${className} relative overflow-hidden bg-gray-100 dark:bg-gray-900 flex items-center justify-center`}
+    >
+      {!rendered && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-islamic-gold/20 to-islamic-green/20">
+          <div className="text-center text-gray-500 dark:text-gray-400">
+            <FileText className="w-12 h-12 mx-auto mb-2 text-islamic-gold/50" />
+            {failed && <p className="text-sm">PDF Preview</p>}
           </div>
-        }
-        options={pdfOptions}
-      >
-        <Page
-          pageNumber={1}
-          width={width}
-          renderTextLayer={false}
-          renderAnnotationLayer={false}
-          className="!max-w-full !max-h-full object-contain shadow-sm"
-        />
-      </Document>
+        </div>
+      )}
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className={`max-w-full max-h-full object-contain shadow-sm ${rendered ? "block" : "invisible"}`}
+      />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Heart, Star, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
+import { siteConfig } from "@/config/site";
 
 export default function HeroSection() {
   const { t, direction, locale } = useLanguage();
@@ -183,7 +184,7 @@ export default function HeroSection() {
 
         {/* Memorial Description */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ 
             duration: 0.8, 
@@ -192,21 +193,23 @@ export default function HeroSection() {
           }}
           className="bg-light-secondary/80 dark:bg-dark-secondary/80 backdrop-blur-lg rounded-2xl p-8 border-2 border-islamic-gold/30 glow motion-safe"
           style={{
+            borderColor: 'var(--color-brand-border)',
             willChange: 'transform, opacity',
             transform: 'translateZ(0)',
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
           }}
+          data-memorial-card
           suppressHydrationWarning
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-3" suppressHydrationWarning>
-            {mounted ? t("memorial.name") : (locale === 'ar' ? "مشاري بن أحمد بن سليمان العبره" : "Meshari Ahmed Sulaiman Alabra")}
-          </h2>
+          <h1 className="text-3xl md:text-4xl font-bold mb-3" suppressHydrationWarning>
+            {siteConfig.content.memorialName || (mounted ? t("memorial.name") : siteConfig.content.memorialLegalName)}
+          </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4" suppressHydrationWarning>
-            {mounted ? t("memorial.death") : (locale === 'ar' ? "توفي في 29 مارس 2023 - رحمه الله" : "Passed away on March 29, 2023 - May Allah have mercy on him")}
+            {siteConfig.content.memorialDate || (mounted ? t("memorial.death") : (locale === 'ar' ? "توفي في 29 مارس 2023 - رحمه الله" : "Passed away on March 29, 2023 - May Allah have mercy on him"))}
           </p>
           <p className="text-xl text-islamic-green dark:text-islamic-gold leading-relaxed mb-6" suppressHydrationWarning>
-            {mounted ? t("hero.description") : (locale === 'ar' ? "صفحة مخصصة لأخي مشاري، توفي إثر مرض سرطان الدماغ. اللهم اغفر له وارحمه واجعل القرآن والصدقة الجارية شفيعاً له" : "A page dedicated to my brother Meshari, who passed away from brain cancer. O Allah, forgive him, have mercy on him, and make the Quran and ongoing charity intercede for him")}
+            {siteConfig.content.heroDescription || (mounted ? t("hero.description") : siteConfig.content.memorialLegalName)}
           </p>
 
           {/* Supplications Button */}
@@ -217,7 +220,7 @@ export default function HeroSection() {
             className="flex justify-center"
           >
             <a
-              href="/mehsari (دعاء).pdf"
+              href={siteConfig.assets.supplicationsPdf}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-semibold rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 transform hover:scale-105 glow"
@@ -230,14 +233,14 @@ export default function HeroSection() {
 
         {/* Quranic Verse - Same as Footer */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-8"
         >
           <div className="space-y-6">
             {/* Bismillah */}
-            <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold dark:text-islamic-green leading-relaxed`}>
+            <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold dark:text-islamic-gold leading-relaxed`}>
               {getQuranVerse('bismillah')}
             </p>
             
@@ -247,7 +250,7 @@ export default function HeroSection() {
             </p>
             
             {/* Sadaqallah */}
-            <p className={`text-lg md:text-xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold dark:text-islamic-green leading-relaxed`}>
+            <p className={`text-lg md:text-xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold dark:text-islamic-gold leading-relaxed`}>
               {getQuranVerse('sadaqallah')}
             </p>
           </div>

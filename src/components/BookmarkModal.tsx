@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, BookmarkCheck, Bookmark, ChevronRight, ChevronLeft } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
+import { useRouter } from "next/navigation";
 
 interface BookmarkedVerse {
   surahNumber: number;
@@ -64,6 +65,7 @@ function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: {
 
 export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { t, locale, direction } = useLanguage();
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const isRTL = direction === "rtl";
 
@@ -272,12 +274,11 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                             quranSection.scrollIntoView({ behavior: 'smooth' });
                           } else {
                             // If on a different page, navigate to main page with quran section
-                            const baseUrl = locale === 'ar' ? '/' : `/${locale}`;
-                            window.location.href = `${baseUrl}#quran`;
+                            router.push(`/${locale}#quran`);
                           }
                         }, 300);
                       }}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-semibold rounded-full hover:bg-islamic-green transition-all duration-300 glow"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-gray-950 font-semibold rounded-full hover:bg-islamic-green hover:text-white transition-all duration-300 glow"
                     >
                       {t("bookmarks.go_to_quran")}
                       <motion.div

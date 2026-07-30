@@ -2,6 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Keep below-the-fold landing sections out of initial layout/paint work. */
+#main-content > section:not(:first-of-type) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+@font-face {
+  font-family: 'Lexend Deca';
+  src: url('/fonts/lexend-deca-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('/fonts/tajawal-arabic-400.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('/fonts/tajawal-arabic-500.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('/fonts/tajawal-arabic-700.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amiri';
+  src: url('/fonts/amiri-arabic-400.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amiri';
+  src: url('/fonts/amiri-arabic-700.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Scheherazade New';
+  src: url('/fonts/scheherazade-new-arabic-400.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Scheherazade New';
+  src: url('/fonts/scheherazade-new-arabic-700.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 :root {
   --font-lexend-deca: 'Lexend Deca', sans-serif;
   --font-tajwal: 'Tajawal', sans-serif;
@@ -136,7 +206,15 @@ html[dir="ltr"] body {
 /* Only apply RTL direction to Arabic text when in RTL context */
 html[dir="rtl"] .font-arabic {
   direction: rtl;
-  unicode-bidi: bidi-override;
+  unicode-bidi: isolate;
+}
+
+/* Arabic glyphs and diacritics extend beyond Latin font metrics. Keep title
+   boxes roomy so gradient clipping and tight Tailwind leading never crop them. */
+html[dir="rtl"] :is(h1, h2, h3) {
+  line-height: 1.65;
+  padding-block: 0.12em;
+  overflow: visible;
 }
 
 /* Override font-arabic for English text - ensure English surah names use LTR */
@@ -198,7 +276,7 @@ h3.font-tajawal {
 /* Only apply RTL direction to Quran text when in RTL context */
 html[dir="rtl"] .quran-text {
   direction: rtl !important;
-  unicode-bidi: bidi-override !important;
+  unicode-bidi: isolate !important;
 }
 
 /* Font loading is handled via <link> tags in layout.tsx for better performance */
@@ -260,13 +338,9 @@ html[dir="rtl"] .quran-text {
 /* Only apply RTL direction to Arabic Quran text when in RTL context */
 html[dir="rtl"] .arabic-quran-text {
   direction: rtl !important;
-  unicode-bidi: bidi-override !important;
+  unicode-bidi: isolate !important;
 }
 
-/* Font family override for font-semibold elements in grid containers */
-.grid.md\:grid-cols-2 .font-semibold {
-  font-family: 'Amiri' !important;
-}
 
 /* Scrollbar Styling - Hidden by default, visible on scroll/hover */
 ::-webkit-scrollbar {
@@ -293,11 +367,11 @@ body:hover ::-webkit-scrollbar-thumb,
 body:focus ::-webkit-scrollbar-thumb,
 html:active ::-webkit-scrollbar-thumb,
 body:active ::-webkit-scrollbar-thumb {
-  background: #D4AF37 !important;
+  background: var(--color-brand) !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #22C55E !important;
+  background: var(--color-accent) !important;
 }
 
 /* Firefox scrollbar - hidden by default */
@@ -309,7 +383,7 @@ html {
 /* Show Firefox scrollbar on hover/scroll */
 html:hover,
 html:active {
-  scrollbar-color: #D4AF37 transparent;
+  scrollbar-color: var(--color-brand) transparent;
 }
 
 /* Language Switcher Scrollbar */
@@ -329,11 +403,11 @@ html:active {
 
 .language-switcher:hover::-webkit-scrollbar-thumb,
 .language-switcher:focus::-webkit-scrollbar-thumb {
-  background: #D4AF37 !important;
+  background: var(--color-brand) !important;
 }
 
 .language-switcher::-webkit-scrollbar-thumb:hover {
-  background: #22C55E !important;
+  background: var(--color-accent) !important;
 }
 
 /* Firefox scrollbar - hidden by default */
@@ -347,7 +421,7 @@ html:hover *,
 html:focus *,
 body:hover *,
 body:focus * {
-  scrollbar-color: #D4AF37 transparent;
+  scrollbar-color: var(--color-brand) transparent;
 }
 
 /* Safari scrollbar support */
@@ -370,19 +444,19 @@ html:hover *,
 html:focus *,
 body:hover *,
 body:focus * {
-  scrollbar-color: #D4AF37 transparent;
+  scrollbar-color: var(--color-brand) transparent;
 }
 
 /* Islamic Patterns Background */
 .islamic-pattern {
   background-image:
-    radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(0, 107, 63, 0.03) 0%, transparent 50%);
+    radial-gradient(circle at 20% 50%, rgb(var(--color-brand-rgb) / 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgb(var(--color-accent-rgb) / 0.03) 0%, transparent 50%);
 }
 
 /* Glowing Effect */
 .glow {
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  box-shadow: 0 0 20px rgb(var(--color-brand-rgb) / 0.3);
 }
 
 /* Card Hover Effect */
@@ -393,6 +467,14 @@ body:focus * {
 /* Gradient Text */
 .gradient-text {
   @apply bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue bg-clip-text text-transparent;
+  line-height: 1.25;
+  padding-block: 0.08em;
+  overflow: visible;
+}
+
+[data-dhikr-count] {
+  line-height: 1.5;
+  padding-block: 0.2em;
 }
 
 /* Loading Shimmer */

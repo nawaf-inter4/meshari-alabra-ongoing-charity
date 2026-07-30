@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion, AnimatePresence } from "framer-motion";
 import { RotateCcw, Hand, ChevronDown, ChevronUp } from "lucide-react";
+import SectionTitleLink from "./SectionTitleLink";
 
 export default function DhikrCounter() {
   const { t } = useLanguage();
@@ -109,7 +110,7 @@ export default function DhikrCounter() {
           <div className="inline-flex items-center gap-2 mb-4">
             <Hand className="w-8 h-8 text-islamic-gold" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text">
-              {t("dhikr.title")}
+              <SectionTitleLink section="dhikr">{t("dhikr.title")}</SectionTitleLink>
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400">
@@ -269,7 +270,7 @@ export default function DhikrCounter() {
             className="text-center mb-6 md:mb-12"
           >
             <div className="inline-block p-6 md:p-8 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-full mb-4 md:mb-6">
-              <p className="text-6xl md:text-7xl lg:text-9xl font-bold gradient-text">
+              <p className="text-6xl md:text-7xl lg:text-9xl font-bold gradient-text leading-[1.25] px-2 py-2" data-dhikr-count>
                 {count}
               </p>
             </div>

@@ -274,7 +274,7 @@ export default function QuranStoriesSection() {
 
         {/* Stories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
-          {quranStories.map((story) => (
+          {quranStories.map((story, index) => (
             <div
               key={story.id}
               className="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-islamic-gold"
@@ -288,6 +288,7 @@ export default function QuranStoriesSection() {
                     className="w-full h-full"
                     width={400}
                     height={192}
+                    priority={index === 0}
                   />
                 </div>
                 

@@ -2,8 +2,10 @@
 
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
+import { siteConfig } from "@/config/site";
 import { Heart, Gift, Users, Star } from "lucide-react";
 import { useState, useEffect } from "react";
+import SectionTitleLink from "./SectionTitleLink";
 
 export default function DonationSection() {
   const { t } = useLanguage();
@@ -39,7 +41,7 @@ export default function DonationSection() {
           <div className="inline-flex items-center gap-2 mb-4">
             <Heart className="w-8 h-8 text-islamic-gold" fill="currentColor" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
-              {t("donation.title")}
+              <SectionTitleLink section="donation">{t("donation.title")}</SectionTitleLink>
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-4">
@@ -91,7 +93,7 @@ export default function DonationSection() {
             className="text-center"
           >
             <a
-              href="https://ehsan.sa/campaign/6FC11E15DA"
+              href={siteConfig.content.donationUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue text-white font-bold text-lg rounded-full hover:scale-105 transition-transform duration-300 glow"

@@ -2,34 +2,15 @@
 
 import { useLanguage } from "../LanguageProvider";
 import { PlayCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { siteConfig } from "@/config/site";
+import NativeYouTubeIframe from "@/components/NativeYouTubeIframe";
 
 export default function MeshariFavoriteReciter() {
-  const { locale, t } = useLanguage();
-  const [mounted, setMounted] = useState(false);
+  const { t } = useLanguage();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { favoriteReciterPlaylistId, favoriteReciterStartVideoId } = siteConfig.content;
+  const youtubeEmbedUrl = `https://www.youtube.com/embed/${favoriteReciterStartVideoId}?list=${favoriteReciterPlaylistId}&autoplay=0&modestbranding=1&rel=0&playsinline=1`;
 
-  const reciterData = {
-    youtubeUrl: "https://youtube.com/playlist?list=PLA3B14EC1634EA167&si=v29X0j6DNNVdr6In",
-    youtubeEmbedUrl: "https://www.youtube.com/embed/videoseries?list=PLA3B14EC1634EA167&autoplay=0&modestbranding=1&rel=0"
-  };
-
-  if (!mounted) {
-    return (
-      <section id="meshari-favorite-reciter" className="py-20 px-4 bg-light-secondary dark:bg-dark-secondary">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="shimmer w-96 h-12 mx-auto mb-4 rounded-lg"></div>
-            <div className="shimmer w-80 h-6 mx-auto rounded-lg"></div>
-          </div>
-          <div className="shimmer w-full h-96 rounded-2xl"></div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section id="meshari-favorite-reciter" className="py-20 px-4 bg-light-secondary dark:bg-dark-secondary">
@@ -55,14 +36,9 @@ export default function MeshariFavoriteReciter() {
 
         {/* YouTube Video */}
         <div className="relative rounded-2xl overflow-hidden shadow-2xl glow" style={{ paddingBottom: "56.25%" }}>
-          <iframe
-            className="absolute top-0 left-0 w-full h-full"
-            src={reciterData.youtubeEmbedUrl}
-            title="Meshari's Favorite Quran Reciter"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
+          <NativeYouTubeIframe
+            src={youtubeEmbedUrl}
+            title={`${siteConfig.content.memorialName || siteConfig.content.memorialLegalName}'s Favorite Quran Reciter`}
           />
         </div>
       </div>

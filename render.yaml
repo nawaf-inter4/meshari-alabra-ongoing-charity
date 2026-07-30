@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ongoing-charity
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: 'off'
+    envVars:
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"

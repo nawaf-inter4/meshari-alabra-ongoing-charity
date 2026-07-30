@@ -2,8 +2,8 @@
 
 import dynamic from "next/dynamic";
 
-const PWAInstallPrompt = dynamic(() => import("./PWAInstallPrompt"));
+const PWAClient = dynamic(() => import("./PWAClient"));
 
 export default function PWAInstallWrapper() {
-  return <PWAInstallPrompt />;
+  return <PWAClient />;
 }

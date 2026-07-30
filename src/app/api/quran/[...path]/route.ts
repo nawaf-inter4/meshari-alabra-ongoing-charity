@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { siteConfig } from '@/config/site';
 
 export async function GET(
   request: NextRequest,
@@ -14,7 +15,7 @@ export async function GET(
       headers: {
         'Accept': 'application/json',
         'Accept-Encoding': 'gzip, deflate, br',
-        'User-Agent': 'Meshari-Alabra-Charity/1.0',
+        'User-Agent': `OngoingCharityApp/1.0 (${siteConfig.identity.siteUrl})`,
       },
       // Add timeout
       signal: AbortSignal.timeout(10000), // 10 second timeout

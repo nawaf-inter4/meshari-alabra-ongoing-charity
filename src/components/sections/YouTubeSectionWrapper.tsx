@@ -12,6 +12,6 @@ const YouTubePlaylist = dynamic(() => import("@/components/sections/YouTubePlayl
 });
 
 export default function YouTubeSectionWrapper() {
-  return <YouTubePlaylist playlistId="PL5YnzBdhLdkXy12BLR-2mjj9qrPg4QL-N" />;
+  return <YouTubePlaylist />;
 }
 

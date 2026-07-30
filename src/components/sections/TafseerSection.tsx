@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Book, Search, ChevronDown, Globe, X, Loader2 } from "lucide-react";
+import SectionTitleLink from "./SectionTitleLink";
 
 interface TafseerEdition {
   id: number;
@@ -296,7 +297,9 @@ export default function TafseerSection() {
           <div className="inline-flex items-center gap-2 mb-4">
             <Book className="w-8 h-8 text-islamic-gold" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-normal py-2" suppressHydrationWarning>
-              {t("tafseer.title") !== "tafseer.title" ? t("tafseer.title") : "تفسير القرآن"}
+              <SectionTitleLink section="tafseer">
+                {t("tafseer.title") !== "tafseer.title" ? t("tafseer.title") : "تفسير القرآن"}
+              </SectionTitleLink>
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400" suppressHydrationWarning>

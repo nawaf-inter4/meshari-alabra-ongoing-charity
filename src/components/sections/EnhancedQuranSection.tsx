@@ -5,6 +5,8 @@ import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookOpen, ChevronDown, Play, Pause, Volume2, Download, Share2, Bookmark, BookmarkCheck, Search, X } from "lucide-react";
 import ShareModal from "../ShareModal";
+import SectionTitleLink from "./SectionTitleLink";
+import { localeDirection, siteConfig } from "@/config/site";
 
 interface Ayah {
   number: number;
@@ -299,7 +301,7 @@ export default function EnhancedQuranSection() {
   const [loading, setLoading] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [reciters, setReciters] = useState<Reciter[]>([]);
-  const [selectedReciter, setSelectedReciter] = useState<string>("ar.ajmi");
+  const [selectedReciter, setSelectedReciter] = useState<string>("ar.ahmedajamy");
   const [selectedTranslation, setSelectedTranslation] = useState<string>("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAyah, setCurrentAyah] = useState<number>(1);
@@ -1088,7 +1090,7 @@ export default function EnhancedQuranSection() {
     } catch (error) {
       console.error("Error fetching reciters:", error);
       // Set a fallback reciter if API fails
-      setSelectedReciter("ar.ajmi");
+      setSelectedReciter("ar.ahmedajamy");
     }
   };
 
@@ -1110,9 +1112,12 @@ export default function EnhancedQuranSection() {
       
       // First, fetch the ayah data to get the audio URL
       const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${selectedReciter}`);
+      if (!response.ok) {
+        throw new Error(`Quran audio request failed with status ${response.status}`);
+      }
       const data = await response.json();
       
-      if (data.data && data.data.audio) {
+      if (data.data?.audio && (!data.data.edition || data.data.edition.format === "audio")) {
         // Found audio URL
         
         if (audioRef.current) {
@@ -1129,20 +1134,22 @@ export default function EnhancedQuranSection() {
             setAudioLoading(false);
             
             // Show user-friendly error message
-            alert("Unable to play audio. Please check your internet connection or try a different reciter.");
+            alert(locale === "ar"
+              ? "تعذر تشغيل صوت هذه الآية. يرجى المحاولة مرة أخرى أو اختيار قارئ آخر."
+              : "This verse audio could not be played. Please try again or choose another reciter.");
           }
         }
       } else {
-        console.error("No audio data found in API response");
-        setIsPlaying(false);
-        setAudioLoading(false);
-        alert("Audio not available for this verse. Please try a different reciter.");
+        console.error("No valid audio edition URL found in response:", data);
+        throw new Error("No valid audio edition URL found");
       }
     } catch (error) {
       console.error("Error in playAyah:", error);
       setIsPlaying(false);
       setAudioLoading(false);
-      alert("Unable to load audio. Please check your internet connection.");
+      alert(locale === "ar"
+        ? "تعذر تحميل صوت هذه الآية. يرجى المحاولة مرة أخرى أو اختيار قارئ آخر."
+        : "This verse audio could not be loaded. Please try again or choose another reciter.");
     }
   };
 
@@ -1178,7 +1185,9 @@ export default function EnhancedQuranSection() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-4">
-              {t("quran.title") !== "quran.title" ? t("quran.title") : "القرآن الكريم"}
+              <SectionTitleLink section="quran">
+                {t("quran.title") !== "quran.title" ? t("quran.title") : "القرآن الكريم"}
+              </SectionTitleLink>
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-400">
               {t("quran.subtitle") !== "quran.subtitle" ? t("quran.subtitle") : "اقرأ وتدبر آيات الله العظيم"}
@@ -1211,7 +1220,9 @@ export default function EnhancedQuranSection() {
           <div className="inline-flex items-center gap-2 mb-4">
             <BookOpen className="w-8 h-8 text-islamic-gold" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text">
-              {mounted && t("quran.title") !== "quran.title" ? t("quran.title") : "القرآن الكريم"}
+              <SectionTitleLink section="quran">
+                {mounted && t("quran.title") !== "quran.title" ? t("quran.title") : "القرآن الكريم"}
+              </SectionTitleLink>
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400">
@@ -1320,8 +1331,8 @@ export default function EnhancedQuranSection() {
                     </div>
                   </div>
                   {reciters.find(r => r.identifier === selectedReciter)?.isMeshariFavorite && (
-                    <span className="px-2 py-1 text-xs font-bold bg-islamic-gold text-white rounded-full self-start">
-                      {mounted && t("quran.meshari_favorite") !== "quran.meshari_favorite" ? t("quran.meshari_favorite") : (locale === 'ar' ? "مفضل مشاري" : "Meshari's Favorite")}
+                    <span className="px-2 py-1 text-xs font-bold bg-islamic-gold text-gray-950 rounded-full self-start">
+                      {mounted && t("quran.meshari_favorite") !== "quran.meshari_favorite" ? t("quran.meshari_favorite") : `${siteConfig.content.memorialName || siteConfig.content.memorialLegalName}'s Favorite`}
                     </span>
                   )}
                 </span>
@@ -1351,8 +1362,8 @@ export default function EnhancedQuranSection() {
                       </div>
                     </div>
                     {reciter.isMeshariFavorite && (
-                      <span className="px-2 py-1 text-xs font-bold bg-islamic-gold text-white rounded-full self-start">
-                        {mounted && t("quran.meshari_favorite") !== "quran.meshari_favorite" ? t("quran.meshari_favorite") : (locale === 'ar' ? "مفضل مشاري" : "Meshari's Favorite")}
+                      <span className="px-2 py-1 text-xs font-bold bg-islamic-gold text-gray-950 rounded-full self-start">
+                        {mounted && t("quran.meshari_favorite") !== "quran.meshari_favorite" ? t("quran.meshari_favorite") : `${siteConfig.content.memorialName || siteConfig.content.memorialLegalName}'s Favorite`}
                       </span>
                     )}
                   </div>
@@ -1493,7 +1504,7 @@ export default function EnhancedQuranSection() {
                         )}
                         {/* Show translation below Arabic text if available */}
                         {translationText && translationText !== arabicText && (
-                          <div className="text-gray-600 dark:text-gray-400 text-sm mt-2 p-2 bg-light-secondary dark:bg-dark-secondary rounded" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+                          <div className="text-gray-600 dark:text-gray-400 text-sm mt-2 p-2 bg-light-secondary dark:bg-dark-secondary rounded" dir={localeDirection(locale)}>
                             {translationText}
                           </div>
                         )}

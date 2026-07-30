@@ -3,7 +3,7 @@
 <div align="center">
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
+![TypeScript](https://img.shields.io/badge/TypeScript-7-blue?style=for-the-badge&logo=typescript)
 ![PWA](https://img.shields.io/badge/PWA-Enabled-green?style=for-the-badge)
 ![Performance](https://img.shields.io/badge/Performance-Optimized-gold?style=for-the-badge)
 
@@ -18,13 +18,30 @@
 
 [🚀 Live Demo](https://meshari.charity) | [📖 Documentation](./DEPLOYMENT.md) | [🤲 Donate](https://ehsan.sa/campaign/6FC11E15DA)
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+
 </div>
 
 ---
 
 ## 🌙 About
 
-This landing page serves as a **Sadaqah Jariyah** (ongoing charity) dedicated to Meshari, who passed away from brain cancer. Built with cutting-edge technology for **instant loading** and **optimal performance**. The site features comprehensive multilingual support, dedicated section pages with full SEO optimization, and is fully optimized for AI/LLM indexing.
+This landing page serves as a **Sadaqah Jariyah** (ongoing charity) dedicated to Meshari, who passed away from brain cancer. It now uses Next.js 16.3 Instant Navigations, Cache Components, Partial Prefetching, thumbnail-first privacy-conscious YouTube embeds, centralized white-label configuration, and multi-provider deployment templates. The site retains comprehensive multilingual support, dedicated section pages, SEO metadata, PWA support, and AI/LLM indexing guidance.
+
+### Recently added
+
+- Next.js `16.3.0-preview.10` with Cache Components and Partial Prefetching
+- TypeScript 7 project compilation with an isolated TypeScript 6 lint compatibility bridge
+- Playwright coverage for Instant Navigations, YouTube previews, white-label metadata/PWA values, and direction-aware CTA typography
+- Click-to-load Quran and favorite-reciter playlist thumbnails
+- Central configuration for identity, memorial content, assets, SEO, PWA, colors, media, and public URLs
+- Dynamic `/manifest.webmanifest`
+- Vercel, Netlify, Render, Railway, Docker, and Docker Compose deployment support
+- Explicit privacy rules excluding real environment files, agent metadata, and every `SKILL.md`
+- Direction-aware typography: Lexend Deca for LTR interfaces and Tajawal for RTL interface controls
+- Clickable landing-page section titles and section-directory cards that preserve the active locale in URLs such as `/en/sections/quran`
 
 ### ✨ Core Features
 
@@ -51,7 +68,7 @@ This landing page serves as a **Sadaqah Jariyah** (ongoing charity) dedicated to
 - ✅ Page Size: **1.83 KB** (main page)
 - ✅ **Instant** loading with aggressive caching
 - ✅ **7x faster** development with Turbopack
-- ✅ Static generation for all routes
+- ✅ Hybrid static, partially prerendered, and request-time routes where appropriate
 
 **Optimization Features:**
 - 🚀 Dynamic imports with code splitting
@@ -105,21 +122,21 @@ Images:           24 hours (with stale-while-revalidate)
 - Fully responsive design
 
 ### 📱 Progressive Web App (PWA)
-- ✅ Works offline with intelligent caching
-- ✅ Install on home screen (mobile & desktop)
-- ✅ Push notifications ready (prayer times & daily supplications)
-- ✅ Background sync support
-- ✅ App-like experience
-- ✅ 5MB cache limit with smart eviction
+- ✅ Installable on supported mobile and desktop browsers
+- ✅ Dedicated regular and maskable icons plus a generated manifest
+- ✅ Previously visited same-origin pages can remain available from cache
+- ✅ Localized last-resort offline screen when an uncached navigation fails
+- ✅ User-controlled service-worker update prompt
+- ℹ️ Live prayer times, location search, streaming/audio, and remote APIs require connectivity
 
 ---
 
 ## 🛠️ Tech Stack
 
 **Framework & Language:**
-- **Next.js 16.1.1** (App Router) - Latest stable version with Server Components
+- **Next.js 16.3.0-preview.10** (App Router) - Cache Components, Partial Prefetching, and Instant Navigations
 - **React 19** - With concurrent features
-- **TypeScript 5** - Type safety
+- **TypeScript 7** - Project compiler, with TypeScript 6 isolated to ESLint compatibility
 - **Turbopack** - 7x faster development builds
 
 **Styling & UI:**
@@ -135,7 +152,7 @@ Images:           24 hours (with stale-while-revalidate)
 **Build Tools:**
 - **Turbopack** - 7x faster than Webpack (dev mode)
 - **SWC Compiler** - Rust-based, lightning fast
-- **next-pwa** - Full PWA support
+- **Dependency-free service worker** - Cross-provider offline and update lifecycle
 - **Bundle Analyzer** - Visualize bundle size
 
 **APIs Integrated:**
@@ -148,7 +165,7 @@ Images:           24 hours (with stale-while-revalidate)
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ and npm
+- Node.js 22 recommended (Node.js 20.9+ supported) and npm
 
 ### Installation
 
@@ -157,8 +174,8 @@ Images:           24 hours (with stale-while-revalidate)
 git clone https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity.git
 cd meshari-alabra-ongoing-charity
 
-# Install dependencies
-npm install
+# Install the locked dependency graph
+npm ci --legacy-peer-deps
 
 # Run development server with Turbopack (7x faster!)
 npm run dev
@@ -176,6 +193,8 @@ npm start                # Start production server
 npm run lint             # Run ESLint
 npm run lint:fix         # Auto-fix ESLint issues
 npm run type-check       # TypeScript type checking
+npm run test:e2e         # Playwright browser regression suite
+npm run test:e2e:install # Install Playwright Chromium
 npm run clean            # Clean build cache and .next folder
 ```
 
@@ -192,16 +211,7 @@ npm run build:analyze
 npm start
 ```
 
-**Build Output:**
-```
-Route (app)                Size     First Load JS
-┌ ○ /                      1.83 kB  107 kB
-└ ○ /_not-found            979 B    107 kB
-
-✓ Static generation: 4 routes
-✓ Sitemap generated
-✓ All optimizations applied
-```
+The production output contains static routes, partially prerendered language routes, and request-time API routes. Run `npm run build` against the current lockfile for authoritative route and bundle output rather than relying on stale committed metrics.
 
 ---
 
@@ -223,57 +233,135 @@ Route (app)                Size     First Load JS
 - **Coverage**: Quran, Islamic charity, prayer times, supplications, hadith, tafseer, dhikr, qibla, donation, orphan sponsorship
 
 ### AI/LLM Crawler Support
-The site is optimized for indexing by:
-- **Search Engines**: Google, Bing, Yahoo, Yandex, Baidu, DuckDuckGo
-- **AI/LLM Systems**: OpenAI GPTBot, Anthropic Claude, Google AI, Perplexity AI, You.com, Character.AI, CCBot, ChatGPT-User
-- **Social Media**: Facebook, Twitter/X, LinkedIn, WhatsApp, Telegram
-- **SEO Tools**: Ahrefs, Semrush, Majestic SEO, Moz
-- **Archive Services**: Archive.org, Wayback Machine
+Public HTML is available to ordinary search and AI user agents. `robots.txt`
+allows public pages and excludes service/API paths; `llms.txt` provides
+supplementary project context but does not replace HTML crawlability,
+canonicals, or the sitemap.
 
 ### Structured Data
 - WebPage schema for all pages
 - BreadcrumbList navigation
-- Article schema for content pages
-- Organization schema
-- Multilingual alternate pages with proper hreflang
+- WebSite and memorial Person entities
+- Locale-specific page URLs and language declarations
 
 ## 📦 Deployment
 
-This project is **100% serverless** and optimized for instant deployment.
+This application needs a real Next.js runtime because it contains API routes and
+Cache Components. Do not deploy it as a static export.
 
-### Recommended Platforms:
+### One-click platforms
 
-#### 1. **Vercel** (Recommended - Easiest)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+
+- **Vercel:** native Next.js deployment using `vercel.json`.
+- **Netlify:** Next.js runtime deployment using `netlify.toml` and Netlify's
+  official Next.js adapter.
+- **Render:** Docker deployment defined by `render.yaml` and `Dockerfile`.
+
+### Railway and any Docker host
+
+`railway.json` is included. In Railway, create a project, connect your fork, and
+Railway will build the included Dockerfile. A provider-specific one-click Railway
+button can be added after publishing this repository as a Railway Template.
+
+For any Docker-compatible host:
+
 ```bash
-npm i -g vercel
-vercel
-```
-Or use the button: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
-
-**Why Vercel:**
-- ✅ Zero configuration needed
-- ✅ Automatic HTTPS
-- ✅ Global CDN (Edge Network)
-- ✅ Perfect for Next.js
-- ✅ Free tier: 100GB bandwidth
-
-#### 2. **Netlify**
-```bash
-npm i -g netlify-cli
-npm run build
-netlify deploy --prod
+cp .env.example .env.local
+docker compose --env-file .env.local up --build
 ```
 
-#### 3. **Cloudflare Pages**
-- Connect Git repository
-- Build command: `npm run build`
-- Publish directory: `.next`
-- **Unlimited bandwidth on free tier!**
+The container listens on port `3000`, runs as a non-root user, and uses Next.js's
+standalone production output.
 
-#### 4. **AWS Amplify**
-- Auto-detect Next.js configuration
-- Global CloudFront CDN
-- Auto-scaling infrastructure
+### White-label before deploying
+
+All core branding is centralized in [`src/config/site.ts`](./src/config/site.ts).
+Fork owners can edit that file directly or set the documented `NEXT_PUBLIC_*`
+variables from [`.env.example`](./.env.example) to update:
+
+- Site, organization, and short names
+- Visible logo, favicon, Apple icon, PWA icons, and Open Graph image
+- SEO title, description, keywords, URL, and social identity
+- PWA name, identity, start URL, theme, and background colors
+- Memorial headline/date/description overrides and donation URL
+- Quran and favorite-reciter playlist/thumbnail IDs
+- Brand, accent, link, light-mode, and dark-mode colors
+
+See [WHITE_LABELING.md](./WHITE_LABELING.md) for the complete workflow. Never put
+passwords, tokens, private keys, or secrets in `NEXT_PUBLIC_*` variables.
+
+### Copy-ready AI agent prompt
+
+Copy this prompt into Hermes, Claude Code, Codex, OpenCode, or another coding
+agent after cloning or forking the repository. Replace the bracketed values first.
+
+```text
+Configure and validate my fork of nawaf-inter4/meshari-alabra-ongoing-charity.
+
+Branding and deployment inputs:
+- Site name: [SITE NAME]
+- Short/PWA name: [SHORT NAME]
+- Organization: [ORGANIZATION]
+- Canonical production URL: [HTTPS URL]
+- Default locale: [LOCALE]
+- Default direction: [ltr OR rtl]
+- Memorial legal name: [NAME]
+- Memorial display name: [NAME]
+- Memorial alternate-script name: [NAME]
+- Memorial date: [YYYY-MM-DD]
+- Respectful hero description: [DESCRIPTION]
+- Donation URL: [HTTPS URL]
+- Logo path: [PUBLIC PATH]
+- Favicon path: [PUBLIC PATH]
+- Apple/PWA icon paths: [PUBLIC PATHS]
+- Open Graph image path: [PUBLIC PATH]
+- Brand, accent, link, light, and dark colors: [COLORS]
+- Quran playlist and representative thumbnail video IDs: [IDS]
+- Favorite-reciter playlist and representative thumbnail video IDs: [IDS]
+- Deployment target: [Vercel, Netlify, Render, Railway, or Docker]
+
+Requirements:
+1. Read README.md, WHITE_LABELING.md, `/llms.txt`, .env.example,
+   src/config/site.ts, and the selected provider manifest before editing.
+2. Use src/config/site.ts and documented NEXT_PUBLIC_* values as the central
+   white-label source. Do not scatter identity, domains, assets, or colors
+   through components. Use translationOverrides for localized copy.
+3. Preserve Quranic text exactly and keep all memorial/religious language
+   respectful. Do not replace content that I did not explicitly provide.
+4. Keep the application on its current Next.js 16.3 preview, Cache Components,
+   Partial Prefetching, Instant Navigations, React 19, and TypeScript 7 setup.
+5. Preserve native one-click YouTube players. A playlist ID controls playback;
+   its representative video ID supplies the native poster, and the iframe is
+   inserted near the viewport to defer third-party work.
+6. Preserve direction-aware typography: LTR interface controls use Lexend Deca;
+   RTL interface controls use Tajawal; Quranic Arabic may use its dedicated
+   Arabic/Quran font. Never add a broad CSS selector that overrides both.
+   Keep landing-page titles for dedicated sections clickable, and generate every
+   section URL with the active locale (`/[lang]/sections/[section]`).
+7. Never commit .env, .env.local, credentials, tokens, private keys, .agents/,
+   .claude/, skills-lock.json, SKILL.md, Playwright output, or browser state.
+   Only .env.example may be committed, and it must contain placeholders.
+8. NEXT_PUBLIC_* values are public browser data. Never place a secret in one.
+9. Do not configure static-only hosting: the app requires a Next.js runtime for
+   API routes and dynamic behavior.
+10. After implementation, run and report real output from:
+    npm ci --legacy-peer-deps
+    npm run lint
+    npm run type-check
+    npm run test:e2e
+    npm run build
+    git diff --check
+11. In browser tests, verify the configured title, canonical URL, logo, favicon,
+    /manifest.webmanifest, theme variables, both YouTube thumbnails, donation
+    destination, an LTR route, an RTL route, and computed CTA font families.
+12. Validate the selected provider manifest and, for Docker, build the image and
+    smoke-test /, /manifest.webmanifest, and /api/ip-location without inventing
+    successful output if a provider or Docker is unavailable.
+13. Show me the final diff and validation results before committing or deploying.
+```
 
 ### Performance on Deployment
 
@@ -392,7 +480,7 @@ Help continue Meshari's legacy of kindness and giving by sponsoring an orphan in
 ## 🌐 Supported Languages (12 Fully Supported)
 
 **Complete Multilingual Support:**
-- 🇸🇦 **Arabic (ar)** - Primary language, RTL - Default at `/`
+- 🇸🇦 **Arabic (ar)** - Primary language, RTL - Canonical at `/ar`
 - 🇬🇧 **English (en)** - LTR - Available at `/en`
 - 🇵🇰 **Urdu (ur)** - RTL - Available at `/ur`
 - 🇹🇷 **Turkish (tr)** - LTR - Available at `/tr`
@@ -408,7 +496,8 @@ Help continue Meshari's legacy of kindness and giving by sponsoring an orphan in
 **URL Structure:**
 - Main pages: `https://meshari.charity/{lang}`
 - Section pages: `https://meshari.charity/{lang}/sections/{section}`
-- Arabic (default): No language prefix needed (`/` or `/sections/{section}`)
+- `/` permanently redirects to the configured default locale (`/ar` by default)
+- Legacy `/sections/{section}` URLs permanently redirect to `/ar/sections/{section}` by default
 
 All languages include:
 - ✅ Complete UI translations
@@ -424,79 +513,48 @@ All languages include:
 
 **Security Headers:**
 - ✅ HSTS with preload
-- ✅ X-Frame-Options: SAMEORIGIN
+- ✅ X-Frame-Options: DENY
 - ✅ X-Content-Type-Options: nosniff
 - ✅ X-XSS-Protection enabled
 - ✅ Referrer-Policy configured
 - ✅ Permissions-Policy restrictive
 
 **Privacy:**
-- ✅ No tracking or analytics by default
-- ✅ No personal data collection
-- ✅ Geolocation: Only for prayer times (optional)
-- ✅ Local storage: Only for preferences
-- ✅ APIs: All public, read-only Islamic resources
+- Vercel Analytics and Speed Insights are configurable; analytics can be disabled with the documented public setting
+- Prayer times and Qibla may use visitor IP/browser location with permission or API lookup
+- Browser storage is used for preferences, bookmarks, PWA dismissal state, and cached offline resources
+- External Quran, prayer, geolocation, donation, audio, and YouTube services have their own privacy policies
 
 ---
 
-## 📊 Performance Metrics
+## 📊 Performance and crawl measurements
 
-**Build Performance:**
-```
-First Load JS:           107 KB
-Main Page Size:          1.83 KB
-Static Routes:           4 main + 9 sections × 12 languages = 112 routes
-Build Time:              ~30 seconds
-Compiler:                SWC (Rust)
-Dev Server:              Turbopack (7x faster)
-```
-
-**Lighthouse Scores (Expected):**
-```
-Performance:      95-100
-Accessibility:    95-100
-Best Practices:   95-100
-SEO:              100 (with multilingual optimization)
-PWA:              ✓ Installable
-```
-
-**Core Web Vitals:**
-```
-LCP (Largest Contentful Paint):  < 1.5s
-FID (First Input Delay):          < 100ms
-CLS (Cumulative Layout Shift):    < 0.1
-```
-
-**SEO Metrics:**
-```
-Total Pages:              112 (12 languages × 9 sections + 12 main pages)
-Sitemap Entries:          112+ with hreflang alternates
-Schema.org Markup:        100% coverage
-Canonical URLs:           100% coverage
-Multilingual Metadata:    100% coverage
-Keywords per Page:        8-30 keywords depending on page type
-```
+- Canonical localized HTML pages: **120** (12 landing pages + 108 section pages)
+- Sitemap entries: **120**, each with reciprocal locale alternates and one `x-default`
+- Root and legacy section aliases are redirects and are excluded from the sitemap
+- Production build output is authoritative; route sizes and timings vary by toolchain and machine
+- Lighthouse scores are measurements, not guarantees. Run several production-mode mobile and desktop audits and report the actual median alongside the commit and conditions.
 
 ## 📄 Section Pages
 
 Each section has its own dedicated page with:
 - ✅ **Multilingual Metadata**: Language-specific titles, descriptions, keywords
 - ✅ **Canonical URLs**: Proper canonical tags with language alternates
-- ✅ **Schema.org Markup**: Full structured data (WebPage, BreadcrumbList, Article)
+- ✅ **Schema.org Markup**: WebPage, BreadcrumbList, WebSite, and memorial Person entities
 - ✅ **SEO Optimization**: Comprehensive keywords and meta tags
 - ✅ **Social Sharing**: Open Graph and Twitter Card tags
 - ✅ **Sitemap Integration**: All sections included in sitemap with hreflang
 
 **Available Sections:**
-1. `/sections/quran` - Complete Quran with translations
-2. `/sections/tafseer` - Quranic interpretations
-3. `/sections/dhikr` - Digital tasbih counter
-4. `/sections/prayer-times` - Prayer times with Hijri calendar
-5. `/sections/qibla` - Qibla direction finder
-6. `/sections/donation` - Orphan sponsorship
-7. `/sections/supplications` - Daily duas and supplications
-8. `/sections/hadith` - Prophetic traditions
-9. `/sections/youtube` - Quran recitation playlists
+1. `/{lang}/sections/quran` - Complete Quran with translations
+2. `/{lang}/sections/tafseer` - Quranic interpretations
+3. `/{lang}/sections/dhikr` - Digital tasbih counter
+4. `/{lang}/sections/prayer-times` - Prayer times with Hijri calendar
+5. `/{lang}/sections/qibla` - Qibla direction finder
+6. `/{lang}/sections/donation` - Orphan sponsorship
+7. `/{lang}/sections/supplications` - Daily duas and supplications
+8. `/{lang}/sections/hadith` - Prophetic traditions
+9. `/{lang}/sections/youtube` - Quran recitation playlists
 
 ---
 
@@ -527,18 +585,12 @@ meshari-alabra-ongoing-charity/
 │   │   ├── page.tsx              # Root redirect
 │   │   ├── [lang]/               # Language-specific routes
 │   │   │   ├── layout.tsx        # Language layout with metadata
-│   │   │   └── page.tsx           # Main page
-│   │   ├── sections/              # Dedicated section pages
-│   │   │   ├── layout.tsx        # Sections layout
-│   │   │   ├── quran/page.tsx    # Quran section
-│   │   │   ├── tafseer/page.tsx  # Tafseer section
-│   │   │   ├── dhikr/page.tsx    # Dhikr section
-│   │   │   ├── prayer-times/     # Prayer times section
-│   │   │   ├── qibla/page.tsx    # Qibla section
-│   │   │   ├── donation/page.tsx  # Donation section
-│   │   │   ├── supplications/     # Supplications section
-│   │   │   ├── hadith/page.tsx    # Hadith section
-│   │   │   └── youtube/page.tsx  # YouTube section
+│   │   │   ├── page.tsx           # Localized landing page
+│   │   │   └── sections/[section]/page.tsx # 9 localized section routes
+│   │   ├── sitemap.ts             # 120 canonical localized URLs
+│   │   ├── robots.ts              # Crawler policy
+│   │   ├── manifest.ts            # Generated PWA manifest
+│   │   ├── llms.txt/route.ts       # Configured agent/project context
 │   │   ├── api/                  # API routes
 │   │   │   ├── quran/            # Quran API proxy
 │   │   │   └── location-search/  # Location search API
@@ -587,25 +639,22 @@ meshari-alabra-ongoing-charity/
 │   └── types/                    # TypeScript types
 ├── public/
 │   ├── icons/                    # PWA icons
+│   ├── fonts/                    # Self-hosted interface/Quran fonts
 │   ├── stories/                  # PDF stories
-│   ├── manifest.json             # PWA manifest
 │   ├── sw.js                     # Service worker
-│   ├── sitemap.xml               # Auto-generated sitemap
-│   ├── robots.txt                # Comprehensive robots file
-│   └── llms.txt                  # LLM training data
+│   └── offline.html              # Localized last-resort offline fallback
 ├── src/
 │   └── proxy.ts                  # Next.js proxy for routing
 ├── next.config.js                # Next.js configuration
-├── next-sitemap.config.js       # Sitemap configuration
 ├── tailwind.config.ts            # Tailwind CSS configuration
 └── package.json                  # Dependencies and scripts
 ```
 
 ### Key Technologies
 - **Dynamic Imports**: Code splitting for optimal loading
-- **Service Worker**: Intelligent caching with workbox
+- **Service Worker**: Dependency-free bounded runtime caching
 - **Image Optimization**: AVIF/WebP with lazy loading
-- **Font Optimization**: Google Fonts with preconnect
+- **Font Optimization**: Self-hosted locale-aware font subsets
 - **API Caching**: Strategic caching for all external APIs
 
 ---

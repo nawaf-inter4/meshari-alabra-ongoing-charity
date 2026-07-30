@@ -8,9 +8,13 @@
 
 # testing
 /coverage
+/test-results
+/playwright-report
 
 # next.js
 /.next/
+/.next-playwright/
+/.next-verify/
 /out/
 
 # production
@@ -25,8 +29,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# Environment files and secrets (commit only the reusable template)
+.env
+.env.*
+!.env.example
+
+# Local AI-agent skills and metadata
+.agents/
+.claude/
+.hermes/
+skills-lock.json
+**/SKILL.md
 
 # vercel
 .vercel
@@ -38,5 +51,4 @@ next-env.d.ts
 # PWA files
 **/public/workbox-*
 **/public/worker-*
-**/public/sw.js
 **/public/fallback-*.js

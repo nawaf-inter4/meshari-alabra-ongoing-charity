@@ -1,157 +1,124 @@
 # Deployment Guide
 
-## Serverless Deployment Options
+This is a server-rendered Next.js application, not a static export. Deploy it to a platform that supports Next.js route handlers, Proxy, image optimization, dynamic Open Graph output, and the standalone Node.js server.
 
-This landing page is designed to be deployed on serverless platforms for maximum stability and minimal cost.
+## Requirements
 
-### 1. Vercel (Recommended)
+- Node.js 22
+- `npm ci --legacy-peer-deps`
+- All `NEXT_PUBLIC_*` values available **before** `npm run build`
+- HTTPS in production for PWA installation
+- `/health` exposed without authentication or locale redirects
 
-**Easiest deployment option with automatic CI/CD:**
+Copy [`.env.example`](./.env.example) for the complete configuration reference. Never commit `.env.local` or provider credentials.
+
+## Vercel
+
+[`vercel.json`](./vercel.json) configures installation, build behavior, and PWA cache headers.
+
+1. Import the GitHub repository in Vercel.
+2. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin.
+3. Add other white-label values in Project Settings → Environment Variables.
+4. Deploy the `main` branch.
+
+CLI deployments are also supported:
 
 ```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
+npx vercel
+npx vercel --prod
 ```
 
-Or use the Vercel Dashboard:
-1. Go to https://vercel.com
-2. Import your Git repository
-3. Vercel will auto-detect Next.js
-4. Click "Deploy"
+## Netlify
 
-**Environment Variables:**
-- Add your `.env` variables in Vercel Dashboard → Settings → Environment Variables
+[`netlify.toml`](./netlify.toml) enables the official Next.js runtime adapter.
 
-### 2. Netlify
+1. Import the repository in Netlify.
+2. Add build-time environment variables in Site configuration.
+3. Deploy using the checked-in build command.
 
 ```bash
-# Install Netlify CLI
-npm i -g netlify-cli
+npx netlify deploy --build
+npx netlify deploy --build --prod
+```
 
-# Build
+Do not configure this application as a generic static `.next` directory upload.
+
+## Docker and Docker Compose
+
+The multi-stage [`Dockerfile`](./Dockerfile) produces a non-root standalone Next.js image with a `/health` health check.
+
+```bash
+cp .env.example .env.local
+docker compose --env-file .env.local up --build
+```
+
+`--env-file .env.local` is required because public configuration is embedded during `next build`; a runtime-only environment file cannot change the compiled browser bundle.
+
+Direct image builds must pass public values as build arguments:
+
+```bash
+docker build \
+  --build-arg NEXT_PUBLIC_SITE_URL=https://charity.example \
+  -t ongoing-charity .
+docker run --rm -p 3000:3000 ongoing-charity
+```
+
+## Render
+
+[`render.yaml`](./render.yaml) deploys the Docker image and checks `/health`. Automatic deployment is intentionally disabled in the template; enable it in Render only after connecting the correct production branch and environment values.
+
+## Railway
+
+[`railway.json`](./railway.json) selects the Dockerfile builder and configures health and restart policies. Add `NEXT_PUBLIC_SITE_URL` and the remaining white-label values before triggering the build.
+
+## AWS Amplify and Cloudflare
+
+Use a supported Next.js server/runtime adapter. A generic static publish directory is not compatible with this application because it contains dynamic API, health, manifest, Open Graph, feed, and `llms.txt` routes plus Proxy routing.
+
+Plain Cloudflare Pages static export is unsupported. Use Cloudflare's current Next.js/OpenNext adapter if deploying there and validate every dynamic endpoint afterward.
+
+## Pre-deployment verification
+
+```bash
+npm ci --legacy-peer-deps
+npm run lint
+npm run type-check
+npm run test:e2e
 npm run build
-
-# Deploy
-netlify deploy --prod
+docker compose --env-file .env.example config --quiet
 ```
 
-### 3. AWS Amplify
+## Post-deployment verification
 
-1. Go to AWS Amplify Console
-2. Connect your Git repository
-3. Amplify will auto-detect Next.js
-4. Configure build settings:
-   - Build command: `npm run build`
-   - Publish directory: `.next`
-5. Deploy
+Verify these against the final public origin:
 
-### 4. Cloudflare Pages
-
-1. Go to Cloudflare Pages Dashboard
-2. Connect your Git repository
-3. Build settings:
-   - Build command: `npm run build`
-   - Build output directory: `.next`
-4. Deploy
-
-## Performance Optimization
-
-### Image Optimization
-- Use Next.js Image component for automatic optimization
-- Images are served in WebP format when supported
-- Lazy loading is enabled by default
-
-### Caching Strategy
-- Static assets are cached for 1 year
-- API responses are cached for 24 hours
-- PWA assets are cached for offline access
-
-### CDN Configuration
-All serverless platforms provide automatic CDN distribution:
-- **Vercel**: Global Edge Network
-- **Netlify**: Global CDN
-- **AWS Amplify**: CloudFront CDN
-- **Cloudflare Pages**: Cloudflare CDN
-
-## Post-Deployment
-
-### 1. Configure Custom Domain
-Set up your custom domain in the platform dashboard.
-
-### 2. Enable HTTPS
-All platforms provide automatic SSL/TLS certificates.
-
-### 3. Test PWA Functionality
-- Check if service worker is registered
-- Test offline functionality
-- Verify push notifications (if configured)
-
-### 4. Monitor Performance
-Use these tools:
-- Google PageSpeed Insights
-- Lighthouse CI
-- Web Vitals monitoring
-
-## Scaling
-
-These serverless platforms automatically scale to handle traffic:
-- **Vercel**: Automatic scaling, 100GB bandwidth on free tier
-- **Netlify**: Automatic scaling, 100GB bandwidth on free tier
-- **AWS Amplify**: Auto-scales with AWS infrastructure
-- **Cloudflare Pages**: Unlimited bandwidth, unlimited requests
-
-## Cost Estimation
-
-For a static site like this:
-- **Vercel Free Tier**: $0/month (sufficient for most use cases)
-- **Netlify Free Tier**: $0/month (sufficient for most use cases)
-- **AWS Amplify**: ~$1-5/month (pay for what you use)
-- **Cloudflare Pages**: $0/month (free plan)
+- `/health` → `200 application/json` and `{"status":"ok"}`
+- `/sw.js` → `200 application/javascript`
+- `/manifest.webmanifest` → `200 application/manifest+json`
+- `/robots.txt`, `/sitemap.xml`, `/feed.xml`, and `/llms.txt`
+- Unsupported paths return a real `404` with `noindex`
+- Sitemap contains exactly 120 localized canonical HTML URLs
+- Each indexed page has one self-canonical and reciprocal locale alternates
+- Locale/section navigation never shows the offline shell while online
+- PWA installation and offline fallback work over HTTPS
+- Quran audio, PDF thumbnails, background audio, and native YouTube players work
 
 ## Troubleshooting
 
-### Build Failures
-```bash
-# Clean install
-rm -rf node_modules package-lock.json
-npm install
+### Clean local build
 
-# Test build locally
+```bash
+rm -rf .next node_modules
+npm ci --legacy-peer-deps
 npm run build
 ```
 
-### PWA Issues
-- Ensure manifest.json is accessible
-- Check service worker registration in browser DevTools
-- Verify HTTPS is enabled (PWA requires HTTPS)
+Keep `package-lock.json`; deleting it makes deployments non-reproducible.
 
-### API Rate Limits
-The site uses public Islamic APIs:
-- Aladhan API: 25 requests per second
-- Quran API: No strict limits
-- If issues occur, consider caching responses
+### Incorrect branding
 
-## Monitoring
+`NEXT_PUBLIC_*` values are build-time values. Rebuild and redeploy after changing them. For Compose, include `--env-file .env.local`.
 
-Set up monitoring:
-1. **Uptime Monitoring**: UptimeRobot, Pingdom
-2. **Error Tracking**: Sentry
-3. **Analytics**: Google Analytics, Plausible
+### PWA or offline issues
 
-## Backup
-
-Your code is version-controlled on GitHub. For additional safety:
-1. Enable GitHub branch protection
-2. Set up automated backups of your deployment platform
-3. Keep a local copy of environment variables
-
-## Support
-
-For deployment issues:
-- Vercel: https://vercel.com/support
-- Netlify: https://www.netlify.com/support/
-- AWS Amplify: AWS Support
-- Cloudflare: Cloudflare Support
+Confirm `/sw.js` has the JavaScript MIME type and is not rewritten to an HTML page. Clear old origin service workers and Cache Storage before retesting a repaired deployment.

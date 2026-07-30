@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookMarked, RefreshCw } from "lucide-react";
+import SectionTitleLink from "./SectionTitleLink";
 
 interface Hadith {
   arab: string;
@@ -172,7 +173,7 @@ export default function HadithSection() {
           <div className="inline-flex items-center gap-2 mb-4">
             <BookMarked className="w-8 h-8 text-islamic-gold" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
-              {t("hadith.title")}
+              <SectionTitleLink section="hadith">{t("hadith.title")}</SectionTitleLink>
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400">
