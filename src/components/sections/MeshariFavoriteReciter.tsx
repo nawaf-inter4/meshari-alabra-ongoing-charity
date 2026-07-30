@@ -13,8 +13,8 @@ export default function MeshariFavoriteReciter() {
   }, []);
 
   const reciterData = {
-    youtubeUrl: "https://youtube.com/playlist?list=PL5YnzBdhLdkXy12BLR-2mjj9qrPg4QL-N&si=G8WskIhXXLYNQr-N",
-    youtubeEmbedUrl: "https://www.youtube.com/embed/videoseries?list=PL5YnzBdhLdkXy12BLR-2mjj9qrPg4QL-N&autoplay=0&modestbranding=1&rel=0"
+    youtubeUrl: "https://youtube.com/playlist?list=PLA3B14EC1634EA167&si=v29X0j6DNNVdr6In",
+    youtubeEmbedUrl: "https://www.youtube.com/embed/videoseries?list=PLA3B14EC1634EA167&autoplay=0&modestbranding=1&rel=0"
   };
 
   if (!mounted) {
