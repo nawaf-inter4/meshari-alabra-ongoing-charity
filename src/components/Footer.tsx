@@ -148,7 +148,7 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={handleShare}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-gray-950 font-bold rounded-full hover:bg-islamic-green hover:text-white transition-all duration-300 hover:scale-105 glow"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 hover:scale-105 glow"
               aria-label={memoizedTranslations.share || "Share"}
             >
               <Share2 className="w-5 h-5" />
@@ -200,7 +200,7 @@ export default function Footer() {
         <div className="text-center mb-8">
           <div className="space-y-6">
             {/* Bismillah */}
-            <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold dark:text-islamic-gold leading-relaxed`}>
+            <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed`}>
               {getQuranVerse('bismillah')}
             </p>
             
@@ -210,7 +210,7 @@ export default function Footer() {
             </p>
             
             {/* Sadaqallah */}
-            <p className={`text-lg md:text-xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold dark:text-islamic-gold leading-relaxed`}>
+            <p className={`text-lg md:text-xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed`}>
               {getQuranVerse('sadaqallah')}
             </p>
           </div>

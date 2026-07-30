@@ -203,13 +203,13 @@ export default function HeroSection() {
           suppressHydrationWarning
         >
           <h1 className="text-3xl md:text-4xl font-bold mb-3" suppressHydrationWarning>
-            {siteConfig.content.memorialName || (mounted ? t("memorial.name") : siteConfig.content.memorialLegalName)}
+            {siteConfig.content.memorialName || t("memorial.name")}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4" suppressHydrationWarning>
-            {siteConfig.content.memorialDate || (mounted ? t("memorial.death") : (locale === 'ar' ? "توفي في 29 مارس 2023 - رحمه الله" : "Passed away on March 29, 2023 - May Allah have mercy on him"))}
+            {siteConfig.content.memorialDate || t("memorial.death")}
           </p>
           <p className="text-xl text-islamic-green dark:text-islamic-gold leading-relaxed mb-6" suppressHydrationWarning>
-            {siteConfig.content.heroDescription || (mounted ? t("hero.description") : siteConfig.content.memorialLegalName)}
+            {siteConfig.content.heroDescription || t("hero.description")}
           </p>
 
           {/* Supplications Button */}
@@ -240,7 +240,7 @@ export default function HeroSection() {
         >
           <div className="space-y-6">
             {/* Bismillah */}
-            <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold dark:text-islamic-gold leading-relaxed`}>
+            <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed`}>
               {getQuranVerse('bismillah')}
             </p>
             
@@ -250,7 +250,7 @@ export default function HeroSection() {
             </p>
             
             {/* Sadaqallah */}
-            <p className={`text-lg md:text-xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold dark:text-islamic-gold leading-relaxed`}>
+            <p className={`text-lg md:text-xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed`}>
               {getQuranVerse('sadaqallah')}
             </p>
           </div>

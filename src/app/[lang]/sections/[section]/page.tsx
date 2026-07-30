@@ -73,23 +73,18 @@ async function LocalizedSectionContent({ params }: SectionPageProps) {
   if (!isSupportedLocale(lang) || !isSectionId(section)) notFound();
 
   const locale: SupportedLocale = lang;
-  const { title, description } = getSectionCopy(section, locale);
+  const { title } = getSectionCopy(section, locale);
   const SectionComponent = sectionComponents[section];
 
   return (
     <>
       <SectionSchema sectionId={section} locale={locale} />
-      <header className="mx-auto max-w-5xl px-4 pb-4 pt-28 text-center sm:px-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
-          {title}
-        </h1>
-        <p className="mx-auto mt-3 max-w-3xl text-base leading-7 text-gray-700 dark:text-gray-300 sm:text-lg">
-          {description}
-        </p>
-      </header>
-      <Suspense fallback={<LoadingSection title={title} />}>
-        <SectionComponent />
-      </Suspense>
+      <div className="pt-20">
+        <h1 className="sr-only">{title}</h1>
+        <Suspense fallback={<LoadingSection title={title} />}>
+          <SectionComponent />
+        </Suspense>
+      </div>
     </>
   );
 }

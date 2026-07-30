@@ -50,6 +50,18 @@ export async function mockExternalApis(page: Page) {
         format: "audio",
         type: "versebyverse",
       }];
+    } else if (pathname.includes("/ayah/") && pathname.endsWith("/ar.muyassar")) {
+      data = {
+        number: 1,
+        numberInSurah: 1,
+        text: "أبتدئ باسم الله، (الرَّحْمَنِ) ذي الرحمة العامة، (الرَّحِيمِ) بالمؤمنين.",
+        edition: {
+          identifier: "ar.muyassar",
+          language: "ar",
+          format: "text",
+          type: "tafsir",
+        },
+      };
     } else if (pathname.includes("/ayah/")) {
       data = {
         number: 1,

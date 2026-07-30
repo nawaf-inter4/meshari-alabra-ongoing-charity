@@ -4,10 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Copy, Check, Download, Share2, MessageCircle, Send, Facebook, Linkedin, Mail, Share } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
-import { useTheme } from "next-themes";
+import { useTheme } from "./ThemeProvider";
 import { toPng, toJpeg } from "html-to-image";
 import { localeDirection, siteAssetUrl, siteConfig } from "@/config/site";
 import { localizedSectionHref } from "@/lib/routes";
+import BidiText from "./BidiText";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -1673,12 +1674,12 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                         display: 'block',
                         padding: '0',
                         alignSelf: 'center',
-                        unicodeBidi: 'plaintext', // This helps center RTL text properly
+                        unicodeBidi: 'isolate',
                         whiteSpace: 'nowrap', // Keep Arabic watermark on one line
                         overflow: 'visible' // Allow text to be visible even if it extends
                       }}
                     >
-                      {memorialShareCaption}
+                      <BidiText text={memorialShareCaption} direction={isRtl ? "rtl" : "ltr"} />
                     </p>
                     <p 
                       className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}

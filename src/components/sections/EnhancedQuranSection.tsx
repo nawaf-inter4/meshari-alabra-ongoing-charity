@@ -5,6 +5,7 @@ import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookOpen, ChevronDown, Play, Pause, Volume2, Download, Share2, Bookmark, BookmarkCheck, Search, X } from "lucide-react";
 import ShareModal from "../ShareModal";
+import BidiText from "../BidiText";
 import SectionTitleLink from "./SectionTitleLink";
 import { localeDirection, siteConfig } from "@/config/site";
 
@@ -266,13 +267,15 @@ function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: {
   // RTL languages: Arabic, Urdu, Hebrew, Farsi, Yiddish, Pashto
   const rtlLanguages = ['ar', 'ur', 'he', 'fa', 'yi', 'ps'];
   const isRTL = rtlLanguages.includes(locale);
+  const textDirection = isRTL ? "rtl" : "ltr";
   
   return (
     <div 
       className={isRTL ? "font-arabic text-right leading-relaxed" : "font-lexend text-left leading-relaxed"} 
-      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+      dir={textDirection}
+      data-quran-translation
     >
-      {translationText}
+      <BidiText text={translationText} direction={textDirection} />
     </div>
   );
 }
@@ -1178,6 +1181,11 @@ export default function EnhancedQuranSection() {
   };
 
   const currentSurah = surahs.find((s) => s.number === selectedSurah);
+  const localized = (key: string, fallback: string) => {
+    const value = t(key);
+    return value === key ? fallback : value;
+  };
+  const versesLabel = localized("quran.verses", "verses");
 
   if (!mounted) {
     return (
@@ -1253,18 +1261,25 @@ export default function EnhancedQuranSection() {
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="w-full p-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
-                aria-label={currentSurah ? `${currentSurah.number}. ${locale === 'ar' ? currentSurah.name : currentSurah.englishName} - ${locale === 'ar' ? currentSurah.englishName : currentSurah.name} - ${currentSurah.numberOfAyahs} verses` : (t("quran.select_surah") || "Select Surah")}
+                aria-label={currentSurah ? `${currentSurah.number}. ${locale === 'ar' ? currentSurah.name : currentSurah.englishName} - ${locale === 'ar' ? currentSurah.englishName : currentSurah.name} - ${currentSurah.numberOfAyahs} ${versesLabel}` : (t("quran.select_surah") || "Select Surah")}
                 aria-expanded={isDropdownOpen}
                 aria-haspopup="listbox"
+                data-surah-select-trigger
               >
                 <span className={`text-left flex items-center gap-2 ${locale === 'ar' ? 'flex-row-reverse' : 'flex-row'}`}>
                   <div className="flex flex-col">
                     <div className="font-semibold" style={{ fontFamily: 'Amiri' }}>
-                      {currentSurah ? `${currentSurah.number}. ${locale === 'ar' ? currentSurah.name : currentSurah.englishName}` : "Select Surah"}
+                      {currentSurah ? (
+                        <>
+                          <bdi dir="ltr">{currentSurah.number}.</bdi>{" "}
+                          <bdi dir={localeDirection(locale)}>{locale === 'ar' ? currentSurah.name : currentSurah.englishName}</bdi>
+                        </>
+                      ) : "Select Surah"}
                     </div>
                     {currentSurah && (
                       <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {locale === 'ar' ? currentSurah.englishName : currentSurah.name} • {currentSurah.numberOfAyahs} verses
+                        <bdi dir={locale === 'ar' ? 'ltr' : 'rtl'}>{locale === 'ar' ? currentSurah.englishName : currentSurah.name}</bdi>{" • "}
+                        <bdi dir={localeDirection(locale)}>{currentSurah.numberOfAyahs} {versesLabel}</bdi>
                       </div>
                     )}
                   </div>
@@ -1288,7 +1303,10 @@ export default function EnhancedQuranSection() {
                     >
                       <div className={`flex items-center justify-between ${locale === 'ar' ? 'flex-row-reverse' : 'flex-row'}`}>
                         <div className="font-semibold" style={{ fontFamily: 'Amiri' }}>{surah.number}. {locale === 'ar' ? surah.name : surah.englishName}</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">{locale === 'ar' ? surah.englishName : surah.name} • {surah.numberOfAyahs} verses</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          <bdi dir={locale === 'ar' ? 'ltr' : 'rtl'}>{locale === 'ar' ? surah.englishName : surah.name}</bdi>{" • "}
+                          <bdi dir={localeDirection(locale)}>{surah.numberOfAyahs} {versesLabel}</bdi>
+                        </div>
                       </div>
                     </button>
                   ))}
@@ -1331,7 +1349,7 @@ export default function EnhancedQuranSection() {
                     </div>
                   </div>
                   {reciters.find(r => r.identifier === selectedReciter)?.isMeshariFavorite && (
-                    <span className="px-2 py-1 text-xs font-bold bg-islamic-gold text-gray-950 rounded-full self-start">
+                    <span className="px-2 py-1 text-xs font-bold bg-islamic-gold text-white rounded-full self-start" data-meshari-favorite-badge>
                       {mounted && t("quran.meshari_favorite") !== "quran.meshari_favorite" ? t("quran.meshari_favorite") : `${siteConfig.content.memorialName || siteConfig.content.memorialLegalName}'s Favorite`}
                     </span>
                   )}
@@ -1362,7 +1380,7 @@ export default function EnhancedQuranSection() {
                       </div>
                     </div>
                     {reciter.isMeshariFavorite && (
-                      <span className="px-2 py-1 text-xs font-bold bg-islamic-gold text-gray-950 rounded-full self-start">
+                      <span className="px-2 py-1 text-xs font-bold bg-islamic-gold text-white rounded-full self-start" data-meshari-favorite-badge>
                         {mounted && t("quran.meshari_favorite") !== "quran.meshari_favorite" ? t("quran.meshari_favorite") : `${siteConfig.content.memorialName || siteConfig.content.memorialLegalName}'s Favorite`}
                       </span>
                     )}
@@ -1591,7 +1609,7 @@ export default function EnhancedQuranSection() {
         ) : ayahs.length > 0 ? (
           <div className="space-y-6 max-h-[600px] overflow-y-auto p-4 bg-light-secondary/50 dark:bg-dark-secondary/50 rounded-2xl">
             <div className="text-center mb-4 text-sm text-gray-500">
-              Found {ayahs.length} verses
+              {localized("quran.found", "Found")} {ayahs.length} {versesLabel}
             </div>
             {/* Bismillah - only show for surahs other than Al-Fatihah */}
             {selectedSurah !== 1 && (
@@ -1630,8 +1648,8 @@ export default function EnhancedQuranSection() {
                     <div className="w-10 h-10 bg-islamic-gold/20 rounded-full flex items-center justify-center text-islamic-gold font-bold">
                       {ayah.numberInSurah}
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Ayah {ayah.numberInSurah} • Juz {ayah.juz} • Page {ayah.page}
+                    <div className="text-sm text-gray-600 dark:text-gray-400" data-verse-metadata>
+                      {localized("quran.verse", "Ayah")} {ayah.numberInSurah} • {localized("quran.juz", "Juz")} {ayah.juz} • {localized("quran.page", "Page")} {ayah.page}
                     </div>
                   </div>
                   
@@ -1702,8 +1720,9 @@ export default function EnhancedQuranSection() {
                 {/* Translation */}
                 {selectedTranslation && (
                   <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4">
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                      {mounted && t("quran.translation") !== "quran.translation" ? t("quran.translation") : "التفسير"} ({locale.toUpperCase()})
+                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-2" dir={localeDirection(locale)} data-translation-language>
+                      {mounted && t("quran.translation") !== "quran.translation" ? t("quran.translation") : "التفسير"}{" "}
+                      <bdi dir="ltr">({locale.toUpperCase()})</bdi>
                     </div>
                     <AyahTranslation 
                       surahNumber={selectedSurah} 

@@ -199,6 +199,7 @@ export default async function LanguageLayout({
     <html
       lang={lang}
       dir={direction}
+      className="dark"
       style={siteCssVariables}
       data-scroll-behavior="smooth"
       suppressHydrationWarning

@@ -33,6 +33,86 @@ test("Arabic memorial parentheses retain their phrase order", async ({ page }) =
   await expect(parenthetical.locator('bdi[dir="rtl"]')).toHaveText("رحمه الله");
 });
 
+test("original Quran framing phrases remain green in dark mode", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("theme", "dark"));
+  await page.goto("/ar");
+
+  for (const phrase of ["بسم الله الرحمن الرحيم", "صدق الله العلي العظيم"]) {
+    const matches = page.getByText(phrase, { exact: true });
+    await expect(matches).toHaveCount(2);
+    for (const match of await matches.all()) {
+      await expect(match).toHaveCSS("color", "rgb(0, 107, 63)");
+    }
+  }
+});
+
+test("Arabic memorial identity is localized in the server HTML", async ({ request }) => {
+  const response = await request.get("/ar?server-localization=1");
+  expect(response.ok()).toBeTruthy();
+  const html = await response.text();
+  expect(html).toMatch(/<h1[^>]*>مشاري بن أحمد بن سليمان العبره<\/h1>/u);
+  expect(html).toMatch(/<p class="text-xl text-islamic-green[^>]*>صفحة مخصصة لأخي مشاري/u);
+});
+
+test("footer and Quran actions retain their original colors", async ({ page }) => {
+  await page.goto("/ar");
+  const footerShare = page.locator("footer").getByRole("button", { name: "مشاركة" });
+  await footerShare.scrollIntoViewIfNeeded();
+  await expect(footerShare).toHaveCSS("color", "rgb(255, 255, 255)");
+  const xLink = page.locator('footer a[href*="x.com/"]');
+  await xLink.hover();
+  await expect(xLink).toHaveCSS("background-color", "rgb(75, 85, 99)");
+
+  await page.goto("/ar/sections/quran?surah=1&ayah=1");
+  const favoriteBadge = page.locator("[data-meshari-favorite-badge]").first();
+  await expect(favoriteBadge).toHaveCSS("color", "rgb(255, 255, 255)");
+});
+
+test("client-side locale changes do not render an inert theme script", async ({ page }) => {
+  const themeScriptErrors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error" && message.text().includes("Encountered a script tag while rendering React component")) {
+      themeScriptErrors.push(message.text());
+    }
+  });
+
+  await page.goto("/ar");
+  await page.getByRole("button", { name: "Select language" }).click();
+  await page.getByRole("button", { name: "English English" }).click();
+  await expect(page).toHaveURL(/\/en(?:[/?#]|$)/u);
+  await expect(page.locator("html")).toHaveClass(/\bdark\b/u);
+  await page.getByRole("button", { name: "Toggle theme" }).click();
+  await expect(page.locator("html")).not.toHaveClass(/\bdark\b/u);
+  expect(themeScriptErrors).toEqual([]);
+});
+
+test("Arabic Quran controls keep localized badges and isolated mixed-direction text", async ({ page }) => {
+  await page.goto("/ar/sections/quran?surah=1&ayah=1");
+
+  const favoriteBadge = page.locator("[data-meshari-favorite-badge]").first();
+  await expect(favoriteBadge).toHaveText("مفضل مشاري");
+  await expect(favoriteBadge).not.toContainText("Favorite");
+
+  const surahTrigger = page.locator("[data-surah-select-trigger]");
+  await expect(surahTrigger.locator('bdi[dir="rtl"]', { hasText: "سُورَةُ ٱلْفَاتِحَةِ" })).toHaveText("سُورَةُ ٱلْفَاتِحَةِ");
+  await expect(surahTrigger.locator('bdi[dir="ltr"]', { hasText: "Al-Faatiha" })).toHaveText("Al-Faatiha");
+  await expect(surahTrigger).toContainText("7 آيات");
+  await expect(surahTrigger).not.toContainText("verses");
+
+  const verseMetadata = page.locator("[data-ayah-number='1'] [data-verse-metadata]");
+  await expect(verseMetadata).toHaveText("آية 1 • الجزء 1 • الصفحة 1");
+  await expect(page.locator("#quran")).toContainText("تم العثور على 1 آيات");
+
+  const translation = page.locator("[data-quran-translation]").first();
+  await expect(translation).toContainText("(الرَّحْمَنِ)");
+  const parenthetical = translation.locator("[data-bidi-parenthetical]").first();
+  await expect(parenthetical).toHaveAttribute("dir", "ltr");
+  await expect(parenthetical.locator('bdi[dir="rtl"]')).toHaveText("الرَّحْمَنِ");
+
+  const language = page.locator("[data-translation-language]").first();
+  await expect(language.locator('bdi[dir="ltr"]')).toHaveText("(AR)");
+});
+
 test("Arabic section titles and the dhikr count are not clipped", async ({ page }) => {
   await page.goto("/ar/sections/dhikr");
   const title = page.locator("#dhikr h2");
@@ -53,6 +133,9 @@ test("Arabic verse share preview keeps the original Arabic memorial watermark", 
   await shareButton.click();
   const preview = page.locator("[data-share-verse-preview]");
   await expect(preview).toContainText("صدقة جارية لمشاري بن أحمد بن سليمان العبره (رحمه الله)");
+  const watermarkParenthetical = preview.locator("[data-bidi-parenthetical]");
+  await expect(watermarkParenthetical).toHaveAttribute("dir", "ltr");
+  await expect(watermarkParenthetical.locator('bdi[dir="rtl"]')).toHaveText("رحمه الله");
   await expect(preview).not.toContainText("Test Charity — Meshari Ahmed Sulaiman Alabra");
 });
 
@@ -81,7 +164,8 @@ test("Arabic Quran verse playback uses the valid Ahmed al-Ajamy audio edition", 
 test("locale and section navigation stays online", async ({ page }) => {
   await page.goto("/ar");
   await page.goto("/en/sections/quran");
-  await expect(page.getByRole("heading", { name: "The Holy Quran", level: 1 })).toBeVisible();
+  await expect(page.locator("h1")).toHaveClass(/\bsr-only\b/u);
+  await expect(page.getByRole("heading", { name: "The Holy Quran", level: 2 })).toBeVisible();
   await expect(page.getByText("You are offline", { exact: true })).toHaveCount(0);
 
   await page.goto("/ur/sections/dhikr");
