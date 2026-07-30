@@ -40,8 +40,9 @@ test("section-directory cards preserve the active locale", async ({ page }) => {
   await mockExternalApis(page);
 
   await page.goto("/en");
-  await page.waitForSelector('a[href="/en/sections/dhikr"]', { state: "attached" });
+  await page.waitForSelector('a[href="/en/sections/dhikr"]', { state: "visible" });
   const dhikrCard = page.locator('a[href="/en/sections/dhikr"]').first();
+  await dhikrCard.scrollIntoViewIfNeeded();
   await expect(dhikrCard).toBeVisible();
   await dhikrCard.click();
   await expect(page).toHaveURL(/\/en\/sections\/dhikr$/);

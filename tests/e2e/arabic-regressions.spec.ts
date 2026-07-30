@@ -129,6 +129,9 @@ test("Arabic section titles and the dhikr count are not clipped", async ({ page 
   await expect(title).toBeVisible();
   await expect(dhikr).toBeVisible();
   await expect(count).toBeVisible();
+  await title.scrollIntoViewIfNeeded();
+  await dhikr.scrollIntoViewIfNeeded();
+  await count.scrollIntoViewIfNeeded();
   await expectTextNotClipped(title);
   await expectTextNotClipped(dhikr);
   await expectTextNotClipped(count);
