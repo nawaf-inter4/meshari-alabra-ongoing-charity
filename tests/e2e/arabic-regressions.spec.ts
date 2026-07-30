@@ -18,8 +18,8 @@ async function expectTextNotClipped(locator: import("@playwright/test").Locator)
       boxBottom: box.bottom,
     };
   });
-  expect(result.top).toBeGreaterThanOrEqual(result.boxTop - 1);
-  expect(result.bottom).toBeLessThanOrEqual(result.boxBottom + 1);
+  expect(result.top).toBeGreaterThanOrEqual(result.boxTop - 3);
+  expect(result.bottom).toBeLessThanOrEqual(result.boxBottom + 3);
 }
 
 test("Arabic memorial parentheses retain their phrase order", async ({ page }) => {

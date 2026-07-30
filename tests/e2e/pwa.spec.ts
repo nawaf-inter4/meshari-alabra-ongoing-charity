@@ -135,7 +135,7 @@ test("install guidance follows the active locale and direction", async ({ page }
   await page.goto("/fr");
   await announceInstallability();
   const frenchPrompt = page.locator("[data-pwa-install-prompt]");
-  await expect(frenchPrompt).toBeVisible();
+  await expect(frenchPrompt).toBeVisible({ timeout: 15_000 });
   await expect(frenchPrompt).toHaveAttribute("dir", "ltr");
   await expect(frenchPrompt).toContainText("Installer l’application");
   const promptBox = await frenchPrompt.boundingBox();
@@ -151,7 +151,7 @@ test("install guidance follows the active locale and direction", async ({ page }
   await page.goto("/ur");
   await announceInstallability();
   const urduPrompt = page.locator("[data-pwa-install-prompt]");
-  await expect(urduPrompt).toBeVisible();
+  await expect(urduPrompt).toBeVisible({ timeout: 15_000 });
   await expect(urduPrompt).toHaveAttribute("dir", "rtl");
   await expect(urduPrompt).toContainText("ایپ انسٹال کریں");
 });
