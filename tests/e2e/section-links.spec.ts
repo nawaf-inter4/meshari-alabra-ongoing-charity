@@ -37,8 +37,10 @@ test("landing-page section titles are links that preserve the active locale", as
 });
 
 test("section-directory cards preserve the active locale", async ({ page }) => {
-  await page.goto("/en");
+  await mockExternalApis(page);
 
+  await page.goto("/en");
+  await page.waitForSelector('a[href="/en/sections/dhikr"]', { state: "attached" });
   const dhikrCard = page.locator('a[href="/en/sections/dhikr"]').first();
   await expect(dhikrCard).toBeVisible();
   await dhikrCard.click();
