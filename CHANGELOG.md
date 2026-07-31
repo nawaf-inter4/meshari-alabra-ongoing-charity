@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 This project uses [Semantic Versioning](https://semver.org/) and automated releases powered by [Release Please](https://github.com/googleapis/release-please).
 
+Patch and minor changes are batched: Release Please opens one release pull request on `main` that accumulates `fix:` (patch) and `feat:` (minor) commits since the last tag. Merging that pull request publishes the GitHub release and tag.
+
+## [1.1.0](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.0.0...v1.1.0) - 2026-07-31
+
+### Features
+
+- Modernize the multilingual memorial platform on Next.js 16.3 Instant Navigations, Cache Components, and Partial Prefetching.
+- Add centralized white-label configuration, dynamic PWA manifest, and multi-provider deploy templates (Vercel, Netlify, Render, Railway, Docker).
+- Ship Playwright coverage for Instant Navigations, YouTube players, white-label metadata/PWA values, and direction-aware CTA typography.
+- Use Lexend Deca for LTR interfaces and Tajawal for RTL interface controls, with dedicated Arabic Quran fonts.
+- Add locale-preserving section title links and section-directory cards (`/{lang}/sections/{section}`).
+
+### Bug Fixes
+
+- Stabilize CI browser coverage and Vercel production packaging for the Next.js 16.3 preview toolchain.
+- Ignore unsafe Dependabot major bumps that require dedicated migrations (Tailwind 4, lucide-react 1, ESLint 10, and related packages).
+
+### Documentation
+
+- Refresh README with live screenshots, rounded tech badges, sandbox → main release flow, and no emoji icons.
+
 ## [1.0.0](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/releases/tag/v1.0.0) - 2026-07-30
 
 ### Features
@@ -16,5 +37,5 @@ This project uses [Semantic Versioning](https://semver.org/) and automated relea
 
 ### Maintenance
 
-- Next.js 16, React 19, TypeScript 5, and Tailwind CSS.
+- Next.js 16, React 19, TypeScript, and Tailwind CSS.
 - Automated linting, type-checking, production builds, changelog updates, tags, and GitHub releases.
