@@ -22,6 +22,7 @@
 [![Deploy with Vercel](https://img.shields.io/badge/Deploy%20with-Vercel-black?style=flat&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME)
 [![Deploy to Netlify](https://img.shields.io/badge/Deploy%20to-Netlify-00C7B7?style=flat&logo=netlify&logoColor=white)](https://app.netlify.com/start/deploy?repository=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy to Cloudflare](https://img.shields.io/badge/Deploy%20to-Cloudflare-F38020?style=flat&logo=cloudflare&logoColor=white)](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 
 </div>
 
@@ -72,7 +73,7 @@ Built on Next.js 16.3 Instant Navigations, Cache Components, Partial Prefetching
 - Native one-click YouTube playlist players with deferred third-party work
 - Central config for identity, memorial content, assets, SEO, PWA, colors, and media
 - Dynamic `/manifest.webmanifest` and dependency-free service worker
-- Deploy templates for Vercel, Netlify, Render, Railway, and Docker
+- Deploy templates for Vercel, Netlify, Render, Cloudflare Workers, Railway, and Docker
 - LTR interface font: Lexend Deca · RTL interface font: Tajawal
 
 ### Sections
@@ -236,10 +237,12 @@ This application needs a real Next.js runtime (API routes + Cache Components). D
 [![Deploy with Vercel](https://img.shields.io/badge/Deploy%20with-Vercel-black?style=flat&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME)
 [![Deploy to Netlify](https://img.shields.io/badge/Deploy%20to-Netlify-00C7B7?style=flat&logo=netlify&logoColor=white)](https://app.netlify.com/start/deploy?repository=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy to Cloudflare](https://img.shields.io/badge/Deploy%20to-Cloudflare-F38020?style=flat&logo=cloudflare&logoColor=white)](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 
 - **Vercel:** native Next.js via `vercel.json`. Production branch = `main`. Sandbox environment branch = `sandbox`.
 - **Netlify:** Next.js runtime via `netlify.toml` and Netlify's official adapter.
 - **Render:** Docker via `render.yaml` and `Dockerfile`.
+- **Cloudflare:** Workers via `@opennextjs/cloudflare`, `wrangler.jsonc`, and the official [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity) button. Plain Cloudflare Pages static export is unsupported.
 
 ### Railway and Docker
 
@@ -293,7 +296,7 @@ Branding and deployment inputs:
 - Brand, accent, link, light, and dark colors: [COLORS]
 - Quran playlist and representative thumbnail video IDs: [IDS]
 - Favorite-reciter playlist and representative thumbnail video IDs: [IDS]
-- Deployment target: [Vercel, Netlify, Render, Railway, or Docker]
+- Deployment target: [Vercel, Netlify, Render, Cloudflare, Railway, or Docker]
 
 Requirements:
 1. Read README.md, WHITE_LABELING.md, `/llms.txt`, .env.example,
@@ -447,7 +450,8 @@ meshari-alabra-ongoing-charity/
 ├── public/                          # Icons, fonts, stories, sw.js, offline.html
 ├── tests/e2e/                       # Playwright suite
 ├── docs/screenshots/                # README screenshots
-├── vercel.json / netlify.toml / render.yaml / railway.json / Dockerfile
+├── vercel.json / netlify.toml / render.yaml / railway.json / wrangler.jsonc
+├── open-next.config.ts / Dockerfile
 └── package.json
 ```
 

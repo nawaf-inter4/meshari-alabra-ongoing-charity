@@ -74,11 +74,48 @@ docker run --rm -p 3000:3000 ongoing-charity
 
 [`railway.json`](./railway.json) selects the Dockerfile builder and configures health and restart policies. Add `NEXT_PUBLIC_SITE_URL` and the remaining white-label values before triggering the build.
 
-## AWS Amplify and Cloudflare
+## Cloudflare Workers
+
+This app deploys to Cloudflare **Workers** with the official OpenNext adapter (`@opennextjs/cloudflare`). Plain Cloudflare Pages static export is unsupported because the app needs route handlers, Proxy routing, and dynamic Open Graph / feed / `llms.txt` output.
+
+Checked-in Cloudflare files:
+
+- [`wrangler.jsonc`](./wrangler.jsonc) — Worker name, `nodejs_compat`, and OpenNext assets binding
+- [`open-next.config.ts`](./open-next.config.ts) — OpenNext Cloudflare adapter config
+- [`public/_headers`](./public/_headers) — long-lived cache for `/_next/static/*`
+- `package.json` scripts: `preview`, `deploy`, and `cf-typegen`
+- [`.npmrc`](./.npmrc) — `legacy-peer-deps=true` so Workers Builds install matches other providers
+
+### One-click deploy
+
+Use the official Deploy to Cloudflare button (same URL as the README badge):
+
+[Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+
+During setup:
+
+1. Confirm the detected build/deploy commands (`npm run build` / `npm run deploy`), or accept Cloudflare's OpenNext defaults.
+2. Set build-time variables for white-label values, especially `NEXT_PUBLIC_SITE_URL` (final HTTPS origin). Other `NEXT_PUBLIC_*` keys from [`.env.example`](./.env.example) may be set the same way.
+3. After the first deploy, smoke-test `/health`, `/manifest.webmanifest`, `/llms.txt`, an LTR locale, and an RTL locale.
+
+### CLI deploy
+
+```bash
+npm ci
+npm run deploy
+```
+
+Preview the Workers runtime locally (more accurate than `next dev` for production parity):
+
+```bash
+npm run preview
+```
+
+Optional image optimization on Workers uses Cloudflare Images; see the [OpenNext Cloudflare image guide](https://opennext.js.org/cloudflare/howtos/image). Incremental cache via R2 is optional and documented in OpenNext caching docs.
+
+## AWS Amplify
 
 Use a supported Next.js server/runtime adapter. A generic static publish directory is not compatible with this application because it contains dynamic API, health, manifest, Open Graph, feed, and `llms.txt` routes plus Proxy routing.
-
-Plain Cloudflare Pages static export is unsupported. Use Cloudflare's current Next.js/OpenNext adapter if deploying there and validate every dynamic endpoint afterward.
 
 ## Pre-deployment verification
 
