@@ -6,6 +6,13 @@ This project uses [Semantic Versioning](https://semver.org/) and automated relea
 
 Patch and minor changes are batched: Release Please opens one release pull request on `main` that accumulates `fix:` (patch) and `feat:` (minor) commits since the last tag. Merging that pull request publishes the GitHub release and tag.
 
+## [1.1.2](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.1.1...v1.1.2) (2026-07-31)
+
+
+### Bug Fixes
+
+* ship PWA splash/safe-area and PageSpeed CSS/polyfill wins ([#28](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/issues/28)) ([0be1a71](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/commit/0be1a71e022fd5abf0efc185ab3f79b513d6458b))
+
 ## [1.1.1](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.1.0...v1.1.1) (2026-07-31)
 
 
