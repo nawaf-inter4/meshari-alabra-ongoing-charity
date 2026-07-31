@@ -5,7 +5,6 @@ import ClientHeader from "./ClientHeader";
 import HeroSection from "./sections/HeroSection";
 import SectionNavigation from "./sections/SectionNavigation";
 import Footer from "./Footer";
-import WhenVisible from "./WhenVisible";
 
 // Lazy load heavy sections for better performance - reduces initial bundle size
 const YouTubePlaylist = lazy(() => import("./sections/YouTubePlaylist"));
@@ -45,67 +44,43 @@ export default function HomePage({ language }: HomePageProps) {
       
       <HeroSection />
       
-      {/* Gate dynamic imports on near-viewport; sentinel ids keep anchors scrollable */}
-      <WhenVisible id="quran" minHeight={320}>
-        <Suspense fallback={<SectionLoader />}>
-          <EnhancedQuranSection />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="donation">
-        <Suspense fallback={<SectionLoader />}>
-          <DonationSection />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="youtube">
-        <Suspense fallback={<SectionLoader />}>
-          <YouTubePlaylist />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="supplications">
-        <Suspense fallback={<SectionLoader />}>
-          <SupplicationsSection />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="prayer-times">
-        <Suspense fallback={<SectionLoader />}>
-          <PrayerTimesSection />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="tafseer">
-        <Suspense fallback={<SectionLoader />}>
-          <TafseerSection />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="hadith">
-        <Suspense fallback={<SectionLoader />}>
-          <HadithSection />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="dhikr">
-        <Suspense fallback={<SectionLoader />}>
-          <DhikrCounter />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="qibla">
-        <Suspense fallback={<SectionLoader />}>
-          <QiblaFinder />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="quran-stories">
-        <Suspense fallback={<SectionLoader />}>
-          <QuranStoriesSection />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="meshari-favorite-reciter">
-        <Suspense fallback={<SectionLoader />}>
-          <MeshariFavoriteReciter />
-        </Suspense>
-      </WhenVisible>
-      <WhenVisible id="islamic-chant">
-        <Suspense fallback={<SectionLoader />}>
-          <IslamicChantSection />
-        </Suspense>
-      </WhenVisible>
+      {/* Lazy-loaded sections with Suspense for better performance */}
+      <Suspense fallback={<SectionLoader />}>
+        <EnhancedQuranSection />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <DonationSection />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <YouTubePlaylist />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <SupplicationsSection />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <PrayerTimesSection />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <TafseerSection />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <HadithSection />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <DhikrCounter />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <QiblaFinder />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <QuranStoriesSection />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <MeshariFavoriteReciter />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <IslamicChantSection />
+      </Suspense>
       
       <SectionNavigation />
       <Footer />

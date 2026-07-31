@@ -20,7 +20,6 @@ test("native YouTube players defer third-party scripts while memorial audio auto
   await expect(memorialAudio).toHaveAttribute("autoplay", "");
 
   await page.locator("#youtube").scrollIntoViewIfNeeded();
-  await expect(page.locator("#youtube iframe").first()).toBeVisible({ timeout: 15_000 });
   await expect.poll(() => embedRequests.some((url) => url.includes("/embed/VXb36Nzybps"))).toBeTruthy();
 });
 
@@ -38,7 +37,7 @@ test("playlist sections use YouTube's native one-click players", async ({ page }
   const quranSection = page.locator("#youtube");
   await quranSection.scrollIntoViewIfNeeded();
   const quranPlayer = quranSection.locator("iframe[title='Quran Playlist']");
-  await expect(quranPlayer).toBeVisible({ timeout: 15_000 });
+  await expect(quranPlayer).toBeVisible();
   await expect(quranPlayer).toHaveAttribute(
     "src",
     /youtube\.com\/embed\/VXb36Nzybps\?.*list=PLozaqJ9egxJegXbK52PNLLlvWf4K5g-Cb/,
@@ -48,7 +47,7 @@ test("playlist sections use YouTube's native one-click players", async ({ page }
   const reciterSection = page.locator("#meshari-favorite-reciter");
   await reciterSection.scrollIntoViewIfNeeded();
   const reciterPlayer = reciterSection.locator("iframe");
-  await expect(reciterPlayer).toBeVisible({ timeout: 15_000 });
+  await expect(reciterPlayer).toBeVisible();
   await expect(reciterPlayer).toHaveAttribute("title", /Favorite Quran Reciter$/);
   await expect(reciterPlayer).toHaveAttribute(
     "src",
@@ -59,7 +58,7 @@ test("playlist sections use YouTube's native one-click players", async ({ page }
   const chantSection = page.locator("#islamic-chant");
   await chantSection.scrollIntoViewIfNeeded();
   const chantPlayer = chantSection.locator("iframe");
-  await expect(chantPlayer).toBeVisible({ timeout: 15_000 });
+  await expect(chantPlayer).toBeVisible();
   const chantCard = chantPlayer.locator("../..");
   await expect(chantCard).toHaveClass(/shadow-2xl/);
   await expect(chantCard).toHaveClass(/glow/);
