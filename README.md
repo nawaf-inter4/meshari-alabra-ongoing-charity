@@ -13,7 +13,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat)](./LICENSE)
 
 **A multilingual Islamic memorial site dedicated to Meshari Ahmed Sulaiman Alabra**  
-**مشاري بن أحمد بن سليمان العبره**
+**مشاري بن أحمد بن سليمان العبره (رحمه الله)**
 
 *March 29, 2023 — may Allah have mercy on him*
 
@@ -468,7 +468,7 @@ meshari-alabra-ongoing-charity/
 ## In memory of
 
 **Meshari Ahmed Sulaiman Alabra**  
-**مشاري بن أحمد بن سليمان العبره**
+**مشاري بن أحمد بن سليمان العبره (رحمه الله)**
 
 *Passed away on March 29, 2023 in Riyadh, Saudi Arabia*
 

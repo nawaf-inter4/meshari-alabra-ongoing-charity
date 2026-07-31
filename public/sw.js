@@ -2,7 +2,7 @@
  * Keep this file dependency-free so it works with every supported deployment target.
  */
 
-const VERSION = "v5";
+const VERSION = "v6";
 const PREFIX = "ongoing-charity";
 const PRECACHE = `${PREFIX}-precache-${VERSION}`;
 const PAGES = `${PREFIX}-pages-${VERSION}`;
@@ -19,8 +19,8 @@ const CORE_PRECACHE_URLS = [
   "/manifest.webmanifest",
   "/fonts/lexend-deca-latin.woff2",
   "/fonts/tajawal-arabic-400.woff2",
-  "/fonts/tajawal-arabic-500.woff2",
   "/fonts/tajawal-arabic-700.woff2",
+  "/flags/sa.svg",
 ];
 
 const OPTIONAL_LOCAL_ASSETS = [FAVICON, ICON_192, ICON_512, APPLE_ICON].filter((url) => {

@@ -202,6 +202,7 @@ export default async function LanguageLayout({
     >
       <head>
         <SEOScripts />
+        {/* Preload only the above-the-fold UI font for this direction. */}
         <link
           rel="preload"
           href={direction === "rtl" ? "/fonts/tajawal-arabic-400.woff2" : "/fonts/lexend-deca-latin.woff2"}
@@ -212,7 +213,7 @@ export default async function LanguageLayout({
         {direction === "rtl" ? (
           <link
             rel="preload"
-            href="/fonts/amiri-arabic-400.woff2"
+            href="/fonts/tajawal-arabic-700.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"

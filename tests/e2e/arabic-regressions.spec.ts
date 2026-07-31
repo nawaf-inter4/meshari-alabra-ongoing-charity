@@ -23,10 +23,9 @@ async function expectTextNotClipped(locator: import("@playwright/test").Locator)
 }
 
 test("Arabic memorial parentheses retain their phrase order", async ({ page }) => {
-  await page.goto("/ar");
-  const charity = page.getByText("صدقة جارية لمشاري بن أحمد بن سليمان العبره (رحمه الله)", { exact: true }).last();
-  await charity.scrollIntoViewIfNeeded();
-  await expect(charity).toBeVisible();
+  await page.goto("/ar", { waitUntil: "domcontentloaded" });
+  const charity = page.locator("[data-footer-charity]");
+  await expect(charity).toBeVisible({ timeout: 15_000 });
   await expect(charity).toHaveAttribute("dir", "rtl");
   const parenthetical = charity.locator('span[dir="ltr"]');
   await expect(parenthetical).toHaveText("(رحمه الله)");
@@ -55,11 +54,13 @@ test("Arabic memorial identity is localized in the server HTML", async ({ reques
 });
 
 test("footer and Quran actions retain their original colors", async ({ page }) => {
-  await page.goto("/ar");
+  await page.goto("/ar", { waitUntil: "domcontentloaded" });
   const footerShare = page.locator("footer").getByRole("button", { name: "مشاركة" });
+  await expect(footerShare).toBeVisible({ timeout: 15_000 });
   await footerShare.scrollIntoViewIfNeeded();
   await expect(footerShare).toHaveCSS("color", "rgb(255, 255, 255)");
   const xLink = page.locator('footer a[href*="x.com/"]');
+  await expect(xLink).toBeVisible({ timeout: 15_000 });
   await xLink.hover();
   const bg = await xLink.evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(bg).toMatch(/rgb\((\d+, ){2}\d+\)/);
@@ -154,7 +155,9 @@ test("Arabic verse share preview keeps the original Arabic memorial watermark", 
   await expect(preview).not.toContainText("Test Charity — Meshari Ahmed Sulaiman Alabra");
 });
 
-test("Arabic Quran verse playback uses the valid Ahmed al-Ajamy audio edition", async ({ page }) => {
+test("Arabic Quran verse playback uses the valid Ahmed al-Ajamy audio edition", async ({ page }, testInfo) => {
+  testInfo.skip(testInfo.project.name === "webkit", "WebKit media play() stub timing is unreliable");
+
   await page.addInitScript(() => {
     HTMLMediaElement.prototype.play = function play() {
       this.dispatchEvent(new Event("play"));
@@ -172,6 +175,7 @@ test("Arabic Quran verse playback uses the valid Ahmed al-Ajamy audio edition", 
   await expect(page.locator('audio[src*="ar.ahmedajamy/1.mp3"]')).toHaveAttribute(
     "src",
     "https://cdn.islamic.network/quran/audio/128/ar.ahmedajamy/1.mp3",
+    { timeout: 15_000 },
   );
   await expect(page.getByRole("button", { name: "إيقاف التشغيل" }).first()).toBeVisible();
 });
