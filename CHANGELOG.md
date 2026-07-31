@@ -6,6 +6,18 @@ This project uses [Semantic Versioning](https://semver.org/) and automated relea
 
 Patch and minor changes are batched: Release Please opens one release pull request on `main` that accumulates `fix:` (patch) and `feat:` (minor) commits since the last tag. Merging that pull request publishes the GitHub release and tag.
 
+## [1.1.1](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.1.0...v1.1.1) (2026-07-31)
+
+
+### Bug Fixes
+
+* PageSpeed agentic browsing and performance ([#16](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/issues/16)) ([#17](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/issues/17)) ([6e23828](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/commit/6e23828f522dcaa9630e5b484de85a01fcac1539))
+
+
+### Documentation
+
+* note sandbox branch protection ([#20](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/issues/20)) ([84fd623](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/commit/84fd6232ca1a897a025445fd6b83fc77c18a4eed))
+
 ## [1.1.0](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.0.0...v1.1.0) - 2026-07-31
 
 ### Features
