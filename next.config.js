@@ -21,8 +21,9 @@ const nextConfig = {
     // This reduces bundle size by not transpiling modern JS features
   },
   
-  // Output standalone for better optimization
-  output: 'standalone',
+  // Output standalone for better optimization.
+  // Disabled for Vercel deployment compatibility.
+  // output: 'standalone',
 
   // Enable Cache Components and reusable route shells for instant navigation.
   cacheComponents: true,
