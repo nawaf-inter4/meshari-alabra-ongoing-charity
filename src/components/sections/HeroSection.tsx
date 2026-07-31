@@ -1,7 +1,6 @@
 "use client";
 
 import { useLanguage } from "../LanguageProvider";
-import { motion } from "framer-motion";
 import { Star, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
 import { siteConfig } from "@/config/site";
@@ -168,21 +167,10 @@ export default function HeroSection() {
       <div className="relative z-10 max-w-4xl mx-auto text-center">
 
         {/* Memorial Description */}
-        <motion.div
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.8, 
-            delay: 0.2,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
+        <div
           className="bg-light-secondary/80 dark:bg-dark-secondary/80 backdrop-blur-lg rounded-2xl p-8 border-2 border-islamic-gold/30 glow motion-safe"
           style={{
             borderColor: 'var(--color-brand-border)',
-            willChange: 'transform, opacity',
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden',
           }}
           data-memorial-card
           suppressHydrationWarning
@@ -209,15 +197,10 @@ export default function HeroSection() {
               <span>{t("hero.supplications_button")}</span>
             </a>
           </div>
-        </motion.div>
+        </div>
 
         {/* Quranic Verse - Same as Footer */}
-        <motion.div
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-8"
-        >
+        <div className="mt-8">
           <div className="space-y-6">
             {/* Bismillah */}
             <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed`}>
@@ -234,7 +217,7 @@ export default function HeroSection() {
               {getQuranVerse('sadaqallah')}
             </p>
           </div>
-        </motion.div>
+        </div>
 
         {/* Scroll Down Icon */}
         <div className="mt-12 flex justify-center" aria-hidden="true">

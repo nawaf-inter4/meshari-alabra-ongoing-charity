@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, lazy, Suspense } from "react";
-import { useLanguage } from "./LanguageProvider";
+import { lazy, Suspense } from "react";
 import ClientHeader from "./ClientHeader";
 import HeroSection from "./sections/HeroSection";
 import SectionNavigation from "./sections/SectionNavigation";

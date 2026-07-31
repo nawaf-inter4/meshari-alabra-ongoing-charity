@@ -41,7 +41,7 @@ test("serves an offline-capable service worker and fallback", async ({ request }
   expect(worker).toContain("addEventListener(\"activate\"");
   expect(worker).toContain("addEventListener(\"fetch\"");
   expect(worker).toContain("/offline.html");
-  expect(worker).toContain('const VERSION = "v5"');
+  expect(worker).toContain('const VERSION = "v6"');
 
   expect(offlineResponse.status()).toBe(200);
   expect(offlineResponse.headers()["content-type"]).toContain("text/html");

@@ -11,10 +11,14 @@ const DeferredAnalytics = dynamic(() => import("@/components/AnalyticsWrapper"),
 const DeferredPWA = dynamic(() => import("@/components/PWAInstallWrapper"), {
   ssr: false,
 });
+const DeferredQuranFonts = dynamic(() => import("@/components/QuranFontLoader"), {
+  ssr: false,
+});
 
 export default function DeferredClientShell() {
   return (
     <>
+      <DeferredQuranFonts />
       <DeferredAudioPlayer />
       <DeferredAnalytics />
       <DeferredPWA />
