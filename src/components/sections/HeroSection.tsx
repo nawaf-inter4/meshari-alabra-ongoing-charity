@@ -7,69 +7,26 @@ import { siteConfig } from "@/config/site";
 
 export default function HeroSection() {
   const { t, direction, locale } = useLanguage();
-  const [dimensions, setDimensions] = useState({ width: 1920, height: 1080 });
-  const [starKey, setStarKey] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [starPositions, setStarPositions] = useState<
+    Array<{ id: number; x: number; y: number; delay: number }>
+  >([]);
 
+  // Generate star positions once after mount — avoid resize/locale churn (WebKit flicker).
   useEffect(() => {
+    if (typeof window === "undefined") return;
     setMounted(true);
-  }, []);
-
-
-  useEffect(() => {
-    const updateDimensions = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
-
-    updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    
-    return () => window.removeEventListener('resize', updateDimensions);
-  }, []);
-
-  // Regenerate stars when language changes
-  useEffect(() => {
-    setStarKey(prev => prev + 1);
-  }, [direction]);
-
-  const [starPositions, setStarPositions] = useState<Array<{id: number, x: number, y: number, delay: number}>>([]);
-
-  // Generate star positions - only on client to prevent hydration mismatch
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const generateStarPositions = () => {
-      return [...Array(8)].map((_, i) => ({
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    setStarPositions(
+      [...Array(8)].map((_, i) => ({
         id: i,
-        x: Math.random() * (dimensions.width - 100) + 50, // Keep stars within bounds
-        y: Math.random() * (dimensions.height - 100) + 50, // Keep stars within bounds
+        x: Math.random() * Math.max(width - 100, 100) + 50,
+        y: Math.random() * Math.max(height - 100, 100) + 50,
         delay: i * 0.2,
-      }));
-    };
-
-    setMounted(true);
-    // Generate stars after mount
-    setTimeout(() => {
-      setStarPositions(generateStarPositions());
-    }, 0);
+      })),
+    );
   }, []);
-
-  useEffect(() => {
-    if (mounted && typeof window !== 'undefined') {
-      const generateStarPositions = () => {
-        return [...Array(8)].map((_, i) => ({
-          id: i,
-          x: Math.random() * (dimensions.width - 100) + 50,
-          y: Math.random() * (dimensions.height - 100) + 50,
-          delay: i * 0.2,
-        }));
-      };
-      setStarPositions(generateStarPositions());
-    }
-  }, [dimensions, direction, starKey, mounted]);
 
   // Get Quran verse with proper fallbacks (same as Footer)
   const getQuranVerse = (part: 'bismillah' | 'verse' | 'sadaqallah') => {
@@ -138,8 +95,8 @@ export default function HeroSection() {
 
   return (
     <section 
-      className="relative min-h-screen flex items-center justify-center px-4 pt-28 pb-20 sm:pt-32 md:pt-28" 
-      style={{ paddingTop: 'max(7rem, env(safe-area-inset-top, 7rem))' }}
+      className="relative min-h-screen flex items-center justify-center px-4 pb-20 sm:pt-32 md:pt-28" 
+      style={{ paddingTop: 'calc(7rem + env(safe-area-inset-top, 0px))' }}
       suppressHydrationWarning
     >
       {/* Decorative stars use CSS animation to avoid long main-thread/composited-animation work. */}
@@ -147,7 +104,7 @@ export default function HeroSection() {
         <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true" suppressHydrationWarning>
           {starPositions.slice(0, 8).map((star) => (
             <div
-              key={`${starKey}-${star.id}`}
+              key={star.id}
               className="absolute hero-star"
               style={{
                 transform: `translate3d(${star.x}px, ${star.y}px, 0)`,
@@ -168,7 +125,7 @@ export default function HeroSection() {
 
         {/* Memorial Description */}
         <div
-          className="bg-light-secondary/80 dark:bg-dark-secondary/80 backdrop-blur-lg rounded-2xl p-8 border-2 border-islamic-gold/30 glow motion-safe"
+          className="bg-light-secondary/80 dark:bg-dark-secondary/80 backdrop-blur-md md:backdrop-blur-lg rounded-2xl p-8 border-2 border-islamic-gold/30 glow motion-safe"
           style={{
             borderColor: 'var(--color-brand-border)',
           }}

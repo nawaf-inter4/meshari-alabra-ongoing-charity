@@ -47,6 +47,19 @@ test("serves an offline-capable service worker and fallback", async ({ request }
   expect(offlineResponse.headers()["content-type"]).toContain("text/html");
 });
 
+test("exposes apple-touch-startup-image splash links for iOS PWA", async ({ page }) => {
+  await mockExternalApis(page);
+  await page.goto("/ar");
+  const splashLinks = page.locator('link[rel="apple-touch-startup-image"]');
+  expect(await splashLinks.count()).toBeGreaterThanOrEqual(8);
+  const href = await splashLinks.first().getAttribute("href");
+  expect(href).toMatch(/^\/splash\/apple-splash-\d+x\d+\.png$/);
+  const media = await splashLinks.first().getAttribute("media");
+  expect(media).toContain("orientation: portrait");
+  const splashResponse = await page.request.get(href!);
+  expect(splashResponse.ok()).toBeTruthy();
+});
+
 test("offline fallback uses one active locale and the site typography", async ({ page }) => {
   await page.addInitScript(() => {
     if (!localStorage.getItem("preferred-locale")) localStorage.setItem("preferred-locale", "fr");
@@ -143,9 +156,11 @@ test("install guidance follows the active locale and direction", async ({ page }
   expect(promptBox).not.toBeNull();
   expect(promptBox!.x).toBeLessThan(40);
   expect(promptBox!.width).toBeLessThanOrEqual(360);
-  expect(promptBox!.height).toBeLessThanOrEqual(120);
+  expect(promptBox!.height).toBeLessThanOrEqual(130);
+  await expect(frenchPrompt).toHaveCSS("border-radius", "9999px");
   await expect(frenchPrompt.locator("[data-pwa-app-icon]")).toHaveCSS("border-radius", "9999px");
   await expect(frenchPrompt).toContainText("Test Charity");
+  await expect(frenchPrompt.getByRole("button", { name: "Installer" })).toBeVisible();
   await frenchPrompt.getByRole("button", { name: "Fermer l’invite d’installation" }).click();
 
   await page.evaluate(() => localStorage.removeItem("pwa-install-prompt-dismissed-at"));
