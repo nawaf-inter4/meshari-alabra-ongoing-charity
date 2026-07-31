@@ -1,17 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import SectionSkeleton from "@/components/SectionSkeleton";
 
 const YouTubePlaylist = dynamic(() => import("@/components/sections/YouTubePlaylist"), {
-  loading: () => (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-islamic-gold"></div>
-    </div>
-  ),
+  loading: () => <SectionSkeleton label="Loading videos" />,
   ssr: false,
 });
 
 export default function YouTubeSectionWrapper() {
   return <YouTubePlaylist />;
 }
-

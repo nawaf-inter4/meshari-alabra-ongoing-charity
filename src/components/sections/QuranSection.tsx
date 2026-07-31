@@ -221,7 +221,7 @@ export default function QuranSection() {
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-islamic-gold flex items-center justify-center text-white font-bold">
                     {ayah.numberInSurah}
                   </div>
-                  <p className="flex-1 text-2xl md:text-3xl font-arabic text-right leading-loose text-islamic-green dark:text-islamic-gold">
+                  <p className="flex-1 text-2xl md:text-3xl font-arabic text-right leading-loose text-islamic-gold">
                     {ayah.text}
                   </p>
                 </div>

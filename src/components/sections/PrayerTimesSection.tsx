@@ -829,7 +829,7 @@ export default function PrayerTimesSection() {
               >
                 <Bell className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-islamic-gold mb-1" />
                 <h3 className="font-bold text-xs sm:text-sm md:text-base mb-1 leading-tight">{prayer.name}</h3>
-                <p className="text-xs sm:text-sm md:text-base font-bold text-islamic-green dark:text-islamic-gold leading-tight">
+                <p className="text-xs sm:text-sm md:text-base font-bold text-islamic-gold leading-tight">
                   {prayerTimes[prayer.key]}
                 </p>
               </motion.div>

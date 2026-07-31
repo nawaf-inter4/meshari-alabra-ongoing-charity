@@ -250,11 +250,15 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
               {/* Content */}
               <div className="flex-1 overflow-y-auto p-6">
                 {loading ? (
-                  <div className="text-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-islamic-gold mx-auto"></div>
-                    <p className="mt-4 text-gray-600 dark:text-gray-400">
-                      {locale === 'ar' ? 'جاري التحميل...' : 'Loading...'}
-                    </p>
+                  <div className="space-y-4 py-2" role="status" aria-busy="true" aria-label={locale === 'ar' ? 'جاري التحميل...' : 'Loading...'}>
+                    <span className="sr-only">{locale === 'ar' ? 'جاري التحميل...' : 'Loading...'}</span>
+                    {[0, 1, 2].map((i) => (
+                      <div key={i} className="rounded-2xl border border-islamic-gold/10 p-4 space-y-3">
+                        <div className="shimmer h-4 w-1/3 rounded-full" />
+                        <div className="shimmer h-16 w-full rounded-xl" />
+                        <div className="shimmer h-3 w-2/3 rounded-full" />
+                      </div>
+                    ))}
                   </div>
                 ) : bookmarkedVerses.length === 0 ? (
                   <div className="text-center py-12">
@@ -327,7 +331,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                         
                         {verse.arabicText && (
                           <div className="mb-4">
-                            <div className="arabic-quran-text text-2xl md:text-3xl leading-relaxed text-right text-islamic-green dark:text-islamic-gold">
+                            <div className="arabic-quran-text text-2xl md:text-3xl leading-relaxed text-right text-islamic-gold">
                               {verse.arabicText}
                             </div>
                           </div>

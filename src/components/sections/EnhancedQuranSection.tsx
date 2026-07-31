@@ -1201,15 +1201,16 @@ export default function EnhancedQuranSection() {
               {t("quran.subtitle") !== "quran.subtitle" ? t("quran.subtitle") : "اقرأ وتدبر آيات الله العظيم"}
             </p>
           </div>
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-islamic-gold mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">Loading Quran...</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-4 mb-8">
+          <div className="grid md:grid-cols-2 gap-4 mb-8" role="status" aria-label="Loading Quran">
             <div className="shimmer w-full h-16 rounded-2xl" />
             <div className="shimmer w-full h-16 rounded-2xl" />
           </div>
           <div className="shimmer w-full h-96 rounded-2xl" />
+          <div className="mt-4 space-y-3">
+            <div className="shimmer h-4 w-full rounded-full" />
+            <div className="shimmer h-4 w-[92%] rounded-full" />
+            <div className="shimmer h-4 w-[78%] rounded-full" />
+          </div>
         </div>
       </section>
     );
@@ -1630,7 +1631,7 @@ export default function EnhancedQuranSection() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6 }}
-                className="text-center mb-8 text-lg text-islamic-green dark:text-islamic-gold motion-safe"
+                className="text-center mb-8 text-lg text-islamic-gold motion-safe"
                 style={{
                   willChange: 'opacity',
                   transform: 'translateZ(0)',

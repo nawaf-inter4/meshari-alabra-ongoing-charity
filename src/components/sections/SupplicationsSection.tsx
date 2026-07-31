@@ -330,7 +330,7 @@ export default function SupplicationsSection() {
               }}
             >
               <p 
-                className="text-2xl md:text-3xl font-arabic text-right leading-loose mb-4 text-islamic-green dark:text-islamic-gold py-2 px-4" 
+                className="text-2xl md:text-3xl font-arabic text-right leading-loose mb-4 text-islamic-gold py-2 px-4" 
                 style={{ 
                   lineHeight: '2.5', 
                   wordSpacing: '0.2em',
@@ -348,7 +348,7 @@ export default function SupplicationsSection() {
               <p className="text-base leading-loose mb-3 py-2">
                 {dua.translation}
               </p>
-              <p className="text-sm text-islamic-blue dark:text-islamic-gold font-semibold">
+              <p className="text-sm text-islamic-gold font-semibold">
                 {dua.reference}
               </p>
             </motion.div>

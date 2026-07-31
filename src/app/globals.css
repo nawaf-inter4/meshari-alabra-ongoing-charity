@@ -285,3 +285,90 @@ h3.font-tajawal {
   line-height: 1.5;
   padding-block: 0.2em;
 }
+
+/* Loading Shimmer */
+.shimmer {
+  background-color: rgb(var(--color-background-light-accent-rgb) / 0.85);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(var(--color-brand-rgb) / 0.12) 45%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+  background-size: 200% 100%;
+}
+
+.dark .shimmer {
+  background-color: rgb(var(--color-background-dark-accent-rgb) / 0.55);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(var(--color-brand-rgb) / 0.18) 45%,
+    transparent 100%
+  );
+}
+
+/* Soft skeleton pulse for route/section placeholders */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.skeleton-pulse {
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-pulse,
+  .shimmer {
+    animation: none;
+  }
+}
+
+/* PDF Viewer Responsive Styles */
+.react-pdf__Page {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.react-pdf__Page__canvas {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+.react-pdf__Page__textContent {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.react-pdf__Page__textContent span {
+  max-width: 100% !important;
+  word-wrap: break-word;
+}
+
+/* Mobile-specific PDF adjustments */
+@media (max-width: 768px) {
+  .react-pdf__Page {
+    width: 100% !important;
+  }
+  
+  .react-pdf__Page__canvas {
+    width: 100% !important;
+  }
+  
+  .react-pdf__Page__textContent {
+    width: 100% !important;
+    transform-origin: top left;
+  }
+  
+  .react-pdf__Page__annotations {
+    width: 100% !important;
+  }
+}

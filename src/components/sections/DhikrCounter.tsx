@@ -246,7 +246,7 @@ export default function DhikrCounter() {
           {/* Dhikr Text - Moved up for better mobile UX */}
           <div className="text-center mb-4 md:mb-12">
             <p 
-              className="text-3xl md:text-5xl lg:text-6xl font-arabic mb-3 md:mb-6 text-islamic-green dark:text-islamic-gold"
+              className="text-3xl md:text-5xl lg:text-6xl font-arabic mb-3 md:mb-6 text-islamic-gold"
               style={{
                 direction: 'rtl',
                 unicodeBidi: 'isolate',

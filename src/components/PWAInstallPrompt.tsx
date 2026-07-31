@@ -104,7 +104,6 @@ export default function PWAInstallPrompt() {
         className="safe-fixed-bottom-left fixed z-50 max-w-[min(20rem,calc(100vw-6.75rem-env(safe-area-inset-left,0px)-env(safe-area-inset-right,0px)))] bg-white/90 p-3 text-gray-900 shadow-lg backdrop-blur-sm dark:bg-gray-800/90 dark:text-white rounded-full border border-islamic-gold/20"
         role="dialog"
         aria-labelledby="pwa-install-title"
-        aria-describedby="pwa-install-description"
         dir={direction}
         data-pwa-install-prompt
       >
@@ -126,12 +125,6 @@ export default function PWAInstallPrompt() {
             <h2 id="pwa-install-title" className="truncate text-sm font-bold leading-tight">
               {siteConfig.identity.shortName}
             </h2>
-            <p
-              id="pwa-install-description"
-              className="mt-0.5 line-clamp-2 text-xs leading-snug text-gray-600 dark:text-gray-300"
-            >
-              {isIOS && !deferredPrompt ? copy.iosInstructions : copy.installTitle}
-            </p>
           </div>
           {isIOS && !deferredPrompt ? (
             <Share className="h-5 w-5 shrink-0 self-center text-islamic-gold" aria-hidden="true" />

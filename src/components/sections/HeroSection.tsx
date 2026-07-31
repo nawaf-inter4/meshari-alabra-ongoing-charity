@@ -138,7 +138,7 @@ export default function HeroSection() {
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4" suppressHydrationWarning>
             {siteConfig.content.memorialDate || t("memorial.death")}
           </p>
-          <p className="text-xl text-islamic-green dark:text-islamic-gold leading-relaxed mb-6" suppressHydrationWarning>
+          <p className="text-xl text-islamic-gold leading-relaxed mb-6" suppressHydrationWarning>
             {siteConfig.content.heroDescription || t("hero.description")}
           </p>
 
@@ -165,7 +165,7 @@ export default function HeroSection() {
             </p>
             
             {/* Quran Verse */}
-            <p className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green dark:text-islamic-gold leading-[2.5] max-w-4xl mx-auto`} style={{ lineHeight: '2.5' }}>
+            <p className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold leading-[2.5] max-w-4xl mx-auto`} style={{ lineHeight: '2.5' }}>
               {getQuranVerse('verse')}
             </p>
             

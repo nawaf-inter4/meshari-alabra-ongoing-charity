@@ -32,15 +32,22 @@ test("Arabic memorial parentheses retain their phrase order", async ({ page }) =
   await expect(parenthetical.locator('bdi[dir="rtl"]')).toHaveText("رحمه الله");
 });
 
-test("original Quran framing phrases remain green in dark mode", async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem("theme", "dark"));
-  await page.goto("/ar");
+test("original Quran framing phrases remain green in dark and light mode", async ({ page }) => {
+  for (const theme of ["dark", "light"] as const) {
+    await page.addInitScript((value) => localStorage.setItem("theme", value), theme);
+    await page.goto("/ar", { waitUntil: "domcontentloaded" });
+    if (theme === "dark") {
+      await expect(page.locator("html")).toHaveClass(/dark/);
+    } else {
+      await expect(page.locator("html")).not.toHaveClass(/dark/);
+    }
 
-  for (const phrase of ["بسم الله الرحمن الرحيم", "صدق الله العلي العظيم"]) {
-    const matches = page.getByText(phrase, { exact: true });
-    await expect(matches).toHaveCount(2);
-    for (const match of await matches.all()) {
-      await expect(match).toHaveCSS("color", "rgb(0, 107, 63)");
+    for (const phrase of ["بسم الله الرحمن الرحيم", "صدق الله العلي العظيم"]) {
+      const matches = page.getByText(phrase, { exact: true });
+      await expect(matches).toHaveCount(2);
+      for (const match of await matches.all()) {
+        await expect(match).toHaveCSS("color", "rgb(0, 107, 63)");
+      }
     }
   }
 });
@@ -50,7 +57,7 @@ test("Arabic memorial identity is localized in the server HTML", async ({ reques
   expect(response.ok()).toBeTruthy();
   const html = await response.text();
   expect(html).toMatch(/<h1[^>]*>مشاري بن أحمد بن سليمان العبره<\/h1>/u);
-  expect(html).toMatch(/<p class="text-xl text-islamic-green[^>]*>صفحة مخصصة لأخي مشاري/u);
+  expect(html).toMatch(/<p class="text-xl text-islamic-gold[^>]*>صفحة مخصصة لأخي مشاري/u);
 });
 
 test("footer and Quran actions retain their original colors", async ({ page }) => {

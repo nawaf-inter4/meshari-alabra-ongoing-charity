@@ -151,12 +151,12 @@ test("install guidance follows the active locale and direction", async ({ page }
   const frenchPrompt = page.locator("[data-pwa-install-prompt]");
   await expect(frenchPrompt).toBeVisible({ timeout: 15_000 });
   await expect(frenchPrompt).toHaveAttribute("dir", "ltr");
-  await expect(frenchPrompt).toContainText("Installer l’application");
+  await expect(frenchPrompt).not.toContainText("Installer l’application");
   const promptBox = await frenchPrompt.boundingBox();
   expect(promptBox).not.toBeNull();
   expect(promptBox!.x).toBeLessThan(40);
   expect(promptBox!.width).toBeLessThanOrEqual(360);
-  expect(promptBox!.height).toBeLessThanOrEqual(130);
+  expect(promptBox!.height).toBeLessThanOrEqual(100);
   await expect(frenchPrompt).toHaveCSS("border-radius", "9999px");
   await expect(frenchPrompt.locator("[data-pwa-app-icon]")).toHaveCSS("border-radius", "9999px");
   await expect(frenchPrompt).toContainText("Test Charity");
@@ -169,5 +169,7 @@ test("install guidance follows the active locale and direction", async ({ page }
   const urduPrompt = page.locator("[data-pwa-install-prompt]");
   await expect(urduPrompt).toBeVisible({ timeout: 15_000 });
   await expect(urduPrompt).toHaveAttribute("dir", "rtl");
-  await expect(urduPrompt).toContainText("ایپ انسٹال کریں");
+  await expect(urduPrompt).toContainText("Test Charity");
+  await expect(urduPrompt).not.toContainText("ایپ انسٹال کریں");
+  await expect(urduPrompt.getByRole("button", { name: "انسٹال کریں" })).toBeVisible();
 });

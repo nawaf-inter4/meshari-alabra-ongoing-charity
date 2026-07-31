@@ -5,6 +5,7 @@ import ClientHeader from "./ClientHeader";
 import HeroSection from "./sections/HeroSection";
 import SectionNavigation from "./sections/SectionNavigation";
 import Footer from "./Footer";
+import SectionSkeleton from "./SectionSkeleton";
 
 // Lazy load heavy sections for better performance - reduces initial bundle size
 const YouTubePlaylist = lazy(() => import("./sections/YouTubePlaylist"));
@@ -20,14 +21,7 @@ const QuranStoriesSection = lazy(() => import("./sections/QuranStoriesSection"))
 const MeshariFavoriteReciter = lazy(() => import("./sections/MeshariFavoriteReciter"));
 const IslamicChantSection = lazy(() => import("./sections/IslamicChantSection"));
 
-// Loading fallback component
-const SectionLoader = () => (
-  <div className="min-h-[200px] flex items-center justify-center">
-    <div className="text-center">
-      <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-islamic-gold border-r-transparent"></div>
-    </div>
-  </div>
-);
+const SectionLoader = () => <SectionSkeleton compact label="Loading section" />;
 
 interface HomePageProps {
   language?: string;
