@@ -28,6 +28,11 @@ test("publishes white-label identity, PWA, assets, and theme from one configurat
   expect(llmsResponse.headers()["content-type"] || "").toContain("text/markdown");
 
   await page.goto("/en");
+  // Below-fold sections mount near-viewport; reveal a few so theme borders are present.
+  for (const section of ["quran", "donation", "youtube", "supplications"]) {
+    await page.locator(`#${section}`).scrollIntoViewIfNeeded();
+    await expect(page.locator(`#${section} h2`).first()).toBeVisible({ timeout: 15_000 });
+  }
   await expect(page).toHaveTitle(/Test Ongoing Charity/);
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute("href", "/manifest.webmanifest");
   await expect(page.locator('link[rel="icon"]').first()).toHaveAttribute("href", "/favicon.svg");

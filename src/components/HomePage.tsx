@@ -45,63 +45,63 @@ export default function HomePage({ language }: HomePageProps) {
       
       <HeroSection />
       
-      {/* Gate dynamic imports on near-viewport so unused JS stays off the critical path */}
-      <WhenVisible minHeight={320}>
+      {/* Gate dynamic imports on near-viewport; sentinel ids keep anchors scrollable */}
+      <WhenVisible id="quran" minHeight={320}>
         <Suspense fallback={<SectionLoader />}>
           <EnhancedQuranSection />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="donation">
         <Suspense fallback={<SectionLoader />}>
           <DonationSection />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="youtube">
         <Suspense fallback={<SectionLoader />}>
           <YouTubePlaylist />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="supplications">
         <Suspense fallback={<SectionLoader />}>
           <SupplicationsSection />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="prayer-times">
         <Suspense fallback={<SectionLoader />}>
           <PrayerTimesSection />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="tafseer">
         <Suspense fallback={<SectionLoader />}>
           <TafseerSection />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="hadith">
         <Suspense fallback={<SectionLoader />}>
           <HadithSection />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="dhikr">
         <Suspense fallback={<SectionLoader />}>
           <DhikrCounter />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="qibla">
         <Suspense fallback={<SectionLoader />}>
           <QiblaFinder />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="quran-stories">
         <Suspense fallback={<SectionLoader />}>
           <QuranStoriesSection />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="meshari-favorite-reciter">
         <Suspense fallback={<SectionLoader />}>
           <MeshariFavoriteReciter />
         </Suspense>
       </WhenVisible>
-      <WhenVisible>
+      <WhenVisible id="islamic-chant">
         <Suspense fallback={<SectionLoader />}>
           <IslamicChantSection />
         </Suspense>

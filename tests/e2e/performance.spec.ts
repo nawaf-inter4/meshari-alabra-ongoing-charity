@@ -11,7 +11,8 @@ test("hero LCP content is visible before client JavaScript hydrates", async ({ p
 
 test("compact supplication tabs retain accessible names", async ({ page }) => {
   await page.goto("/en");
-  await page.waitForSelector("#supplications button", { state: "visible" });
+  await page.locator("#supplications").scrollIntoViewIfNeeded();
+  await page.waitForSelector("#supplications button", { state: "visible", timeout: 15_000 });
   const tabs = page.locator("#supplications button");
   await tabs.first().scrollIntoViewIfNeeded();
   const names = await tabs.evaluateAll((buttons) => buttons.map((button) => button.getAttribute("aria-label")));
