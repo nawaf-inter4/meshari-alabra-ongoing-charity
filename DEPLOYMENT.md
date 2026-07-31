@@ -19,7 +19,10 @@ Copy [`.env.example`](./.env.example) for the complete configuration reference. 
 1. Import the GitHub repository in Vercel.
 2. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin.
 3. Add other white-label values in Project Settings → Environment Variables.
-4. Deploy the `main` branch.
+4. Production branch: `main` (serves [meshari.charity](https://meshari.charity)).
+5. Preview branch: treat `sandbox` as the default integration lane. Every push and PR to `sandbox` should produce a Vercel Preview. Optionally assign a stable Preview alias (for example `sandbox.meshari.charity`) to the `sandbox` branch in Vercel Project Settings → Domains / Git.
+
+Recommended flow: feature branch → PR into `sandbox` (Preview) → PR from `sandbox` into `main` (Production).
 
 CLI deployments are also supported:
 
