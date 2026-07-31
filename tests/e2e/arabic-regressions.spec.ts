@@ -62,13 +62,18 @@ test("Arabic memorial identity is localized in the server HTML", async ({ reques
 
 test("footer and Quran actions retain their original colors", async ({ page }) => {
   await page.goto("/ar", { waitUntil: "domcontentloaded" });
+  // Prefer evaluate scroll over scrollIntoViewIfNeeded: WebKit can detach nodes
+  // while Playwright waits for stability during soft navigations / Suspense remounts.
+  await expect(page.locator("footer")).toBeVisible({ timeout: 15_000 });
+  await page.evaluate(() => document.querySelector("footer")?.scrollIntoView());
   const footerShare = page.locator("footer").getByRole("button", { name: "مشاركة" });
   await expect(footerShare).toBeVisible({ timeout: 15_000 });
-  // Avoid scrollIntoViewIfNeeded — WebKit can detach nodes during soft navigations.
   await expect(footerShare).toHaveCSS("color", "rgb(255, 255, 255)");
   const xLink = page.locator('footer a[href*="x.com/"]');
   await expect(xLink).toBeVisible({ timeout: 15_000 });
-  await xLink.hover();
+  await expect(async () => {
+    await xLink.hover({ timeout: 5_000 });
+  }).toPass({ timeout: 15_000 });
   const bg = await xLink.evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(bg).toMatch(/rgb\((\d+, ){2}\d+\)/);
   const [r, g, b] = bg.match(/\d+/g)!.map(Number);
