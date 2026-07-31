@@ -1,0 +1,165 @@
+import type { SupportedLocale } from "@/config/site";
+
+interface PWACopy {
+  installTitle: string;
+  installDescription: string;
+  iosInstructions: string;
+  install: string;
+  dismissInstall: string;
+  updateTitle: string;
+  updateDescription: string;
+  updateNow: string;
+  updating: string;
+  dismissUpdate: string;
+}
+
+export const pwaCopy: Record<SupportedLocale, PWACopy> = {
+  ar: {
+    installTitle: "ثبّت التطبيق",
+    installDescription: "أضف {name} إلى شاشتك الرئيسية للوصول السريع. قد تبقى الصفحات التي زرتها سابقًا متاحة دون اتصال.",
+    iosInstructions: "اضغط مشاركة، ثم «إضافة إلى الشاشة الرئيسية».",
+    install: "تثبيت",
+    dismissInstall: "إخفاء طلب التثبيت",
+    updateTitle: "يتوفر تحديث جديد",
+    updateDescription: "حدّث عندما يناسبك لاستخدام أحدث إصدار.",
+    updateNow: "التحديث الآن",
+    updating: "جارٍ التحديث…",
+    dismissUpdate: "إخفاء إشعار التحديث",
+  },
+  en: {
+    installTitle: "Install the app",
+    installDescription: "Add {name} to your home screen for quick access. Pages you previously visited may remain available offline.",
+    iosInstructions: "Tap Share, then Add to Home Screen.",
+    install: "Install",
+    dismissInstall: "Dismiss install prompt",
+    updateTitle: "An update is ready",
+    updateDescription: "Refresh when convenient to use the latest version.",
+    updateNow: "Update now",
+    updating: "Updating…",
+    dismissUpdate: "Dismiss update notice",
+  },
+  ur: {
+    installTitle: "ایپ انسٹال کریں",
+    installDescription: "فوری رسائی کے لیے {name} کو اپنی ہوم اسکرین میں شامل کریں۔ پہلے دیکھی گئی صفحات آف لائن دستیاب رہ سکتے ہیں۔",
+    iosInstructions: "شیئر دبائیں، پھر ہوم اسکرین میں شامل کریں۔",
+    install: "انسٹال کریں",
+    dismissInstall: "انسٹالیشن کا پیغام بند کریں",
+    updateTitle: "نئی اپ ڈیٹ تیار ہے",
+    updateDescription: "تازہ ترین ورژن کے لیے اپنی سہولت کے مطابق اپ ڈیٹ کریں۔",
+    updateNow: "ابھی اپ ڈیٹ کریں",
+    updating: "اپ ڈیٹ ہو رہا ہے…",
+    dismissUpdate: "اپ ڈیٹ کا پیغام بند کریں",
+  },
+  tr: {
+    installTitle: "Uygulamayı yükle",
+    installDescription: "Hızlı erişim için {name} uygulamasını ana ekranınıza ekleyin. Daha önce ziyaret ettiğiniz sayfalar çevrimdışıyken kullanılabilir.",
+    iosInstructions: "Paylaş'a, ardından Ana Ekrana Ekle'ye dokunun.",
+    install: "Yükle",
+    dismissInstall: "Yükleme istemini kapat",
+    updateTitle: "Bir güncelleme hazır",
+    updateDescription: "En son sürümü kullanmak için uygun olduğunuzda güncelleyin.",
+    updateNow: "Şimdi güncelle",
+    updating: "Güncelleniyor…",
+    dismissUpdate: "Güncelleme bildirimini kapat",
+  },
+  id: {
+    installTitle: "Instal aplikasi",
+    installDescription: "Tambahkan {name} ke layar utama untuk akses cepat. Halaman yang pernah dikunjungi mungkin tetap tersedia saat offline.",
+    iosInstructions: "Ketuk Bagikan, lalu Tambahkan ke Layar Utama.",
+    install: "Instal",
+    dismissInstall: "Tutup ajakan instalasi",
+    updateTitle: "Pembaruan siap",
+    updateDescription: "Perbarui saat nyaman untuk menggunakan versi terbaru.",
+    updateNow: "Perbarui sekarang",
+    updating: "Memperbarui…",
+    dismissUpdate: "Tutup pemberitahuan pembaruan",
+  },
+  ms: {
+    installTitle: "Pasang aplikasi",
+    installDescription: "Tambahkan {name} pada skrin utama untuk akses pantas. Halaman yang pernah dilawati mungkin kekal tersedia di luar talian.",
+    iosInstructions: "Ketik Kongsi, kemudian Tambah ke Skrin Utama.",
+    install: "Pasang",
+    dismissInstall: "Tutup gesaan pemasangan",
+    updateTitle: "Kemas kini tersedia",
+    updateDescription: "Kemas kini apabila sesuai untuk menggunakan versi terkini.",
+    updateNow: "Kemas kini sekarang",
+    updating: "Mengemas kini…",
+    dismissUpdate: "Tutup notis kemas kini",
+  },
+  bn: {
+    installTitle: "অ্যাপ ইনস্টল করুন",
+    installDescription: "দ্রুত ব্যবহারের জন্য হোম স্ক্রিনে {name} যোগ করুন। আগে দেখা পৃষ্ঠাগুলো অফলাইনে পাওয়া যেতে পারে।",
+    iosInstructions: "শেয়ার চাপুন, তারপর হোম স্ক্রিনে যোগ করুন।",
+    install: "ইনস্টল",
+    dismissInstall: "ইনস্টল বার্তা বন্ধ করুন",
+    updateTitle: "একটি আপডেট প্রস্তুত",
+    updateDescription: "সর্বশেষ সংস্করণ ব্যবহার করতে সুবিধামতো আপডেট করুন।",
+    updateNow: "এখন আপডেট করুন",
+    updating: "আপডেট হচ্ছে…",
+    dismissUpdate: "আপডেট বার্তা বন্ধ করুন",
+  },
+  fr: {
+    installTitle: "Installer l’application",
+    installDescription: "Ajoutez {name} à votre écran d’accueil pour un accès rapide. Les pages déjà consultées peuvent rester disponibles hors ligne.",
+    iosInstructions: "Touchez Partager, puis Sur l’écran d’accueil.",
+    install: "Installer",
+    dismissInstall: "Fermer l’invite d’installation",
+    updateTitle: "Une mise à jour est prête",
+    updateDescription: "Actualisez lorsque cela vous convient pour utiliser la dernière version.",
+    updateNow: "Mettre à jour",
+    updating: "Mise à jour…",
+    dismissUpdate: "Fermer l’avis de mise à jour",
+  },
+  zh: {
+    installTitle: "安装应用",
+    installDescription: "将{name}添加到主屏幕以便快速访问。之前访问过的页面在离线时可能仍可使用。",
+    iosInstructions: "轻点“分享”，然后选择“添加到主屏幕”。",
+    install: "安装",
+    dismissInstall: "关闭安装提示",
+    updateTitle: "更新已就绪",
+    updateDescription: "请在方便时更新，以使用最新版本。",
+    updateNow: "立即更新",
+    updating: "正在更新…",
+    dismissUpdate: "关闭更新通知",
+  },
+  it: {
+    installTitle: "Installa l’app",
+    installDescription: "Aggiungi {name} alla schermata Home per un accesso rapido. Le pagine già visitate potrebbero restare disponibili offline.",
+    iosInstructions: "Tocca Condividi, quindi Aggiungi alla schermata Home.",
+    install: "Installa",
+    dismissInstall: "Chiudi la richiesta di installazione",
+    updateTitle: "È disponibile un aggiornamento",
+    updateDescription: "Aggiorna quando preferisci per usare la versione più recente.",
+    updateNow: "Aggiorna ora",
+    updating: "Aggiornamento…",
+    dismissUpdate: "Chiudi l’avviso di aggiornamento",
+  },
+  ja: {
+    installTitle: "アプリをインストール",
+    installDescription: "すぐにアクセスできるよう、{name}をホーム画面に追加します。以前に開いたページはオフラインでも利用できる場合があります。",
+    iosInstructions: "共有をタップし、「ホーム画面に追加」を選択してください。",
+    install: "インストール",
+    dismissInstall: "インストール案内を閉じる",
+    updateTitle: "更新の準備ができました",
+    updateDescription: "都合のよいときに更新して、最新版をご利用ください。",
+    updateNow: "今すぐ更新",
+    updating: "更新中…",
+    dismissUpdate: "更新通知を閉じる",
+  },
+  ko: {
+    installTitle: "앱 설치",
+    installDescription: "빠르게 이용하려면 {name}을 홈 화면에 추가하세요. 이전에 방문한 페이지는 오프라인에서도 사용할 수 있습니다.",
+    iosInstructions: "공유를 누른 다음 홈 화면에 추가를 선택하세요.",
+    install: "설치",
+    dismissInstall: "설치 안내 닫기",
+    updateTitle: "업데이트가 준비되었습니다",
+    updateDescription: "편리한 시간에 업데이트하여 최신 버전을 사용하세요.",
+    updateNow: "지금 업데이트",
+    updating: "업데이트 중…",
+    dismissUpdate: "업데이트 알림 닫기",
+  },
+};
+
+export function formatPwaCopy(template: string, name: string) {
+  return template.replace("{name}", name);
+}

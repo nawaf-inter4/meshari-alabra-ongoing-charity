@@ -4,8 +4,11 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Copy, Check, Download, Share2, MessageCircle, Send, Facebook, Linkedin, Mail, Share } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
-import { useTheme } from "next-themes";
+import { useTheme } from "./ThemeProvider";
 import { toPng, toJpeg } from "html-to-image";
+import { localeDirection, siteAssetUrl, siteConfig } from "@/config/site";
+import { localizedSectionHref } from "@/lib/routes";
+import BidiText from "./BidiText";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -31,6 +34,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
   const [mounted, setMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const previewCardRef = useRef<HTMLDivElement>(null);
+  const isRtl = localeDirection(locale) === "rtl";
 
   // Determine if dark mode is active
   const isDarkMode = mounted && resolvedTheme === 'dark';
@@ -44,40 +48,12 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     if (!mounted || mode === 'website') return;
     
     const preloadFonts = async () => {
-      const fontFamilies = ['Amiri', 'Scheherazade New'];
-      
       try {
-        // Load fonts from Google Fonts
-        const fontPromises = fontFamilies.map(async (fontFamily) => {
-          try {
-            // Check if font is already loaded
-            if (document.fonts && document.fonts.check(`16px "${fontFamily}"`)) {
-              return true;
-            }
-            
-            // Load font using FontFace API with Google Fonts URL
-            // Use correct font URLs for proper diacritics support
-            const fontUrl = fontFamily === 'Amiri' 
-              ? 'https://fonts.gstatic.com/s/amiri/v27/J7aRnpd8CGxBHqUpvrI.woff2'
-              : 'https://fonts.gstatic.com/s/scheherazadenew/v8/4UaHrEghqB_RMo6uD_0A3dHBBs5nYQzBpBMRVJ9D.woff2';
-            
-            // Set font feature settings for proper Arabic diacritics
-            const font = new FontFace(fontFamily, `url(${fontUrl})`, {
-              display: 'swap',
-              featureSettings: '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1'
-            });
-            await font.load();
-            if (document.fonts) {
-              document.fonts.add(font);
-            }
-            return true;
-          } catch (e) {
-            console.warn(`Font loading error for ${fontFamily}:`, e);
-            return false;
-          }
-        });
-        
-        await Promise.all(fontPromises);
+        await Promise.all([
+          document.fonts.load('16px "Amiri"'),
+          document.fonts.load('16px "Scheherazade New"'),
+        ]);
+        setFontsLoaded(true);
         
         // Wait for all fonts to be ready
         if (document.fonts && document.fonts.ready) {
@@ -104,17 +80,24 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     preloadFonts();
   }, [mounted, mode]);
 
-  const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const siteUrl = siteConfig.identity.siteUrl;
+  const siteHost = new URL(siteUrl).host;
+  const websiteTitle = typeof window !== 'undefined' ? document.title : siteConfig.identity.name;
+  const translatedShareCaption = t("footer.charity");
+  const memorialShareCaption = siteConfig.content.footerCharity ||
+    (translatedShareCaption === "footer.charity"
+      ? `${siteConfig.identity.shortName} — ${siteConfig.content.memorialLegalName}`
+      : translatedShareCaption);
   const shareUrl = mode === 'website' 
     ? (typeof window !== 'undefined' ? window.location.href : siteUrl)
-    : `${siteUrl}/quran?surah=${verse?.surahNumber}&ayah=${verse?.ayahNumber}`;
+    : `${siteUrl}${localizedSectionHref(locale, 'quran')}?surah=${verse?.surahNumber}&ayah=${verse?.ayahNumber}`;
   const shareText = mode === 'website'
-    ? (typeof window !== 'undefined' ? document.title : 'Meshari\'s Ongoing Charity')
+    ? websiteTitle
     : `${verse?.surahName} - ${t("share.ayah")} ${verse?.ayahNumber}\n\n${verse?.arabicText}${verse?.translation ? `\n\n${verse.translation}` : ''}`;
   
   // Get OG image URL
   const ogImageUrl = mode === 'website' 
-    ? `${siteUrl}/og-image.png`
+    ? siteAssetUrl(siteConfig.assets.openGraphImage)
     : undefined;
 
   const copyToClipboard = async () => {
@@ -132,7 +115,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     const encodedUrl = encodeURIComponent(shareUrl);
     
     const shareTitle = mode === 'website' 
-      ? (typeof window !== 'undefined' ? document.title : 'Meshari\'s Ongoing Charity')
+      ? websiteTitle
       : `${verse?.surahName} - ${t("share.ayah")} ${verse?.ayahNumber}`;
     
     const urls: { [key: string]: string } = {
@@ -197,7 +180,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       tempContainer.style.overflowX = 'visible';
       tempContainer.style.overflowY = 'visible';
       // Ensure container has the same background to preserve colors
-      tempContainer.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff';
+      tempContainer.style.backgroundColor = isDarkMode ? siteConfig.colors.backgroundDarkSecondary : siteConfig.colors.backgroundLight;
       document.body.appendChild(tempContainer);
       
       // Clone the element with all styles and classes preserved
@@ -242,7 +225,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       });
       
       // Ensure critical styles are set - use EXACT computed values to match rendered version
-      clonedElement.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff';
+      clonedElement.style.backgroundColor = isDarkMode ? siteConfig.colors.backgroundDarkSecondary : siteConfig.colors.backgroundLight;
       clonedElement.style.position = 'relative';
       clonedElement.style.display = 'block';
       clonedElement.style.visibility = 'visible';
@@ -288,10 +271,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
           (clonedEl.style as any).webkitFontSmoothing = originalComputedAny.webkitFontSmoothing || 'antialiased';
           (clonedEl.style as any).mozOsxFontSmoothing = originalComputedAny.mozOsxFontSmoothing || 'grayscale';
           // CRITICAL: Only set direction for Arabic text elements, not all elements
-          // Setting bidi-override on non-Arabic text can reverse English text
+          // Only force RTL isolation for Arabic runs; leave Latin text in its natural direction
           if (original.classList.contains('arabic-quran-text') || original.classList.contains('quran-text')) {
             clonedEl.style.direction = originalComputed.direction || 'rtl';
-            clonedEl.style.unicodeBidi = originalComputed.unicodeBidi || 'bidi-override';
+            clonedEl.style.unicodeBidi = originalComputed.unicodeBidi || 'isolate';
           } else {
             // For non-Arabic text, use normal direction
             clonedEl.style.direction = originalComputed.direction || 'ltr';
@@ -381,10 +364,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
         
         // For non-Arabic text elements, ensure correct direction
         // BUT preserve centering for watermark elements
-        const isWatermarkElement = original.textContent?.includes('meshari.charity') || 
+        const isWatermarkElement = original.textContent?.includes(siteHost) ||
                                    original.textContent?.includes('صدقة جارية') ||
                                    original.textContent?.includes('Ongoing charity') ||
-                                   original.parentElement?.textContent?.includes('meshari.charity');
+                                   original.parentElement?.textContent?.includes(siteHost);
         
         if (!original.classList.contains('arabic-quran-text') && 
             !original.classList.contains('quran-text') && 
@@ -413,7 +396,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             // Has Arabic text - use RTL with Arabic fonts and proper rendering
             clonedEl.style.direction = 'rtl';
             clonedEl.style.textAlign = isWatermarkElement ? 'center' : 'right';
-            clonedEl.style.unicodeBidi = isWatermarkElement ? 'plaintext' : 'bidi-override';
+            clonedEl.style.unicodeBidi = isWatermarkElement ? 'plaintext' : 'isolate';
             clonedEl.style.fontFamily = originalComputed.fontFamily || "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif";
             clonedEl.style.textRendering = 'optimizeLegibility';
             clonedEl.style.setProperty('-webkit-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
@@ -603,7 +586,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       }
       
       // Determine background color based on theme
-      const bgColor = isDarkMode ? '#1f2937' : '#ffffff';
+      const bgColor = isDarkMode ? siteConfig.colors.backgroundDarkSecondary : siteConfig.colors.backgroundLight;
       
       // Get all @font-face rules from the document
       const fontFaceRules: string[] = [];
@@ -686,7 +669,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             font-variant-ligatures: common-ligatures contextual !important;
             text-rendering: optimizeLegibility !important;
             direction: rtl !important;
-            unicode-bidi: bidi-override !important;
+            unicode-bidi: isolate !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
           }
@@ -800,7 +783,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       tempContainer.style.visibility = 'visible';
       tempContainer.style.opacity = '1';
       // Ensure container has the same background to preserve colors
-      tempContainer.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff';
+      tempContainer.style.backgroundColor = isDarkMode ? siteConfig.colors.backgroundDarkSecondary : siteConfig.colors.backgroundLight;
       document.body.appendChild(tempContainer);
       
       // Clone the element with all styles and classes preserved
@@ -843,7 +826,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       });
       
       // Ensure critical styles are set
-      clonedElement.style.backgroundColor = isDarkMode ? '#1f2937' : '#ffffff';
+      clonedElement.style.backgroundColor = isDarkMode ? siteConfig.colors.backgroundDarkSecondary : siteConfig.colors.backgroundLight;
       clonedElement.style.position = 'relative';
       clonedElement.style.display = 'block';
       clonedElement.style.visibility = 'visible';
@@ -881,10 +864,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
           (clonedEl.style as any).webkitFontSmoothing = originalComputedAny.webkitFontSmoothing || 'antialiased';
           (clonedEl.style as any).mozOsxFontSmoothing = originalComputedAny.mozOsxFontSmoothing || 'grayscale';
           // CRITICAL: Only set direction for Arabic text elements, not all elements
-          // Setting bidi-override on non-Arabic text can reverse English text
+          // Only force RTL isolation for Arabic runs; leave Latin text in its natural direction
           if (original.classList.contains('arabic-quran-text') || original.classList.contains('quran-text')) {
             clonedEl.style.direction = originalComputed.direction || 'rtl';
-            clonedEl.style.unicodeBidi = originalComputed.unicodeBidi || 'bidi-override';
+            clonedEl.style.unicodeBidi = originalComputed.unicodeBidi || 'isolate';
           } else {
             // For non-Arabic text, use normal direction
             clonedEl.style.direction = originalComputed.direction || 'ltr';
@@ -974,10 +957,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
         
         // For non-Arabic text elements, ensure correct direction
         // BUT preserve centering for watermark elements
-        const isWatermarkElement = original.textContent?.includes('meshari.charity') || 
+        const isWatermarkElement = original.textContent?.includes(siteHost) ||
                                    original.textContent?.includes('صدقة جارية') ||
                                    original.textContent?.includes('Ongoing charity') ||
-                                   original.parentElement?.textContent?.includes('meshari.charity');
+                                   original.parentElement?.textContent?.includes(siteHost);
         
         if (!original.classList.contains('arabic-quran-text') && 
             !original.classList.contains('quran-text') && 
@@ -1006,7 +989,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             // Has Arabic text - use RTL with Arabic fonts and proper rendering
             clonedEl.style.direction = 'rtl';
             clonedEl.style.textAlign = isWatermarkElement ? 'center' : 'right';
-            clonedEl.style.unicodeBidi = isWatermarkElement ? 'plaintext' : 'bidi-override';
+            clonedEl.style.unicodeBidi = isWatermarkElement ? 'plaintext' : 'isolate';
             clonedEl.style.fontFamily = originalComputed.fontFamily || "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif";
             clonedEl.style.textRendering = 'optimizeLegibility';
             clonedEl.style.setProperty('-webkit-font-feature-settings', '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1');
@@ -1196,7 +1179,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       }
       
       // Determine background color based on theme
-      const bgColor = isDarkMode ? '#1f2937' : '#ffffff';
+      const bgColor = isDarkMode ? siteConfig.colors.backgroundDarkSecondary : siteConfig.colors.backgroundLight;
       
       // Use html-to-image with explicit font embedding and CORS support
       // useCORS: true enables cross-origin resource loading (needed for Google Fonts in production)
@@ -1263,7 +1246,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
             font-variant-ligatures: common-ligatures contextual !important;
             text-rendering: optimizeLegibility !important;
             direction: rtl !important;
-            unicode-bidi: bidi-override !important;
+            unicode-bidi: isolate !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
           }
@@ -1416,13 +1399,13 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                   <div className="mb-6">
                     <div className="rounded-2xl overflow-hidden shadow-lg border-2 border-islamic-gold/30">
                       <img 
-                        src={ogImageUrl || `${siteUrl}/og-image.png`}
-                        alt={typeof window !== 'undefined' ? document.title : 'Meshari\'s Ongoing Charity'}
+                        src={ogImageUrl || siteAssetUrl(siteConfig.assets.openGraphImage)}
+                        alt={websiteTitle}
                         className="w-full h-auto"
                         onError={(e) => {
                           // Fallback if OG image doesn't load
                           const target = e.target as HTMLImageElement;
-                          target.src = `${siteUrl}/og-image.png`;
+                          target.src = siteAssetUrl(siteConfig.assets.openGraphImage);
                         }}
                       />
                     </div>
@@ -1431,13 +1414,14 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                   /* Visible Preview - This is what gets downloaded */
                   <div 
                     ref={previewCardRef} 
+                    data-share-verse-preview
                     className={`rounded-2xl p-8 shadow-lg border-2 border-islamic-gold/30 mb-6 ${
                       isDarkMode 
                         ? 'bg-gray-800 dark:bg-gray-800' 
                         : 'bg-white'
                     }`}
                     style={{
-                      backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
+                      backgroundColor: isDarkMode ? siteConfig.colors.backgroundDarkSecondary : siteConfig.colors.backgroundLight,
                       position: 'relative',
                       // Ensure no font-arabic is inherited
                       fontFamily: 'inherit',
@@ -1475,7 +1459,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                         >
                           <span 
                             style={{
-                              color: '#D4AF37',
+                              color: 'var(--color-brand)',
                               fontSize: '16px',
                               fontWeight: 'bold',
                               lineHeight: '1',
@@ -1513,7 +1497,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                                   : "'Lexend Deca', sans-serif",
                                 direction: surahNameHasArabic ? 'rtl' : 'ltr',
                                 textAlign: surahNameHasArabic ? 'right' : 'left',
-                                unicodeBidi: surahNameHasArabic ? 'bidi-override' : 'normal',
+                                unicodeBidi: surahNameHasArabic ? 'isolate' : 'normal',
                                 // Explicitly override any font-arabic class styles - CRITICAL for English names like "Al-Faatiha"
                                 textRendering: surahNameHasArabic ? 'optimizeLegibility' : 'auto',
                                 fontFeatureSettings: surahNameHasArabic ? '"liga" 1, "clig" 1, "calt" 1, "kern" 1' : 'normal',
@@ -1569,7 +1553,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                       fontVariantLigatures: 'common-ligatures contextual',
                       fontKerning: 'normal',
                       fontSynthesis: 'none',
-                      unicodeBidi: 'bidi-override',
+                      unicodeBidi: 'isolate',
                       overflow: 'visible', // CRITICAL: Prevent truncation of Arabic text
                       overflowX: 'visible',
                       overflowY: 'visible',
@@ -1602,7 +1586,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                   {verse?.translation && (() => {
                     // Detect if translation contains Arabic text
                     const hasArabic = /[\u0600-\u06FF]/.test(verse.translation);
-                    const isArabicTranslation = hasArabic || locale === 'ar';
+                    const isArabicTranslation = hasArabic || isRtl;
                     
                     return (
                       <div className="mb-6" style={{ 
@@ -1636,7 +1620,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                             textRendering: isArabicTranslation ? 'optimizeLegibility' : 'auto',
                             fontFeatureSettings: isArabicTranslation ? '"liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1' : 'normal',
                             fontVariantLigatures: isArabicTranslation ? 'common-ligatures contextual' : 'normal',
-                            unicodeBidi: isArabicTranslation ? 'bidi-override' : 'normal'
+                            unicodeBidi: isArabicTranslation ? 'isolate' : 'normal'
                           } as React.CSSProperties}
                           ref={(el) => {
                             if (el && isArabicTranslation) {
@@ -1680,8 +1664,8 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                     <p 
                       className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}
                       style={{
-                        fontFamily: locale === 'ar' ? "'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif" : "'Lexend Deca', sans-serif",
-                        direction: locale === 'ar' ? 'rtl' : 'ltr',
+                        fontFamily: isRtl ? "'Amiri', 'Scheherazade New', serif" : "'Lexend Deca', sans-serif",
+                        direction: isRtl ? 'rtl' : 'ltr',
                         lineHeight: '1.5',
                         textAlign: 'center',
                         margin: '0 auto',
@@ -1690,37 +1674,12 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                         display: 'block',
                         padding: '0',
                         alignSelf: 'center',
-                        unicodeBidi: 'plaintext', // This helps center RTL text properly
+                        unicodeBidi: 'isolate',
                         whiteSpace: 'nowrap', // Keep Arabic watermark on one line
                         overflow: 'visible' // Allow text to be visible even if it extends
                       }}
                     >
-                      {locale === 'ar' 
-                        ? 'صدقة جارية لمشاري بن أحمد بن سليمان العبره (رحمه الله)'
-                        : locale === 'en'
-                        ? 'Ongoing charity for Meshari bin Ahmed bin Sulaiman Alabra (May Allah have mercy on him)'
-                        : locale === 'ur'
-                        ? 'مشاری بن احمد بن سلیمان العبرہ کے لیے صدقہ جاریہ (اللہ تعالیٰ ان پر رحم فرمائے)'
-                        : locale === 'tr'
-                        ? 'Meshari bin Ahmed bin Sulaiman Alabra için sürekli hayır (Allah ona rahmet etsin)'
-                        : locale === 'id'
-                        ? 'Sedekah jariyah untuk Meshari bin Ahmed bin Sulaiman Alabra (Semoga Allah merahmatinya)'
-                        : locale === 'ms'
-                        ? 'Sedekah jariah untuk Meshari bin Ahmed bin Sulaiman Alabra (Semoga Allah merahmatinya)'
-                        : locale === 'bn'
-                        ? 'মেশারি বিন আহমেদ বিন সুলাইমান আলাবরার জন্য চলমান দান (আল্লাহ তাকে রহম করুন)'
-                        : locale === 'fr'
-                        ? 'Aumône continue pour Meshari bin Ahmed bin Sulaiman Alabra (Qu\'Allah lui fasse miséricorde)'
-                        : locale === 'zh'
-                        ? '为Meshari bin Ahmed bin Sulaiman Alabra的持续慈善（愿真主怜悯他）'
-                        : locale === 'it'
-                        ? 'Elemosina continua per Meshari bin Ahmed bin Sulaiman Alabra (Che Allah abbia misericordia di lui)'
-                        : locale === 'ja'
-                        ? 'Meshari bin Ahmed bin Sulaiman Alabraの継続的な慈善（アッラーが彼に慈悲をかけてくださいますように）'
-                        : locale === 'ko'
-                        ? 'Meshari bin Ahmed bin Sulaiman Alabra를 위한 지속적인 자선 (알라께서 그에게 자비를 베푸시길)'
-                        : 'Ongoing charity for Meshari bin Ahmed bin Sulaiman Alabra (May Allah have mercy on him)'
-                      }
+                      <BidiText text={memorialShareCaption} direction={isRtl ? "rtl" : "ltr"} />
                     </p>
                     <p 
                       className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}
@@ -1737,7 +1696,7 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                         alignSelf: 'center'
                       }}
                     >
-                      meshari.charity
+                      {siteHost}
                     </p>
                   </div>
                   </div>
@@ -1747,8 +1706,8 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                 {mode === 'verse' && (
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white font-tajawal" style={{ 
-                    direction: locale === 'ar' ? 'rtl' : 'ltr',
-                    textAlign: locale === 'ar' ? 'right' : 'left'
+                    direction: isRtl ? 'rtl' : 'ltr',
+                    textAlign: isRtl ? 'right' : 'left'
                   }}>
                     {t("share.download_as_card")}
                   </h3>
@@ -1790,8 +1749,8 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                 {/* Link Share */}
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white font-tajawal" style={{ 
-                    direction: locale === 'ar' ? 'rtl' : 'ltr',
-                    textAlign: locale === 'ar' ? 'right' : 'left'
+                    direction: isRtl ? 'rtl' : 'ltr',
+                    textAlign: isRtl ? 'right' : 'left'
                   }}>
                     {t("share.share_link")}
                   </h3>
@@ -1829,8 +1788,8 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                 {/* Social Share */}
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white font-tajawal" style={{ 
-                    direction: locale === 'ar' ? 'rtl' : 'ltr',
-                    textAlign: locale === 'ar' ? 'right' : 'left'
+                    direction: isRtl ? 'rtl' : 'ltr',
+                    textAlign: isRtl ? 'right' : 'left'
                   }}>
                     {t("share.share_social")}
                   </h3>

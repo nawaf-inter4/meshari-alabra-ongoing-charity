@@ -23,11 +23,7 @@ export default function ClientHeader() {
   
   // Get home URL based on language - always use the current locale
   const getHomeUrl = () => {
-    if (locale === 'ar') {
-      return '/';
-    } else {
-      return `/${locale}`;
-    }
+    return `/${locale}`;
   };
 
   useEffect(() => {
@@ -36,47 +32,6 @@ export default function ClientHeader() {
 
 
   useEffect(() => {
-    // Register service worker for PWA
-    if ("serviceWorker" in navigator && typeof window !== 'undefined') {
-      // Register immediately, don't wait for load event
-      navigator.serviceWorker
-        .register("/sw.js", { 
-          scope: '/',
-          updateViaCache: 'none' // Always check for updates
-        })
-        .then((registration) => {
-          console.log('[SW] Service Worker registered:', registration.scope);
-          
-          // Force activation
-          if (registration.waiting) {
-            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-          }
-          
-          // Check for updates
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            if (newWorker) {
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // New service worker available
-                  console.log('[SW] New service worker available');
-                  // Auto-activate
-                  newWorker.postMessage({ type: 'SKIP_WAITING' });
-                }
-              });
-            }
-          });
-          
-          // Check for updates periodically
-          setInterval(() => {
-            registration.update();
-          }, 60000); // Check every minute
-        })
-        .catch((error) => {
-          console.error('[SW] Service Worker registration failed:', error);
-        });
-    }
-
     // Note: Notification permission should only be requested on user interaction
     // Removed automatic request to avoid console violations
 

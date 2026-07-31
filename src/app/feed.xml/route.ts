@@ -1,55 +1,65 @@
-import { languageMetadata } from '@/lib/metadata';
+import {
+  SUPPORTED_LOCALES,
+  siteAssetUrl,
+  siteConfig,
+} from "@/config/site";
+import { translate } from "@/lib/translations";
 
-export async function GET() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://meshari.charity';
-  const languages = ['ar', 'en', 'tr', 'ur', 'id', 'ms', 'bn', 'fr', 'zh', 'it', 'ja', 'ko'];
-  
-  const rssItems = languages.map(lang => {
-    const meta = languageMetadata[lang];
-    const url = lang === 'ar' ? siteUrl : `${siteUrl}/${lang}`;
-    
+function escapeXml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+export function GET() {
+  const siteUrl = siteConfig.identity.siteUrl;
+  const defaultUrl = `${siteUrl}/${siteConfig.identity.defaultLocale}`;
+  const title = siteConfig.seo.title || siteConfig.identity.name;
+  const description =
+    siteConfig.seo.description ||
+    translate(siteConfig.identity.defaultLocale, "hero.description");
+
+  const items = SUPPORTED_LOCALES.map((locale) => {
+    const url = `${siteUrl}/${locale}`;
+    const localeTitle =
+      siteConfig.seo.title || translate(locale, "site.title", siteConfig.identity.name);
+    const localeDescription =
+      siteConfig.seo.description || translate(locale, "hero.description");
+
     return `
-      <item>
-        <title>${meta.title}</title>
-        <description>${meta.description}</description>
-        <link>${url}</link>
-        <guid>${url}</guid>
-        <pubDate>${new Date().toUTCString()}</pubDate>
-        <language>${meta.locale}</language>
-        <category>Islamic Charity</category>
-        <category>Religion</category>
-        <category>Charity</category>
-      </item>
-    `;
-  }).join('');
+    <item>
+      <title>${escapeXml(localeTitle)}</title>
+      <description>${escapeXml(localeDescription)}</description>
+      <link>${escapeXml(url)}</link>
+      <guid isPermaLink="true">${escapeXml(url)}</guid>
+      <language>${locale}</language>
+    </item>`;
+  }).join("");
 
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Meshari's Ongoing Charity - صدقة جارية لمشاري</title>
-    <description>A tribute to Meshari Ahmed Sulaiman Alabra - Ongoing charity through Quran, supplications, and good deeds</description>
-    <link>${siteUrl}</link>
-    <language>ar-SA</language>
-    <managingEditor>info@meshari.charity (Meshari's Ongoing Charity)</managingEditor>
-    <webMaster>info@meshari.charity (Meshari's Ongoing Charity)</webMaster>
-    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    <title>${escapeXml(title)}</title>
+    <description>${escapeXml(description)}</description>
+    <link>${escapeXml(defaultUrl)}</link>
+    <language>${siteConfig.identity.defaultLocale}</language>
     <generator>Next.js</generator>
-    <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="${escapeXml(`${siteUrl}/feed.xml`)}" rel="self" type="application/rss+xml"/>
     <image>
-      <url>${siteUrl}/og-image.png</url>
-      <title>Meshari's Ongoing Charity</title>
-      <link>${siteUrl}</link>
-      <width>1200</width>
-      <height>630</height>
-    </image>
-    ${rssItems}
+      <url>${escapeXml(siteAssetUrl(siteConfig.assets.openGraphImage))}</url>
+      <title>${escapeXml(siteConfig.identity.shortName)}</title>
+      <link>${escapeXml(defaultUrl)}</link>
+    </image>${items}
   </channel>
 </rss>`;
 
   return new Response(rss, {
     headers: {
-      'Content-Type': 'application/xml',
-      'Cache-Control': 'public, max-age=3600, s-maxage=3600',
+      "Content-Type": "application/rss+xml; charset=utf-8",
+      "Cache-Control": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
     },
   });
 }

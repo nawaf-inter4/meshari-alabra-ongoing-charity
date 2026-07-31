@@ -1,70 +1,245 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!doctype html>
+<html lang="ar" dir="rtl" class="is-loading">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Offline - Meshari's Ongoing Charity</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>أنت غير متصل بالإنترنت</title>
+  <script>
+    (function () {
+      var config = {};
+      try { config = JSON.parse(localStorage.getItem("offline-site-config") || "{}"); } catch (_) {}
+      var supported = config.supportedLocales || ["ar", "en", "ur", "tr", "id", "ms", "bn", "fr", "zh", "it", "ja", "ko"];
+      var rtlLocales = config.rtlLocales || ["ar", "ur"];
+      var defaultLocale = config.defaultLocale || "ar";
+      var pathLocale = location.pathname.split("/").filter(Boolean)[0];
+      var storedLocale = localStorage.getItem("preferred-locale");
+      var browserLocale = (navigator.language || "").toLowerCase().split("-")[0];
+      var locale = supported.indexOf(pathLocale) !== -1
+        ? pathLocale
+        : supported.indexOf(storedLocale) !== -1
+          ? storedLocale
+          : supported.indexOf(browserLocale) !== -1
+            ? browserLocale
+            : defaultLocale;
+      var direction = rtlLocales.indexOf(locale) !== -1 ? "rtl" : "ltr";
+      var theme = localStorage.getItem("theme") || "dark";
+      var dark = theme === "dark" || (theme === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+
+      document.documentElement.lang = locale;
+      document.documentElement.dir = direction;
+      document.documentElement.dataset.locale = locale;
+      document.documentElement.classList.toggle("dark", dark);
+      if (config.colors) {
+        document.documentElement.style.setProperty("--brand", config.colors.brand);
+        document.documentElement.style.setProperty("--accent", config.colors.accent);
+        document.documentElement.style.setProperty("--link", config.colors.link);
+        document.documentElement.style.setProperty("--page", dark ? config.colors.backgroundDark : config.colors.backgroundLight);
+        document.documentElement.style.setProperty("--surface", dark ? config.colors.backgroundDarkSecondary : config.colors.backgroundLightSecondary);
+        document.documentElement.style.setProperty("--surface-strong", dark ? config.colors.backgroundDarkAccent : config.colors.backgroundLightAccent);
+        document.querySelector('meta[name="theme-color"]').setAttribute("content", dark ? config.colors.backgroundDark : config.colors.brand);
+      }
+      window.__offlineLocale = locale;
+      window.__offlineSiteConfig = config;
+    })();
+  </script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    @font-face {
+      font-family: "Lexend Deca";
+      src: url("/fonts/lexend-deca-latin.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
     }
+    @font-face {
+      font-family: "Tajawal";
+      src: url("/fonts/tajawal-arabic-400.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Tajawal";
+      src: url("/fonts/tajawal-arabic-700.woff2") format("woff2");
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+    }
+    :root {
+      color-scheme: light;
+      --brand: #d4af37;
+      --accent: #006b3f;
+      --link: #0066b2;
+      --page: #faf8f3;
+      --surface: #f5f3ee;
+      --surface-strong: #fff;
+      --text: #111827;
+      --muted: #4b5563;
+      --border: color-mix(in srgb, var(--brand) 25%, transparent);
+      --focus: var(--brand);
+    }
+    :root.dark {
+      color-scheme: dark;
+      --page: #0f172a;
+      --surface: #1e293b;
+      --surface-strong: #1e293b;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --border: color-mix(in srgb, var(--brand) 30%, transparent);
+    }
+    * { box-sizing: border-box; }
+    html.is-loading body { visibility: hidden; }
+    html[dir="ltr"] body { font-family: "Lexend Deca", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    html[dir="rtl"] body { font-family: "Tajawal", "Noto Sans Arabic", system-ui, sans-serif; }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
-      color: #FAF8F3;
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
+      min-height: 100dvh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: max(1.25rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+      background: var(--page);
+      color: var(--text);
     }
-    .container {
-      max-width: 600px;
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      content: "";
+      background-image:
+        radial-gradient(circle at 20% 50%, color-mix(in srgb, var(--brand) 8%, transparent) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 50%);
+    }
+    .card {
+      width: min(32rem, 100%);
+      padding: clamp(1.5rem, 6vw, 2.5rem);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      background: var(--surface);
+      box-shadow: 0 1.5rem 4rem color-mix(in srgb, var(--page) 16%, transparent), 0 0 40px color-mix(in srgb, var(--brand) 8%, transparent);
+      text-align: center;
+      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(18px);
+    }
+    .app-icon {
+      width: 5.25rem;
+      height: 5.25rem;
+      margin: 0 auto 1.5rem;
+      border-radius: 1.35rem;
+      box-shadow: 0 .75rem 2rem color-mix(in srgb, var(--page) 18%, transparent), 0 0 20px color-mix(in srgb, var(--brand) 30%, transparent);
     }
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: #D4AF37;
+      margin: 0;
+      font-size: clamp(1.8rem, 7vw, 2.5rem);
+      line-height: 1.25;
+      letter-spacing: -.02em;
+      background: linear-gradient(90deg, var(--brand), var(--accent), var(--link));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-      opacity: 0.9;
-    }
-    .offline-icon {
-      font-size: 5rem;
-      margin-bottom: 2rem;
-    }
-    .retry-btn {
-      padding: 1rem 2rem;
-      background: #D4AF37;
-      color: #0F172A;
-      border: none;
-      border-radius: 50px;
+      max-width: 27rem;
+      margin: 1rem auto 0;
+      color: var(--muted);
       font-size: 1rem;
-      font-weight: bold;
+      line-height: 1.75;
+    }
+    nav {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .75rem;
+      margin-top: 1.75rem;
+    }
+    button, a {
+      min-height: 3rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: .75rem 1rem;
+      font: inherit;
+      font-weight: 700;
+      text-decoration: none;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      gap: .5rem;
+      transition: all .3s ease;
     }
-    .retry-btn:hover {
-      transform: scale(1.05);
+    button svg, a svg { width: 1.1rem; height: 1.1rem; flex: none; }
+    button {
+      border-color: var(--brand);
+      background: var(--brand);
+      color: #111827;
+      box-shadow: 0 0 20px color-mix(in srgb, var(--brand) 30%, transparent);
     }
+    a { background: var(--surface-strong); color: var(--text); }
+    button:hover { border-color: var(--accent); background: var(--accent); color: #fff; transform: scale(1.05); }
+    a:hover { border-color: var(--brand); background: var(--brand); color: #111827; transform: scale(1.05); box-shadow: 0 0 20px color-mix(in srgb, var(--brand) 30%, transparent); }
+    button:active, a:active { transform: scale(.98); }
+    button:focus-visible, a:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+    @media (max-width: 25rem) { nav { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { button, a { transition: none; } }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="offline-icon">📡</div>
-    <h1>أنت غير متصل بالإنترنت</h1>
-    <p>You are offline</p>
-    <p>يبدو أنك غير متصل بالإنترنت حالياً. بعض الميزات قد لا تعمل بشكل صحيح.</p>
-    <p>It seems you are offline. Some features may not work properly.</p>
-    <button class="retry-btn" onclick="window.location.reload()">
-      إعادة المحاولة / Retry
-    </button>
-  </div>
+  <main class="card">
+    <svg class="app-icon" viewBox="0 0 512 512" width="84" height="84" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="offline-icon-bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="var(--surface)" />
+          <stop offset="1" stop-color="var(--surface-strong)" />
+        </linearGradient>
+      </defs>
+      <rect width="512" height="512" rx="64" fill="url(#offline-icon-bg)" />
+      <g transform="translate(256 256)" fill="var(--link)" text-anchor="middle" font-family="Arial, sans-serif">
+        <text id="offline-brand" y="-10" font-size="42" font-weight="700" textLength="400" lengthAdjust="spacingAndGlyphs">Ongoing Charity</text>
+        <text y="40" font-size="24">صدقة جارية</text>
+      </g>
+    </svg>
+    <h1 id="offline-title">أنت غير متصل بالإنترنت</h1>
+    <p id="offline-message">بعض الميزات قد لا تعمل بدون اتصال بالإنترنت</p>
+    <nav id="offline-actions" aria-label="إجراءات عدم الاتصال">
+      <button id="retry" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 1 0 .5 4"/><path d="M20 4v7h-7"/></svg>
+        <span id="retry-label">إعادة المحاولة</span>
+      </button>
+      <a id="home" href="/ar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+        <span id="home-label">الصفحة الرئيسية</span>
+      </a>
+    </nav>
+  </main>
+  <script>
+    (function () {
+      var copy = {
+        ar: { title: "أنت غير متصل بالإنترنت", message: "بعض الميزات قد لا تعمل بدون اتصال بالإنترنت", retry: "إعادة المحاولة", home: "الصفحة الرئيسية", actions: "إجراءات عدم الاتصال" },
+        en: { title: "You are offline", message: "Some features may not work without an internet connection.", retry: "Retry", home: "Home", actions: "Offline actions" },
+        ur: { title: "آپ آف لائن ہیں", message: "کچھ خصوصیات انٹرنیٹ کنکشن کے بغیر کام نہیں کر سکتیں", retry: "دوبارہ کوشش کریں", home: "مرکزی صفحہ", actions: "آف لائن کارروائیاں" },
+        tr: { title: "Çevrimdışısınız", message: "Bazı özellikler internet bağlantısı olmadan çalışmayabilir.", retry: "Tekrar dene", home: "Ana sayfa", actions: "Çevrimdışı işlemler" },
+        id: { title: "Anda sedang offline", message: "Beberapa fitur mungkin tidak berfungsi tanpa koneksi internet.", retry: "Coba lagi", home: "Beranda", actions: "Tindakan offline" },
+        ms: { title: "Anda sedang luar talian", message: "Sesetengah ciri mungkin tidak berfungsi tanpa sambungan internet.", retry: "Cuba lagi", home: "Laman utama", actions: "Tindakan luar talian" },
+        bn: { title: "আপনি অফলাইনে আছেন", message: "ইন্টারনেট সংযোগ ছাড়া কিছু ফিচার কাজ নাও করতে পারে।", retry: "আবার চেষ্টা করুন", home: "হোম", actions: "অফলাইন পদক্ষেপ" },
+        fr: { title: "Vous êtes hors ligne", message: "Certaines fonctionnalités peuvent ne pas fonctionner sans connexion Internet.", retry: "Réessayer", home: "Accueil", actions: "Actions hors ligne" },
+        zh: { title: "您已离线", message: "某些功能在没有网络连接时可能无法使用。", retry: "重试", home: "首页", actions: "离线操作" },
+        it: { title: "Sei offline", message: "Alcune funzionalità potrebbero non funzionare senza una connessione Internet.", retry: "Riprova", home: "Home", actions: "Azioni offline" },
+        ja: { title: "オフラインです", message: "インターネット接続なしでは一部の機能が動作しない場合があります。", retry: "再試行", home: "ホーム", actions: "オフライン操作" },
+        ko: { title: "오프라인 상태입니다", message: "일부 기능은 인터넷 연결 없이 작동하지 않을 수 있습니다.", retry: "다시 시도", home: "홈", actions: "오프라인 작업" }
+      };
+      var locale = window.__offlineLocale || "ar";
+      var config = window.__offlineSiteConfig || {};
+      var text = copy[locale] || copy.ar;
+      document.title = text.title;
+      document.getElementById("offline-title").textContent = text.title;
+      document.getElementById("offline-message").textContent = text.message;
+      document.getElementById("retry-label").textContent = text.retry;
+      document.getElementById("retry").addEventListener("click", function () { location.reload(); });
+      document.getElementById("home-label").textContent = text.home;
+      document.getElementById("home").href = "/" + locale;
+      document.getElementById("offline-actions").setAttribute("aria-label", text.actions);
+      document.getElementById("offline-brand").textContent = config.shortName || "Ongoing Charity";
+      document.documentElement.classList.remove("is-loading");
+    })();
+  </script>
 </body>
 </html>

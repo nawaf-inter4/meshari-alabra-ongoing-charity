@@ -1,156 +1,154 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, X, Smartphone } from "lucide-react";
+import { Download, Share, X } from "lucide-react";
+import { localeDirection, siteConfig } from "@/config/site";
+import { useLanguage } from "./LanguageProvider";
+import { pwaCopy } from "@/lib/pwa-copy";
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
-  readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed';
-    platform: string;
-  }>;
+  readonly userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
   prompt(): Promise<void>;
 }
 
+const DISMISS_KEY = "pwa-install-prompt-dismissed-at";
+const DISMISS_FOR_MS = 14 * 24 * 60 * 60 * 1000;
+
 export default function PWAInstallPrompt() {
+  const { locale } = useLanguage();
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    
-    // Check if app is already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    const standalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
+    if (standalone) {
       setIsInstalled(true);
       return;
     }
 
-    // Listen for the beforeinstallprompt event
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setShowInstallPrompt(true);
+    const dismissedAt = Number(localStorage.getItem(DISMISS_KEY) || 0);
+    if (Date.now() - dismissedAt < DISMISS_FOR_MS) return;
+
+    const iosDevice =
+      /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+      (/macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+    setIsIOS(iosDevice);
+
+    let revealTimer: ReturnType<typeof setTimeout> | undefined;
+    const reveal = () => {
+      revealTimer = setTimeout(() => setShowInstallPrompt(true), 8000);
     };
 
-    // Listen for the appinstalled event
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setDeferredPrompt(event as BeforeInstallPromptEvent);
+      reveal();
+    };
+
     const handleAppInstalled = () => {
       setIsInstalled(true);
       setShowInstallPrompt(false);
       setDeferredPrompt(null);
+      localStorage.removeItem(DISMISS_KEY);
     };
 
-    // Show install prompt after a delay if no beforeinstallprompt event
-    // Only show if the app meets PWA criteria
-    const showPromptTimer = setTimeout(() => {
-      if (!deferredPrompt && !isInstalled) {
-        // Check if app meets PWA install criteria
-        const hasServiceWorker = 'serviceWorker' in navigator;
-        const hasManifest = document.querySelector('link[rel="manifest"]');
-        const isHTTPS = location.protocol === 'https:' || location.hostname === 'localhost';
-        
-        if (hasServiceWorker && hasManifest && isHTTPS) {
-          setShowInstallPrompt(true);
-        }
-      }
-    }, 3000); // Show after 3 seconds
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
+    if (iosDevice) reveal();
 
     return () => {
-      clearTimeout(showPromptTimer);
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
+      if (revealTimer) clearTimeout(revealTimer);
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
     };
-  }, [deferredPrompt, isInstalled]);
+  }, []);
 
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      // If no deferredPrompt, show manual install instructions
-      alert(`To install this app:
-      
-1. Look for the install icon in your browser's address bar
-2. Or go to your browser menu (⋮) and select "Install app"
-3. Or use Chrome: Menu → More tools → Create shortcut → Open as window
-
-The app will then be installed on your device!`);
-      setShowInstallPrompt(false);
-      return;
+  const install = async () => {
+    if (!deferredPrompt) return;
+    await deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    if (choice.outcome === "dismissed") {
+      localStorage.setItem(DISMISS_KEY, String(Date.now()));
     }
-
-    try {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      
-      if (outcome === 'accepted') {
-        console.log('PWA installation accepted');
-      } else {
-        console.log('PWA installation dismissed');
-      }
-    } catch (error) {
-      console.log('Install prompt failed:', error);
-    }
-    
     setDeferredPrompt(null);
     setShowInstallPrompt(false);
   };
 
-  const handleDismiss = () => {
+  const dismiss = () => {
+    localStorage.setItem(DISMISS_KEY, String(Date.now()));
     setShowInstallPrompt(false);
     setDeferredPrompt(null);
   };
 
-  if (!mounted || isInstalled || !showInstallPrompt) {
-    return null;
-  }
+  if (isInstalled || !showInstallPrompt || (!deferredPrompt && !isIOS)) return null;
+
+  const direction = localeDirection(locale);
+  const copy = pwaCopy[locale];
 
   return (
     <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 100 }}
-        className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm"
+      <motion.aside
+        initial={{ opacity: 0, x: -24, y: 8 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
+        exit={{ opacity: 0, x: -24, y: 8 }}
+        className="fixed bottom-4 left-4 z-50 w-[calc(100%-2rem)] max-w-[22rem] rounded-2xl border border-islamic-gold/30 bg-white/95 p-3 text-gray-900 shadow-xl backdrop-blur-md dark:bg-gray-900/95 dark:text-white"
+        role="dialog"
+        aria-labelledby="pwa-install-title"
+        aria-describedby="pwa-install-description"
+        dir={direction}
+        data-pwa-install-prompt
       >
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-4">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0">
-              <div className="w-10 h-10 bg-gradient-to-br from-islamic-gold to-islamic-green rounded-xl flex items-center justify-center">
-                <Smartphone className="w-5 h-5 text-white" />
-              </div>
-            </div>
-            
-            <div className="flex-1 min-w-0">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
-                Install App
-              </h3>
-              <p className="text-xs text-gray-600 dark:text-gray-300 mb-3">
-                Install Meshari's Charity app for quick access to prayers, Quran, and supplications.
-              </p>
-              
-              <div className="flex gap-2">
-                <button
-                  onClick={handleInstallClick}
-                  className="flex-1 bg-islamic-gold hover:bg-islamic-green text-white text-xs font-medium py-2 px-3 rounded-full transition-colors duration-200 flex items-center justify-center gap-1 glow"
-                >
-                  <Download className="w-3 h-3" />
-                  Install
-                </button>
-                
-                <button
-                  onClick={handleDismiss}
-                  className="px-3 py-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
+        <div className="flex items-center gap-2.5">
+          <div
+            className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full ring-1 ring-islamic-gold/30"
+            data-pwa-app-icon
+          >
+            {/* Configurable white-label icons may be hosted on any HTTPS origin. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={siteConfig.assets.pwaIcon192}
+              alt=""
+              loading="eager"
+              className="h-full w-full object-cover"
+            />
           </div>
+          <div className="min-w-0 flex-1">
+            <h2 id="pwa-install-title" className="truncate text-sm font-bold leading-tight">
+              {siteConfig.identity.shortName}
+            </h2>
+            <p id="pwa-install-description" className="mt-0.5 line-clamp-2 text-xs leading-snug text-gray-600 dark:text-gray-300">
+              {isIOS && !deferredPrompt ? copy.iosInstructions : copy.installTitle}
+            </p>
+          </div>
+          {isIOS && !deferredPrompt ? (
+            <Share className="h-5 w-5 shrink-0 text-islamic-gold" aria-hidden="true" />
+          ) : (
+            <button
+              type="button"
+              onClick={install}
+              className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full bg-islamic-gold px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-islamic-green focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-islamic-gold focus-visible:ring-offset-2"
+            >
+              <Download className="h-3.5 w-3.5" aria-hidden="true" />
+              {copy.install}
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={dismiss}
+            className="grid min-h-10 min-w-10 shrink-0 place-items-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-islamic-gold dark:hover:bg-gray-800"
+            aria-label={copy.dismissInstall}
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
-      </motion.div>
+      </motion.aside>
     </AnimatePresence>
   );
 }

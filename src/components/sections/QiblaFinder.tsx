@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Compass, MapPin, Navigation } from "lucide-react";
+import SectionTitleLink from "./SectionTitleLink";
+import { siteConfig } from "@/config/site";
 
 export default function QiblaFinder() {
   const { t } = useLanguage();
@@ -62,8 +64,8 @@ export default function QiblaFinder() {
     setError("");
     setLoading(true);
     setHasRequestedLocation(true);
-    let latitude = 24.7136; // Default to Riyadh
-    let longitude = 46.6753;
+    let latitude = siteConfig.fallbackLocation.latitude;
+    let longitude = siteConfig.fallbackLocation.longitude;
     let locationDetected = false;
 
     // First, try browser geolocation API (most accurate)
@@ -215,7 +217,7 @@ export default function QiblaFinder() {
           <div className="inline-flex items-center gap-2 mb-4">
             <Compass className="w-8 h-8 text-islamic-gold" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text">
-              {t("qibla.title")}
+              <SectionTitleLink section="qibla">{t("qibla.title")}</SectionTitleLink>
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400">

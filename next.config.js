@@ -4,6 +4,10 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Automated browser tests use a separate directory so their white-label
+  // build cannot invalidate the developer's live `.next` session.
+  distDir: process.env.NEXT_DIST_DIR || '.next',
+
   // Enable React strict mode for better development
   reactStrictMode: true,
 
@@ -17,11 +21,13 @@ const nextConfig = {
     // This reduces bundle size by not transpiling modern JS features
   },
   
-  // Output standalone for better optimization
-  output: 'standalone',
+  // Output standalone for better optimization.
+  // Disabled for Vercel deployment compatibility.
+  // output: 'standalone',
 
-  // Enable Cache Components - stable in Next.js 16.1.1
+  // Enable Cache Components and reusable route shells for instant navigation.
   cacheComponents: true,
+  partialPrefetching: true,
 
   // Strong cache invalidation strategy
   onDemandEntries: {
@@ -61,6 +67,8 @@ const nextConfig = {
   
   // Experimental features for better performance
   experimental: {
+    // TypeScript 7 uses the CLI because it no longer exposes the compiler API.
+    useTypeScriptCli: true,
     // Optimize package imports (stable in Next.js 16)
     // Note: react-pdf is excluded here because it's in serverExternalPackages
     optimizePackageImports: [
@@ -170,7 +178,7 @@ const nextConfig = {
         ],
       },
       {
-        source: '/manifest.json',
+        source: '/manifest.webmanifest',
         headers: [
           {
             key: 'Content-Type',
@@ -182,15 +190,7 @@ const nextConfig = {
           },
         ],
       },
-      {
-        source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
+
       {
         source: '/icons/:path*',
         headers: [

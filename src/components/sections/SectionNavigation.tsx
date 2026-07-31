@@ -4,6 +4,7 @@ import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookOpen, Book, Heart, Clock, DollarSign, Compass, Users, Calendar, Star, Globe, Shield, Gift, Grid3X3 } from "lucide-react";
 import Link from "next/link";
+import { localizedSectionHref } from "@/lib/routes";
 
 export default function SectionNavigation() {
   const { t, locale, direction } = useLanguage();
@@ -14,7 +15,7 @@ export default function SectionNavigation() {
       title: t("quran.title"),
       description: t("quran.subtitle"),
       icon: BookOpen,
-      href: "/sections/quran",
+      href: localizedSectionHref(locale, "quran"),
       color: "from-islamic-blue to-islamic-green"
     },
     {
@@ -22,7 +23,7 @@ export default function SectionNavigation() {
       title: t("tafseer.title"),
       description: t("tafseer.subtitle"),
       icon: Book,
-      href: "/sections/tafseer",
+      href: localizedSectionHref(locale, "tafseer"),
       color: "from-islamic-green to-islamic-gold"
     },
     {
@@ -30,7 +31,7 @@ export default function SectionNavigation() {
       title: t("dhikr.title"),
       description: t("dhikr.subtitle"),
       icon: Heart,
-      href: "/sections/dhikr",
+      href: localizedSectionHref(locale, "dhikr"),
       color: "from-islamic-gold to-yellow-500"
     },
     {
@@ -38,7 +39,7 @@ export default function SectionNavigation() {
       title: t("prayer.title"),
       description: t("prayer.subtitle"),
       icon: Clock,
-      href: "/sections/prayer-times",
+      href: localizedSectionHref(locale, "prayer-times"),
       color: "from-purple-500 to-islamic-blue"
     },
     {
@@ -46,7 +47,7 @@ export default function SectionNavigation() {
       title: t("qibla.title"),
       description: t("qibla.subtitle"),
       icon: Compass,
-      href: "/sections/qibla",
+      href: localizedSectionHref(locale, "qibla"),
       color: "from-islamic-green to-teal-500"
     },
     {
@@ -54,7 +55,7 @@ export default function SectionNavigation() {
       title: t("donation.title"),
       description: t("donation.subtitle"),
       icon: DollarSign,
-      href: "/sections/donation",
+      href: localizedSectionHref(locale, "donation"),
       color: "from-red-500 to-pink-500"
     },
     {
@@ -62,7 +63,7 @@ export default function SectionNavigation() {
       title: t("supplications.title"),
       description: t("supplications.subtitle"),
       icon: Star,
-      href: "/sections/supplications",
+      href: localizedSectionHref(locale, "supplications"),
       color: "from-yellow-500 to-orange-500"
     },
     {
@@ -70,7 +71,7 @@ export default function SectionNavigation() {
       title: t("hadith.title"),
       description: t("hadith.subtitle"),
       icon: Shield,
-      href: "/sections/hadith",
+      href: localizedSectionHref(locale, "hadith"),
       color: "from-islamic-blue to-blue-600"
     },
     {
@@ -78,7 +79,7 @@ export default function SectionNavigation() {
       title: t("youtube.title"),
       description: t("youtube.description"),
       icon: Globe,
-      href: "/sections/youtube",
+      href: localizedSectionHref(locale, "youtube"),
       color: "from-red-600 to-red-500"
     }
   ];
@@ -146,7 +147,11 @@ export default function SectionNavigation() {
                   {section.description}
                 </p>
                 
-                <div className={`flex items-center text-islamic-gold font-semibold group-hover:${direction === 'rtl' ? '-translate-x-2' : 'translate-x-2'} transition-transform duration-300 mt-auto`}>
+                <div
+                  data-section-cta
+                  className={`flex items-center text-islamic-gold font-semibold ${direction === 'rtl' ? 'font-tajwal' : 'font-lexend'} group-hover:${direction === 'rtl' ? '-translate-x-2' : 'translate-x-2'} transition-transform duration-300 mt-auto`}
+                  dir={direction}
+                >
                   <span>{t("navigation.visit_section")}</span>
                   <svg 
                     className={`w-4 h-4 ${direction === 'rtl' ? 'mr-2 rotate-180' : 'ml-2'}`}

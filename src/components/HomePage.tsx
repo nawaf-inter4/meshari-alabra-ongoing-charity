@@ -53,7 +53,7 @@ export default function HomePage({ language }: HomePageProps) {
         <DonationSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
-        <YouTubePlaylist playlistId="PLozaqJ9egxJegXbK52PNLLlvWf4K5g-Cb" />
+        <YouTubePlaylist />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <SupplicationsSection />

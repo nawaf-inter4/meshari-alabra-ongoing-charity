@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { siteConfig } from '@/config/site';
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'User-Agent': 'MeshariCharityApp/1.0', // Required by Nominatim
+          'User-Agent': `OngoingCharityApp/1.0 (${siteConfig.identity.siteUrl})`, // Required by Nominatim
         },
       }
     );

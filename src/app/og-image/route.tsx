@@ -1,14 +1,19 @@
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
+import { isSupportedLocale, localeDirection, siteConfig } from '@/config/site';
 
 // export const runtime = 'edge'; // Removed due to cacheComponents compatibility
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const title = searchParams.get('title') || 'صدقة جارية لمشاري';
-    const description = searchParams.get('description') || 'صفحة مخصصة لأخي مشاري، توفي إثر مرض سرطان الدماغ';
-    const lang = searchParams.get('lang') || 'ar';
+    const title = searchParams.get('title') || siteConfig.seo.title || siteConfig.identity.name;
+    const description = searchParams.get('description') || siteConfig.seo.description || siteConfig.content.heroDescription || 'Ongoing charity through Quran, supplications, prayer, and good deeds.';
+    const requestedLang = searchParams.get('lang') || siteConfig.identity.defaultLocale;
+    const lang = isSupportedLocale(requestedLang) ? requestedLang : siteConfig.identity.defaultLocale;
+    const direction = localeDirection(lang);
+    const siteHost = new URL(siteConfig.identity.siteUrl).host;
+    const brandPatternColor = `%23${siteConfig.colors.brand.replace('#', '')}`;
 
     return new ImageResponse(
       (
@@ -20,8 +25,8 @@ export async function GET(request: NextRequest) {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#0F172A',
-            backgroundImage: 'linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%)',
+            backgroundColor: siteConfig.colors.backgroundDark,
+            backgroundImage: `linear-gradient(135deg, ${siteConfig.colors.backgroundDark} 0%, ${siteConfig.colors.backgroundDarkSecondary} 50%, ${siteConfig.colors.backgroundDarkAccent} 100%)`,
             fontFamily: 'system-ui, sans-serif',
             position: 'relative',
           }}
@@ -34,7 +39,7 @@ export async function GET(request: NextRequest) {
               left: 0,
               right: 0,
               bottom: 0,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='${brandPatternColor}' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
               opacity: 0.3,
             }}
           />
@@ -47,8 +52,8 @@ export async function GET(request: NextRequest) {
               left: 0,
               right: 0,
               bottom: 0,
-              border: '8px solid #D4AF37',
-              borderImage: 'linear-gradient(45deg, #D4AF37, #10B981, #3B82F6) 1',
+              border: `8px solid ${siteConfig.colors.brand}`,
+              borderImage: `linear-gradient(45deg, ${siteConfig.colors.brand}, ${siteConfig.colors.accent}, ${siteConfig.colors.link}) 1`,
             }}
           />
 
@@ -69,9 +74,9 @@ export async function GET(request: NextRequest) {
             <div
               style={{
                 fontSize: '80px',
-                color: '#D4AF37',
+                color: siteConfig.colors.brand,
                 marginBottom: '20px',
-                textShadow: '0 0 20px rgba(212, 175, 55, 0.5)',
+                textShadow: `0 0 20px ${siteConfig.colors.brand}80`,
               }}
             >
               ☪️
@@ -87,7 +92,7 @@ export async function GET(request: NextRequest) {
                 lineHeight: 1.2,
                 textAlign: 'center',
                 textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)',
-                direction: lang === 'ar' ? 'rtl' : 'ltr',
+                direction,
               }}
             >
               {title}
@@ -102,7 +107,7 @@ export async function GET(request: NextRequest) {
                 lineHeight: 1.4,
                 textAlign: 'center',
                 maxWidth: '800px',
-                direction: lang === 'ar' ? 'rtl' : 'ltr',
+                direction,
               }}
             >
               {description}
@@ -112,12 +117,12 @@ export async function GET(request: NextRequest) {
             <div
               style={{
                 fontSize: '20px',
-                color: '#D4AF37',
+                color: siteConfig.colors.brand,
                 fontWeight: '600',
                 letterSpacing: '1px',
               }}
             >
-              meshari.charity
+              {siteHost}
             </div>
           </div>
 
@@ -129,7 +134,7 @@ export async function GET(request: NextRequest) {
               left: '50%',
               transform: 'translateX(-50%)',
               fontSize: '24px',
-              color: '#D4AF37',
+              color: siteConfig.colors.brand,
               opacity: 0.7,
             }}
           >

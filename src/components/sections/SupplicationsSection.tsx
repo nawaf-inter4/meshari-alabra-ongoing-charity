@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { BookOpen, Sunrise, Sunset, Heart, Shield, Home, Car, Briefcase, Users, Star, Moon, Sun, Compass, ShieldCheck, HeartHandshake, MoonStar } from "lucide-react";
+import SectionTitleLink from "./SectionTitleLink";
 
 interface Supplication {
   arabic: string;
@@ -277,7 +278,9 @@ export default function SupplicationsSection() {
           <div className="inline-flex items-center gap-2 mb-4">
             <BookOpen className="w-8 h-8 text-islamic-gold" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
-              {mounted ? t("supplications.title") : "الأدعية"}
+              <SectionTitleLink section="supplications">
+                {mounted ? t("supplications.title") : "الأدعية"}
+              </SectionTitleLink>
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400">
@@ -292,9 +295,11 @@ export default function SupplicationsSection() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
+                aria-label={tab.label}
+                aria-pressed={activeTab === tab.id}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                   activeTab === tab.id
-                    ? "bg-islamic-gold text-white shadow-lg scale-105 glow"
+                    ? "bg-islamic-gold text-gray-950 shadow-lg scale-105 glow"
                     : "bg-light dark:bg-dark hover:bg-islamic-gold/20 text-gray-700 dark:text-gray-300"
                 }`}
               >

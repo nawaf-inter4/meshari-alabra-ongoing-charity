@@ -1,10 +1,13 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 
+const [nextConfig, ...remainingNextConfigs] = nextVitals;
+
 export default defineConfig([
-  ...nextVitals,
   {
+    ...nextConfig,
     rules: {
+      ...nextConfig.rules,
       "@next/next/no-page-custom-font": "off",
       "@next/next/no-img-element": "warn",
       "react-hooks/exhaustive-deps": "warn",
@@ -13,8 +16,11 @@ export default defineConfig([
       "react/no-unescaped-entities": "off",
     },
   },
+  ...remainingNextConfigs,
   globalIgnores([
     ".next/**",
+    ".next-playwright/**",
+    ".next-verify/**",
     "out/**",
     "build/**",
     "next-env.d.ts",

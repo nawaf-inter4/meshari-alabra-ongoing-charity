@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { SUPPORTED_LOCALES, siteConfig } from "@/config/site";
+import { localizedSectionHref } from "@/lib/routes";
 
 export default function PerformanceOptimizer() {
   useEffect(() => {
@@ -8,7 +10,7 @@ export default function PerformanceOptimizer() {
     // Resources are already loaded via manifest and meta tags
     const preloadCriticalResources = () => {
       // Removed preloads to avoid "preloaded but not used" warnings
-      // Icons are loaded via manifest.json and meta tags
+      // Icons are loaded via the generated web manifest and meta tags
     };
 
     // Optimize images
@@ -98,12 +100,12 @@ export default function PerformanceOptimizer() {
 
       // Get current language from URL
       const pathSegments = window.location.pathname.split('/').filter(Boolean);
-      const currentLang = pathSegments[0] && ['ar', 'en', 'ur', 'tr', 'id', 'ms', 'bn', 'fr', 'zh', 'it', 'ja', 'ko'].includes(pathSegments[0])
+      const currentLang = pathSegments[0] && SUPPORTED_LOCALES.includes(pathSegments[0] as typeof SUPPORTED_LOCALES[number])
         ? pathSegments[0]
-        : 'ar';
+        : siteConfig.identity.defaultLocale;
 
       criticalSections.forEach(section => {
-        const href = currentLang === 'ar' ? section : `/${currentLang}${section}`;
+        const href = localizedSectionHref(currentLang, section.replace('/sections/', ''));
         const existing = document.querySelector(`link[rel="prefetch"][href="${href}"]`);
         if (!existing && document.head && document.head.parentNode) {
           try {

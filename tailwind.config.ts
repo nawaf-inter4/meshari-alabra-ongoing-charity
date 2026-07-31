@@ -11,19 +11,19 @@ const config: Config = {
     extend: {
       colors: {
         dark: {
-          DEFAULT: "#0F172A",
-          secondary: "#1E293B",
-          accent: "#334155",
+          DEFAULT: "rgb(var(--color-background-dark-rgb) / <alpha-value>)",
+          secondary: "rgb(var(--color-background-dark-secondary-rgb) / <alpha-value>)",
+          accent: "rgb(var(--color-background-dark-accent-rgb) / <alpha-value>)",
         },
         light: {
-          DEFAULT: "#FAF8F3",
-          secondary: "#F5F3EE",
-          accent: "#E8E5DD",
+          DEFAULT: "rgb(var(--color-background-light-rgb) / <alpha-value>)",
+          secondary: "rgb(var(--color-background-light-secondary-rgb) / <alpha-value>)",
+          accent: "rgb(var(--color-background-light-accent-rgb) / <alpha-value>)",
         },
         islamic: {
-          gold: "#D4AF37",
-          green: "#006B3F",
-          blue: "#0066B2",
+          gold: "rgb(var(--color-brand-rgb) / <alpha-value>)",
+          green: "rgb(var(--color-accent-rgb) / <alpha-value>)",
+          blue: "rgb(var(--color-link-rgb) / <alpha-value>)",
         },
       },
       fontFamily: {

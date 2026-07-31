@@ -1,9 +1,13 @@
-import { NextResponse } from 'next/server';
+import { connection, NextResponse } from 'next/server';
+import { siteConfig } from '@/config/site';
 
 // MIGRATED: Removed export const dynamic - API routes are dynamic by default with Cache Components
 // This route fetches external data, so it remains dynamic (default behavior)
 
 export async function GET() {
+  // Resolve this per request so a build-time IP lookup is never cached for visitors.
+  await connection();
+
   try {
     const response = await fetch('https://ipapi.co/json/', {
       headers: {
@@ -30,14 +34,15 @@ export async function GET() {
     });
   } catch (error) {
     console.error('IP location API error:', error);
-    // Return default location (Riyadh) on error
+    const fallback = siteConfig.fallbackLocation;
+    // Return the configured default location on error.
     return NextResponse.json(
       {
-        latitude: 24.7136,
-        longitude: 46.6753,
-        city: 'Riyadh',
-        country: 'Saudi Arabia',
-        country_code: 'SA',
+        latitude: fallback.latitude,
+        longitude: fallback.longitude,
+        city: fallback.city,
+        country: fallback.country,
+        country_code: fallback.countryCode,
         error: 'Failed to fetch location',
       },
       {

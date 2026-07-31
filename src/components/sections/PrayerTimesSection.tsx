@@ -4,6 +4,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Clock, MapPin, Bell, Search, ChevronDown, Volume2, VolumeX, AlertCircle } from "lucide-react";
+import SectionTitleLink from "./SectionTitleLink";
+import { siteConfig } from "@/config/site";
 
 interface PrayerTimes {
   Fajr: string;
@@ -44,7 +46,7 @@ export default function PrayerTimesSection() {
     if (!mounted) return '';
     
     const date = new Date();
-    const localeCode = locale === 'ar' ? 'ar-SA' : 'en-US';
+    const localeCode = locale;
     
     return new Intl.DateTimeFormat(localeCode, {
       weekday: 'long',
@@ -202,10 +204,10 @@ export default function PrayerTimesSection() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
       
-      let latitude = 24.7136; // Default to Riyadh
-      let longitude = 46.6753;
-      let city = 'Riyadh';
-      let country = 'Saudi Arabia';
+      let latitude = siteConfig.fallbackLocation.latitude;
+      let longitude = siteConfig.fallbackLocation.longitude;
+      let city = siteConfig.fallbackLocation.city;
+      let country = siteConfig.fallbackLocation.country;
 
       // Try to get user location via IP (use proxy to avoid CORS)
       try {
@@ -286,7 +288,7 @@ export default function PrayerTimesSection() {
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
       const response = await fetch(
-        "https://api.aladhan.com/v1/timingsByCity?city=Riyadh&country=Saudi Arabia&method=4",
+        `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(siteConfig.fallbackLocation.city)}&country=${encodeURIComponent(siteConfig.fallbackLocation.country)}&method=4`,
         {
           method: 'GET',
           headers: {
@@ -323,7 +325,7 @@ export default function PrayerTimesSection() {
           Isha: formatTime(timings.Isha),
           Sunrise: formatTime(timings.Sunrise),
         });
-        setLocation(translateLocation("Riyadh", "Saudi Arabia"));
+        setLocation(translateLocation(siteConfig.fallbackLocation.city, siteConfig.fallbackLocation.country));
       } else {
         throw new Error('Invalid API response');
       }
@@ -331,16 +333,8 @@ export default function PrayerTimesSection() {
     } catch (error) {
       // Error fetching default prayer times - using fallback
       setError("Using fallback prayer times");
-      // Fallback to static prayer times for Riyadh (12-hour format)
-      setPrayerTimes({
-        Fajr: "5:15 AM",
-        Sunrise: "6:30 AM",
-        Dhuhr: "12:00 PM",
-        Asr: "3:30 PM",
-        Maghrib: "6:00 PM",
-        Isha: "7:30 PM"
-      });
-      setLocation(translateLocation("Riyadh", "Saudi Arabia"));
+      setPrayerTimes(siteConfig.fallbackLocation.prayerTimes);
+      setLocation(translateLocation(siteConfig.fallbackLocation.city, siteConfig.fallbackLocation.country));
       setLoading(false);
     }
   };
@@ -541,8 +535,8 @@ export default function PrayerTimesSection() {
     if (notificationPermission.granted) {
       new Notification('Prayer Time', {
         body: message,
-        icon: '/icons/icon-192x192.png',
-        badge: '/icons/icon-192x192.png',
+        icon: siteConfig.assets.pwaIcon192,
+        badge: siteConfig.assets.pwaIcon192,
         tag: 'prayer-time',
         requireInteraction: true
       });
@@ -661,7 +655,9 @@ export default function PrayerTimesSection() {
           <div className="inline-flex items-center gap-2 mb-4">
             <Clock className="w-8 h-8 text-islamic-gold" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
-              {mounted ? (t("prayer.title") !== "prayer.title" ? t("prayer.title") : "مواقيت الصلاة") : "مواقيت الصلاة"}
+              <SectionTitleLink section="prayer-times">
+                {mounted ? (t("prayer.title") !== "prayer.title" ? t("prayer.title") : "مواقيت الصلاة") : "مواقيت الصلاة"}
+              </SectionTitleLink>
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400">

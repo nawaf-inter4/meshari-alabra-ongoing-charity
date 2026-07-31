@@ -5,6 +5,7 @@ import { useLanguage } from "./LanguageProvider";
 import { Search, X, BookOpen, Clock, Compass, Heart, FileText, Bookmark, Youtube, MessageSquare } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { localizedSectionHref } from "@/lib/routes";
 
 interface SearchResult {
   type: 'quran' | 'section' | 'content';
@@ -89,7 +90,7 @@ export default function GlobalSearchModal({ isOpen, onClose }: { isOpen: boolean
       .map(section => ({
         type: 'section' as const,
         title: section.name,
-        url: locale === 'ar' ? section.url : `/${locale}${section.url}`,
+        url: localizedSectionHref(locale, section.url.replace('/sections/', '')),
       }));
 
     // Search Quran using the API
@@ -125,7 +126,7 @@ export default function GlobalSearchModal({ isOpen, onClose }: { isOpen: boolean
                 type: 'quran' as const,
                 title: `${surahName} - ${locale === 'ar' ? 'آية' : 'Ayah'} ${ayahNumber}`,
                 subtitle: match.text?.substring(0, 100) || '',
-                url: locale === 'ar' ? '/sections/quran' : `/${locale}/sections/quran`,
+                url: localizedSectionHref(locale, 'quran'),
                 surahNumber,
                 ayahNumber,
               };
@@ -152,7 +153,7 @@ export default function GlobalSearchModal({ isOpen, onClose }: { isOpen: boolean
   const handleResultClick = (result: SearchResult) => {
     if (result.type === 'quran' && result.surahNumber && result.ayahNumber) {
       // Navigate to Quran section and scroll to ayah
-      const quranUrl = locale === 'ar' ? '/sections/quran' : `/${locale}/sections/quran`;
+      const quranUrl = localizedSectionHref(locale, 'quran');
       router.push(quranUrl);
       setTimeout(() => {
         window.dispatchEvent(new CustomEvent('navigate-to-ayah', {
