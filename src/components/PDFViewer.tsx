@@ -111,8 +111,15 @@ export default function PDFViewer({ pdfUrl, className = "" }: PDFViewerProps) {
 
   if (!mounted || !pdfModuleLoaded || !Document || !Page) {
     return (
-      <div className={`${className} flex items-center justify-center bg-gray-100 dark:bg-gray-900 rounded-lg min-h-[400px]`}>
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-islamic-gold"></div>
+      <div
+        className={`${className} flex flex-col justify-center gap-3 bg-gray-100 dark:bg-gray-900 rounded-lg min-h-[400px] p-6`}
+        role="status"
+        aria-busy="true"
+        aria-label="Loading PDF"
+      >
+        <div className="shimmer h-8 w-1/3 max-w-xs rounded-full mx-auto" />
+        <div className="shimmer h-64 w-full rounded-xl" />
+        <div className="shimmer h-4 w-2/3 max-w-sm rounded-full mx-auto" />
       </div>
     );
   }
@@ -221,8 +228,10 @@ export default function PDFViewer({ pdfUrl, className = "" }: PDFViewerProps) {
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
             loading={
-              <div className="flex items-center justify-center w-full h-full min-h-[400px]">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-islamic-gold"></div>
+              <div className="flex w-full min-h-[400px] flex-col justify-center gap-3 p-6" role="status" aria-busy="true" aria-label="Loading PDF">
+                <div className="shimmer mx-auto h-8 w-1/3 max-w-xs rounded-full" />
+                <div className="shimmer h-64 w-full rounded-xl" />
+                <div className="shimmer mx-auto h-4 w-2/3 max-w-sm rounded-full" />
               </div>
             }
             error={

@@ -67,10 +67,10 @@ export default function ClientHeader() {
 
   if (!mounted) {
     return (
-      <div className="fixed top-0 right-0 z-50 p-4 flex gap-4">
+      <div className="safe-fixed-top fixed top-0 right-0 z-50 flex gap-4 pb-4">
         <a
           href="#donation"
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-bold rounded-full hover:from-islamic-green hover:to-islamic-blue transition-all duration-300 text-sm glow"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-bold rounded-full hover:from-islamic-green hover:to-islamic-blue transition-colors duration-300 text-sm glow"
           aria-label={t("donation.header_button") || "Donate for orphans"}
         >
           <Heart className="w-4 h-4" fill="currentColor" />
@@ -88,7 +88,7 @@ export default function ClientHeader() {
 
   return (
     <>
-      <div className="fixed top-0 right-0 z-50 p-4 flex gap-4 items-center">
+      <div className="safe-fixed-top fixed top-0 right-0 z-50 flex gap-4 items-center pb-4">
         {isSectionPage && (
           <>
             <a
@@ -124,7 +124,7 @@ export default function ClientHeader() {
         )}
         <button
           onClick={() => setIsSearchOpen(true)}
-          className="group flex items-center justify-center p-3 rounded-full bg-light-secondary dark:bg-dark-secondary hover:bg-islamic-gold dark:hover:bg-islamic-gold transition-all duration-300 glow"
+          className="group flex items-center justify-center p-3 rounded-full bg-light-secondary dark:bg-dark-secondary hover:bg-islamic-gold dark:hover:bg-islamic-gold transition-colors duration-300 glow"
           title={mounted && t("quran.search") !== "quran.search" ? t("quran.search") : (locale === 'ar' ? 'بحث' : 'Search')}
           aria-label={mounted && t("quran.search") !== "quran.search" ? t("quran.search") : (locale === 'ar' ? 'بحث' : 'Search')}
         >
@@ -132,7 +132,7 @@ export default function ClientHeader() {
         </button>
         <button
           onClick={() => setIsBookmarkModalOpen(true)}
-          className="group relative flex items-center justify-center p-3 rounded-full bg-light-secondary dark:bg-dark-secondary hover:bg-islamic-gold dark:hover:bg-islamic-gold transition-all duration-300 glow"
+          className="group relative flex items-center justify-center p-3 rounded-full bg-light-secondary dark:bg-dark-secondary hover:bg-islamic-gold dark:hover:bg-islamic-gold transition-colors duration-300 glow"
           title={t("bookmarks.title") || "Bookmarks"}
           aria-label={t("bookmarks.title") || "Bookmarks"}
         >

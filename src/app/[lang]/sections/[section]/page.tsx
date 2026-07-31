@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import ClientHeader from "@/components/ClientHeader";
 import Footer from "@/components/Footer";
 import SectionSchema from "@/components/SectionSchema";
+import SectionSkeleton from "@/components/SectionSkeleton";
 import QuranSectionWrapper from "@/components/sections/QuranSectionWrapper";
 import TafseerSection from "@/components/sections/TafseerSection";
 import DhikrCounter from "@/components/sections/DhikrCounter";
@@ -54,14 +55,7 @@ export async function generateMetadata({
 }
 
 function LoadingSection({ title = "Loading section" }: { title?: string }) {
-  return (
-    <div className="flex min-h-[50vh] items-center justify-center" role="status">
-      <div className="text-center">
-        <div className="inline-block size-12 animate-spin rounded-full border-4 border-islamic-gold border-r-transparent" />
-        <span className="sr-only">{title}</span>
-      </div>
-    </div>
-  );
+  return <SectionSkeleton label={title} className="min-h-[50vh]" />;
 }
 
 interface SectionPageProps {

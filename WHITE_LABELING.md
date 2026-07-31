@@ -58,7 +58,20 @@ Recommended dimensions:
 | Favicon | SVG or multi-size ICO |
 | Apple touch icon | 180×180 PNG |
 | PWA icons | 192×192 and 512×512 PNG |
+| iOS splash screens | Full-bleed PNGs in `public/splash/` (see below) |
 | Open Graph image | 1200×630 PNG or JPEG |
+
+### iOS PWA splash screens
+
+iOS ignores the web app manifest splash and needs `apple-touch-startup-image` links sized to each device. This project ships branded dark-slate splash PNGs under `public/splash/` and injects the matching media queries via `AppleSplashLinks` in the language layout (`viewportFit: "cover"` is already set so safe-area insets apply in standalone mode).
+
+After changing the PWA icon or brand colors, regenerate:
+
+```bash
+npm run generate:splash
+```
+
+That script (`scripts/generate-apple-splash.mjs`) composites `/public/icons/icon-512x512.png` onto the memorial dark background for common iPhone and iPad portrait sizes. Keep `src/lib/apple-splash.ts` in sync if you add or rename splash files.
 
 Absolute HTTPS asset URLs are also supported. Local assets are the safest option across hosting providers.
 

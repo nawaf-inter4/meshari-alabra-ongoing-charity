@@ -128,24 +128,24 @@ export default function PWAClient() {
       <PWAInstallPrompt />
       {updateAvailable ? (
         <aside
-          className="fixed bottom-4 left-4 right-4 z-[60] rounded-2xl border border-islamic-gold/40 bg-white p-4 text-gray-900 shadow-2xl dark:bg-gray-900 dark:text-white md:left-auto md:max-w-sm"
+          className="safe-fixed-bottom-left fixed z-[60] max-w-[min(22rem,calc(100vw-6.75rem-env(safe-area-inset-left,0px)-env(safe-area-inset-right,0px)))] rounded-full border border-islamic-gold/20 bg-white/90 p-3 text-gray-900 shadow-lg backdrop-blur-sm dark:bg-gray-800/90 dark:text-white sm:rounded-2xl sm:p-4"
           role="status"
           aria-live="polite"
           dir={localeDirection(locale)}
           data-pwa-update-prompt
         >
-          <div className="flex items-start gap-3">
-            <RefreshCw className="mt-0.5 h-5 w-5 shrink-0 text-islamic-gold" aria-hidden="true" />
+          <div className="flex items-center gap-3">
+            <RefreshCw className="h-5 w-5 shrink-0 self-center text-islamic-gold" aria-hidden="true" />
             <div className="min-w-0 flex-1">
-              <p className="font-semibold">{copy.updateTitle}</p>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+              <p className="font-semibold text-sm leading-tight">{copy.updateTitle}</p>
+              <p className="mt-0.5 text-xs leading-snug text-gray-600 dark:text-gray-300 sm:text-sm">
                 {copy.updateDescription}
               </p>
               <button
                 type="button"
                 onClick={applyUpdate}
                 disabled={isApplyingUpdate}
-                className="mt-3 min-h-11 rounded-full bg-islamic-gold px-4 py-2 text-sm font-bold text-white disabled:opacity-60"
+                className="mt-2 min-h-10 rounded-full bg-gradient-to-r from-islamic-gold to-islamic-green px-4 py-2 text-sm font-bold text-white disabled:opacity-60"
               >
                 {isApplyingUpdate ? copy.updating : copy.updateNow}
               </button>
@@ -153,7 +153,7 @@ export default function PWAClient() {
             <button
               type="button"
               onClick={() => setUpdateAvailable(false)}
-              className="min-h-11 min-w-11 rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="grid min-h-10 min-w-10 shrink-0 place-items-center self-center rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
               aria-label={copy.dismissUpdate}
             >
               <X className="h-5 w-5" aria-hidden="true" />

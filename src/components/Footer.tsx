@@ -135,7 +135,7 @@ export default function Footer() {
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
             {memoizedTranslations.memorialDeath}
           </p>
-          <p className="text-xl leading-relaxed max-w-3xl mx-auto text-islamic-green dark:text-islamic-gold">
+          <p className="text-xl leading-relaxed max-w-3xl mx-auto text-islamic-gold">
             {memoizedTranslations.footerDescription}
           </p>
         </div>
@@ -205,7 +205,7 @@ export default function Footer() {
             </p>
             
             {/* Quran Verse */}
-            <p className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green dark:text-islamic-gold leading-[2.5] max-w-4xl mx-auto`} style={{ lineHeight: '2.5' }}>
+            <p className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold leading-[2.5] max-w-4xl mx-auto`} style={{ lineHeight: '2.5' }}>
               {getQuranVerse('verse')}
             </p>
             

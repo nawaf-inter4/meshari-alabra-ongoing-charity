@@ -29,7 +29,7 @@ export default function MeshariFavoriteReciter() {
 
         {/* Bismillah */}
         <div className="text-center mb-8">
-          <p className="text-lg text-islamic-green dark:text-islamic-gold">
+          <p className="text-lg text-islamic-gold">
             ﷽
           </p>
         </div>

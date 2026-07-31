@@ -6,15 +6,15 @@
     "node": ">=22 <23"
   },
   "scripts": {
-    "dev": "next dev --turbopack",
-    "dev:webpack": "next dev",
+    "dev": "npm run stub:polyfills && next dev --turbopack",
+    "dev:webpack": "npm run stub:polyfills && next dev",
     "dev:clean": "npm run clean:all && npm run dev",
-    "build": "next build",
-    "build:turbo": "NEXT_TURBOPACK=1 next build",
-    "build:analyze": "ANALYZE=true next build",
+    "build": "npm run stub:polyfills && next build",
+    "build:turbo": "npm run stub:polyfills && NEXT_TURBOPACK=1 next build",
+    "build:analyze": "npm run stub:polyfills && ANALYZE=true next build",
     "build:clean": "npm run clean:all && npm run build",
-    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "preview": "npm run stub:polyfills && opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "npm run stub:polyfills && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "start": "next start",
     "lint": "node -r ./scripts/use-typescript6.cjs ./node_modules/eslint/bin/eslint.js . --ext .js,.jsx,.ts,.tsx",
@@ -24,7 +24,10 @@
     "test:e2e:install": "playwright install --with-deps chromium firefox webkit",
     "clean": "rm -rf .next out node_modules/.cache",
     "clean:all": "rm -rf .next node_modules package-lock.json .turbo .swc && npm cache clean --force",
-    "clean:build": "./scripts/clean-build.sh"
+    "clean:build": "./scripts/clean-build.sh",
+"stub:polyfills": "node ./scripts/stub-next-polyfills.cjs",
+    "postinstall": "node ./scripts/stub-next-polyfills.cjs",
+    "generate:splash": "node scripts/generate-apple-splash.mjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.2",

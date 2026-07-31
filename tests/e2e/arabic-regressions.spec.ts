@@ -32,15 +32,22 @@ test("Arabic memorial parentheses retain their phrase order", async ({ page }) =
   await expect(parenthetical.locator('bdi[dir="rtl"]')).toHaveText("رحمه الله");
 });
 
-test("original Quran framing phrases remain green in dark mode", async ({ page }) => {
-  await page.addInitScript(() => localStorage.setItem("theme", "dark"));
-  await page.goto("/ar");
+test("original Quran framing phrases remain green in dark and light mode", async ({ page }) => {
+  for (const theme of ["dark", "light"] as const) {
+    await page.addInitScript((value) => localStorage.setItem("theme", value), theme);
+    await page.goto("/ar", { waitUntil: "domcontentloaded" });
+    if (theme === "dark") {
+      await expect(page.locator("html")).toHaveClass(/dark/);
+    } else {
+      await expect(page.locator("html")).not.toHaveClass(/dark/);
+    }
 
-  for (const phrase of ["بسم الله الرحمن الرحيم", "صدق الله العلي العظيم"]) {
-    const matches = page.getByText(phrase, { exact: true });
-    await expect(matches).toHaveCount(2);
-    for (const match of await matches.all()) {
-      await expect(match).toHaveCSS("color", "rgb(0, 107, 63)");
+    for (const phrase of ["بسم الله الرحمن الرحيم", "صدق الله العلي العظيم"]) {
+      const matches = page.getByText(phrase, { exact: true });
+      await expect(matches).toHaveCount(2);
+      for (const match of await matches.all()) {
+        await expect(match).toHaveCSS("color", "rgb(0, 107, 63)");
+      }
     }
   }
 });
@@ -50,18 +57,23 @@ test("Arabic memorial identity is localized in the server HTML", async ({ reques
   expect(response.ok()).toBeTruthy();
   const html = await response.text();
   expect(html).toMatch(/<h1[^>]*>مشاري بن أحمد بن سليمان العبره<\/h1>/u);
-  expect(html).toMatch(/<p class="text-xl text-islamic-green[^>]*>صفحة مخصصة لأخي مشاري/u);
+  expect(html).toMatch(/<p class="text-xl text-islamic-gold[^>]*>صفحة مخصصة لأخي مشاري/u);
 });
 
 test("footer and Quran actions retain their original colors", async ({ page }) => {
   await page.goto("/ar", { waitUntil: "domcontentloaded" });
+  // Prefer evaluate scroll over scrollIntoViewIfNeeded: WebKit can detach nodes
+  // while Playwright waits for stability during soft navigations / Suspense remounts.
+  await expect(page.locator("footer")).toBeVisible({ timeout: 15_000 });
+  await page.evaluate(() => document.querySelector("footer")?.scrollIntoView());
   const footerShare = page.locator("footer").getByRole("button", { name: "مشاركة" });
   await expect(footerShare).toBeVisible({ timeout: 15_000 });
-  await footerShare.scrollIntoViewIfNeeded();
   await expect(footerShare).toHaveCSS("color", "rgb(255, 255, 255)");
   const xLink = page.locator('footer a[href*="x.com/"]');
   await expect(xLink).toBeVisible({ timeout: 15_000 });
-  await xLink.hover();
+  await expect(async () => {
+    await xLink.hover({ timeout: 5_000 });
+  }).toPass({ timeout: 15_000 });
   const bg = await xLink.evaluate((el) => getComputedStyle(el).backgroundColor);
   expect(bg).toMatch(/rgb\((\d+, ){2}\d+\)/);
   const [r, g, b] = bg.match(/\d+/g)!.map(Number);

@@ -1,0 +1,157 @@
+/* Below-the-fold / non-critical styles — loaded after first paint. */
+
+/* Quran text (sections; hero uses .font-arabic which stays critical) */
+.quran-text {
+  font-family: 'Amiri', 'Tajawal', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
+  text-rendering: optimizeLegibility !important;
+  font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
+  -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
+  font-variant-ligatures: common-ligatures contextual !important;
+  font-kerning: normal !important;
+  font-synthesis: none !important;
+  -webkit-font-smoothing: antialiased !important;
+  word-spacing: 0.1em !important;
+  letter-spacing: 0.02em !important;
+  line-height: 2.5 !important;
+  text-transform: none !important;
+}
+
+html[dir="rtl"] .quran-text {
+  direction: rtl !important;
+  unicode-bidi: isolate !important;
+}
+
+.arabic-quran-text {
+  font-family: 'Amiri', 'Tajawal', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', 'Arial Unicode MS', serif !important;
+  text-rendering: optimizeLegibility !important;
+  font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+  -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
+  font-variant-ligatures: common-ligatures contextual !important;
+  font-kerning: normal !important;
+  font-synthesis: none !important;
+  -webkit-font-smoothing: antialiased !important;
+  word-spacing: 0.1em !important;
+  letter-spacing: 0.02em !important;
+  line-height: 2.5 !important;
+  text-transform: none !important;
+  text-combine-upright: none !important;
+}
+
+html[dir="rtl"] .arabic-quran-text {
+  direction: rtl !important;
+  unicode-bidi: isolate !important;
+}
+
+/* Scrollbars — cosmetic, not needed for first paint */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+html:hover ::-webkit-scrollbar-thumb,
+html:focus ::-webkit-scrollbar-thumb,
+body:hover ::-webkit-scrollbar-thumb,
+body:focus ::-webkit-scrollbar-thumb {
+  background: var(--color-brand) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent) !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  scrollbar-gutter: stable;
+}
+
+html:hover,
+html:active {
+  scrollbar-color: var(--color-brand) transparent;
+}
+
+.language-switcher::-webkit-scrollbar {
+  width: 6px;
+}
+
+.language-switcher::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.language-switcher:hover::-webkit-scrollbar-thumb,
+.language-switcher:focus::-webkit-scrollbar-thumb {
+  background: var(--color-brand) !important;
+}
+
+/* Loading shimmer */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: deferred-shimmer 2s infinite;
+  background-size: 200% 100%;
+}
+
+@keyframes deferred-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* PDF viewer (react-pdf) — only after section interaction */
+.react-pdf__Page {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.react-pdf__Page__canvas {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+.react-pdf__Page__textContent {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+.react-pdf__Page__textContent span {
+  max-width: 100% !important;
+  word-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .react-pdf__Page,
+  .react-pdf__Page__canvas,
+  .react-pdf__Page__textContent,
+  .react-pdf__Page__annotations {
+    width: 100% !important;
+  }
+
+  .react-pdf__Page__textContent {
+    transform-origin: top left;
+  }
+}

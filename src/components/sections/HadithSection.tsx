@@ -233,7 +233,7 @@ export default function HadithSection() {
               </div>
             </div>
             <p 
-              className="text-2xl md:text-3xl font-arabic text-right leading-loose mb-6 text-islamic-green dark:text-islamic-gold"
+              className="text-2xl md:text-3xl font-arabic text-right leading-loose mb-6 text-islamic-gold"
               style={{
                 direction: 'rtl',
                 unicodeBidi: 'isolate',
@@ -248,7 +248,7 @@ export default function HadithSection() {
                 <p className="text-lg leading-relaxed mb-4">
                   {hadiths[hadith.number - 1].translation}
                 </p>
-                <p className="text-sm text-islamic-blue dark:text-islamic-gold font-semibold">
+                <p className="text-sm text-islamic-gold font-semibold">
                   {t("hadith.source")}: {hadiths[hadith.number - 1].source}
                 </p>
               </>

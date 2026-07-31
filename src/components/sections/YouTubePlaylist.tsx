@@ -48,7 +48,7 @@ export default function YouTubePlaylist() {
             delay: 0.2,
             ease: [0.25, 0.1, 0.25, 1],
           }}
-          className="text-center mb-8 text-lg text-islamic-green dark:text-islamic-gold motion-safe"
+          className="text-center mb-8 text-lg text-islamic-gold motion-safe"
           style={{
             willChange: 'opacity',
             transform: 'translateZ(0)',
