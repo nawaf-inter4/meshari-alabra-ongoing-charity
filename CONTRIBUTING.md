@@ -11,7 +11,7 @@ Thank you for helping improve Meshari's Continuous Charity. This is a memorial p
 
 1. Create your feature branch from `sandbox`.
 2. Open a pull request into `sandbox` and verify the Sandbox deployment.
-3. When sandbox is stable, open a pull request from `sandbox` into `main`.
+3. When sandbox is stable, open a pull request from `sandbox` into `main` to promote; `sandbox` is branch-protected and must not be deleted (feature branches still auto-delete on merge).
 4. After the feature branch is fully merged and no follow-up work remains on it, delete the remote and local feature branch.
 
 ## Development workflow
