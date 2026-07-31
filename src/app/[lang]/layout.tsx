@@ -5,6 +5,7 @@ import "../globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import SEOScripts from "@/components/SEOScripts";
+import AppleSplashLinks from "@/components/AppleSplashLinks";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import DeferredClientShell from "@/components/DeferredClientShell";
 import {
@@ -202,6 +203,7 @@ export default async function LanguageLayout({
     >
       <head>
         <SEOScripts />
+        <AppleSplashLinks />
         {/* Preload only the above-the-fold UI font for this direction. */}
         <link
           rel="preload"
@@ -223,7 +225,11 @@ export default async function LanguageLayout({
       <body className="antialiased">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded z-50"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-50 bg-blue-600 text-white px-4 py-2 rounded"
+          style={{
+            top: "max(1rem, env(safe-area-inset-top, 0px))",
+            left: "max(1rem, env(safe-area-inset-left, 0px))",
+          }}
           aria-label={skipLabel}
         >
           {skipLabel}
@@ -233,7 +239,7 @@ export default async function LanguageLayout({
             attribute="class"
             defaultTheme="dark"
             enableSystem
-            disableTransitionOnChange={false}
+            disableTransitionOnChange
           >
             <Suspense fallback={<div className="min-h-screen bg-light-primary dark:bg-dark-primary" />}>
               <LanguageContent locale={lang}>{children}</LanguageContent>

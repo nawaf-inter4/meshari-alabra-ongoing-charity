@@ -1,9 +1,25 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { mockExternalApis } from "./mock-api";
 
 test.beforeEach(async ({ page }) => {
   await mockExternalApis(page);
 });
+
+/** Scroll until a lazy iframe mounts. Soft navigations / Suspense remounts can
+ *  reset IntersectionObserver state and scroll position on WebKit. */
+async function revealLazySection(page: Page, sectionId: string, iframeLocator: string) {
+  const section = page.locator(`#${sectionId}`);
+  await expect(section).toBeAttached({ timeout: 15_000 });
+  const frame = section.locator(iframeLocator);
+  await expect(async () => {
+    await page.evaluate((id) => {
+      document.querySelector(`#${id}`)?.scrollIntoView({ block: "center" });
+      window.dispatchEvent(new Event("scroll"));
+    }, sectionId);
+    await expect(frame).toBeVisible({ timeout: 2_500 });
+  }).toPass({ timeout: 30_000 });
+  return { section, frame };
+}
 
 test("native YouTube players defer third-party scripts while memorial audio autoplays", async ({ page }) => {
   const embedRequests: string[] = [];
@@ -19,7 +35,7 @@ test("native YouTube players defer third-party scripts while memorial audio auto
   await expect(memorialAudio).toHaveAttribute("preload", "metadata");
   await expect(memorialAudio).toHaveAttribute("autoplay", "");
 
-  await page.locator("#youtube").scrollIntoViewIfNeeded();
+  await revealLazySection(page, "youtube", "iframe[title='Quran Playlist']");
   await expect.poll(() => embedRequests.some((url) => url.includes("/embed/VXb36Nzybps"))).toBeTruthy();
 });
 
@@ -33,12 +49,12 @@ test("Quran story cards render their first-page PDF thumbnails", async ({ page }
 
 test("playlist sections use YouTube's native one-click players", async ({ page }) => {
   await page.goto("/en", { waitUntil: "domcontentloaded" });
-  // Match the deferral test: give lazy sections a beat before scrolling on WebKit.
-  await page.waitForTimeout(1_000);
-  await page.locator("#youtube").scrollIntoViewIfNeeded();
 
-  const quranPlayer = page.locator("iframe[title='Quran Playlist']");
-  await expect(quranPlayer).toBeVisible({ timeout: 15_000 });
+  const { section: quranSection, frame: quranPlayer } = await revealLazySection(
+    page,
+    "youtube",
+    "iframe[title='Quran Playlist']",
+  );
   await expect(quranPlayer).toHaveAttribute(
     "src",
     /youtube\.com\/embed\/VXb36Nzybps\?.*list=PLozaqJ9egxJegXbK52PNLLlvWf4K5g-Cb/,
@@ -47,9 +63,11 @@ test("playlist sections use YouTube's native one-click players", async ({ page }
     page.locator("#youtube").getByRole("button", { name: /Play Quran Recitations playlist/ }),
   ).toHaveCount(0);
 
-  await page.locator("#meshari-favorite-reciter").scrollIntoViewIfNeeded();
-  const reciterPlayer = page.locator("#meshari-favorite-reciter iframe");
-  await expect(reciterPlayer).toBeVisible({ timeout: 15_000 });
+  const { section: reciterSection, frame: reciterPlayer } = await revealLazySection(
+    page,
+    "meshari-favorite-reciter",
+    "iframe",
+  );
   await expect(reciterPlayer).toHaveAttribute("title", /Favorite Quran Reciter$/);
   await expect(reciterPlayer).toHaveAttribute(
     "src",
@@ -61,9 +79,7 @@ test("playlist sections use YouTube's native one-click players", async ({ page }
     }),
   ).toHaveCount(0);
 
-  await page.locator("#islamic-chant").scrollIntoViewIfNeeded();
-  const chantPlayer = page.locator("#islamic-chant iframe");
-  await expect(chantPlayer).toBeVisible({ timeout: 15_000 });
+  const { frame: chantPlayer } = await revealLazySection(page, "islamic-chant", "iframe");
   const chantCard = chantPlayer.locator("../..");
   await expect(chantCard).toHaveClass(/shadow-2xl/);
   await expect(chantCard).toHaveClass(/glow/);

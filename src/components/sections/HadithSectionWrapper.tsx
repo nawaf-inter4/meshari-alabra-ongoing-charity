@@ -1,17 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import SectionSkeleton from "@/components/SectionSkeleton";
 
 const HadithSection = dynamic(() => import("@/components/sections/HadithSection"), {
-  loading: () => (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-islamic-gold"></div>
-    </div>
-  ),
+  loading: () => <SectionSkeleton label="Loading hadith" />,
   ssr: false,
 });
 
 export default function HadithSectionWrapper() {
   return <HadithSection />;
 }
-

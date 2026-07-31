@@ -47,6 +47,19 @@ test("serves an offline-capable service worker and fallback", async ({ request }
   expect(offlineResponse.headers()["content-type"]).toContain("text/html");
 });
 
+test("exposes apple-touch-startup-image splash links for iOS PWA", async ({ page }) => {
+  await mockExternalApis(page);
+  await page.goto("/ar");
+  const splashLinks = page.locator('link[rel="apple-touch-startup-image"]');
+  expect(await splashLinks.count()).toBeGreaterThanOrEqual(8);
+  const href = await splashLinks.first().getAttribute("href");
+  expect(href).toMatch(/^\/splash\/apple-splash-\d+x\d+\.png$/);
+  const media = await splashLinks.first().getAttribute("media");
+  expect(media).toContain("orientation: portrait");
+  const splashResponse = await page.request.get(href!);
+  expect(splashResponse.ok()).toBeTruthy();
+});
+
 test("offline fallback uses one active locale and the site typography", async ({ page }) => {
   await page.addInitScript(() => {
     if (!localStorage.getItem("preferred-locale")) localStorage.setItem("preferred-locale", "fr");
@@ -138,14 +151,16 @@ test("install guidance follows the active locale and direction", async ({ page }
   const frenchPrompt = page.locator("[data-pwa-install-prompt]");
   await expect(frenchPrompt).toBeVisible({ timeout: 15_000 });
   await expect(frenchPrompt).toHaveAttribute("dir", "ltr");
-  await expect(frenchPrompt).toContainText("Installer l’application");
+  await expect(frenchPrompt).not.toContainText("Installer l’application");
   const promptBox = await frenchPrompt.boundingBox();
   expect(promptBox).not.toBeNull();
   expect(promptBox!.x).toBeLessThan(40);
   expect(promptBox!.width).toBeLessThanOrEqual(360);
-  expect(promptBox!.height).toBeLessThanOrEqual(120);
+  expect(promptBox!.height).toBeLessThanOrEqual(100);
+  await expect(frenchPrompt).toHaveCSS("border-radius", "9999px");
   await expect(frenchPrompt.locator("[data-pwa-app-icon]")).toHaveCSS("border-radius", "9999px");
   await expect(frenchPrompt).toContainText("Test Charity");
+  await expect(frenchPrompt.getByRole("button", { name: "Installer" })).toBeVisible();
   await frenchPrompt.getByRole("button", { name: "Fermer l’invite d’installation" }).click();
 
   await page.evaluate(() => localStorage.removeItem("pwa-install-prompt-dismissed-at"));
@@ -154,5 +169,7 @@ test("install guidance follows the active locale and direction", async ({ page }
   const urduPrompt = page.locator("[data-pwa-install-prompt]");
   await expect(urduPrompt).toBeVisible({ timeout: 15_000 });
   await expect(urduPrompt).toHaveAttribute("dir", "rtl");
-  await expect(urduPrompt).toContainText("ایپ انسٹال کریں");
+  await expect(urduPrompt).toContainText("Test Charity");
+  await expect(urduPrompt).not.toContainText("ایپ انسٹال کریں");
+  await expect(urduPrompt.getByRole("button", { name: "انسٹال کریں" })).toBeVisible();
 });

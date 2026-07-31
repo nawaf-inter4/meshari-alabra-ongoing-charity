@@ -100,7 +100,7 @@ export default function AudioPlayer() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="safe-fixed-bottom-right fixed z-50" data-audio-controls>
       <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-3 shadow-lg border border-islamic-gold/20">
         <div className="flex items-center gap-3">
           <audio
@@ -117,7 +117,7 @@ export default function AudioPlayer() {
           <button
             onClick={togglePlayPause}
             aria-label={isPlaying ? "Pause background audio" : "Play background audio"}
-            className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-all duration-300"
+            className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-colors duration-300"
           >
             {isPlaying ? (
               <Pause className="w-5 h-5 text-islamic-gold" />
@@ -129,7 +129,7 @@ export default function AudioPlayer() {
           <button
             onClick={toggleMute}
             aria-label={isMuted ? "Unmute background audio" : "Mute background audio"}
-            className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-all duration-300"
+            className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-colors duration-300"
           >
             {isMuted ? (
               <VolumeX className="w-5 h-5 text-islamic-gold" />

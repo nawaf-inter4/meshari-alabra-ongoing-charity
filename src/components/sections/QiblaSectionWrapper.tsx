@@ -1,17 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import SectionSkeleton from "@/components/SectionSkeleton";
 
-const QiblaSection = dynamic(() => import("@/components/sections/QiblaFinder"), {
-  loading: () => (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-islamic-gold"></div>
-    </div>
-  ),
+const QiblaFinder = dynamic(() => import("@/components/sections/QiblaFinder"), {
+  loading: () => <SectionSkeleton label="Loading Qibla finder" />,
   ssr: false,
 });
 
 export default function QiblaSectionWrapper() {
-  return <QiblaSection />;
+  return <QiblaFinder />;
 }
-

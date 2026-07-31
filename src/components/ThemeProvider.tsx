@@ -30,6 +30,7 @@ export function ThemeProvider({
   defaultTheme = "dark",
   storageKey = "theme",
   enableSystem = true,
+  disableTransitionOnChange = true,
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">(
@@ -38,10 +39,20 @@ export function ThemeProvider({
 
   const applyTheme = useCallback((nextTheme: Theme) => {
     const resolved = nextTheme === "system" && enableSystem ? systemTheme() : nextTheme === "light" ? "light" : "dark";
-    document.documentElement.classList.toggle("dark", resolved === "dark");
-    document.documentElement.style.colorScheme = resolved;
+    const root = document.documentElement;
+    if (disableTransitionOnChange) {
+      root.classList.add("theme-changing");
+      void root.offsetHeight;
+    }
+    root.classList.toggle("dark", resolved === "dark");
+    root.style.colorScheme = resolved;
     setResolvedTheme(resolved);
-  }, [enableSystem]);
+    if (disableTransitionOnChange) {
+      requestAnimationFrame(() => {
+        root.classList.remove("theme-changing");
+      });
+    }
+  }, [disableTransitionOnChange, enableSystem]);
 
   useEffect(() => {
     const storedTheme = window.localStorage.getItem(storageKey);
