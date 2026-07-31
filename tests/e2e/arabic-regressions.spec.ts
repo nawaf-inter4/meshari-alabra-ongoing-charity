@@ -26,7 +26,6 @@ test("Arabic memorial parentheses retain their phrase order", async ({ page }) =
   await page.goto("/ar", { waitUntil: "domcontentloaded" });
   const charity = page.locator("[data-footer-charity]");
   await expect(charity).toBeVisible({ timeout: 15_000 });
-  await charity.scrollIntoViewIfNeeded();
   await expect(charity).toHaveAttribute("dir", "rtl");
   const parenthetical = charity.locator('span[dir="ltr"]');
   await expect(parenthetical).toHaveText("(رحمه الله)");
