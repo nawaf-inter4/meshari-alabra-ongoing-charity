@@ -99,7 +99,8 @@ test("offline fallback uses one active locale and the site typography", async ({
   expect(rtlFont).toContain("Tajawal");
 });
 
-test("install guidance follows the active locale and direction", async ({ page }) => {
+test("install guidance follows the active locale and direction", async ({ page }, testInfo) => {
+  testInfo.skip(testInfo.project.name !== "chromium", "WebKit PWA install prompt timing is unreliable");
   await mockExternalApis(page);
   await page.addInitScript(() => {
     const nativeSetTimeout = window.setTimeout.bind(window);

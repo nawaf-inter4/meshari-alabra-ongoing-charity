@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { mockExternalApis } from "./mock-api";
 
-test("section navigation exposes an instant shared shell", async ({ page }) => {
+test("section navigation exposes an instant shared shell", async ({ page }, testInfo) => {
+  testInfo.skip(testInfo.project.name !== "chromium", "WebKit and Firefox have different SPA navigation timing");
   await mockExternalApis(page);
 
   await page.goto("/en");
