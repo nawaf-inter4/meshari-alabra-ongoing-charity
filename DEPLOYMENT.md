@@ -22,7 +22,7 @@ Copy [`.env.example`](./.env.example) for the complete configuration reference. 
 4. Production branch: `main` (serves [meshari.charity](https://meshari.charity)).
 5. **Sandbox** environment: use the `sandbox` Git branch as the default non-production lane. Every push and PR targeting `sandbox` should deploy to the Sandbox environment (Vercel’s custom environment named `sandbox`, or the project’s Preview deployments scoped to `sandbox`). Optionally assign a stable alias such as `sandbox.meshari.charity` to the `sandbox` branch in Project Settings → Domains / Environments.
 
-Recommended flow: feature branch → PR into `sandbox` (Sandbox) → PR from `sandbox` into `main` (Production). Delete feature branches after they are fully merged.
+Recommended flow: feature branch → PR into `sandbox` (Sandbox) → PR from `sandbox` into `main` (Production). Promote via PR `sandbox`→`main`; `sandbox` is protected and must not be deleted. Delete feature branches after they are fully merged.
 
 CLI deployments are also supported:
 
