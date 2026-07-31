@@ -6,9 +6,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import SEOScripts from "@/components/SEOScripts";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import AudioPlayer from "@/components/AudioPlayer";
-import AnalyticsWrapper from "@/components/AnalyticsWrapper";
-import PWAInstallWrapper from "@/components/PWAInstallWrapper";
+import DeferredClientShell from "@/components/DeferredClientShell";
 import {
   SUPPORTED_LOCALES,
   isSupportedLocale,
@@ -176,9 +174,7 @@ function LanguageContent({
   return (
     <LanguageProvider initialLocale={locale}>
       {children}
-      <AudioPlayer />
-      <AnalyticsWrapper />
-      <PWAInstallWrapper />
+      <DeferredClientShell />
     </LanguageProvider>
   );
 }
@@ -206,6 +202,22 @@ export default async function LanguageLayout({
     >
       <head>
         <SEOScripts />
+        <link
+          rel="preload"
+          href={direction === "rtl" ? "/fonts/tajawal-arabic-400.woff2" : "/fonts/lexend-deca-latin.woff2"}
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        {direction === "rtl" ? (
+          <link
+            rel="preload"
+            href="/fonts/amiri-arabic-400.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+        ) : null}
       </head>
       <body className="antialiased">
         <a

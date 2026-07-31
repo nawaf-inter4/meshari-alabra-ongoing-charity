@@ -106,7 +106,7 @@ export default function AudioPlayer() {
           <audio
             ref={audioRef}
             loop
-            preload="auto"
+            preload="metadata"
             autoPlay
             muted
             className="hidden"

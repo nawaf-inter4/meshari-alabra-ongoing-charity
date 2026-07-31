@@ -128,7 +128,7 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
     "img-src 'self' data: https: blob: https://hatscripts.github.io",
     "media-src 'self' https:",
     "connect-src 'self' https://api.aladhan.com https://api.alquran.cloud https://api.quran.com https://ipapi.co https://cdn.jsdelivr.net https://vitals.vercel-insights.com https://www.google-analytics.com https://fonts.googleapis.com https://fonts.gstatic.com https://hatscripts.github.io",
-    "frame-src 'self' https://www.youtube.com",
+    "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://vercel.live",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

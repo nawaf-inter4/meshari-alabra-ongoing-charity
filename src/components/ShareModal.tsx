@@ -1748,17 +1748,23 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
 
                 {/* Link Share */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white font-tajawal" style={{ 
+                  <h3 id="share-link-heading" className="text-lg font-semibold mb-3 text-gray-900 dark:text-white font-tajawal" style={{ 
                     direction: isRtl ? 'rtl' : 'ltr',
                     textAlign: isRtl ? 'right' : 'left'
                   }}>
                     {t("share.share_link")}
                   </h3>
                   <div className="flex gap-2">
+                    <label htmlFor="share-url-field" className="sr-only">
+                      {t("share.share_link") || "Share link"}
+                    </label>
                     <input
-                      type="text"
+                      id="share-url-field"
+                      name="share-url"
+                      type="url"
                       value={shareUrl}
                       readOnly
+                      aria-labelledby="share-link-heading"
                       className="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-islamic-gold"
                     />
                     <button

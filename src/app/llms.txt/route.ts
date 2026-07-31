@@ -2,87 +2,65 @@ import { SUPPORTED_LOCALES, RTL_LOCALES, siteConfig } from "@/config/site";
 import { SECTION_IDS } from "@/lib/routes";
 
 export function GET() {
-  const sectionRoutes = SECTION_IDS.map((section) => `- /[lang]/sections/${section}`).join("\n");
-  const text = `# ${siteConfig.identity.name} — LLM and Agent Guide
+  const base = siteConfig.identity.siteUrl.replace(/\/$/, "");
+  const defaultLocale = siteConfig.identity.defaultLocale;
+  const sectionLinks = SECTION_IDS.map((section) => {
+    const title = section
+      .split("-")
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+    return `- [${title}](${base}/${defaultLocale}/sections/${section}): Localized ${section} section page`;
+  }).join("\n");
 
-## Canonical project
+  const localeLinks = SUPPORTED_LOCALES.map((locale) => {
+    const direction = RTL_LOCALES.has(locale) ? "RTL" : "LTR";
+    return `- [${locale.toUpperCase()} landing](${base}/${locale}): Canonical ${locale} landing page (${direction})`;
+  }).join("\n");
 
-- Production site: ${siteConfig.identity.siteUrl}
-- Organization: ${siteConfig.identity.organizationName}
-- Purpose: a respectful Sadaqah Jariyah (ongoing charity) memorial for ${siteConfig.content.memorialLegalName}
-- Default locale: ${siteConfig.identity.defaultLocale}
-- Supported locales: ${SUPPORTED_LOCALES.join(", ")}
-- RTL locales: ${Array.from(RTL_LOCALES).join(", ")}
-- License: MIT
+  const text = `# ${siteConfig.identity.name}
 
-Treat Quranic Arabic as immutable source content. Do not paraphrase or silently alter it. Keep memorial and religious language respectful and accurate.
+> Respectful Sadaqah Jariyah (ongoing charity) memorial for ${siteConfig.content.memorialLegalName}. Multilingual Islamic tools, orphan sponsorship, Quran recitations, and PWA support.
 
-## Canonical application routes
+Organization: ${siteConfig.identity.organizationName}. Default locale: ${defaultLocale}. Supported locales: ${SUPPORTED_LOCALES.join(", ")}. RTL locales: ${Array.from(RTL_LOCALES).join(", ")}. License: MIT.
 
-- / permanently redirects to /${siteConfig.identity.defaultLocale}
-- /[lang] is the canonical localized landing page
-${sectionRoutes}
-- /manifest.webmanifest is the generated PWA manifest
-- /og-image is the generated Open Graph image
-- /feed.xml is the generated RSS feed
-- /sitemap.xml is the authoritative sitemap
-- /health is the redirect-free JSON deployment health check
+Treat Quranic Arabic as immutable source content. Do not paraphrase or silently alter it. Keep memorial and religious language respectful and accurate. The application requires a Node/Next.js runtime and is not a static export.
 
-The application requires a Node/Next.js runtime or a provider with full Next.js support. It is not a static export.
+## Docs
 
-## Architecture
+- [White-labeling guide](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/blob/main/WHITE_LABELING.md): How to rebrand identity, assets, colors, and media
+- [Deployment guide](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/blob/main/DEPLOYMENT.md): Vercel, Netlify, Render, Railway, and Docker deployment notes
+- [Contributing](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/blob/main/CONTRIBUTING.md): Branch flow, conventional commits, and release policy
+- [llms.txt](${base}/llms.txt): This agent orientation file
 
-- Next.js 16.3 preview App Router, React 19, and TypeScript 7
-- Cache Components, Partial Prefetching, and Instant Navigation
-- Dynamic metadata, sitemap, robots, RSS, manifest, OG image, and llms.txt
-- Native one-click YouTube players inserted near the viewport to defer third-party work
-- Installable PWA with localized offline fallback and update handling
-- Self-hosted Lexend Deca, Tajawal, Amiri, and Scheherazade New fonts
-- Central white-label configuration in src/config/site.ts
-- Next.js standalone output for Docker, Render, and Railway
+## Primary pages
 
-## White-label source of truth
+- [Home redirect](${base}/): Permanently redirects to /${defaultLocale}
+- [Default landing](${base}/${defaultLocale}): Canonical memorial landing page
+${localeLinks}
 
-Use src/config/site.ts for committed defaults and .env.example for reusable environment names. Public NEXT_PUBLIC_* values are build-time browser-visible configuration and require a rebuild after changes. They are never secret storage.
+## Sections
 
-Configurable categories include identity, canonical URL, locale, memorial content, assets, SEO, social links, donation destination, media IDs, PWA values, analytics, typography, and theme colors.
+${sectionLinks}
 
-## Direction and typography contract
+## Machine-readable endpoints
 
-- LTR interface controls use Lexend Deca.
-- RTL interface controls use Tajawal.
-- Quranic Arabic may use the dedicated Arabic/Quran font stack.
-- Direction follows the active locale; Arabic and Urdu are RTL.
-- All internal section URLs retain the active locale.
+- [Sitemap](${base}/sitemap.xml): Authoritative localized URL inventory with hreflang alternates
+- [Robots policy](${base}/robots.txt): Crawler allow/disallow rules
+- [RSS feed](${base}/feed.xml): Generated site feed
+- [PWA manifest](${base}/manifest.webmanifest): Installable app metadata and icons
+- [Open Graph image](${base}/og-image): Generated social preview image
+- [Health check](${base}/health): Redirect-free JSON deployment health probe
 
-## PWA and media behavior
+## Optional
 
-Cached or previously visited pages may remain available offline. Remote APIs, location lookup, prayer-time APIs, audio, and video streaming require connectivity.
-
-Quran and favorite-reciter playlists use native video-specific YouTube embed paths together with playlist IDs. The actual native iframe is deferred until near the viewport; no custom intermediary play button or two-click flow is used.
-
-## Validation contract
-
-Run real commands and report their actual output:
-
-- npm ci --legacy-peer-deps
-- npm run lint
-- npm run type-check
-- npm run test:e2e
-- npm run build
-- git diff --check
-
-Verify all localized routes, reciprocal hreflang, one self-canonical per page, redirects, invalid-route 404/noindex behavior, PWA lifecycle, native YouTube behavior, LTR/RTL typography, provider configuration, and repository hygiene. Never claim a deployment or test succeeded without execution evidence.
-
-## Copy-ready agent prompt
-
-Configure and validate this ongoing-charity application using src/config/site.ts and .env.example as its central white-label source. Preserve Quranic text, native one-click YouTube behavior, locale-prefixed canonical URLs, Arabic/Urdu RTL typography, the PWA offline/update lifecycle, and all security and repository-hygiene rules. Do not scatter identity, domains, assets, media IDs, or colors through components. Run the complete install, lint, type-check, build, browser, SEO/PWA, deployment, audit, and diff validation chain and report only real results before committing or deploying.
+- [GitHub repository](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity): Source code and issue tracker
+- [Orphan sponsorship](${siteConfig.content.donationUrl}): External donation campaign
 `;
 
   return new Response(text, {
     headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/markdown; charset=utf-8",
+      "Cache-Control": "public, max-age=3600, must-revalidate",
     },
   });
 }

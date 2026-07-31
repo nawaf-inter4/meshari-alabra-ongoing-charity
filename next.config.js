@@ -213,6 +213,15 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/fonts/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
     ];
   },
 
@@ -230,3 +239,12 @@ const nextConfig = {
 };
 
 module.exports = withBundleAnalyzer(nextConfig);
+
+// Cloudflare OpenNext: enable Workers bindings during local `next dev`.
+// Safe no-op path for Vercel/Netlify/Docker when the adapter is present.
+try {
+  const { initOpenNextCloudflareForDev } = require('@opennextjs/cloudflare');
+  initOpenNextCloudflareForDev();
+} catch {
+  // Adapter unavailable in stripped installs; ignore.
+}
