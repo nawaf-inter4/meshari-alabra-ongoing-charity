@@ -357,11 +357,13 @@ export default function TafseerSection() {
             <div className="grid md:grid-cols-3 gap-4">
               {/* Surah Selection */}
               <div className="relative" ref={surahsRef}>
-                <label className="block text-sm font-semibold mb-2" suppressHydrationWarning>
+                <label htmlFor="tafseer-surah-trigger" className="block text-sm font-semibold mb-2" suppressHydrationWarning>
                   {t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
                 </label>
                 <div className="relative">
                   <button
+                    id="tafseer-surah-trigger"
+                    type="button"
                     onClick={() => setShowSurahs(!showSurahs)}
                     className="w-full p-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-left flex items-center justify-between"
                     aria-label={t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
@@ -399,6 +401,7 @@ export default function TafseerSection() {
                 </label>
                 <input
                   id="ayah-number-input"
+                  name="ayah-number"
                   type="number"
                   min="1"
                   max={selectedSurah?.verses || 1}
@@ -432,12 +435,14 @@ export default function TafseerSection() {
                 <div className="relative">
                   <input
                     id="verse-search-input"
-                    type="text"
+                    name="verse-search"
+                    type="search"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="مثال: 2:255 أو البقرة:255"
                     className="w-full p-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none"
                     aria-label={t("tafseer.search_verse") !== "tafseer.search_verse" ? t("tafseer.search_verse") : "ابحث عن آية"}
+                    autoComplete="off"
                   />
                   {searchQuery && (
                     <button
@@ -484,11 +489,13 @@ export default function TafseerSection() {
 
           {/* Edition Selection */}
           <div className="mt-4 relative" ref={editionsRef}>
-            <label className="block text-sm font-semibold mb-2" suppressHydrationWarning>
+            <label htmlFor="tafseer-edition-trigger" className="block text-sm font-semibold mb-2" suppressHydrationWarning>
               {t("tafseer.source") !== "tafseer.source" ? t("tafseer.source") : "مصدر التفسير"}
             </label>
             <div className="relative">
               <button
+                id="tafseer-edition-trigger"
+                type="button"
                 onClick={() => setShowEditions(!showEditions)}
                 className="w-full p-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-left flex items-center justify-between"
                 aria-label={t("tafseer.source") !== "tafseer.source" ? `${t("tafseer.source")}: ${selectedEdition.name}` : `مصدر التفسير: ${selectedEdition.name}`}

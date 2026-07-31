@@ -114,13 +114,18 @@ export default function QuranSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-8"
         >
-          <label className="block text-lg font-semibold mb-3">
+          <label htmlFor="legacy-quran-surah-trigger" className="block text-lg font-semibold mb-3">
             {mounted && t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
           </label>
           <div className="relative" ref={dropdownRef}>
             <button
+              id="legacy-quran-surah-trigger"
+              type="button"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="w-full p-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
+              aria-label={currentSurah ? `${currentSurah.number}. ${currentSurah.englishName}` : "Select Surah"}
+              aria-expanded={isDropdownOpen}
+              aria-haspopup="listbox"
             >
               <span className="text-left">
                 {currentSurah ? `${currentSurah.number}. ${currentSurah.englishName}` : "Select Surah"}

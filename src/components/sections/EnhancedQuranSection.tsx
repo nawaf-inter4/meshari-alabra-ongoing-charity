@@ -1254,11 +1254,13 @@ export default function EnhancedQuranSection() {
           >
           {/* Surah Selection */}
           <div className="relative" ref={dropdownRef}>
-            <label className="block text-sm font-semibold mb-2">
+            <label htmlFor="quran-surah-select-trigger" className="block text-sm font-semibold mb-2">
               {mounted && t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة"}
             </label>
             <div className="relative">
               <button
+                id="quran-surah-select-trigger"
+                type="button"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="w-full p-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
                 aria-label={currentSurah ? `${currentSurah.number}. ${locale === 'ar' ? currentSurah.name : currentSurah.englishName} - ${locale === 'ar' ? currentSurah.englishName : currentSurah.name} - ${currentSurah.numberOfAyahs} ${versesLabel}` : (t("quran.select_surah") || "Select Surah")}
@@ -1317,13 +1319,18 @@ export default function EnhancedQuranSection() {
 
           {/* Reciter Selection */}
           <div className="relative" ref={reciterDropdownRef}>
-            <label className="block text-sm font-semibold mb-2">
+            <label htmlFor="quran-reciter-select-trigger" className="block text-sm font-semibold mb-2">
               {mounted && t("quran.select_reciter") !== "quran.select_reciter" ? t("quran.select_reciter") : "اختر القارئ"}
             </label>
             <div className="relative">
               <button
+                id="quran-reciter-select-trigger"
+                type="button"
                 onClick={() => setIsReciterDropdownOpen(!isReciterDropdownOpen)}
                 className="w-full p-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
+                aria-label={mounted && t("quran.select_reciter") !== "quran.select_reciter" ? t("quran.select_reciter") : "اختر القارئ"}
+                aria-expanded={isReciterDropdownOpen}
+                aria-haspopup="listbox"
               >
                 <span className={`flex items-center gap-2 ${locale === 'ar' ? 'flex-row-reverse' : 'flex-row'}`}>
                   <div className="flex flex-col">
@@ -1405,14 +1412,20 @@ export default function EnhancedQuranSection() {
           ref={searchRef}
         >
           <div className="relative">
+            <label htmlFor="quran-text-search" className="sr-only">
+              {mounted && t("quran.search") !== "quran.search" ? t("quran.search") : (locale === 'ar' ? 'ابحث في القرآن الكريم' : 'Search in the Quran')}
+            </label>
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
-              type="text"
+              id="quran-text-search"
+              name="quran-text-search"
+              type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={mounted && t("quran.search_placeholder") !== "quran.search_placeholder" ? t("quran.search_placeholder") : (locale === 'ar' ? 'ابحث في القرآن الكريم...' : 'Search in the Quran...')}
               className="w-full pl-12 pr-12 py-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none text-lg"
               aria-label={mounted && t("quran.search") !== "quran.search" ? t("quran.search") : (locale === 'ar' ? 'ابحث في القرآن الكريم' : 'Search in the Quran')}
+              autoComplete="off"
             />
             {searchQuery && (
               <button

@@ -8,6 +8,51 @@
   contain-intrinsic-size: auto 900px;
 }
 
+@keyframes hero-star-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
+.hero-star {
+  will-change: transform, opacity;
+  animation: hero-star-pulse 3.2s ease-in-out infinite;
+  backface-visibility: hidden;
+}
+
+@keyframes hero-scroll-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.hero-scroll-indicator {
+  will-change: transform;
+  animation: hero-scroll-nudge 1.6s ease-in-out infinite;
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-star {
+    animation: none;
+    opacity: 0.55;
+  }
+
+  .hero-scroll-indicator {
+    animation: none;
+  }
+}
+
 @font-face {
   font-family: 'Lexend Deca';
   src: url('/fonts/lexend-deca-latin.woff2') format('woff2');

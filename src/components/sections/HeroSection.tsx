@@ -2,7 +2,7 @@
 
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
-import { Heart, Star, FileText } from "lucide-react";
+import { Star, FileText } from "lucide-react";
 import { useState, useEffect } from "react";
 import { siteConfig } from "@/config/site";
 
@@ -43,7 +43,7 @@ export default function HeroSection() {
     if (typeof window === 'undefined') return;
     
     const generateStarPositions = () => {
-      return [...Array(20)].map((_, i) => ({
+      return [...Array(8)].map((_, i) => ({
         id: i,
         x: Math.random() * (dimensions.width - 100) + 50, // Keep stars within bounds
         y: Math.random() * (dimensions.height - 100) + 50, // Keep stars within bounds
@@ -61,7 +61,7 @@ export default function HeroSection() {
   useEffect(() => {
     if (mounted && typeof window !== 'undefined') {
       const generateStarPositions = () => {
-        return [...Array(20)].map((_, i) => ({
+        return [...Array(8)].map((_, i) => ({
           id: i,
           x: Math.random() * (dimensions.width - 100) + 50,
           y: Math.random() * (dimensions.height - 100) + 50,
@@ -143,38 +143,23 @@ export default function HeroSection() {
       style={{ paddingTop: 'max(7rem, env(safe-area-inset-top, 7rem))' }}
       suppressHydrationWarning
     >
-      {/* Animated Background Stars - Only render after mount to prevent hydration mismatch */}
+      {/* Decorative stars use CSS animation to avoid long main-thread/composited-animation work. */}
       {mounted && (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none" suppressHydrationWarning>
-          {starPositions.length > 0 && starPositions.map((star) => (
-            <motion.div
+        <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true" suppressHydrationWarning>
+          {starPositions.slice(0, 8).map((star) => (
+            <div
               key={`${starKey}-${star.id}`}
-              className="absolute motion-safe"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{
-                opacity: [0, 1, 0.8, 1],
-                scale: [0, 1, 0.8, 1],
-              }}
-              transition={{
-                duration: 2,
-                delay: star.delay,
-                repeat: Infinity,
-                repeatType: "reverse",
-                repeatDelay: (star.id % 5) * 0.6 + 2, // Use deterministic delay based on id to prevent hydration issues
-                ease: "easeInOut",
-              }}
+              className="absolute hero-star"
               style={{
                 transform: `translate3d(${star.x}px, ${star.y}px, 0)`,
-                willChange: 'transform, opacity',
-                backfaceVisibility: 'hidden',
-                WebkitBackfaceVisibility: 'hidden',
+                animationDelay: `${star.delay}s`,
               }}
             >
-              <Star 
-                size={(star.id % 3) + 1.5} 
-                className="text-islamic-gold/60 fill-current" 
+              <Star
+                size={(star.id % 3) + 1.5}
+                className="text-islamic-gold/60 fill-current"
               />
-            </motion.div>
+            </div>
           ))}
         </div>
       )}
@@ -213,12 +198,7 @@ export default function HeroSection() {
           </p>
 
           {/* Supplications Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex justify-center"
-          >
+          <div className="flex justify-center">
             <a
               href={siteConfig.assets.supplicationsPdf}
               target="_blank"
@@ -228,7 +208,7 @@ export default function HeroSection() {
               <FileText className="w-5 h-5" />
               <span>{t("hero.supplications_button")}</span>
             </a>
-          </motion.div>
+          </div>
         </motion.div>
 
         {/* Quranic Verse - Same as Footer */}
@@ -257,16 +237,11 @@ export default function HeroSection() {
         </motion.div>
 
         {/* Scroll Down Icon */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-12 flex justify-center"
-        >
-          <div className="w-4 h-6 border border-islamic-gold dark:border-islamic-gold rounded-full flex items-center justify-center animate-bounce">
+        <div className="mt-12 flex justify-center" aria-hidden="true">
+          <div className="hero-scroll-indicator w-4 h-6 border border-islamic-gold dark:border-islamic-gold rounded-full flex items-center justify-center">
             <div className="w-0.5 h-3 bg-islamic-gold dark:bg-islamic-gold"></div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

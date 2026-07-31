@@ -6,12 +6,13 @@ Thank you for helping improve Meshari's Continuous Charity. This is a memorial p
 
 | Branch | Purpose |
 | --- | --- |
-| `sandbox` | Default integration branch. Open feature PRs here first. Vercel Preview deployments are intended for this lane. |
+| `sandbox` | Default integration branch. Open feature PRs here first. This is the default branch for the Vercel **Sandbox** environment (non-production). |
 | `main` | Production branch for [meshari.charity](https://meshari.charity), Release Please, and GitHub Releases. |
 
 1. Create your feature branch from `sandbox`.
-2. Open a pull request into `sandbox` and verify the preview deployment.
+2. Open a pull request into `sandbox` and verify the Sandbox deployment.
 3. When sandbox is stable, open a pull request from `sandbox` into `main`.
+4. After the feature branch is fully merged and no follow-up work remains on it, delete the remote and local feature branch.
 
 ## Development workflow
 
@@ -38,6 +39,7 @@ Thank you for helping improve Meshari's Continuous Charity. This is a memorial p
    Prefer conventional **pull request titles** as well when squash-merging, so Release Please can classify the landed commit.
 
 6. Open a pull request describing the change and how it was verified.
+7. After merge, delete the feature branch (`gh pr merge` with delete-branch, or `git push origin --delete <branch>` / `git branch -d <branch>`). Keep `sandbox` and `main`.
 
 ## Release policy
 
