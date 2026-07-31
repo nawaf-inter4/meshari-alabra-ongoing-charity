@@ -195,13 +195,20 @@ export default function GlobalSearchModal({ isOpen, onClose }: { isOpen: boolean
           {/* Search Input */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="relative">
+              <label htmlFor="global-site-search" className="sr-only">
+                {locale === 'ar' ? 'ابحث في الموقع' : 'Search the website'}
+              </label>
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
               <input
                 ref={inputRef}
-                type="text"
+                id="global-site-search"
+                name="global-site-search"
+                type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={locale === 'ar' ? 'ابحث في الموقع...' : 'Search the website...'}
+                aria-label={locale === 'ar' ? 'ابحث في الموقع' : 'Search the website'}
+                autoComplete="off"
                 className="w-full py-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none text-lg"
                 style={{
                   paddingLeft: '3rem',

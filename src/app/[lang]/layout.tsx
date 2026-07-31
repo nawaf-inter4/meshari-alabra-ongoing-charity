@@ -6,9 +6,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import SEOScripts from "@/components/SEOScripts";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import AudioPlayer from "@/components/AudioPlayer";
-import AnalyticsWrapper from "@/components/AnalyticsWrapper";
-import PWAInstallWrapper from "@/components/PWAInstallWrapper";
+import dynamic from "next/dynamic";
 import {
   SUPPORTED_LOCALES,
   isSupportedLocale,
@@ -19,6 +17,16 @@ import {
   type SupportedLocale,
 } from "@/config/site";
 import { translate } from "@/lib/translations";
+
+const DeferredAudioPlayer = dynamic(() => import("@/components/AudioPlayer"), {
+  ssr: false,
+});
+const DeferredAnalytics = dynamic(() => import("@/components/AnalyticsWrapper"), {
+  ssr: false,
+});
+const DeferredPWA = dynamic(() => import("@/components/PWAInstallWrapper"), {
+  ssr: false,
+});
 
 // The document language and direction depend on this root segment's URL.
 // Deeper pages still validate instant navigation within the active locale.
@@ -176,9 +184,9 @@ function LanguageContent({
   return (
     <LanguageProvider initialLocale={locale}>
       {children}
-      <AudioPlayer />
-      <AnalyticsWrapper />
-      <PWAInstallWrapper />
+      <DeferredAudioPlayer />
+      <DeferredAnalytics />
+      <DeferredPWA />
     </LanguageProvider>
   );
 }
@@ -206,6 +214,22 @@ export default async function LanguageLayout({
     >
       <head>
         <SEOScripts />
+        <link
+          rel="preload"
+          href={direction === "rtl" ? "/fonts/tajawal-arabic-400.woff2" : "/fonts/lexend-deca-latin.woff2"}
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        {direction === "rtl" ? (
+          <link
+            rel="preload"
+            href="/fonts/amiri-arabic-400.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+        ) : null}
       </head>
       <body className="antialiased">
         <a

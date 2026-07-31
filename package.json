@@ -60,6 +60,13 @@
     "typescript": "^7.0.2",
     "typescript6": "npm:@typescript/typescript6@^6.0.2"
   },
+  "browserslist": [
+    "chrome >= 111",
+    "edge >= 111",
+    "firefox >= 111",
+    "safari >= 16.4",
+    "not dead"
+  ],
   "overrides": {
     "@modelcontextprotocol/sdk": "^1.30.0",
     "postcss": "^8.5.25",

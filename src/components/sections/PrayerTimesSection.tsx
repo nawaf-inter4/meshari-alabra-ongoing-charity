@@ -748,12 +748,19 @@ export default function PrayerTimesSection() {
               <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 min-w-80 max-w-sm sm:max-w-md">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-600">
                   <div className="relative">
+                    <label htmlFor="prayer-location-search" className="sr-only">
+                      {locale === 'ar' ? 'ابحث عن مدينة أو دولة' : 'Search city or country'}
+                    </label>
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <input
-                      type="text"
+                      id="prayer-location-search"
+                      name="prayer-location-search"
+                      type="search"
                       placeholder={locale === 'ar' ? 'ابحث عن مدينة أو دولة...' : 'Search city or country...'}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      aria-label={locale === 'ar' ? 'ابحث عن مدينة أو دولة' : 'Search city or country'}
+                      autoComplete="off"
                       className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-full bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-islamic-gold"
                     />
                   </div>

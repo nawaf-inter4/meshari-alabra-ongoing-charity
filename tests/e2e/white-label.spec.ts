@@ -24,6 +24,8 @@ test("publishes white-label identity, PWA, assets, and theme from one configurat
   expect(llmsResponse.ok()).toBeTruthy();
   const llmsText = await llmsResponse.text();
   expect(llmsText).toContain("# Test Ongoing Charity");
+  expect(llmsText).toMatch(/\[.+\]\(https?:\/\/.+\)/);
+  expect(llmsResponse.headers()["content-type"] || "").toContain("text/markdown");
 
   await page.goto("/en");
   await expect(page).toHaveTitle(/Test Ongoing Charity/);
