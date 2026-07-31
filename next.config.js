@@ -1,6 +1,15 @@
+const path = require('path');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
+
+// Next always injects polyfill-module (Chrome 61 / Safari 10.1 era). Our
+// browserslist is Chrome/Edge/Firefox 111+ and Safari/iOS 16.4+, so stub it out.
+const emptyNextPolyfillModule = path.join(
+  __dirname,
+  'src/lib/empty-next-polyfill-module.js'
+);
+
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -17,8 +26,6 @@ const nextConfig = {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
-    // Remove legacy JavaScript polyfills for modern browsers
-    // This reduces bundle size by not transpiling modern JS features
   },
   
   // Output standalone for better optimization.
@@ -57,6 +64,22 @@ const nextConfig = {
       cacheDirectory: '.next/cache/webpack',
     };
 
+    // Drop unused modern-bundle polyfills (see empty-next-polyfill-module.js).
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        [require.resolve('next/dist/build/polyfills/polyfill-module')]:
+          emptyNextPolyfillModule,
+      };
+      try {
+        config.resolve.alias[
+          require.resolve('next/dist/esm/build/polyfills/polyfill-module')
+        ] = emptyNextPolyfillModule;
+      } catch {
+        // ESM polyfill path may be absent depending on Next package layout.
+      }
+    }
+
     return config;
   },
 
@@ -69,6 +92,9 @@ const nextConfig = {
   experimental: {
     // TypeScript 7 uses the CLI because it no longer exposes the compiler API.
     useTypeScriptCli: true,
+    // Inline CSS into HTML in production to remove the render-blocking stylesheet
+    // round-trip (PageSpeed "Eliminate render-blocking resources").
+    inlineCss: true,
     // Optimize package imports (stable in Next.js 16)
     // Note: react-pdf is excluded here because it's in serverExternalPackages
     optimizePackageImports: [
@@ -95,6 +121,12 @@ const nextConfig = {
   // Turbopack configuration
   turbopack: {
     root: __dirname,
+    resolveAlias: {
+      'next/dist/build/polyfills/polyfill-module':
+        './src/lib/empty-next-polyfill-module.js',
+      'next/dist/esm/build/polyfills/polyfill-module':
+        './src/lib/empty-next-polyfill-module.js',
+    },
   },
 
   // Image optimization - Performance critical
