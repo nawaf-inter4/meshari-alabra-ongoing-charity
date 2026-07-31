@@ -130,21 +130,15 @@ body {
 
 body {
   @apply bg-light dark:bg-dark text-gray-900 dark:text-gray-100 transition-colors duration-300;
-  /* Default font will be overridden by direction-specific rules */
   font-family: 'Lexend Deca', sans-serif;
   transition: opacity 0.3s ease-in-out;
-  /* iOS Safari specific fixes */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Prevent text size adjustment on iOS */
   -webkit-text-size-adjust: 100%;
-  /* Improve scrolling performance on iOS */
   -webkit-overflow-scrolling: touch;
-  /* Prevent tap highlight */
   -webkit-tap-highlight-color: transparent;
 }
 
-/* RTL Support */
 html[dir="rtl"] {
   direction: rtl;
 }
@@ -153,9 +147,7 @@ html[dir="ltr"] {
   direction: ltr;
 }
 
-/* Dynamic font classes for body */
 html[dir="rtl"] body {
-  /* UI stack: Tajawal only on the critical path (Quran fonts load deferred). */
   font-family: 'Tajawal', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', sans-serif !important;
   text-rendering: optimizeLegibility !important;
   font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
@@ -163,7 +155,6 @@ html[dir="rtl"] body {
   font-kerning: normal !important;
 }
 
-/* Avoid an extra Tajawal 500 request; map medium to regular. */
 html[dir="rtl"] .font-medium {
   font-weight: 400;
 }
@@ -174,21 +165,16 @@ html[dir="ltr"] body {
   font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
 }
 
-/* Additional specificity for font switching - removed universal selectors to prevent text direction issues */
-
-/* Lexend Deca Font for English/Non-Arabic Text */
 .font-lexend {
   font-family: 'Lexend Deca', sans-serif !important;
   text-rendering: optimizeLegibility;
   font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
   -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
-  -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
   font-kerning: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Arabic Text Rendering — Amiri swaps in after quran-fonts.css loads */
 .font-arabic {
   font-family: 'Amiri', 'Tajawal', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', serif;
   text-rendering: optimizeLegibility;
@@ -197,39 +183,24 @@ html[dir="ltr"] body {
   font-kerning: normal;
   font-synthesis: none;
   -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
-  -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1;
-  /* Force proper Arabic text shaping */
   text-combine-upright: none;
   -webkit-text-combine: none;
-  /* Handle special Unicode characters properly */
-  font-variant-east-asian: normal;
-  font-variant-caps: normal;
-  font-variant-numeric: normal;
-  /* Enhanced Arabic text rendering */
-  font-variant-alternates: normal;
-  font-variant-position: normal;
-  font-variant-emoji: normal;
-  /* Ensure proper character spacing */
   word-spacing: 0.1em;
   letter-spacing: 0.02em;
   line-height: 2.5;
 }
 
-/* Only apply RTL direction to Arabic text when in RTL context */
 html[dir="rtl"] .font-arabic {
   direction: rtl;
   unicode-bidi: isolate;
 }
 
-/* Arabic glyphs and diacritics extend beyond Latin font metrics. Keep title
-   boxes roomy so gradient clipping and tight Tailwind leading never crop them. */
 html[dir="rtl"] :is(h1, h2, h3) {
   line-height: 1.65;
   padding-block: 0.12em;
   overflow: visible;
 }
 
-/* Lexend for English h3 only — do not pull Lexend into the RTL critical path */
 html[dir="ltr"] h3:not(.font-arabic):not(.font-tajawal),
 html[dir="ltr"] h3.not-arabic-text:not(.font-tajawal) {
   font-family: 'Lexend Deca', sans-serif !important;
@@ -242,241 +213,29 @@ html[dir="ltr"] h3.not-arabic-text:not(.font-tajawal) {
   word-spacing: normal !important;
 }
 
-/* Tajawal font for h3 elements */
 h3.font-tajawal {
   font-family: 'Tajawal', sans-serif !important;
 }
 
-/* Override for centered surah headers */
 .text-center h3,
 .text-center h3:not(.font-arabic) {
   text-align: center !important;
 }
 
-/* Quran Text with Special Unicode Characters */
-.quran-text {
-  font-family: 'Amiri', 'Tajawal', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', serif !important;
-  text-rendering: optimizeLegibility !important;
-  font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
-  -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
-  -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
-  font-variant-ligatures: common-ligatures !important;
-  font-kerning: normal !important;
-  font-synthesis: none !important;
-  /* Handle special Unicode characters in Quran text */
-  font-variant-east-asian: normal !important;
-  font-variant-caps: normal !important;
-  font-variant-numeric: normal !important;
-  font-variant-alternates: normal !important;
-  font-variant-position: normal !important;
-  font-variant-emoji: normal !important;
-  /* Force proper character shaping */
-  -webkit-text-stroke: 0.01em transparent !important;
-  -webkit-font-smoothing: antialiased !important;
-  -moz-osx-font-smoothing: grayscale !important;
-  /* Enhanced spacing for better readability */
-  word-spacing: 0.1em !important;
-  letter-spacing: 0.02em !important;
-  line-height: 2.5 !important;
-  /* Ensure proper text encoding */
-  text-encoding: utf-8 !important;
-  /* Force proper Unicode handling */
-  text-transform: none !important;
-  font-variant-ligatures: common-ligatures contextual !important;
-}
-
-/* Only apply RTL direction to Quran text when in RTL context */
-html[dir="rtl"] .quran-text {
-  direction: rtl !important;
-  unicode-bidi: isolate !important;
-}
-
-/* Font loading is handled via <link> tags in layout.tsx for better performance */
-
-/* Enhanced Arabic text rendering for Quran */
-.arabic-quran-text {
-  font-family: 'Amiri', 'Tajawal', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', 'Arial Unicode MS', serif !important;
-  text-rendering: optimizeLegibility !important;
-  font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
-  -webkit-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
-  -moz-font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1, "mark" 1, "mkmk" 1, "ccmp" 1, "locl" 1 !important;
-  font-variant-ligatures: common-ligatures contextual !important;
-  font-kerning: normal !important;
-  font-synthesis: none !important;
-  /* Enhanced Unicode support for Arabic diacritics */
-  font-variant-east-asian: normal !important;
-  font-variant-caps: normal !important;
-  font-variant-numeric: normal !important;
-  font-variant-alternates: normal !important;
-  font-variant-position: normal !important;
-  font-variant-emoji: normal !important;
-  /* Force proper character shaping and diacritics */
-  -webkit-text-stroke: 0.01em transparent !important;
-  -webkit-font-smoothing: antialiased !important;
-  -moz-osx-font-smoothing: grayscale !important;
-  /* Optimal spacing for Arabic text */
-  word-spacing: 0.1em !important;
-  letter-spacing: 0.02em !important;
-  line-height: 2.5 !important;
-  /* Ensure proper text encoding and Unicode handling */
-  text-transform: none !important;
-  /* Force proper Arabic text shaping */
-  text-combine-upright: none !important;
-  -webkit-text-combine: none !important;
-  /* Additional font properties for better rendering */
-  font-variant-ligatures: common-ligatures contextual !important;
-  font-variant-numeric: normal !important;
-  font-variant-caps: normal !important;
-  font-variant-east-asian: normal !important;
-  font-variant-alternates: normal !important;
-  font-variant-position: normal !important;
-  font-variant-emoji: normal !important;
-  /* Ensure proper Unicode character support */
-  font-variant-ligatures: common-ligatures contextual !important;
-  /* Force proper Arabic text rendering */
-  -webkit-text-stroke: 0.01em transparent !important;
-  -webkit-font-smoothing: antialiased !important;
-  -moz-osx-font-smoothing: grayscale !important;
-  /* Additional Unicode support */
-  font-variant-ligatures: common-ligatures contextual !important;
-  font-variant-numeric: normal !important;
-  font-variant-caps: normal !important;
-  font-variant-east-asian: normal !important;
-  font-variant-alternates: normal !important;
-  font-variant-position: normal !important;
-  font-variant-emoji: normal !important;
-}
-
-/* Only apply RTL direction to Arabic Quran text when in RTL context */
-html[dir="rtl"] .arabic-quran-text {
-  direction: rtl !important;
-  unicode-bidi: isolate !important;
-}
-
-
-/* Scrollbar Styling - Hidden by default, visible on scroll/hover */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-  transition: all 0.3s ease;
-}
-
-/* Show scrollbar on scroll or hover */
-html:hover ::-webkit-scrollbar-thumb,
-html:focus ::-webkit-scrollbar-thumb,
-body:hover ::-webkit-scrollbar-thumb,
-body:focus ::-webkit-scrollbar-thumb,
-html:active ::-webkit-scrollbar-thumb,
-body:active ::-webkit-scrollbar-thumb {
-  background: var(--color-brand) !important;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent) !important;
-}
-
-/* Firefox scrollbar - hidden by default */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-}
-
-/* Show Firefox scrollbar on hover/scroll */
-html:hover,
-html:active {
-  scrollbar-color: var(--color-brand) transparent;
-}
-
-/* Language Switcher Scrollbar */
-.language-switcher::-webkit-scrollbar {
-  width: 6px;
-}
-
-.language-switcher::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.language-switcher::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-.language-switcher:hover::-webkit-scrollbar-thumb,
-.language-switcher:focus::-webkit-scrollbar-thumb {
-  background: var(--color-brand) !important;
-}
-
-.language-switcher::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent) !important;
-}
-
-/* Firefox scrollbar - hidden by default */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-}
-
-/* Show Firefox scrollbar on hover */
-html:hover *,
-html:focus *,
-body:hover *,
-body:focus * {
-  scrollbar-color: var(--color-brand) transparent;
-}
-
-/* Safari scrollbar support */
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
-/* Force scrollbar visibility on scroll */
-html {
-  scrollbar-gutter: stable;
-}
-
-/* Additional scrollbar fixes for all browsers */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-}
-
-html:hover *,
-html:focus *,
-body:hover *,
-body:focus * {
-  scrollbar-color: var(--color-brand) transparent;
-}
-
-/* Islamic Patterns Background */
 .islamic-pattern {
   background-image:
     radial-gradient(circle at 20% 50%, rgb(var(--color-brand-rgb) / 0.03) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgb(var(--color-accent-rgb) / 0.03) 0%, transparent 50%);
 }
 
-/* Glowing Effect */
 .glow {
   box-shadow: 0 0 20px rgb(var(--color-brand-rgb) / 0.3);
 }
 
-/* Card Hover Effect */
 .card-hover {
   @apply transition-all duration-300 hover:scale-105 hover:shadow-xl;
 }
 
-/* Gradient Text */
 .gradient-text {
   @apply bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue bg-clip-text text-transparent;
   line-height: 1.25;
@@ -487,59 +246,4 @@ body:focus * {
 [data-dhikr-count] {
   line-height: 1.5;
   padding-block: 0.2em;
-}
-
-/* Loading Shimmer */
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.2) 20%,
-    rgba(255, 255, 255, 0.5) 60%,
-    rgba(255, 255, 255, 0)
-  );
-  animation: shimmer 2s infinite;
-  background-size: 200% 100%;
-}
-
-/* PDF Viewer Responsive Styles */
-.react-pdf__Page {
-  max-width: 100% !important;
-  height: auto !important;
-}
-
-.react-pdf__Page__canvas {
-  max-width: 100% !important;
-  height: auto !important;
-  display: block;
-}
-
-.react-pdf__Page__textContent {
-  max-width: 100% !important;
-  height: auto !important;
-}
-
-.react-pdf__Page__textContent span {
-  max-width: 100% !important;
-  word-wrap: break-word;
-}
-
-/* Mobile-specific PDF adjustments */
-@media (max-width: 768px) {
-  .react-pdf__Page {
-    width: 100% !important;
-  }
-  
-  .react-pdf__Page__canvas {
-    width: 100% !important;
-  }
-  
-  .react-pdf__Page__textContent {
-    width: 100% !important;
-    transform-origin: top left;
-  }
-  
-  .react-pdf__Page__annotations {
-    width: 100% !important;
-  }
 }

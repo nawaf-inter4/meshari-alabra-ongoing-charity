@@ -57,7 +57,7 @@ test("footer and Quran actions retain their original colors", async ({ page }) =
   await page.goto("/ar", { waitUntil: "domcontentloaded" });
   const footerShare = page.locator("footer").getByRole("button", { name: "مشاركة" });
   await expect(footerShare).toBeVisible({ timeout: 15_000 });
-  await footerShare.scrollIntoViewIfNeeded();
+  // Avoid scrollIntoViewIfNeeded — WebKit can detach nodes during soft navigations.
   await expect(footerShare).toHaveCSS("color", "rgb(255, 255, 255)");
   const xLink = page.locator('footer a[href*="x.com/"]');
   await expect(xLink).toBeVisible({ timeout: 15_000 });
