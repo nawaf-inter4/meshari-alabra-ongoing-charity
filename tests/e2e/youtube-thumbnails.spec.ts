@@ -16,7 +16,7 @@ test("native YouTube players defer third-party scripts while memorial audio auto
   expect(embedRequests).toHaveLength(0);
 
   const memorialAudio = page.locator('audio:has(source[src="/audio-webiste.mp3"])');
-  await expect(memorialAudio).toHaveAttribute("preload", "auto");
+  await expect(memorialAudio).toHaveAttribute("preload", "metadata");
   await expect(memorialAudio).toHaveAttribute("autoplay", "");
 
   await page.locator("#youtube").scrollIntoViewIfNeeded();
