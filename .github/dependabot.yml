@@ -10,6 +10,20 @@ updates:
         dependency-type: production
       development-dependencies:
         dependency-type: development
+    # Major bumps that need dedicated migrations (not safe as group PRs).
+    ignore:
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: i18next
+        update-types: ["version-update:semver-major"]
+      - dependency-name: lucide-react
+        update-types: ["version-update:semver-major"]
+      - dependency-name: pdfjs-dist
+        update-types: ["version-update:semver-major"]
+      - dependency-name: react-i18next
+        update-types: ["version-update:semver-major"]
+      - dependency-name: tailwindcss
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
