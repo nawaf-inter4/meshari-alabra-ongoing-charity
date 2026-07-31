@@ -20,9 +20,9 @@ Copy [`.env.example`](./.env.example) for the complete configuration reference. 
 2. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin.
 3. Add other white-label values in Project Settings → Environment Variables.
 4. Production branch: `main` (serves [meshari.charity](https://meshari.charity)).
-5. Preview branch: treat `sandbox` as the default integration lane. Every push and PR to `sandbox` should produce a Vercel Preview. Optionally assign a stable Preview alias (for example `sandbox.meshari.charity`) to the `sandbox` branch in Vercel Project Settings → Domains / Git.
+5. **Sandbox** environment: use the `sandbox` Git branch as the default non-production lane. Every push and PR targeting `sandbox` should deploy to the Sandbox environment (Vercel’s custom environment named `sandbox`, or the project’s Preview deployments scoped to `sandbox`). Optionally assign a stable alias such as `sandbox.meshari.charity` to the `sandbox` branch in Project Settings → Domains / Environments.
 
-Recommended flow: feature branch → PR into `sandbox` (Preview) → PR from `sandbox` into `main` (Production).
+Recommended flow: feature branch → PR into `sandbox` (Sandbox) → PR from `sandbox` into `main` (Production). Delete feature branches after they are fully merged.
 
 CLI deployments are also supported:
 

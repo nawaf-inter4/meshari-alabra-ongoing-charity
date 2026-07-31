@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import SEOScripts from "@/components/SEOScripts";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import dynamic from "next/dynamic";
+import DeferredClientShell from "@/components/DeferredClientShell";
 import {
   SUPPORTED_LOCALES,
   isSupportedLocale,
@@ -17,16 +17,6 @@ import {
   type SupportedLocale,
 } from "@/config/site";
 import { translate } from "@/lib/translations";
-
-const DeferredAudioPlayer = dynamic(() => import("@/components/AudioPlayer"), {
-  ssr: false,
-});
-const DeferredAnalytics = dynamic(() => import("@/components/AnalyticsWrapper"), {
-  ssr: false,
-});
-const DeferredPWA = dynamic(() => import("@/components/PWAInstallWrapper"), {
-  ssr: false,
-});
 
 // The document language and direction depend on this root segment's URL.
 // Deeper pages still validate instant navigation within the active locale.
@@ -184,9 +174,7 @@ function LanguageContent({
   return (
     <LanguageProvider initialLocale={locale}>
       {children}
-      <DeferredAudioPlayer />
-      <DeferredAnalytics />
-      <DeferredPWA />
+      <DeferredClientShell />
     </LanguageProvider>
   );
 }

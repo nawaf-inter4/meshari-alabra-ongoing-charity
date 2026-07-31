@@ -1,0 +1,14 @@
+---
+description: Delete feature branches after related work is merged
+alwaysApply: true
+---
+
+# Delete merged feature branches
+
+When a feature branch’s pull request is fully merged and no follow-up work remains on that branch:
+
+1. Delete the remote feature branch (prefer `gh pr merge --delete-branch`, or `git push origin --delete <branch>`).
+2. Delete the local branch if it still exists (`git branch -d <branch>`), then switch to `sandbox` or `main` as appropriate.
+3. Never delete `main` or `sandbox`.
+4. Prefer enabling GitHub “Automatically delete head branches” for the repository when available.
+5. Apply this by default after finishing agent-created branch work that has been merged; do not leave orphaned feature branches.
