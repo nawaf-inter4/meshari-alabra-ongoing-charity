@@ -23,11 +23,11 @@ export default function QuranFontLoader() {
     };
 
     if (typeof window.requestIdleCallback === "function") {
-      const id = window.requestIdleCallback(inject, { timeout: 2000 });
+      const id = window.requestIdleCallback(inject, { timeout: 3500 });
       return () => window.cancelIdleCallback(id);
     }
 
-    const timer = window.setTimeout(inject, 1);
+    const timer = window.setTimeout(inject, 1200);
     return () => window.clearTimeout(timer);
   }, []);
 
