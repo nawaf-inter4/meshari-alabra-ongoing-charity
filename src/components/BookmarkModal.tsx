@@ -7,6 +7,7 @@ import { useLanguage } from "./LanguageProvider";
 import { useRouter } from "next/navigation";
 import BidiText from "./BidiText";
 import ShareModal from "./ShareModal";
+import { notifyExternalMediaPlay } from "@/lib/media-coordination";
 
 interface BookmarkedVerse {
   surahNumber: number;
@@ -295,6 +296,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
       setCurrentPlayingKey(verseKey);
       setAudioLoading(true);
       setIsPlaying(true);
+      notifyExternalMediaPlay("quran");
 
       const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${DEFAULT_RECITER}`);
       if (requestId !== playRequestIdRef.current) {

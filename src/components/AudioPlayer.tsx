@@ -2,6 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Volume2, VolumeX, Play, Pause } from "lucide-react";
+import {
+  EXTERNAL_MEDIA_PLAY_EVENT,
+  MEMORIAL_AUDIO_PAUSE_EVENT,
+} from "@/lib/media-coordination";
 
 export default function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -44,37 +48,31 @@ export default function AudioPlayer() {
       document.removeEventListener("keydown", startAfterGesture);
     };
   }, []);
-  // Stop audio when YouTube plays
+
+  // Pause memorial track when Quran / YouTube (or any external media) plays.
   useEffect(() => {
+    const pauseMemorial = () => {
+      const audio = audioRef.current;
+      if (!audio || audio.paused) return;
+      audio.pause();
+      setIsPlaying(false);
+    };
+
     const handleVideoPlay = (event: Event) => {
-      const target = event.target as HTMLElement;
-      // Only handle if it's a video element and not our audio
-      if (target && target !== audioRef.current && target.tagName === 'VIDEO') {
-        const audio = audioRef.current;
-        if (audio && !audio.paused) {
-          audio.pause();
-          setIsPlaying(false);
-        }
+      const target = event.target as HTMLElement | null;
+      if (target && target !== audioRef.current && target.tagName === "VIDEO") {
+        pauseMemorial();
       }
     };
 
-    const handleVideoPause = (event: Event) => {
-      const target = event.target as HTMLElement;
-      if (target && target !== audioRef.current && target.tagName === 'VIDEO') {
-        const audio = audioRef.current;
-        if (audio && audio.paused) {
-          audio.play();
-          setIsPlaying(true);
-        }
-      }
-    };
-
-    document.addEventListener('play', handleVideoPlay, true);
-    document.addEventListener('pause', handleVideoPause, true);
+    window.addEventListener(MEMORIAL_AUDIO_PAUSE_EVENT, pauseMemorial);
+    window.addEventListener(EXTERNAL_MEDIA_PLAY_EVENT, pauseMemorial);
+    document.addEventListener("play", handleVideoPlay, true);
 
     return () => {
-      document.removeEventListener('play', handleVideoPlay, true);
-      document.removeEventListener('pause', handleVideoPause, true);
+      window.removeEventListener(MEMORIAL_AUDIO_PAUSE_EVENT, pauseMemorial);
+      window.removeEventListener(EXTERNAL_MEDIA_PLAY_EVENT, pauseMemorial);
+      document.removeEventListener("play", handleVideoPlay, true);
     };
   }, []);
 
@@ -86,7 +84,7 @@ export default function AudioPlayer() {
       audio.pause();
       setIsPlaying(false);
     } else {
-      audio.play();
+      void audio.play();
       setIsPlaying(true);
     }
   };
@@ -106,8 +104,7 @@ export default function AudioPlayer() {
           <audio
             ref={audioRef}
             loop
-            preload="metadata"
-            autoPlay
+            preload="none"
             muted
             className="hidden"
           >

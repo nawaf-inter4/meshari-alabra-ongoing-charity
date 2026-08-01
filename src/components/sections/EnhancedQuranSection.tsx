@@ -9,6 +9,7 @@ import ShareModal from "../ShareModal";
 import BidiText from "../BidiText";
 import SectionTitleLink from "./SectionTitleLink";
 import { localeDirection, siteConfig } from "@/config/site";
+import { notifyExternalMediaPlay } from "@/lib/media-coordination";
 
 interface Ayah {
   number: number;
@@ -1103,44 +1104,45 @@ export default function EnhancedQuranSection() {
 
 
 
+  const pauseAyah = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setIsPlaying(false);
+  };
+
   const playAyah = async (surahNumber: number, ayahNumber: number) => {
     try {
-      // Playing ayah with selected reciter
-      
       // Stop any currently playing audio
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      
+
       setCurrentAyah(ayahNumber);
       setAudioLoading(true);
       setIsPlaying(true);
-      
-      // First, fetch the ayah data to get the audio URL
+      notifyExternalMediaPlay("quran");
+
       const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${selectedReciter}`);
       if (!response.ok) {
         throw new Error(`Quran audio request failed with status ${response.status}`);
       }
       const data = await response.json();
-      
+
       if (data.data?.audio && (!data.data.edition || data.data.edition.format === "audio")) {
-        // Found audio URL
-        
         if (audioRef.current) {
           audioRef.current.src = data.data.audio;
           audioRef.current.load();
-          
+
           try {
             await audioRef.current.play();
-            // Audio playback started successfully
             setAudioLoading(false);
           } catch (playError) {
             console.error("Error playing audio:", playError);
             setIsPlaying(false);
             setAudioLoading(false);
-            
-            // Show user-friendly error message
+
             alert(locale === "ar"
               ? "تعذر تشغيل صوت هذه الآية. يرجى المحاولة مرة أخرى أو اختيار قارئ آخر."
               : "This verse audio could not be played. Please try again or choose another reciter.");
@@ -1160,28 +1162,39 @@ export default function EnhancedQuranSection() {
     }
   };
 
-  const togglePlayPause = async () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-        // Audio paused
-      } else {
-        if (audioRef.current.src) {
-          try {
-            await audioRef.current.play();
-            setIsPlaying(true);
-            // Audio resumed
-          } catch (error) {
-            console.error("Error resuming audio:", error);
-          }
-        } else {
-          // If no audio is loaded, play the current ayah
-          // No audio loaded, playing current ayah
-          await playAyah(selectedSurah, currentAyah);
-        }
-      }
+  const togglePlayPause = async (surahNumber?: number, ayahNumber?: number) => {
+    const targetSurah = surahNumber ?? selectedSurah;
+    const targetAyah = ayahNumber ?? currentAyah;
+
+    if (
+      isPlaying &&
+      currentAyah === targetAyah &&
+      selectedSurah === targetSurah &&
+      audioRef.current?.src
+    ) {
+      pauseAyah();
+      return;
     }
+
+    if (
+      !isPlaying &&
+      currentAyah === targetAyah &&
+      selectedSurah === targetSurah &&
+      audioRef.current?.src &&
+      !audioRef.current.ended
+    ) {
+      try {
+        notifyExternalMediaPlay("quran");
+        await audioRef.current.play();
+        setIsPlaying(true);
+      } catch (error) {
+        console.error("Error resuming audio:", error);
+        await playAyah(targetSurah, targetAyah);
+      }
+      return;
+    }
+
+    await playAyah(targetSurah, targetAyah);
   };
 
   const currentSurah = surahs.find((s) => s.number === selectedSurah);
@@ -1667,7 +1680,7 @@ export default function EnhancedQuranSection() {
                   
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => playAyah(selectedSurah, ayah.numberInSurah)}
+                      onClick={() => void togglePlayPause(selectedSurah, ayah.numberInSurah)}
                       className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-colors duration-300"
                       disabled={audioLoading && currentAyah === ayah.numberInSurah}
                       aria-label={isPlaying && currentAyah === ayah.numberInSurah 
