@@ -132,7 +132,7 @@ export default function HeroSection() {
           data-memorial-card
           suppressHydrationWarning
         >
-          <h1 className="hero-lcp-title text-4xl md:text-5xl font-bold mb-3 leading-tight" data-lcp suppressHydrationWarning>
+          <h1 className="hero-lcp-title text-3xl md:text-4xl font-bold mb-3" data-lcp suppressHydrationWarning>
             {siteConfig.content.memorialName || t("memorial.name")}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4" suppressHydrationWarning>
