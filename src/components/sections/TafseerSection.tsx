@@ -5,6 +5,8 @@ import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Book, Search, ChevronDown, Globe, X, Loader2 } from "lucide-react";
 import SectionTitleLink from "./SectionTitleLink";
+import BidiText from "../BidiText";
+import { localeDirection } from "@/config/site";
 
 interface TafseerEdition {
   id: number;
@@ -159,7 +161,8 @@ const SURAHS: Surah[] = [
 ];
 
 export default function TafseerSection() {
-  const { t } = useLanguage();
+  const { t, locale } = useLanguage();
+  const tafseerDirection = localeDirection(locale);
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [selectedAyah, setSelectedAyah] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
@@ -555,14 +558,17 @@ export default function TafseerSection() {
               <div className="p-4 bg-light-secondary dark:bg-dark-secondary rounded-xl">
                 <h4 className="text-sm font-semibold text-islamic-gold mb-2">نص التفسير:</h4>
                 <div
-                  className="text-lg leading-relaxed text-right font-arabic"
+                  className={`text-lg leading-relaxed ${tafseerDirection === "rtl" ? "text-right font-arabic" : "text-left font-lexend"}`}
+                  dir={tafseerDirection}
                   style={{
                     lineHeight: '2.5',
                     wordSpacing: '0.2em',
                     letterSpacing: '0.05em'
                   }}
-                  dangerouslySetInnerHTML={{ __html: tafseer.text }}
-                />
+                  data-tafseer-text
+                >
+                  <BidiText text={tafseer.text} direction={tafseerDirection} />
+                </div>
               </div>
               
               <div className="flex flex-wrap gap-2">

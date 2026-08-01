@@ -33,7 +33,7 @@ export default function Footer() {
       memorialDeath: getTrans("memorial.death", locale === 'ar' ? "(رحمه الله)" : "(May Allah have mercy on him)"),
       footerDescription: getTrans("footer.description", locale === 'ar' ? "هذا الموقع صدقة جارية" : "This website is an ongoing charity"),
       share: getTrans("share", locale === 'ar' ? "مشاركة" : "Share"),
-      socialXAccount: getTrans("social.x_account", locale === 'ar' ? "تابعنا على X" : "Follow on X"),
+      socialXAccount: getTrans("social.x_account", locale === 'ar' ? "حساب مشاري على إكس" : "Meshari's X Account"),
       socialGithub: getTrans("social.github", locale === 'ar' ? "على GitHub" : "On GitHub"),
       // CRITICAL: Use full text to match translation file - this prevents hydration mismatch
       footerCharity: siteConfig.content.footerCharity || getTrans("footer.charity", siteConfig.content.memorialLegalName),
@@ -129,7 +129,7 @@ export default function Footer() {
         {/* Memorial */}
         <div className="text-center mb-8">
           <Heart className="w-12 h-12 text-islamic-gold mx-auto mb-4" fill="currentColor" />
-          <h3 className={`text-2xl md:text-3xl font-bold mb-2 gradient-text leading-tight py-1 ${safeDirection === 'rtl' ? 'font-arabic' : ''}`}>
+          <h3 className={`text-2xl md:text-3xl font-bold mb-2 gradient-text text-center leading-tight py-1 ${safeDirection === 'rtl' ? 'font-arabic' : ''}`}>
             {memoizedTranslations.memorialName}
           </h3>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
@@ -166,7 +166,7 @@ export default function Footer() {
               const isX = link.includes('x.com/') || link.includes('twitter.com/');
               const isGitHub = link.includes('github.com/');
               const label = isX
-                ? (memoizedTranslations.socialXAccount || "Follow on X")
+                ? (memoizedTranslations.socialXAccount || "Meshari's X Account")
                 : isGitHub
                   ? (memoizedTranslations.socialGithub || "View on GitHub")
                   : link;

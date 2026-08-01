@@ -1536,8 +1536,8 @@ export default function EnhancedQuranSection() {
                         )}
                         {/* Show translation below Arabic text if available */}
                         {translationText && translationText !== arabicText && (
-                          <div className="text-gray-600 dark:text-gray-400 text-sm mt-2 p-2 bg-light-secondary dark:bg-dark-secondary rounded" dir={localeDirection(locale)}>
-                            {translationText}
+                          <div className="text-gray-600 dark:text-gray-400 text-sm mt-2 p-2 bg-light-secondary dark:bg-dark-secondary rounded" dir={localeDirection(locale)} data-quran-translation>
+                            <BidiText text={translationText} direction={localeDirection(locale)} />
                           </div>
                         )}
                       </div>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, BookmarkCheck, Bookmark, ChevronRight, ChevronLeft } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
 import { useRouter } from "next/navigation";
+import BidiText from "./BidiText";
 
 interface BookmarkedVerse {
   surahNumber: number;
@@ -52,13 +53,15 @@ function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: {
   // RTL languages: Arabic, Urdu, Hebrew, Farsi, Yiddish, Pashto
   const rtlLanguages = ['ar', 'ur', 'he', 'fa', 'yi', 'ps'];
   const isRTL = rtlLanguages.includes(locale);
+  const textDirection = isRTL ? "rtl" : "ltr";
   
   return (
     <div 
       className={isRTL ? "font-arabic text-right leading-relaxed" : "font-lexend text-left leading-relaxed"} 
-      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+      dir={textDirection}
+      data-quran-translation
     >
-      {translationText}
+      <BidiText text={translationText} direction={textDirection} />
     </div>
   );
 }
