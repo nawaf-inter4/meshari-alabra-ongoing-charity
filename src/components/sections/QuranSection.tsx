@@ -89,10 +89,10 @@ export default function QuranSection() {
     <section id="quran" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ y: 14 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 mb-4">
@@ -108,10 +108,10 @@ export default function QuranSection() {
 
         {/* Surah Selector */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          initial={{ y: 14 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, delay: 0.08, ease: [0.25, 0.1, 0.25, 1] }}
           className="mb-8"
         >
           <label htmlFor="legacy-quran-surah-trigger" className="block text-lg font-semibold mb-3">
@@ -163,10 +163,10 @@ export default function QuranSection() {
             : t('quran.meccan');
           return (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              initial={{ scale: 0.98, y: 8 }}
+              whileInView={{ scale: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
               className="text-center mb-8 p-8 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-2xl border-2 border-islamic-gold/30"
             >
               <h3 
@@ -201,19 +201,15 @@ export default function QuranSection() {
             {ayahs.map((ayah, index) => (
               <motion.div
                 key={ayah.number}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ 
-                  duration: 0.4, 
-                  delay: index * 0.05,
+                initial={{ y: 10 }}
+                whileInView={{ y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{
+                  duration: 0.35,
+                  delay: Math.min(index * 0.03, 0.15),
                   ease: [0.25, 0.1, 0.25, 1],
                 }}
-                className="bg-light dark:bg-dark rounded-xl p-6 border-2 border-transparent hover:border-islamic-gold transition-all duration-300 motion-safe"
-                style={{
-                  willChange: 'transform, opacity',
-                  transform: 'translateZ(0)',
-                }}
+                className="bg-light dark:bg-dark rounded-xl p-6 border-2 border-transparent hover:border-islamic-gold transition-colors duration-300"
               >
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 rounded-full bg-islamic-gold flex items-center justify-center text-white font-bold">

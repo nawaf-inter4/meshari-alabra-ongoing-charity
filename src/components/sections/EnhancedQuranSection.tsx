@@ -1223,10 +1223,10 @@ export default function EnhancedQuranSection() {
     <section id="quran" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ y: 14 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 mb-4">
@@ -1250,10 +1250,10 @@ export default function EnhancedQuranSection() {
           </div>
         ) : (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ y: 14 }}
+            whileInView={{ y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.4, delay: 0.08, ease: [0.25, 0.1, 0.25, 1] }}
             className="grid md:grid-cols-2 gap-4 mb-8"
           >
           {/* Surah Selection */}
@@ -1408,10 +1408,10 @@ export default function EnhancedQuranSection() {
 
         {/* Search Bar */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          initial={{ y: 14 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
           className="mb-8"
           ref={searchRef}
         >
@@ -1565,10 +1565,10 @@ export default function EnhancedQuranSection() {
             : t('quran.meccan');
           return (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              initial={{ scale: 0.98, y: 8 }}
+              whileInView={{ scale: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
               className="text-center mb-8 p-8 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-2xl border-2 border-islamic-gold/30"
             >
               <h3 
@@ -1628,18 +1628,9 @@ export default function EnhancedQuranSection() {
             </div>
             {/* Bismillah - only show for surahs other than Al-Fatihah */}
             {selectedSurah !== 1 && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6 }}
-                className="text-center mb-8 text-lg text-islamic-gold motion-safe"
-                style={{
-                  willChange: 'opacity',
-                  transform: 'translateZ(0)',
-                }}
-              >
+              <p className="text-center mb-8 text-lg text-islamic-gold">
                 ﷽
-              </motion.p>
+              </p>
             )}
             {usingStaticFallback && (
               <div className="text-center mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-600 rounded-lg">
@@ -1652,11 +1643,19 @@ export default function EnhancedQuranSection() {
               <motion.div
                 key={ayah.number}
                 data-ayah-number={ayah.numberInSurah}
-                initial={skipAnimations ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                whileInView={skipAnimations ? {} : { opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={skipAnimations ? { duration: 0 } : { duration: 0.6, delay: index * 0.1 }}
-                className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700"
+                initial={skipAnimations ? false : { y: 10 }}
+                whileInView={skipAnimations ? undefined : { y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={
+                  skipAnimations
+                    ? { duration: 0 }
+                    : {
+                        duration: 0.35,
+                        delay: Math.min(index * 0.03, 0.15),
+                        ease: [0.25, 0.1, 0.25, 1],
+                      }
+                }
+                className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200 dark:border-gray-700"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">

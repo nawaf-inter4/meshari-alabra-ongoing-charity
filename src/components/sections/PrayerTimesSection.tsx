@@ -863,9 +863,10 @@ export default function PrayerTimesSection() {
         {/* Athan Audio Controls */}
         {isAthanPlaying && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="safe-fixed-bottom-right fixed bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg p-3 border border-islamic-gold/20 z-50"
+            initial={{ y: 12 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+            className="safe-fixed-bottom-right fixed bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-full shadow-lg p-3 border border-islamic-gold/20 z-50"
           >
             <div className="flex items-center gap-3">
               <Volume2 className="w-5 h-5 text-islamic-gold" />
@@ -885,10 +886,11 @@ export default function PrayerTimesSection() {
         {/* Prayer Notification Popup */}
         {showNotification && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="safe-fixed-top-center fixed left-1/2 -translate-x-1/2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg p-4 border border-islamic-gold/20 z-50 max-w-sm"
+            initial={{ y: -10 }}
+            animate={{ y: 0 }}
+            exit={{ y: -10 }}
+            transition={{ duration: 0.22, ease: [0.25, 0.1, 0.25, 1] }}
+            className="safe-fixed-top-center fixed left-1/2 -translate-x-1/2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-full shadow-lg p-4 border border-islamic-gold/20 z-50 max-w-sm"
           >
             <div className="flex items-center gap-3">
               <AlertCircle className="w-5 h-5 text-islamic-gold" />

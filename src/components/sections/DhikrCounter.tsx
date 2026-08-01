@@ -101,10 +101,10 @@ export default function DhikrCounter() {
     <section id="dhikr" className="py-20 px-4 bg-light-secondary dark:bg-dark-secondary">
       <div className="max-w-4xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ y: 14 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 mb-4">
@@ -119,10 +119,10 @@ export default function DhikrCounter() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          initial={{ scale: 0.98, y: 8 }}
+          whileInView={{ scale: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, delay: 0.08, ease: [0.25, 0.1, 0.25, 1] }}
           className="bg-light dark:bg-dark rounded-2xl p-4 md:p-12 border-2 border-islamic-gold/30 glow"
         >
           {/* Category Filter - Collapsible on Both Mobile and Desktop */}

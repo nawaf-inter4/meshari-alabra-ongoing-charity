@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, BookmarkCheck, Bookmark, ChevronRight, ChevronLeft, Play, Pause, Share2 } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
 import { useRouter } from "next/navigation";
@@ -72,6 +72,7 @@ function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: {
 export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { t, locale, direction } = useLanguage();
   const router = useRouter();
+  const reduceMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const isRTL = direction === "rtl";
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -387,20 +388,22 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — opacity only (no blur thrash on WebKit). */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0.1 : 0.18 }}
             onClick={onClose}
             className="fixed inset-0 bg-black/50 z-50"
           />
           
-          {/* Modal */}
+          {/* Modal — y + opacity; avoid scale (blinks on Safari). */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            transition={{ duration: reduceMotion ? 0.12 : 0.22, ease: [0.25, 0.1, 0.25, 1] }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             onClick={(e) => e.stopPropagation()}
           >
@@ -459,20 +462,13 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                       className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-semibold rounded-full hover:bg-islamic-green transition-all duration-300 glow"
                     >
                       {t("bookmarks.go_to_quran")}
-                      <motion.div
-                        animate={{ x: isRTL ? [-4, 0, -4] : [0, 4, 0] }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      >
+                      <span className={reduceMotion ? undefined : "bookmark-cta-nudge"} aria-hidden="true">
                         {isRTL ? (
                           <ChevronLeft className="w-5 h-5" />
                         ) : (
                           <ChevronRight className="w-5 h-5" />
                         )}
-                      </motion.div>
+                      </span>
                     </button>
                   </div>
                 ) : (
@@ -480,10 +476,10 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                     {bookmarkedVerses.map((verse, index) => (
                       <motion.div
                         key={`${verse.surahNumber}-${verse.ayahNumber}`}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold transition-all duration-300"
+                        initial={reduceMotion ? false : { y: 10 }}
+                        animate={{ y: 0 }}
+                        transition={{ delay: Math.min(index * 0.03, 0.12), duration: 0.3 }}
+                        className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold transition-colors duration-300"
                       >
                         <div className="flex items-start justify-between mb-4">
                           <div>
