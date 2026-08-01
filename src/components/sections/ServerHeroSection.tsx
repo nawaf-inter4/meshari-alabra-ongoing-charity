@@ -46,21 +46,21 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
         <div className="mt-6 md:mt-8" data-hero-verse>
           <div className="space-y-2 md:space-y-3">
             <p
-              className="hero-verse-bismillah text-lg md:text-2xl font-arabic arabic-quran-text text-islamic-green"
+              className="hero-verse-bismillah text-center text-lg md:text-2xl font-arabic arabic-quran-text text-islamic-green"
               dir="rtl"
               lang="ar"
             >
               {bismillah}
             </p>
             <p
-              className="hero-verse-main text-lg md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
+              className="hero-verse-main text-center text-lg md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
               dir="rtl"
               lang="ar"
             >
               {verse}
             </p>
             <p
-              className="hero-verse-sadaqallah text-base md:text-xl font-arabic arabic-quran-text text-islamic-green"
+              className="hero-verse-sadaqallah text-center text-base md:text-xl font-arabic arabic-quran-text text-islamic-green"
               dir="rtl"
               lang="ar"
             >

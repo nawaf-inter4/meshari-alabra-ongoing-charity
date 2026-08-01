@@ -77,7 +77,7 @@ body:focus ::-webkit-scrollbar-thumb {
 html {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
 }
 
 html:hover,

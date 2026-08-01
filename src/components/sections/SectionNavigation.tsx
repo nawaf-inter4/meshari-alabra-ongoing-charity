@@ -88,7 +88,7 @@ export default function SectionNavigation() {
       description: t("quran_stories.description"),
       icon: FileText,
       href: localizedSectionHref(locale, "quran-stories"),
-      color: "from-islamic-gold to-islamic-green"
+      color: "from-cyan-500 to-indigo-600"
     }
   ];
 

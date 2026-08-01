@@ -232,21 +232,21 @@ export default function Footer() {
         <div className="text-center mb-8">
           <div className="space-y-3">
             <p
-              className="hero-verse-bismillah text-xl md:text-2xl font-arabic arabic-quran-text text-islamic-green"
+              className="hero-verse-bismillah text-center text-xl md:text-2xl font-arabic arabic-quran-text text-islamic-green"
               dir="rtl"
               lang="ar"
             >
               {getQuranVerse('bismillah')}
             </p>
             <p
-              className="hero-verse-main text-2xl md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
+              className="hero-verse-main text-center text-2xl md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
               dir="rtl"
               lang="ar"
             >
               {getQuranVerse('verse')}
             </p>
             <p
-              className="hero-verse-sadaqallah text-lg md:text-xl font-arabic arabic-quran-text text-islamic-green"
+              className="hero-verse-sadaqallah text-center text-lg md:text-xl font-arabic arabic-quran-text text-islamic-green"
               dir="rtl"
               lang="ar"
             >

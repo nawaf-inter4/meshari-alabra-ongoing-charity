@@ -1,11 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Compass, MapPin, Navigation } from "lucide-react";
 import SectionTitleLink from "./SectionTitleLink";
 import { siteConfig } from "@/config/site";
+
+type CompassOrientationEvent = DeviceOrientationEvent & {
+  webkitCompassHeading?: number;
+};
+
+function normalizeHeading(value: number) {
+  let heading = value % 360;
+  if (heading < 0) heading += 360;
+  return heading;
+}
 
 export default function QiblaFinder() {
   const { t } = useLanguage();
@@ -16,54 +26,83 @@ export default function QiblaFinder() {
   const [loading, setLoading] = useState(false);
   const [locationPermission, setLocationPermission] = useState<"prompt" | "granted" | "denied">("prompt");
   const [hasRequestedLocation, setHasRequestedLocation] = useState(false);
+  const [compassReady, setCompassReady] = useState(false);
+  const orientationBound = useRef(false);
+  const onOrientation = useRef<(event: Event) => void>(() => {});
+
+  onOrientation.current = (event: Event) => {
+    const orientation = event as CompassOrientationEvent;
+    let heading: number | null = null;
+
+    // iOS Safari exposes true compass degrees via webkitCompassHeading.
+    if (typeof orientation.webkitCompassHeading === "number") {
+      heading = orientation.webkitCompassHeading;
+    } else if (orientation.absolute === true && orientation.alpha !== null) {
+      // Absolute orientation: convert alpha so 0 points north.
+      heading = 360 - orientation.alpha;
+    } else if (orientation.alpha !== null) {
+      heading = orientation.alpha;
+    }
+
+    if (heading === null || Number.isNaN(heading)) return;
+    setUserHeading(normalizeHeading(heading));
+    setCompassReady(true);
+  };
+
+  const orientationListener = useRef((event: Event) => {
+    onOrientation.current(event);
+  });
 
   useEffect(() => {
-    // Only setup device orientation, don't auto-detect location
-    setupDeviceOrientation();
-
+    const listener = orientationListener.current;
     return () => {
-      if (window.DeviceOrientationEvent) {
-        window.removeEventListener("deviceorientation", handleOrientation);
-      }
+      if (!orientationBound.current || typeof window === "undefined") return;
+      window.removeEventListener("deviceorientation", listener);
+      window.removeEventListener("deviceorientationabsolute", listener);
     };
   }, []);
 
-  const setupDeviceOrientation = () => {
-    // Request permission for device orientation (iOS 13+)
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof (DeviceOrientationEvent as any).requestPermission === 'function') {
-      (DeviceOrientationEvent as any).requestPermission()
-        .then((response: string) => {
-          if (response === 'granted') {
-            window.addEventListener("deviceorientation", handleOrientation);
-          }
-        })
-        .catch(() => {
-          console.warn('Device orientation permission denied');
-        });
-    } else if (window.DeviceOrientationEvent) {
-      // For non-iOS devices
-      window.addEventListener("deviceorientation", handleOrientation);
+  const enableDeviceCompass = async () => {
+    if (typeof window === "undefined" || !window.DeviceOrientationEvent) {
+      return;
     }
-  };
 
-  const handleOrientation = (event: DeviceOrientationEvent) => {
-    if (event.alpha !== null) {
-      // Convert alpha (0-360) to heading
-      // Alpha is the compass direction (0 = North, 90 = East, etc.)
-      let heading = event.alpha;
-      
-      // Normalize to 0-360
-      if (heading < 0) heading += 360;
-      if (heading >= 360) heading -= 360;
-      
-      setUserHeading(heading);
+    const DeviceOrientation = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
+      requestPermission?: () => Promise<"granted" | "denied" | "default">;
+    };
+
+    try {
+      if (typeof DeviceOrientation.requestPermission === "function") {
+        // Must run from a user gesture on iOS.
+        const response = await DeviceOrientation.requestPermission();
+        if (response !== "granted") {
+          setError(
+            t("qibla.compass_denied") ||
+              "Compass access was denied. Qibla angle is still shown; enable motion access for live direction.",
+          );
+          return;
+        }
+      }
+    } catch {
+      setError(
+        t("qibla.compass_denied") ||
+          "Compass access was denied. Qibla angle is still shown; enable motion access for live direction.",
+      );
+      return;
     }
+
+    if (orientationBound.current) return;
+    const listener = orientationListener.current;
+    window.addEventListener("deviceorientationabsolute", listener, true);
+    window.addEventListener("deviceorientation", listener, true);
+    orientationBound.current = true;
   };
 
   const getQiblaDirection = async () => {
     setError("");
     setLoading(true);
     setHasRequestedLocation(true);
+    await enableDeviceCompass();
     let latitude = siteConfig.fallbackLocation.latitude;
     let longitude = siteConfig.fallbackLocation.longitude;
     let locationDetected = false;
@@ -332,6 +371,13 @@ export default function QiblaFinder() {
               <div className="mt-6">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                   {t("qibla.location_hint")}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-500 mb-2">
+                  {compassReady
+                    ? t("qibla.compass_active") ||
+                      `Live compass active · device heading ${Math.round(userHeading)}°`
+                    : t("qibla.compass_hint") ||
+                      "Hold your phone flat and allow motion access for a live compass."}
                 </p>
                 {locationPermission === "denied" && (
                   <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-2">

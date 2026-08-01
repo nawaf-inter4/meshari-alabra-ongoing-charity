@@ -96,10 +96,13 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     ? websiteTitle
     : `${verse?.surahName} - ${t("share.ayah")} ${verse?.ayahNumber}\n\n${verse?.arabicText}${verse?.translation ? `\n\n${verse.translation}` : ''}`;
   
-  // Get OG image URL
-  const ogImageUrl = mode === 'website' 
-    ? siteAssetUrl(siteConfig.assets.openGraphImage)
-    : undefined;
+  // Prefer same-origin relative asset path so local/preview hosts always resolve.
+  const ogImagePath = siteConfig.assets.openGraphImage.startsWith("http")
+    ? siteConfig.assets.openGraphImage
+    : siteConfig.assets.openGraphImage.startsWith("/")
+      ? siteConfig.assets.openGraphImage
+      : `/${siteConfig.assets.openGraphImage}`;
+  const ogImageUrl = mode === "website" ? ogImagePath : undefined;
 
   const copyToClipboard = async () => {
     try {
@@ -1402,13 +1405,18 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                   <div className="mb-6">
                     <div className="rounded-2xl overflow-hidden shadow-lg border-2 border-islamic-gold/30">
                       <img 
-                        src={ogImageUrl || siteAssetUrl(siteConfig.assets.openGraphImage)}
+                        src={ogImageUrl || ogImagePath}
                         alt={websiteTitle}
                         className="w-full h-auto"
                         onError={(e) => {
-                          // Fallback if OG image doesn't load
                           const target = e.target as HTMLImageElement;
+                          if (target.dataset.ogFallback === "1") return;
+                          target.dataset.ogFallback = "1";
+                          // Absolute configured URL, then dynamic OG route.
                           target.src = siteAssetUrl(siteConfig.assets.openGraphImage);
+                          target.onerror = () => {
+                            target.src = "/og-image";
+                          };
                         }}
                       />
                     </div>
