@@ -23,7 +23,13 @@ test("Quran stories hub SSR includes story cards without client JS", async ({ pa
 
 test("compact supplication tabs retain accessible names", async ({ page }) => {
   await page.goto("/en");
-  await page.waitForSelector("#supplications button", { state: "visible" });
+  // Homepage sections are viewport-gated; scroll until the deferred mount activates.
+  for (let i = 0; i < 12; i += 1) {
+    if (await page.locator("#supplications button").first().isVisible().catch(() => false)) break;
+    await page.evaluate(() => window.scrollBy(0, Math.floor(window.innerHeight * 0.9)));
+    await page.waitForTimeout(200);
+  }
+  await page.waitForSelector("#supplications button", { state: "visible", timeout: 15000 });
   const tabs = page.locator("#supplications button");
   await tabs.first().scrollIntoViewIfNeeded();
   const names = await tabs.evaluateAll((buttons) => buttons.map((button) => button.getAttribute("aria-label")));
