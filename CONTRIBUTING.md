@@ -6,13 +6,15 @@ Thank you for helping improve Meshari's Continuous Charity. This is a memorial p
 
 | Branch | Purpose |
 | --- | --- |
-| `sandbox` | Default integration branch. Open feature PRs here first. This is the default branch for the Vercel **Sandbox** environment (non-production). |
+| `sandbox` | Default integration branch. Open feature PRs here only. Vercel **Preview** deploys for this branch only (stable alias: [sandbox.meshari.charity](https://sandbox.meshari.charity); not for feature branches). |
 | `main` | Production branch for [meshari.charity](https://meshari.charity), Release Please, and GitHub Releases. |
 
-1. Create your feature branch from `sandbox`.
-2. Open a pull request into `sandbox` and verify the Sandbox deployment.
-3. When sandbox is stable, open a pull request from `sandbox` into `main` to promote; `sandbox` is branch-protected and must not be deleted (feature branches still auto-delete on merge).
-4. After the feature branch is fully merged and no follow-up work remains on it, delete the remote and local feature branch.
+1. Create your feature branch from `sandbox` (`git fetch origin && git checkout -b my-change origin/sandbox`).
+2. Open a pull request **into `sandbox`** and wait for CI (quality + security). Preview deploys come from the `sandbox` branch after merge (or from pushes to `sandbox`), not from every feature branch.
+3. When sandbox is stable, promote with a **conventional** PR title into `main` (see [Promoting to production](#promoting-to-production)).
+4. After the feature branch is fully merged and no follow-up work remains on it, delete the remote and local feature branch. Never delete `sandbox` or `main`.
+
+Do **not** rebase `sandbox` onto `main` for routine work, and do **not** open manual main→sandbox sync PRs after a release. Version files are synced automatically (see below).
 
 ## Development workflow
 
@@ -26,6 +28,7 @@ Thank you for helping improve Meshari's Continuous Charity. This is a memorial p
    npm run type-check
    npm run test:e2e
    npm run build
+   npm audit --audit-level=high
    ```
 
 5. Commit using [Conventional Commits](https://www.conventionalcommits.org/):
@@ -36,10 +39,34 @@ Thank you for helping improve Meshari's Continuous Charity. This is a memorial p
    docs: improve contributor guidance
    ```
 
-   Prefer conventional **pull request titles** as well when squash-merging, so Release Please can classify the landed commit.
+   Prefer conventional **pull request titles** as well when squash-merging, so Release Please can classify the landed commit once it reaches `main`.
 
-6. Open a pull request describing the change and how it was verified.
+6. Open a pull request into `sandbox` describing the change and how it was verified.
 7. After merge, delete the feature branch (`gh pr merge` with delete-branch, or `git push origin --delete <branch>` / `git branch -d <branch>`). Keep `sandbox` and `main`.
+
+## Promoting to production
+
+Promote only when sandbox is green and ready for [meshari.charity](https://meshari.charity):
+
+```bash
+./scripts/promote-sandbox-to-main.sh fix "ship CSP and CI hardening"
+# or
+./scripts/promote-sandbox-to-main.sh feat "add new locale support"
+```
+
+Equivalent `gh` form:
+
+```bash
+gh pr create --base main --head sandbox \
+  --title "fix: promote sandbox to production" \
+  --body "Promote sandbox integration lane."
+```
+
+Rules:
+
+- PR title **must** start with `fix:` or `feat:` (optionally `fix(scope):` / `feat(scope):`). Bare titles like `Promote sandbox…` are not conventional and block Release Please from opening a useful release.
+- Prefer squash or merge commit with that conventional title/message.
+- One full CI run on the promote PR is required; then production deploys from `main`.
 
 ## Release policy
 
@@ -50,7 +77,33 @@ Releases follow Semantic Versioning and are automated with Release Please on `ma
 - A commit containing `BREAKING CHANGE:` produces a **major** release.
 - `docs:`, `chore:`, `ci:`, and `test:` are included where relevant but do not normally trigger a version bump by themselves.
 
-Release Please maintains one release pull request on `main`. Merging it updates `CHANGELOG.md` and `package.json`, creates a `vX.Y.Z` tag, and publishes the GitHub release. Do not push version tags by hand unless recovering a failed automation run.
+Release Please maintains one release pull request on `main`. Merging it updates `CHANGELOG.md` and `package.json`, creates a `vX.Y.Z` tag, and publishes the GitHub release. Do not ship production changes without that release notes path. Do not push version tags by hand unless recovering a failed automation run.
+
+### After a release (no manual main→sandbox sync)
+
+When Release Please updates version files on `main`, [`.github/workflows/sync-release-to-sandbox.yml`](./.github/workflows/sync-release-to-sandbox.yml) opens (or updates) a PR that copies only:
+
+- `package.json`
+- `CHANGELOG.md`
+- `.release-please-manifest.json`
+
+onto `sandbox`. Merge that PR. Do not rebase the whole of `main` into `sandbox`.
+
+## CI
+
+Pull requests targeting `sandbox` or `main` run:
+
+| Job | What |
+| --- | --- |
+| **Dependency review** | GitHub Dependency Review on pull requests (fails on high/critical advisories) |
+| **Security** | `npm audit --audit-level=high` (fails on high/critical) and gitleaks secret scan |
+| **Quality** | lint, type-check, Playwright e2e, production build |
+
+Feature PRs → `sandbox`: one full CI run. Promote PRs → `main`: one full CI run. Avoid stacking redundant Preview builds on feature branches (disabled in `vercel.json`).
+
+### Dependabot
+
+Dependabot PRs target **`sandbox`**, not `main`. Review and merge them like other integration-lane changes after Security + Quality CI are green. See [SECURITY.md](./SECURITY.md) for the full Security CI matrix.
 
 ## Memorial and content standards
 

@@ -14,15 +14,70 @@ Copy [`.env.example`](./.env.example) for the complete configuration reference. 
 
 ## Vercel
 
-[`vercel.json`](./vercel.json) configures installation, build behavior, and PWA cache headers.
+[`vercel.json`](./vercel.json) configures installation, build behavior, PWA cache headers, and **which Git branches deploy**.
 
 1. Import the GitHub repository in Vercel.
-2. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin.
+2. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin (**Production** scope → `https://meshari.charity`). Optionally set Preview scope to `https://sandbox.meshari.charity` so sandbox builds embed the sandbox origin.
 3. Add other white-label values in Project Settings → Environment Variables.
-4. Production branch: `main` (serves [meshari.charity](https://meshari.charity)).
-5. **Sandbox** environment: use the `sandbox` Git branch as the default non-production lane. Every push and PR targeting `sandbox` should deploy to the Sandbox environment (Vercel’s custom environment named `sandbox`, or the project’s Preview deployments scoped to `sandbox`). Optionally assign a stable alias such as `sandbox.meshari.charity` to the `sandbox` branch in Project Settings → Domains / Environments.
+4. **Production** Git branch: `main` only (Project Settings → Git → Production Branch). Serves [meshari.charity](https://meshari.charity). Ship via promote + Release Please (see below).
+5. **Preview / Sandbox**: only the `sandbox` Git branch is enabled for automated deployments. `git.deploymentEnabled` in `vercel.json` sets `main` + `sandbox` to `true` and `"**": false` so feature branches do **not** create Preview deployments.
 
-Recommended flow: feature branch → PR into `sandbox` (Sandbox) → PR from `sandbox` into `main` (Production). Promote via PR `sandbox`→`main`; `sandbox` is protected and must not be deleted. Delete feature branches after they are fully merged.
+### Custom domains (stable aliases)
+
+Every deployment still gets a unique `*.vercel.app` URL. That is normal. Custom domains are **aliases** that always point at the latest matching deployment. Configure them as **project domains** (not one-off “Assign Domain” on a single deployment):
+
+| Domain | Environment / assignment | Git branch |
+| --- | --- | --- |
+| [meshari.charity](https://meshari.charity) | Production | `main` (production branch) |
+| [www.meshari.charity](https://www.meshari.charity) | Production redirect → `meshari.charity` (307) | — |
+| [sandbox.meshari.charity](https://sandbox.meshari.charity) | Preview → **Git Branch** | `sandbox` |
+
+#### Exact UI steps (Vercel Dashboard)
+
+1. Open the project → **Settings** → **Domains**  
+   (`https://vercel.com/nawafinter4s-projects/meshari-alabra-ongoing-charity/settings/domains`).
+2. **Production apex**
+   - Add / keep `meshari.charity`.
+   - Connect to **Production** (no Git Branch field — Production tracks the production Git branch, which must be `main`).
+   - Do **not** point this domain at a single past deployment alias only.
+3. **www**
+   - Keep `www.meshari.charity` as a **redirect** to `meshari.charity` (308/307), or assign it to Production if you prefer serving www directly. Current project setup redirects www → apex.
+4. **Sandbox branch domain**
+   - Add `sandbox.meshari.charity` if missing.
+   - Edit the domain → **Connect to an environment** → **Preview**.
+   - In **Git Branch**, enter exactly `sandbox` (case-sensitive).
+   - Save. After the next successful `sandbox` deploy (or the current one if already Ready), the domain aliases that deployment automatically.
+5. Confirm DNS at your registrar still uses Vercel’s records (or Vercel nameservers). Do not change production DNS while only adjusting the Git Branch assignment in the Domains UI.
+
+#### Verify via API / CLI (optional)
+
+```bash
+# Project domains should show gitBranch: "sandbox" for sandbox.meshari.charity
+# and gitBranch: null for meshari.charity (Production)
+npx vercel project ls --scope nawafinter4s-projects
+```
+
+Or `GET /v9/projects/{id}/domains` with a Vercel token: `sandbox.meshari.charity` must have `"gitBranch": "sandbox"`; production domains must have `"gitBranch": null`.
+
+### What GitHub shows vs stable URLs
+
+- **GitHub Checks / Vercel “Visit” links** often open the unique deployment URL (`*.vercel.app` or `*-git-*-*.vercel.app`). That does **not** mean the custom domain is missing.
+- The **stable** URLs to bookmark and share are:
+  - Production: `https://meshari.charity`
+  - Sandbox: `https://sandbox.meshari.charity`
+- Deployment detail pages may show **Assign Domain** / alias messaging for that single deployment. Prefer project **Settings → Domains** with a Git Branch (above) so every new `sandbox` or `main` deploy updates the stable hostname automatically.
+- **GitHub Environments** (`Preview` / `Production`): Vercel creates these and attaches each deployment’s unique URL. GitHub does not replace those with your custom domain. There is no reliable repo setting that forces Checks to show `meshari.charity` / `sandbox.meshari.charity` instead of `*.vercel.app`. Use the Environments list for deploy history; use the custom domains as the public aliases.
+- If Preview **Deployment Protection** / Vercel Authentication is enabled, `*.vercel.app` Preview URLs (and sometimes Preview access) may require team login. Production custom domains stay public; adjust Project Settings → Deployment Protection if sandbox collaborators need unauthenticated access to `sandbox.meshari.charity`.
+
+### Recommended flow
+
+1. Always branch from `sandbox`.
+2. Feature/fix PR → `sandbox` (full CI once: quality + security). After merge, Vercel Preview updates from `sandbox` and the `sandbox.meshari.charity` branch domain follows that deploy.
+3. Promote `sandbox` → `main` with a conventional title (`fix:` / `feat:`) using [`scripts/promote-sandbox-to-main.sh`](./scripts/promote-sandbox-to-main.sh) (full CI once, then production deploy to `meshari.charity`).
+4. Release Please on `main` opens/publishes the versioned release and changelog. Do not treat a promote as “shipped” without that release path.
+5. After Release Please merges, the **Sync release files to sandbox** workflow opens a PR that copies only version/changelog files onto `sandbox`. Do **not** manually rebase `main` into `sandbox`.
+
+`sandbox` is protected and must not be deleted. Delete feature branches after they are fully merged.
 
 CLI deployments are also supported:
 
@@ -125,8 +180,11 @@ npm run lint
 npm run type-check
 npm run test:e2e
 npm run build
+npm audit --audit-level=high
 docker compose --env-file .env.example config --quiet
 ```
+
+Security headers / CSP notes: [docs/SECURITY-HEADERS.md](./docs/SECURITY-HEADERS.md).
 
 ## Post-deployment verification
 

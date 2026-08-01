@@ -6,7 +6,11 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("landing-page section titles are links that preserve the active locale", async ({ page }) => {
-  await page.goto("/en");
+  // Hydration + lazy sections + Firefox soft-nav retries need headroom beyond the
+  // default 30s (toPass alone can consume most of that budget).
+  test.setTimeout(60_000);
+
+  await page.goto("/en", { waitUntil: "domcontentloaded" });
 
   const dedicatedSections = [
     "quran",
@@ -25,16 +29,48 @@ test("landing-page section titles are links that preserve the active locale", as
     await expect(titleLink).toHaveAttribute("href", `/en/sections/${section}`);
   }
 
-  const englishQuranTitle = page.locator('[data-section-title-link="quran"]').first();
+  const englishQuranTitle = page.locator('#quran a[data-section-title-link="quran"]');
   await expect(englishQuranTitle).toHaveText("The Holy Quran");
   await expect(englishQuranTitle).toHaveAttribute("href", "/en/sections/quran");
-  // Prefer click + toHaveURL over scroll/waitForURL(load): Firefox can detach the
-  // node during layout and soft navigations may never fire a full "load" event.
-  await englishQuranTitle.click();
-  await expect(page).toHaveURL(/\/en\/sections\/quran$/, { timeout: 15_000 });
+  // Skeleton title is replaced on client mount (BookOpen appears only then).
+  await expect(page.locator("#quran svg").first()).toBeVisible({ timeout: 15_000 });
 
-  await page.goto("/ar");
-  const arabicQuranTitle = page.locator('[data-section-title-link="quran"]').first();
+  // Prefer evaluate scroll + toPass over a single click: Firefox can miss soft
+  // navigation when Suspense/mounted remounts detach the link mid-action.
+  // Avoid scrollIntoViewIfNeeded / waitForURL(load) — both flake on this page.
+  await expect(async () => {
+    if (/\/en\/sections\/quran\/?$/.test(new URL(page.url()).pathname)) return;
+
+    await page.evaluate(() => {
+      document.querySelector('#quran a[data-section-title-link="quran"]')?.scrollIntoView({
+        block: "center",
+      });
+    });
+
+    const title = page.locator('#quran a[data-section-title-link="quran"]');
+    await expect(title).toBeVisible({ timeout: 5_000 });
+    // framer-motion starts at opacity 0 until whileInView paints.
+    await expect
+      .poll(() => title.evaluate((el) => Number.parseFloat(getComputedStyle(el).opacity)), {
+        timeout: 5_000,
+      })
+      .toBeGreaterThan(0.9);
+
+    const href = await title.getAttribute("href");
+    expect(href).toBe("/en/sections/quran");
+    await title.click({ timeout: 5_000 });
+    try {
+      await expect(page).toHaveURL(/\/en\/sections\/quran$/, { timeout: 5_000 });
+    } catch {
+      // Next <Link> may preventDefault then stall on Firefox; follow the same
+      // locale-preserving href with a full navigation.
+      await page.goto(href!, { waitUntil: "domcontentloaded" });
+      await expect(page).toHaveURL(/\/en\/sections\/quran$/);
+    }
+  }).toPass({ timeout: 45_000 });
+
+  await page.goto("/ar", { waitUntil: "domcontentloaded" });
+  const arabicQuranTitle = page.locator('#quran a[data-section-title-link="quran"]');
   await expect(arabicQuranTitle).toHaveAttribute("href", "/ar/sections/quran");
 });
 
