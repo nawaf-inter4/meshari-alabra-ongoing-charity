@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import HomePage from "@/components/HomePage";
 import LandingSchema from "@/components/LandingSchema";
+import ServerHeroSection from "@/components/sections/ServerHeroSection";
 import {
   SUPPORTED_LOCALES,
   isSupportedLocale,
@@ -22,7 +23,7 @@ async function LanguagePageContent({ params }: PageProps) {
   return (
     <>
       <LandingSchema locale={lang} />
-      <HomePage language={lang} />
+      <HomePage language={lang} hero={<ServerHeroSection locale={lang} />} />
     </>
   );
 }

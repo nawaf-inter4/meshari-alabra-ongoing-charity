@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { useLanguage } from "./LanguageProvider";
 import { Heart, Share2, Github } from "lucide-react";
-import ShareModal from "./ShareModal";
 import { siteConfig } from "@/config/site";
+
+const ShareModal = dynamic(() => import("./ShareModal"), { ssr: false });
 
 export default function Footer() {
   const { t, locale, direction } = useLanguage();
@@ -164,12 +166,13 @@ export default function Footer() {
               {memoizedTranslations.share}
             </button>
             
-            {/* Share Modal */}
-            <ShareModal
-              isOpen={isShareModalOpen}
-              onClose={() => setIsShareModalOpen(false)}
-              mode="website"
-            />
+            {isShareModalOpen ? (
+              <ShareModal
+                isOpen
+                onClose={() => setIsShareModalOpen(false)}
+                mode="website"
+              />
+            ) : null}
             
             {siteConfig.social.links.map((link) => {
               const isX = link.includes('x.com/') || link.includes('twitter.com/');

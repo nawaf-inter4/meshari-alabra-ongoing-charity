@@ -3,10 +3,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
-import "react-pdf/dist/Page/AnnotationLayer.css";
-import "react-pdf/dist/Page/TextLayer.css";
 
-// Dynamically import react-pdf only on client to avoid SSR issues
+// Dynamically import react-pdf + its CSS only when a preview opens.
 let Document: any = null;
 let Page: any = null;
 let pdfjs: any = null;
@@ -61,16 +59,23 @@ export default function PDFViewer({ pdfUrl, className = "" }: PDFViewerProps) {
 
   useEffect(() => {
     setMounted(true);
-    // Load react-pdf module
-    if (typeof window !== "undefined") {
-      import("react-pdf").then((module) => {
-        Document = module.Document;
-        Page = module.Page;
-        pdfjs = module.pdfjs;
-        pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`;
-        setPdfModuleLoaded(true);
-      });
-    }
+    if (typeof window === "undefined") return;
+    let cancelled = false;
+    Promise.all([
+      import("react-pdf"),
+      import("react-pdf/dist/Page/AnnotationLayer.css"),
+      import("react-pdf/dist/Page/TextLayer.css"),
+    ]).then(([module]) => {
+      if (cancelled) return;
+      Document = module.Document;
+      Page = module.Page;
+      pdfjs = module.pdfjs;
+      pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`;
+      setPdfModuleLoaded(true);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {

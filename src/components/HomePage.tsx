@@ -1,12 +1,11 @@
 "use client";
 
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import ClientHeader from "./ClientHeader";
-import HeroSection from "./sections/HeroSection";
 import Footer from "./Footer";
 import SectionSkeleton from "./SectionSkeleton";
+import DeferredSection from "./DeferredSection";
 
-// Lazy load below-fold sections (incl. framer-motion nav) to cut unused JS on LCP.
 const YouTubePlaylist = lazy(() => import("./sections/YouTubePlaylist"));
 const DonationSection = lazy(() => import("./sections/DonationSection"));
 const PrayerTimesSection = lazy(() => import("./sections/PrayerTimesSection"));
@@ -23,62 +22,38 @@ const SectionNavigation = lazy(() => import("./sections/SectionNavigation"));
 
 const SectionLoader = () => <SectionSkeleton compact label="Loading section" />;
 
-interface HomePageProps {
-  language?: string;
+function Gated({ children }: { children: ReactNode }) {
+  return (
+    <DeferredSection>
+      <Suspense fallback={<SectionLoader />}>{children}</Suspense>
+    </DeferredSection>
+  );
 }
 
-export default function HomePage({ language }: HomePageProps) {
-  // Language is now handled by URL-based detection in LanguageProvider
-  // No need to call setLocale here as it can interfere with the language switcher
+interface HomePageProps {
+  language?: string;
+  hero: ReactNode;
+}
 
+export default function HomePage({ hero }: HomePageProps) {
   return (
     <main id="main-content" role="main" aria-label="Main content" className="min-h-screen bg-light dark:bg-dark islamic-pattern">
-      {/* Fixed Header with Theme, Language, and Donation */}
       <ClientHeader />
-      
-      <HeroSection />
-      
-      {/* Lazy-loaded sections with Suspense for better performance */}
-      <Suspense fallback={<SectionLoader />}>
-        <EnhancedQuranSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <DonationSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <YouTubePlaylist />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <SupplicationsSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <PrayerTimesSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <TafseerSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <HadithSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <DhikrCounter />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <QiblaFinder />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <QuranStoriesSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <MeshariFavoriteReciter />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <IslamicChantSection />
-      </Suspense>
-      
-      <Suspense fallback={<SectionLoader />}>
-        <SectionNavigation />
-      </Suspense>
+      {hero}
+
+      <Gated><EnhancedQuranSection /></Gated>
+      <Gated><DonationSection /></Gated>
+      <Gated><YouTubePlaylist /></Gated>
+      <Gated><SupplicationsSection /></Gated>
+      <Gated><PrayerTimesSection /></Gated>
+      <Gated><TafseerSection /></Gated>
+      <Gated><HadithSection /></Gated>
+      <Gated><DhikrCounter /></Gated>
+      <Gated><QiblaFinder /></Gated>
+      <Gated><QuranStoriesSection /></Gated>
+      <Gated><MeshariFavoriteReciter /></Gated>
+      <Gated><IslamicChantSection /></Gated>
+      <Gated><SectionNavigation /></Gated>
       <Footer />
     </main>
   );

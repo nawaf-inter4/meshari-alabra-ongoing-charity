@@ -1,14 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { requestNotificationPermission } from "@/lib/utils";
 import { Heart, Bookmark, ArrowLeft, Search } from "lucide-react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import BookmarkModal from "@/components/BookmarkModal";
-import GlobalSearchModal from "@/components/GlobalSearchModal";
+
+const BookmarkModal = dynamic(() => import("@/components/BookmarkModal"), {
+  ssr: false,
+});
+const GlobalSearchModal = dynamic(() => import("@/components/GlobalSearchModal"), {
+  ssr: false,
+});
 
 export default function ClientHeader() {
   const { t, locale, direction } = useLanguage();
@@ -157,8 +163,12 @@ export default function ClientHeader() {
         <ThemeToggle />
         <LanguageSwitcher />
       </div>
-      <BookmarkModal isOpen={isBookmarkModalOpen} onClose={() => setIsBookmarkModalOpen(false)} />
-      <GlobalSearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      {isBookmarkModalOpen ? (
+        <BookmarkModal isOpen onClose={() => setIsBookmarkModalOpen(false)} />
+      ) : null}
+      {isSearchOpen ? (
+        <GlobalSearchModal isOpen onClose={() => setIsSearchOpen(false)} />
+      ) : null}
     </>
   );
 }

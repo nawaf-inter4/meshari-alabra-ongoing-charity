@@ -161,23 +161,24 @@ export default function HeroSection() {
           <div className="space-y-6">
             {/* Bismillah */}
             <p
-              className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed min-h-[2.5em]`}
+              className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-tajwal' : ''} text-islamic-green leading-relaxed min-h-[2.5em]`}
               style={{ lineHeight: 1.75 }}
             >
               {getQuranVerse('bismillah')}
             </p>
             
-            {/* Quran Verse (LCP on /ar) */}
+            {/* Quran Verse (LCP on /ar) — Tajawal (preloaded), not deferred Amiri. */}
             <p
-              className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold max-w-4xl mx-auto min-h-[7.5em] md:min-h-[6.5em]`}
+              className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-tajwal' : ''} text-islamic-gold max-w-4xl mx-auto min-h-[7.5em] md:min-h-[6.5em]`}
               style={{ lineHeight: 2.5 }}
+              data-lcp-verse
             >
               {getQuranVerse('verse')}
             </p>
             
             {/* Sadaqallah */}
             <p
-              className={`text-lg md:text-xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed min-h-[1.75em]`}
+              className={`text-lg md:text-xl ${safeDirection === 'rtl' ? 'font-tajwal' : ''} text-islamic-green leading-relaxed min-h-[1.75em]`}
               style={{ lineHeight: 1.75 }}
             >
               {getQuranVerse('sadaqallah')}

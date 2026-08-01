@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useLanguage } from "../LanguageProvider";
 import { BookOpen, ExternalLink, FileText } from "lucide-react";
-import PDFViewer from "../PDFViewer";
 import QuranStoriesCardGrid from "./QuranStoriesCardGrid";
+
+const PDFViewer = dynamic(() => import("../PDFViewer"), { ssr: false });
 import {
   isStoryPdfFallback,
   localizedStoryHref,

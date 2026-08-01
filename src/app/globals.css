@@ -22,6 +22,27 @@
   left: max(1rem, env(safe-area-inset-left, 0px));
 }
 
+@keyframes pwa-install-enter {
+  from {
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.pwa-install-enter {
+  animation: pwa-install-enter 0.22s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pwa-install-enter {
+    animation: none;
+  }
+}
+
 .safe-fixed-bottom-right {
   bottom: max(1rem, env(safe-area-inset-bottom, 0px));
   right: max(1rem, env(safe-area-inset-right, 0px));
@@ -137,8 +158,8 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  /* Preloaded on RTL; swap with metric override keeps LCP stable. */
-  font-display: swap;
+  /* optional + preload: avoid LCP waiting on late font swap. */
+  font-display: optional;
   size-adjust: 100%;
   ascent-override: 95%;
   descent-override: 25%;
@@ -150,7 +171,7 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
+  font-display: optional;
   size-adjust: 100%;
   ascent-override: 95%;
   descent-override: 25%;
