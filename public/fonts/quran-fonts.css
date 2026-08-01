@@ -1,15 +1,10 @@
-/* Quranic display fonts — loaded for Quran / stories surfaces. */
+/* Kept for bookmarks / older links — faces also live in globals.css. */
 @font-face {
   font-family: 'Amiri';
   src: url('/fonts/amiri-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  /* swap + metric overrides: apply Amiri ASAP without wrong-face lock-in. */
-  font-display: swap;
-  size-adjust: 100%;
-  ascent-override: 110%;
-  descent-override: 40%;
-  line-gap-override: 0%;
+  font-display: block;
 }
 
 @font-face {
@@ -17,11 +12,7 @@
   src: url('/fonts/amiri-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
-  size-adjust: 100%;
-  ascent-override: 110%;
-  descent-override: 40%;
-  line-gap-override: 0%;
+  font-display: block;
 }
 
 @font-face {
@@ -29,11 +20,7 @@
   src: url('/fonts/scheherazade-new-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
-  size-adjust: 100%;
-  ascent-override: 115%;
-  descent-override: 45%;
-  line-gap-override: 0%;
+  font-display: block;
 }
 
 @font-face {
@@ -41,9 +28,5 @@
   src: url('/fonts/scheherazade-new-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
-  size-adjust: 100%;
-  ascent-override: 115%;
-  descent-override: 45%;
-  line-gap-override: 0%;
+  font-display: block;
 }

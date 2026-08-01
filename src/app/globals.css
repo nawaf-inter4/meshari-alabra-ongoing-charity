@@ -18,8 +18,20 @@
 }
 
 .skip-to-content:focus {
+  position: absolute;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  z-index: 50;
   top: max(1rem, env(safe-area-inset-top, 0px));
   left: max(1rem, env(safe-area-inset-left, 0px));
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  background-color: rgb(37 99 235);
+  color: #fff;
 }
 
 @keyframes pwa-install-enter {
@@ -138,10 +150,7 @@
   border-color: var(--color-brand-border);
 }
 
-/*
- * Hero H1: brand faces once ready. Until then, UA stack avoids Slow-4G LCP
- * waiting on woff2. Metric overrides on @font-face keep swap CLS small.
- */
+/* Hero H1: brand faces immediately (self-hosted + preloaded in layout). */
 html[dir="rtl"] .hero-lcp-title {
   font-family: "Tajawal", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
 }
@@ -151,21 +160,25 @@ html[dir="ltr"] .hero-lcp-title,
   font-family: "Lexend Deca", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
 }
 
-html[dir="rtl"]:not(.brand-fonts-ready) .hero-lcp-title,
-html[dir="ltr"]:not(.brand-fonts-ready) .hero-lcp-title {
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+html {
+  color-scheme: light;
 }
 
-/*
- * Mobile RTL: keep the UA stack until `brand-fonts-ready` (set after load).
- * Otherwise header/verse request Tajawal during Slow-4G LCP and reflow the hero.
- */
-@media (max-width: 767px) {
-  html[dir="rtl"]:not(.brand-fonts-ready) body,
-  html[dir="rtl"]:not(.brand-fonts-ready) .font-tajwal,
-  html[dir="rtl"]:not(.brand-fonts-ready) .hero-memorial-card {
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
-  }
+html.dark {
+  color-scheme: dark;
+}
+
+/* Accessibility skip link — hidden until keyboard focus (do not rely on Tailwind sr-only alone). */
+.skip-to-content {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .hero-verse-bismillah,
@@ -229,19 +242,13 @@ html.theme-changing *::after {
   transition: none !important;
 }
 
-/* Critical UI fonts only. Quranic Amiri / Scheherazade load via /fonts/quran-fonts.css.
- * `swap` + size-adjust: brand faces apply after load without leaving the wrong
- * face stuck (optional often never paints when deferred past the short window). */
+/* Self-hosted UI + Quran fonts. `block` + <link rel=preload> avoids fallback flash. */
 @font-face {
   font-family: 'Lexend Deca';
   src: url('/fonts/lexend-deca-latin.woff2') format('woff2');
   font-style: normal;
   font-weight: 400 700;
-  font-display: swap;
-  size-adjust: 100%;
-  ascent-override: 92%;
-  descent-override: 24%;
-  line-gap-override: 0%;
+  font-display: block;
 }
 
 @font-face {
@@ -249,11 +256,7 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
-  size-adjust: 100%;
-  ascent-override: 95%;
-  descent-override: 25%;
-  line-gap-override: 0%;
+  font-display: block;
 }
 
 @font-face {
@@ -261,11 +264,39 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
-  size-adjust: 100%;
-  ascent-override: 95%;
-  descent-override: 25%;
-  line-gap-override: 0%;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Amiri';
+  src: url('/fonts/amiri-arabic-400.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Amiri';
+  src: url('/fonts/amiri-arabic-700.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Scheherazade New';
+  src: url('/fonts/scheherazade-new-arabic-400.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Scheherazade New';
+  src: url('/fonts/scheherazade-new-arabic-700.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
 }
 
 :root {

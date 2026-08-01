@@ -76,7 +76,14 @@ function applySecurityHeaders(
     response.headers.set('Vary', 'Accept-Encoding');
   }
 
-  const csp = options?.csp ?? buildContentSecurityPolicy(options?.nonce ?? createCspNonce());
+  const isHttps =
+    request.nextUrl.protocol === "https:" ||
+    request.headers.get("x-forwarded-proto") === "https";
+  const csp =
+    options?.csp ??
+    buildContentSecurityPolicy(options?.nonce ?? createCspNonce(), {
+      upgradeInsecureRequests: isHttps,
+    });
   response.headers.set('Content-Security-Policy', csp);
 
   if (request.nextUrl.pathname.startsWith('/icons/') ||
@@ -120,7 +127,14 @@ function applySecurityHeaders(
 
 function continueWithSecurityHeaders(request: NextRequest) {
   const nonce = createCspNonce();
-  const csp = buildContentSecurityPolicy(nonce);
+  // Only upgrade http→https on real HTTPS deploys. Local `next start` over
+  // http://127.0.0.1 must not get upgrade-insecure-requests or CSS/workers die.
+  const isHttps =
+    request.nextUrl.protocol === "https:" ||
+    request.headers.get("x-forwarded-proto") === "https";
+  const csp = buildContentSecurityPolicy(nonce, {
+    upgradeInsecureRequests: isHttps,
+  });
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-nonce', nonce);

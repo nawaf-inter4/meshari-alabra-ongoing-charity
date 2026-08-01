@@ -19,7 +19,6 @@ const GlobalSearchModal = dynamic(() => import("@/components/GlobalSearchModal")
 export default function ClientHeader() {
   const { t, locale, direction } = useLanguage();
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
   const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
   const [bookmarkCount, setBookmarkCount] = useState(0);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -31,11 +30,6 @@ export default function ClientHeader() {
   const getHomeUrl = () => {
     return `/${locale}`;
   };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
 
   useEffect(() => {
     // Note: Notification permission should only be requested on user interaction
@@ -80,26 +74,6 @@ export default function ClientHeader() {
       : locale === "ar"
         ? "بحث"
         : "Search";
-
-  // Stable SSR chrome: reserve search/bookmark slots so font/icon swap does not shift CTA.
-  if (!mounted) {
-    return (
-      <div className="safe-fixed-top fixed top-0 right-0 z-50 flex gap-4 items-center pb-4">
-        <a
-          href={donationHref}
-          className="flex items-center justify-center gap-2 p-3 sm:px-4 sm:py-2 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-bold rounded-full hover:from-islamic-green hover:to-islamic-blue transition-colors duration-300 text-sm glow min-h-[44px] min-w-[44px]"
-          aria-label={donationLabel}
-        >
-          <Heart className="w-5 h-5" fill="currentColor" aria-hidden="true" />
-          <span className="hidden sm:inline">{donationLabel}</span>
-        </a>
-        <div className="w-11 h-11 rounded-full bg-light-secondary dark:bg-dark-secondary" aria-hidden="true" />
-        <div className="w-11 h-11 rounded-full bg-light-secondary dark:bg-dark-secondary" aria-hidden="true" />
-        <div className="w-11 h-11 rounded-full bg-light-secondary dark:bg-dark-secondary" aria-hidden="true" />
-        <div className="w-11 h-11 rounded-full bg-light-secondary dark:bg-dark-secondary" aria-hidden="true" />
-      </div>
-    );
-  }
 
   return (
     <>

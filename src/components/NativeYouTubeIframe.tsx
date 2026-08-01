@@ -16,7 +16,12 @@ function withJsApi(src: string): string {
     if (!url.searchParams.has("enablejsapi")) {
       url.searchParams.set("enablejsapi", "1");
     }
-    if (typeof window !== "undefined" && !url.searchParams.has("origin")) {
+    // YouTube rejects enablejsapi origin on plain HTTP localhost — omit there.
+    if (
+      typeof window !== "undefined" &&
+      !url.searchParams.has("origin") &&
+      window.location.protocol === "https:"
+    ) {
       url.searchParams.set("origin", window.location.origin);
     }
     return url.toString();

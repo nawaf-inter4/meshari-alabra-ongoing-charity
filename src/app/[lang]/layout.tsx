@@ -238,7 +238,7 @@ export default async function LanguageLayout({
         />
         <SEOScripts nonce={nonce} />
         <AppleSplashLinks />
-        {/* Preload only the above-the-fold UI font for this direction. */}
+        {/* Preload self-hosted faces so first paint is not a fallback flash. */}
         <link
           rel="preload"
           href={direction === "rtl" ? "/fonts/tajawal-arabic-400.woff2" : "/fonts/lexend-deca-latin.woff2"}
@@ -255,13 +255,16 @@ export default async function LanguageLayout({
             crossOrigin="anonymous"
           />
         ) : null}
+        <link
+          rel="preload"
+          href="/fonts/amiri-arabic-400.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="antialiased">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-50 bg-blue-600 text-white px-4 py-2 rounded skip-to-content"
-          aria-label={skipLabel}
-        >
+        <a href="#main-content" className="skip-to-content" aria-label={skipLabel}>
           {skipLabel}
         </a>
         <ErrorBoundary>

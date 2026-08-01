@@ -1,27 +1,27 @@
 /**
  * Content-Security-Policy builders shared by Proxy and docs/verification.
  *
- * Observatory grades `script-src 'unsafe-inline'` as -20.
- * `style-src` uses per-request nonces (Next stamps them on
- * `experimental.inlineCss` <style> tags). React `style={…}` attributes are
- * covered by `style-src-attr 'unsafe-inline'` — Observatory’s CSP grader only
- * inspects `style-src` / `script-src` / `object-src`, so this residual does
- * not block `csp-implemented-with-no-unsafe-default-src-none` (+10).
+ * Scripts: per-request nonce + strict-dynamic (no script unsafe-inline).
+ * Styles: 'unsafe-inline' without a style nonce — React CSSOM / style attrs
+ * require it, and a style-src nonce makes browsers ignore unsafe-inline for
+ * that directive (breaking Safari + hydration).
  *
- * Script trust uses per-request nonces + `strict-dynamic` (Next.js 16 Proxy
- * guide). That requires request-time HTML so Next can stamp `nonce` on
- * framework scripts — see `[lang]/layout.tsx` (`connection()`).
+ * Never emit upgrade-insecure-requests on plain HTTP (local `next start`),
+ * or CSS/fonts/workers get forced to https://127.0.0.1 and fail.
  */
 
 export function createCspNonce(): string {
   return Buffer.from(crypto.randomUUID()).toString("base64");
 }
 
-export function buildContentSecurityPolicy(nonce: string): string {
+export function buildContentSecurityPolicy(
+  nonce: string,
+  options?: { upgradeInsecureRequests?: boolean },
+): string {
   const isDev = process.env.NODE_ENV !== "production";
+  const upgradeInsecure =
+    options?.upgradeInsecureRequests ?? (!isDev && process.env.VERCEL === "1");
 
-  // Host allowlists are ignored by CSP3 browsers when `strict-dynamic` is
-  // present; keep them as a fallback for older engines.
   const scriptSrc = [
     "'self'",
     `'nonce-${nonce}'`,
@@ -46,6 +46,9 @@ export function buildContentSecurityPolicy(nonce: string): string {
     "https://www.google-analytics.com",
     "https://fonts.googleapis.com",
     "https://fonts.gstatic.com",
+    "https://www.youtube.com",
+    "https://www.youtube-nocookie.com",
+    "https://i.ytimg.com",
     "https://vercel.live",
   ].join(" ");
 
@@ -53,13 +56,9 @@ export function buildContentSecurityPolicy(nonce: string): string {
     "default-src 'none'",
     `script-src ${scriptSrc}`,
     "script-src-attr 'none'",
-    // Nonce covers <style> tags + stylesheet <link>s (not style= attributes).
-    // Do NOT put 'unsafe-inline' here: with a nonce/hash present, CSP2/3
-    // browsers ignore it for style-src, which does not help React anyway.
-    `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
-    // REQUIRED for React style={{…}} / cssText. Keep this directive even if
-    // style-src grows sha256 hashes (%%CSP_STYLE_HASHES%% post-build inject).
-    // Without it, attribute styles fall back to nonce-only style-src and break.
+    // Stable for React + Safari. Do not put a nonce here — it disables
+    // 'unsafe-inline' for style-src and breaks CSSOM / missing link nonces.
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "style-src-attr 'unsafe-inline'",
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: https: blob:",
@@ -73,6 +72,6 @@ export function buildContentSecurityPolicy(nonce: string): string {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    ...(isDev ? [] : ["upgrade-insecure-requests"]),
+    ...(upgradeInsecure ? ["upgrade-insecure-requests"] : []),
   ].join("; ");
 }

@@ -22,8 +22,9 @@ Baseline directives:
 - `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`
 - **Production removes `'unsafe-eval'`**
 - **Production `script-src` has no `'unsafe-inline'`** — per-request `'nonce-…'` + `'strict-dynamic'`
-- **Production `style-src` has no `'unsafe-inline'`** — per-request `'nonce-…'` on Next stylesheet `<link>` tags and explicit brand `<style>` tags
-- `experimental.inlineCss` is **off**: its `<style precedence>` tags currently omit the request nonce, which breaks nonce-only `style-src` (CSP2 ignores `'unsafe-inline'` when a nonce is present)
+- **Production `style-src` uses `'unsafe-inline'` without a style nonce** — React CSSOM / Safari require it; a style-src nonce makes browsers ignore `'unsafe-inline'` and breaks the app. Scripts still use nonce + `strict-dynamic` (no script `'unsafe-inline'`).
+- **`upgrade-insecure-requests` only on HTTPS** — must not ship on local `http://127.0.0.1` or CSS/fonts/PDF workers fail after forced https upgrades.
+- `experimental.inlineCss` is **off** (external stylesheets).
 
 ### Nonce + Cache Components tradeoff
 

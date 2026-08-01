@@ -25,8 +25,8 @@
     "clean": "rm -rf .next out node_modules/.cache",
     "clean:all": "rm -rf .next node_modules package-lock.json .turbo .swc && npm cache clean --force",
     "clean:build": "./scripts/clean-build.sh",
-    "stub:polyfills": "node ./scripts/stub-next-polyfills.cjs && node ./scripts/patch-react-style-nonce.cjs",
-    "postinstall": "node ./scripts/stub-next-polyfills.cjs && node ./scripts/patch-react-style-nonce.cjs",
+    "stub:polyfills": "node ./scripts/stub-next-polyfills.cjs",
+    "postinstall": "node ./scripts/stub-next-polyfills.cjs",
     "generate:splash": "node scripts/generate-apple-splash.mjs",
     "generate:story-pdfs": "node scripts/generate-story-pdfs.mjs"
   },
