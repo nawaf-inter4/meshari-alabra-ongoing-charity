@@ -46,7 +46,7 @@
 
 ## About
 
-This site is a **Sadaqah Jariyah** (ongoing charity) for Meshari. It provides Quran reading, tafseer, hadith, daily supplications, prayer times, dhikr, Qibla, orphan-sponsorship links, and Quran-recitation playlists — across **12 languages** with dedicated section pages, SEO metadata, and PWA support.
+This site is a **Sadaqah Jariyah** (ongoing charity) for Meshari. It provides Quran reading, tafseer, hadith, daily supplications, prayer times, dhikr, Qibla, orphan-sponsorship links, and Quran-recitation playlists — across **15 languages** with dedicated section pages, SEO metadata, and PWA support.
 
 Built on Next.js 16.3 Instant Navigations, Cache Components, Partial Prefetching, native YouTube players, and centralized white-label configuration.
 
@@ -63,7 +63,7 @@ Built on Next.js 16.3 Instant Navigations, Cache Components, Partial Prefetching
 - Qibla finder with compass — dedicated section page
 - Quran stories (educational PDFs)
 - Islamic chant and favorite-reciter sections
-- 12 fully supported languages with dedicated localized pages
+- 15 fully supported languages with dedicated localized pages
 
 ### Highlights
 
@@ -117,7 +117,7 @@ Images:           long TTL with stale-while-revalidate where configured
 
 ### Multilingual support
 
-12 languages with complete UI translations:
+15 languages with complete UI translations:
 
 | Locale | Direction | Path |
 | --- | --- | --- |
@@ -133,6 +133,9 @@ Images:           long TTL with stale-while-revalidate where configured
 | Italian (`it`) | LTR | `/it` |
 | Japanese (`ja`) | LTR | `/ja` |
 | Korean (`ko`) | LTR | `/ko` |
+| Spanish (`es`) | LTR | `/es` |
+| Portuguese (`pt`) | LTR | `/pt` |
+| Hindi (`hi`) | LTR | `/hi` |
 
 - Landing: `/{lang}`
 - Sections: `/{lang}/sections/{section}`
@@ -222,8 +225,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) and [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 Crawl inventory (approximate):
 
-- Canonical localized HTML pages: **120** (12 landing + 108 section pages)
-- Sitemap entries: **120**, each with reciprocal locale alternates and one `x-default`
+- Canonical localized HTML pages: **150** (15 landing + 135 section pages)
+- Sitemap entries: **150**, each with reciprocal locale alternates and one `x-default`
 - Root and legacy section aliases are redirects and are excluded from the sitemap
 
 ---
@@ -445,7 +448,7 @@ meshari-alabra-ongoing-charity/
 │   ├── components/                  # UI, sections, wrappers, PWA, audio
 │   ├── config/site.ts               # White-label identity and media
 │   ├── lib/                         # Metadata, translations, routes
-│   ├── locales/                     # 12 language JSON packs
+│   ├── locales/                     # 15 language JSON packs
 │   └── proxy.ts                     # Routing + security headers
 ├── public/                          # Icons, fonts, stories, sw.js, offline.html
 ├── tests/e2e/                       # Playwright suite

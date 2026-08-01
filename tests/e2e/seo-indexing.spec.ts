@@ -1,9 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-const locales = ["ar", "en", "ur", "tr", "id", "ms", "bn", "fr", "zh", "it", "ja", "ko"] as const;
+const locales = ["ar", "en", "ur", "tr", "id", "ms", "bn", "fr", "zh", "it", "ja", "ko", "es", "pt", "hi"] as const;
 const rtlLocales = new Set(["ar", "ur"]);
 const sections = ["quran", "tafseer", "dhikr", "prayer-times", "qibla", "donation", "supplications", "hadith", "youtube"] as const;
 const siteUrl = "https://meshari.charity";
+const expectedPageCount = locales.length * (1 + sections.length);
 
 function tags(html: string, name: string) {
   return html.match(new RegExp(`<${name}\\b[^>]*>`, "gi")) || [];
@@ -81,7 +82,7 @@ test("every localized section is a real self-canonical server page", async ({ re
   }
 });
 
-test("sitemap contains only the 120 canonical localized HTML pages", async ({ request }) => {
+test(`sitemap contains only the ${expectedPageCount} canonical localized HTML pages`, async ({ request }) => {
   const response = await request.get("/sitemap.xml");
   expect(response.status()).toBe(200);
   expect(response.headers()["content-type"]).toContain("xml");
@@ -92,11 +93,24 @@ test("sitemap contains only the 120 canonical localized HTML pages", async ({ re
     ...locales.flatMap((locale) => sections.map((section) => `${siteUrl}/${locale}/sections/${section}`)),
   ];
 
-  expect(new Set(locations).size).toBe(120);
+  expect(new Set(locations).size).toBe(expectedPageCount);
   expect(new Set(locations)).toEqual(new Set(expected));
   expect(xml).not.toContain("manifest.webmanifest");
   expect(xml).not.toContain("llms.txt");
   expect(xml).not.toContain(`${siteUrl}</loc>`);
+});
+
+test("new locales es/pt/hi are LTR, self-canonical, and present in sitemap", async ({ request }) => {
+  for (const locale of ["es", "pt", "hi"] as const) {
+    const response = await request.get(`/${locale}`);
+    expect(response.status(), `/${locale}`).toBe(200);
+    const html = await response.text();
+    const htmlTag = tags(html, "html")[0];
+    expect(attribute(htmlTag || "", "lang")).toBe(locale);
+    expect(attribute(htmlTag || "", "dir")).toBe("ltr");
+    expect(canonical(html)).toBe(`${siteUrl}/${locale}`);
+    expect(hreflangMap(html).get(locale)).toBe(`${siteUrl}/${locale}`);
+  }
 });
 
 test("robots and RSS use the same canonical locale policy", async ({ request }) => {

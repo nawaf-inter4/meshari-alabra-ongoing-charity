@@ -203,6 +203,13 @@ html[dir="ltr"] body {
   font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
 }
 
+/* Hindi (Devanagari) is LTR; prefer system Devanagari faces over Latin-only Lexend. */
+html[lang="hi"] body,
+html[lang="hi"] .font-lexend {
+  font-family: "Noto Sans Devanagari", "Noto Sans", "Mangal", "Kohinoor Devanagari",
+    "Devanagari Sangam MN", "Lexend Deca", system-ui, sans-serif !important;
+}
+
 .font-lexend {
   font-family: 'Lexend Deca', sans-serif !important;
   text-rendering: optimizeLegibility;
