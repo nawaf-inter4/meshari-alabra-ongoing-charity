@@ -14,15 +14,23 @@ Copy [`.env.example`](./.env.example) for the complete configuration reference. 
 
 ## Vercel
 
-[`vercel.json`](./vercel.json) configures installation, build behavior, and PWA cache headers.
+[`vercel.json`](./vercel.json) configures installation, build behavior, PWA cache headers, and **which Git branches deploy**.
 
 1. Import the GitHub repository in Vercel.
 2. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin.
 3. Add other white-label values in Project Settings → Environment Variables.
-4. Production branch: `main` (serves [meshari.charity](https://meshari.charity)).
-5. **Sandbox** environment: use the `sandbox` Git branch as the default non-production lane. Every push and PR targeting `sandbox` should deploy to the Sandbox environment (Vercel’s custom environment named `sandbox`, or the project’s Preview deployments scoped to `sandbox`). Optionally assign a stable alias such as `sandbox.meshari.charity` to the `sandbox` branch in Project Settings → Domains / Environments.
+4. **Production** branch: `main` only (serves [meshari.charity](https://meshari.charity)). Ship via promote + Release Please (see below).
+5. **Preview / Sandbox**: only the `sandbox` Git branch is enabled for automated deployments. `git.deploymentEnabled` in `vercel.json` sets `main` + `sandbox` to `true` and `"**": false` so feature branches do **not** create Preview deployments. Optionally assign a stable alias such as `sandbox.meshari.charity` to the `sandbox` branch in Project Settings → Domains / Environments.
 
-Recommended flow: feature branch → PR into `sandbox` (Sandbox) → PR from `sandbox` into `main` (Production). Promote via PR `sandbox`→`main`; `sandbox` is protected and must not be deleted. Delete feature branches after they are fully merged.
+### Recommended flow
+
+1. Always branch from `sandbox`.
+2. Feature/fix PR → `sandbox` (full CI once: quality + security). After merge, Vercel Preview updates from `sandbox`.
+3. Promote `sandbox` → `main` with a conventional title (`fix:` / `feat:`) using [`scripts/promote-sandbox-to-main.sh`](./scripts/promote-sandbox-to-main.sh) (full CI once, then production deploy).
+4. Release Please on `main` opens/publishes the versioned release and changelog. Do not treat a promote as “shipped” without that release path.
+5. After Release Please merges, the **Sync release files to sandbox** workflow opens a PR that copies only version/changelog files onto `sandbox`. Do **not** manually rebase `main` into `sandbox`.
+
+`sandbox` is protected and must not be deleted. Delete feature branches after they are fully merged.
 
 CLI deployments are also supported:
 
@@ -125,8 +133,11 @@ npm run lint
 npm run type-check
 npm run test:e2e
 npm run build
+npm audit --audit-level=high
 docker compose --env-file .env.example config --quiet
 ```
+
+Security headers / CSP notes: [docs/SECURITY-HEADERS.md](./docs/SECURITY-HEADERS.md).
 
 ## Post-deployment verification
 

@@ -201,18 +201,18 @@ npm run build:analyze   # Bundle analyzer
 
 | Branch | Role |
 | --- | --- |
-| `sandbox` | Integration / **Sandbox** lane. Open feature PRs here first. This is the default branch for the Vercel Sandbox environment (non-production). |
-| `main` | Production. Merge only after sandbox looks good. Powers [meshari.charity](https://meshari.charity) and GitHub Releases. |
+| `sandbox` | Integration lane. Open feature PRs **here only**. Sole Vercel **Preview** branch. |
+| `main` | Production ([meshari.charity](https://meshari.charity)). Release Please + GitHub Releases. |
 
 Recommended flow:
 
-1. Create a feature branch from `sandbox`
-2. Open a PR into `sandbox` and verify the Vercel Sandbox deployment
-3. When stable, open a PR from `sandbox` into `main`
-4. After a feature branch is fully merged and related work is done, delete the remote (and local) feature branch
-5. Release Please batches conventional commits on `main` into a release PR (`fix:` → patch, `feat:` → minor)
+1. Always create a feature branch from `sandbox`
+2. Open a PR **into `sandbox`** (full CI: quality + security). Feature branches do **not** get Vercel Preview deploys
+3. After merge, verify the Preview deployment built from `sandbox`
+4. Promote with a conventional title: `./scripts/promote-sandbox-to-main.sh fix "summary"` (or `feat:`) — never a bare “Promote sandbox…” title
+5. Release Please on `main` opens/publishes patch/minor from conventional commits; an automated workflow syncs version files back to `sandbox` (no manual main→sandbox rebase)
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) and [DEPLOYMENT.md](./DEPLOYMENT.md).
+See [CONTRIBUTING.md](./CONTRIBUTING.md), [DEPLOYMENT.md](./DEPLOYMENT.md), and [docs/SECURITY-HEADERS.md](./docs/SECURITY-HEADERS.md).
 
 ---
 
@@ -242,7 +242,7 @@ This application needs a real Next.js runtime (API routes + Cache Components). D
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Cloudflare](https://img.shields.io/badge/Deploy%20to-Cloudflare-F38020?style=flat&logo=cloudflare&logoColor=white)](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 
-- **Vercel:** native Next.js via `vercel.json`. Production branch = `main`. Sandbox environment branch = `sandbox`.
+- **Vercel:** native Next.js via `vercel.json`. Production = `main` only. Preview deploys = `sandbox` only (`git.deploymentEnabled`; feature branches ignored).
 - **Netlify:** Next.js runtime via `netlify.toml` and Netlify's official adapter.
 - **Render:** Docker via `render.yaml` and `Dockerfile`.
 - **Cloudflare:** Workers via `@opennextjs/cloudflare`, `wrangler.jsonc`, and the official [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity) button. Plain Cloudflare Pages static export is unsupported.
@@ -325,7 +325,7 @@ Requirements:
 8. NEXT_PUBLIC_* values are public browser data. Never place a secret in one.
 9. Do not configure static-only hosting: the app requires a Next.js runtime for
    API routes and dynamic behavior.
-10. Branch from `sandbox`, open PRs into `sandbox` first, then promote to `main`.
+10. Branch from `sandbox`, open PRs into `sandbox` first, then promote to `main` with a `fix:` / `feat:` title.
     Delete feature branches after they are fully merged.
 11. After implementation, run and report real output from:
     npm ci --legacy-peer-deps
@@ -410,7 +410,9 @@ Requirements:
 
 ## Security and privacy
 
-**Security headers (via Proxy / platform):** HSTS, frame protections, nosniff, XSS filter, referrer and permissions policies as configured in `src/proxy.ts` and provider settings.
+**Security headers (via Proxy / platform):** HSTS (preload), `Referrer-Policy: strict-origin-when-cross-origin`, frame protections, nosniff, COOP, and CSP as configured in `src/proxy.ts` / `next.config.js`. Details and residual CSP risk: [docs/SECURITY-HEADERS.md](./docs/SECURITY-HEADERS.md).
+
+**CI Security job:** `npm audit --audit-level=high` and gitleaks on PRs to `sandbox` / `main`.
 
 **Privacy:**
 
@@ -488,9 +490,9 @@ This is a memorial project. Please read [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 1. Branch from `sandbox`
 2. Keep changes focused and respectful
-3. Run `npm run lint`, `npm run type-check`, `npm run test:e2e`, and `npm run build`
+3. Run `npm run lint`, `npm run type-check`, `npm run test:e2e`, `npm run build`, and `npm audit --audit-level=high`
 4. Use [Conventional Commits](https://www.conventionalcommits.org/) so Release Please can batch patch/minor releases
-5. Open a PR into `sandbox`, then promote to `main`
+5. Open a PR into `sandbox`, then promote with `fix:` / `feat:` via `scripts/promote-sandbox-to-main.sh`
 6. Delete the feature branch after it is fully merged
 
 ---

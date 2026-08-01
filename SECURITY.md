@@ -15,3 +15,12 @@ The latest production release and the current `main` branch receive security fix
 ## Scope
 
 Reports involving exposed secrets, cross-site scripting, unsafe redirects, compromised external links, dependency vulnerabilities with a practical impact, or unauthorized changes to religious or donation content are especially important.
+
+## Automated checks
+
+Every pull request targeting `sandbox` or `main` runs a **Security** CI job:
+
+- `npm audit --audit-level=high` (fails the PR on high or critical findings)
+- gitleaks secret scanning
+
+HTTP security headers and CSP posture are documented in [docs/SECURITY-HEADERS.md](./docs/SECURITY-HEADERS.md).
