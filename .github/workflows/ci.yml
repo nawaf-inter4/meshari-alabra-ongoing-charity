@@ -48,7 +48,7 @@ jobs:
           gitleaks version
 
       - name: Secret scan (gitleaks)
-        run: gitleaks detect --source . --verbose --redact --no-banner
+        run: gitleaks detect --source . --config .gitleaks.toml --verbose --redact --no-banner
 
   quality:
     name: Lint, type-check, browser test, and build
