@@ -8,7 +8,7 @@ import type { QuranStoryDefinition } from "./types";
 export const QURAN_STORIES: QuranStoryDefinition[] = [
   {
     slug: "al-khidr-or-destiny",
-    pages: 8,
+    pages: 3,
     surahNumber: 18,
     surahName: { ar: "الكهف", en: "Al-Kahf" },
     legacyArabicFileName: "الخضر؟ أم القَدَر ؟ .pdf",
@@ -95,7 +95,7 @@ export const QURAN_STORIES: QuranStoryDefinition[] = [
   },
   {
     slug: "ash-shura",
-    pages: 12,
+    pages: 8,
     surahNumber: 42,
     surahName: { ar: "الشورى", en: "Ash-Shura" },
     legacyArabicFileName: "في رحاب سورة الشورى .pdf",
@@ -182,7 +182,7 @@ export const QURAN_STORIES: QuranStoryDefinition[] = [
   },
   {
     slug: "al-jinn",
-    pages: 10,
+    pages: 3,
     surahNumber: 72,
     surahName: { ar: "الجن", en: "Al-Jinn" },
     legacyArabicFileName: "وقفات مع سورة الجن .pdf",
@@ -269,7 +269,7 @@ export const QURAN_STORIES: QuranStoryDefinition[] = [
   },
   {
     slug: "an-naml",
-    pages: 14,
+    pages: 8,
     surahNumber: 27,
     surahName: { ar: "النمل", en: "An-Naml" },
     legacyArabicFileName: "وقفات مع سورة النمل .pdf",

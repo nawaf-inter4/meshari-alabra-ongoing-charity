@@ -38,6 +38,8 @@ export default defineConfig({
     env: {
       ...process.env,
       NEXT_DIST_DIR: ".next-playwright",
+      // Pin canonical host so SEO assertions match CI even when .env.local points at localhost.
+      NEXT_PUBLIC_SITE_URL: "https://meshari.charity",
       NEXT_PUBLIC_SITE_NAME: "Test Ongoing Charity",
       NEXT_PUBLIC_SITE_SHORT_NAME: "Test Charity",
       NEXT_PUBLIC_ORGANIZATION_NAME: "Test Charity Foundation",

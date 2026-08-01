@@ -13,7 +13,7 @@ import ko from "@/locales/ko.json";
 import es from "@/locales/es.json";
 import pt from "@/locales/pt.json";
 import hi from "@/locales/hi.json";
-import type { SupportedLocale } from "@/config/site";
+import { siteConfig, type SupportedLocale } from "@/config/site";
 
 export const translations: Record<SupportedLocale, Record<string, unknown>> = {
   ar,
@@ -38,4 +38,13 @@ export function translate(locale: SupportedLocale, key: string, fallback = key) 
   if (typeof localized === "string") return localized;
   const arabic = translations.ar[key];
   return typeof arabic === "string" ? arabic : fallback;
+}
+
+/** White-label `siteConfig.content.translations` overrides first, then locale JSON (same as `t()`). */
+export function translateWithConfig(locale: SupportedLocale, key: string, fallback = key) {
+  const configured =
+    siteConfig.content.translations[locale]?.[key] ||
+    siteConfig.content.translations["*"]?.[key];
+  if (configured?.trim()) return configured;
+  return translate(locale, key, fallback);
 }

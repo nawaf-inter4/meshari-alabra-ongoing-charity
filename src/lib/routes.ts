@@ -10,6 +10,7 @@ export const SECTION_IDS = [
   "supplications",
   "hadith",
   "youtube",
+  "quran-stories",
 ] as const;
 
 export type SectionId = (typeof SECTION_IDS)[number];

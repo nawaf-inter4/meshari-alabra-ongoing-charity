@@ -1,5 +1,5 @@
 import type { SupportedLocale } from "@/config/site";
-import { translate } from "@/lib/translations";
+import { translateWithConfig } from "@/lib/translations";
 import { QURAN_STORIES } from "./stories";
 import { isStoryPdfFallback, resolveStoryPdf } from "./pdf-paths";
 import { STORY_SLUGS, type QuranStoryDefinition, type StorySlug } from "./types";
@@ -31,11 +31,11 @@ export function storyDescriptionKey(slug: StorySlug): string {
 }
 
 export function getStoryTitle(story: QuranStoryDefinition, locale: SupportedLocale): string {
-  return translate(locale, storyTitleKey(story.slug));
+  return translateWithConfig(locale, storyTitleKey(story.slug));
 }
 
 export function getStoryDescription(story: QuranStoryDefinition, locale: SupportedLocale): string {
-  return translate(locale, storyDescriptionKey(story.slug));
+  return translateWithConfig(locale, storyDescriptionKey(story.slug));
 }
 
 export function getStoryBody(story: QuranStoryDefinition, locale: SupportedLocale): string[] {
@@ -50,8 +50,14 @@ export function storyUsesArabicPdf(story: QuranStoryDefinition, locale: Supporte
   return isStoryPdfFallback(story.slug, locale);
 }
 
+/** Canonical story detail URL under the quran-stories section. */
 export function localizedStoryHref(locale: string, slug: string): string {
-  return `/${locale}/stories/${slug}`;
+  return `/${locale}/sections/quran-stories/${slug}`;
+}
+
+/** Canonical stories hub (section listing with landing-style cards). */
+export function localizedStoriesIndexHref(locale: string): string {
+  return `/${locale}/sections/quran-stories`;
 }
 
 export function calculateReadingTime(pages: number): string {

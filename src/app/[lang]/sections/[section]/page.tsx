@@ -14,6 +14,7 @@ import DonationSection from "@/components/sections/DonationSection";
 import SupplicationsSectionWrapper from "@/components/sections/SupplicationsSectionWrapper";
 import HadithSectionWrapper from "@/components/sections/HadithSectionWrapper";
 import YouTubeSectionWrapper from "@/components/sections/YouTubeSectionWrapper";
+import QuranStoriesSection from "@/components/sections/QuranStoriesSection";
 import {
   SECTION_IDS,
   generateSectionMetadata,
@@ -36,6 +37,7 @@ const sectionComponents: Record<SectionId, ComponentType> = {
   supplications: SupplicationsSectionWrapper,
   hadith: HadithSectionWrapper,
   youtube: YouTubeSectionWrapper,
+  "quran-stories": QuranStoriesSection,
 };
 
 export const instant = true;

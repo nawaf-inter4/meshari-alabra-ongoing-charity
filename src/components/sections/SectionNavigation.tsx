@@ -2,7 +2,7 @@
 
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
-import { BookOpen, Book, Heart, Clock, DollarSign, Compass, Users, Calendar, Star, Globe, Shield, Gift, Grid3X3 } from "lucide-react";
+import { BookOpen, Book, Heart, Clock, DollarSign, Compass, Users, Calendar, Star, Globe, Shield, Gift, Grid3X3, FileText } from "lucide-react";
 import Link from "next/link";
 import { localizedSectionHref } from "@/lib/routes";
 
@@ -81,6 +81,14 @@ export default function SectionNavigation() {
       icon: Globe,
       href: localizedSectionHref(locale, "youtube"),
       color: "from-red-600 to-red-500"
+    },
+    {
+      id: "quran-stories",
+      title: t("quran_stories.title"),
+      description: t("quran_stories.description"),
+      icon: FileText,
+      href: localizedSectionHref(locale, "quran-stories"),
+      color: "from-islamic-gold to-islamic-green"
     }
   ];
 
