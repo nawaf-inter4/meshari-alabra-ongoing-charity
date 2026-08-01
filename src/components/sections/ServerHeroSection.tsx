@@ -25,7 +25,7 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
           className="hero-memorial-card bg-light-secondary dark:bg-dark-secondary md:bg-light-secondary/95 md:dark:bg-dark-secondary/95 md:backdrop-blur-sm rounded-2xl p-8 border-2 border-islamic-gold/30 glow"
           data-memorial-card
         >
-          <h1 className="hero-lcp-title text-5xl sm:text-5xl md:text-6xl font-bold mb-4 leading-tight" data-lcp>
+          <h1 className="hero-lcp-title text-4xl md:text-5xl font-bold mb-3 leading-tight" data-lcp>
             {memorialName}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">{memorialDate}</p>

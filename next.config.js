@@ -96,10 +96,10 @@ const nextConfig = {
     sri: {
       algorithm: 'sha256',
     },
-    // Inline critical CSS into HTML to drop the render-blocking stylesheet
-    // round-trip (mobile Lighthouse). Safe with style-src 'unsafe-inline'
-    // (see src/lib/csp.ts) — do not pair with a style-src nonce.
-    inlineCss: true,
+    // External CSS (cached, smaller HTML). Inline CSS bloated the document
+    // (~60KB styles in HTML) and hurt mobile LCP more than the blocking link.
+    // style-src allows 'unsafe-inline' for React; sheets use 'self'.
+    inlineCss: false,
     // Optimize package imports (stable in Next.js 16)
     // Note: react-pdf is excluded here because it's in serverExternalPackages
     optimizePackageImports: [
