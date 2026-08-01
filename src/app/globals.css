@@ -275,12 +275,15 @@ html.theme-changing *::after {
   font-display: block;
 }
 
+/* Quran faces: swap so LCP (hero verse) is not held for ~110KB Amiri on Slow-4G.
+ * Amiri 400 is <link rel=preload> in layout — usually applied before first paint. */
 @font-face {
   font-family: 'Amiri';
   src: url('/fonts/amiri-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  font-display: block;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
 
 @font-face {
@@ -288,7 +291,8 @@ html.theme-changing *::after {
   src: url('/fonts/amiri-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: block;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
 
 @font-face {
@@ -296,7 +300,8 @@ html.theme-changing *::after {
   src: url('/fonts/scheherazade-new-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  font-display: block;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
 
 @font-face {
@@ -304,7 +309,8 @@ html.theme-changing *::after {
   src: url('/fonts/scheherazade-new-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: block;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
 
 :root {
