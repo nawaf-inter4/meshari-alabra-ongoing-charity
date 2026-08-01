@@ -299,7 +299,7 @@ export default function SupplicationsSection() {
                 aria-pressed={activeTab === tab.id}
                 className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                   activeTab === tab.id
-                    ? "bg-islamic-gold text-gray-950 shadow-lg scale-105 glow"
+                    ? "bg-islamic-gold text-white shadow-lg scale-105 glow"
                     : "bg-light dark:bg-dark hover:bg-islamic-gold/20 text-gray-700 dark:text-gray-300"
                 }`}
               >
