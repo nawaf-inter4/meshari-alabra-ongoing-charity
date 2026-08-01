@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useLanguage } from "../LanguageProvider";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { RotateCcw, Hand, ChevronDown, ChevronUp } from "lucide-react";
 import SectionTitleLink from "./SectionTitleLink";
 
 export default function DhikrCounter() {
   const { t } = useLanguage();
+  const reduceMotion = useReducedMotion();
   
   // Fallback function for translations
   const getTranslation = (key: string, fallback: string) => {
@@ -264,9 +265,9 @@ export default function DhikrCounter() {
           {/* Counter Display */}
           <motion.div
             key={count}
-            initial={{ scale: 1 }}
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 0.2 }}
+            initial={false}
+            animate={reduceMotion ? { scale: 1 } : { scale: [1, 1.04, 1] }}
+            transition={{ duration: 0.18 }}
             className="text-center mb-6 md:mb-12"
           >
             <div className="inline-block p-6 md:p-8 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-full mb-4 md:mb-6">
