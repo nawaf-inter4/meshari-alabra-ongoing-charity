@@ -17,6 +17,11 @@
   padding-right: max(1rem, env(safe-area-inset-right, 0px));
 }
 
+.skip-to-content:focus {
+  top: max(1rem, env(safe-area-inset-top, 0px));
+  left: max(1rem, env(safe-area-inset-left, 0px));
+}
+
 .safe-fixed-bottom-right {
   bottom: max(1rem, env(safe-area-inset-bottom, 0px));
   right: max(1rem, env(safe-area-inset-right, 0px));
@@ -132,7 +137,12 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  font-display: optional;
+  /* Preloaded on RTL; swap with metric override keeps LCP stable. */
+  font-display: swap;
+  size-adjust: 100%;
+  ascent-override: 95%;
+  descent-override: 25%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -140,7 +150,11 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: optional;
+  font-display: swap;
+  size-adjust: 100%;
+  ascent-override: 95%;
+  descent-override: 25%;
+  line-gap-override: 0%;
 }
 
 :root {
@@ -191,20 +205,40 @@ html.theme-changing *::after {
 /* Soften backdrop-filter on mobile GPUs (hero cards, modals). */
 @media (max-width: 768px) {
   .motion-safe {
-    --tw-backdrop-blur: blur(6px);
+    --tw-backdrop-blur: blur(0px);
   }
 
   .glow {
     box-shadow: 0 0 12px rgb(var(--color-brand-rgb) / 0.22);
   }
+
+  /* Solid surfaces beat live backdrop-filter on WebKit (scroll jank + CLS). */
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-sm,
+  [data-memorial-card] {
+    --tw-backdrop-blur: blur(0px);
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
 }
 
-/* iOS Safari / WebKit touch: prefer lighter blur (Chrome iOS = WebKit too). */
+/* iOS Safari / WebKit touch: drop blur entirely (Chrome iOS = WebKit too). */
 @supports (-webkit-touch-callout: none) {
   .backdrop-blur-md,
   .backdrop-blur-lg,
-  .backdrop-blur-sm {
-    --tw-backdrop-blur: blur(6px);
+  .backdrop-blur-sm,
+  [data-memorial-card] {
+    --tw-backdrop-blur: blur(0px);
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* Coarse pointer: never animate color/filter; transform/opacity only if needed. */
+@media (hover: none), (pointer: coarse) {
+  .glow {
+    transition: none !important;
   }
 }
 

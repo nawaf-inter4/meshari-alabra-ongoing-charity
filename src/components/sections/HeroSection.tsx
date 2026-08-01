@@ -125,7 +125,7 @@ export default function HeroSection() {
 
         {/* Memorial Description */}
         <div
-          className="bg-light-secondary/90 dark:bg-dark-secondary/90 backdrop-blur-sm md:backdrop-blur-md rounded-2xl p-8 border-2 border-islamic-gold/30 glow"
+          className="bg-light-secondary dark:bg-dark-secondary md:bg-light-secondary/95 md:dark:bg-dark-secondary/95 md:backdrop-blur-sm rounded-2xl p-8 border-2 border-islamic-gold/30 glow"
           style={{
             borderColor: 'var(--color-brand-border)',
           }}

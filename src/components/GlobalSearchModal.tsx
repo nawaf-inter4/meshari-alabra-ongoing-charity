@@ -175,22 +175,22 @@ export default function GlobalSearchModal({ isOpen, onClose }: { isOpen: boolean
       <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-20 px-4" style={{ zIndex: 9999 }}>
         {/* Backdrop — solid dim; blur thrash on iOS Safari. */}
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={false}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: reduceMotion ? 0.1 : 0.16 }}
+          transition={{ duration: reduceMotion ? 0.08 : 0.12 }}
           className="fixed inset-0 bg-black/50"
           style={{ zIndex: 9998 }}
           onClick={onClose}
         />
         
-        {/* Modal — transform y only (+ opacity). */}
+        {/* Modal — transform-only (opacity fades jank on WebKit). */}
         <motion.div
           ref={modalRef}
-          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12 }}
-          transition={{ duration: reduceMotion ? 0.12 : 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+          initial={reduceMotion ? false : { y: -10 }}
+          animate={{ y: 0 }}
+          exit={reduceMotion ? undefined : { y: -10 }}
+          transition={{ duration: reduceMotion ? 0.01 : 0.16, ease: [0.25, 0.1, 0.25, 1] }}
           className="relative w-full max-w-2xl bg-light dark:bg-dark rounded-2xl shadow-2xl border-2 border-islamic-gold/30 overflow-hidden"
           style={{ zIndex: 9999, position: 'relative' }}
         >

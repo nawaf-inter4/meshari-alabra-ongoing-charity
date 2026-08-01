@@ -65,11 +65,9 @@ export default function ClientHeader() {
     };
   }, []);
 
-  const donationLabel = t("donation.header_button") || "Donate for orphans";
-  // Differentiate from SectionNavigation's /sections/donation card (same visible label on /ar).
-  const donationInPageAria = locale === "ar"
-    ? `${donationLabel} — الانتقال إلى قسم التبرع في الصفحة`
-    : `${donationLabel} — jump to donation section on this page`;
+  // Same visible label + href as DonationSection title / section route (Lighthouse link audit).
+  const donationLabel = t("donation.header_button") || t("donation.title") || "Donate for orphans";
+  const donationHref = `/${locale}/sections/donation`;
   const searchLabel =
     t("quran.search") !== "quran.search"
       ? t("quran.search")
@@ -82,9 +80,9 @@ export default function ClientHeader() {
     return (
       <div className="safe-fixed-top fixed top-0 right-0 z-50 flex gap-4 items-center pb-4">
         <a
-          href="#donation"
+          href={donationHref}
           className="flex items-center justify-center gap-2 p-3 sm:px-4 sm:py-2 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-bold rounded-full text-sm glow min-h-[44px] min-w-[44px]"
-          aria-label={donationInPageAria}
+          aria-label={donationLabel}
         >
           <Heart className="w-5 h-5" fill="currentColor" aria-hidden="true" />
           <span className="hidden sm:inline">{donationLabel}</span>
@@ -114,7 +112,7 @@ export default function ClientHeader() {
               <span className="hidden sm:inline whitespace-nowrap">{t("navigation.back_to_home")}</span>
             </a>
             <a
-              href={`/${locale}/sections/donation`}
+              href={donationHref}
               className="flex items-center justify-center gap-2 p-3 sm:px-4 sm:py-2 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-bold rounded-full text-sm glow min-h-[44px]"
               aria-label={donationLabel}
             >
@@ -125,9 +123,9 @@ export default function ClientHeader() {
         )}
         {!isSectionPage && (
           <a
-            href="#donation"
+            href={donationHref}
             className="flex items-center justify-center gap-2 p-3 sm:px-4 sm:py-2 bg-gradient-to-r from-islamic-gold to-islamic-green text-white font-bold rounded-full text-sm glow min-h-[44px]"
-            aria-label={donationInPageAria}
+            aria-label={donationLabel}
           >
             <Heart className="w-5 h-5" fill="currentColor" aria-hidden="true" />
             <span className="hidden sm:inline">{donationLabel}</span>

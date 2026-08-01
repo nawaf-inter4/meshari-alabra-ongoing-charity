@@ -34,26 +34,27 @@ export const revealScale = {
   } satisfies Transition,
 };
 
+/** Backdrop: opacity only, short — WebKit struggles with long fades + blur. */
 export const modalBackdrop = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
-  transition: { duration: 0.18 },
+  transition: { duration: 0.12 },
 };
 
-/** Panel: prefer y + opacity over scale (scale + blur blinks on WebKit). */
+/** Panel: transform-only on enter (no opacity) to avoid WebKit paint blink. */
 export const modalPanel = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: 12 },
-  transition: { duration: 0.22, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] },
+  initial: { y: 10 },
+  animate: { y: 0 },
+  exit: { y: 10 },
+  transition: { duration: 0.18, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] },
 };
 
 export const modalPanelReduced = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.12 },
+  initial: { y: 0 },
+  animate: { y: 0 },
+  exit: { y: 0 },
+  transition: { duration: 0.01 },
 };
 
 /** Cap list stagger — long delays stack jank on iOS Safari. */
@@ -66,4 +67,12 @@ export function isAppleWebKitClient(): boolean {
   if (typeof navigator === "undefined") return false;
   const ua = navigator.userAgent;
   return /iP(hone|ad|od)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+/** Touch / WebKit: skip framer enters — CSS/instant instead. */
+export function preferCssMotion(): boolean {
+  if (typeof window === "undefined") return false;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
+  if (window.matchMedia("(pointer: coarse)").matches) return true;
+  return isAppleWebKitClient();
 }

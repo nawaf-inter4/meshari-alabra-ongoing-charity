@@ -144,10 +144,10 @@ export default function DhikrCounter() {
             <AnimatePresence>
               {isCategoriesOpen && (
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  initial={false}
+                  animate={{ y: 0 }}
+                  exit={{ y: -4 }}
+                  transition={{ duration: reduceMotion ? 0.01 : 0.15 }}
                 >
                   <div className="flex justify-center gap-2 flex-wrap">
                     {categories.map((category) => (
@@ -191,10 +191,10 @@ export default function DhikrCounter() {
             <AnimatePresence>
               {isDhikrSelectorOpen && (
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  initial={false}
+                  animate={{ y: 0 }}
+                  exit={{ y: -4 }}
+                  transition={{ duration: reduceMotion ? 0.01 : 0.15 }}
                   className="max-h-[60vh] overflow-y-auto overflow-x-hidden"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 pr-2 md:pr-0">
