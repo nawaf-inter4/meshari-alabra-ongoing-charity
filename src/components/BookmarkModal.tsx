@@ -75,6 +75,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
   const [mounted, setMounted] = useState(false);
   const isRTL = direction === "rtl";
   const audioRef = useRef<HTMLAudioElement>(null);
+  const playRequestIdRef = useRef(0);
 
   // Language-based translation mapping (same as in EnhancedQuranSection)
   const getTranslationIdentifier = (locale: string): string => {
@@ -120,7 +121,8 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     if (isOpen) {
       loadBookmarks();
     } else {
-      // Stop audio when modal closes
+      // Stop audio when modal closes and invalidate in-flight play requests
+      playRequestIdRef.current += 1;
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
@@ -269,9 +271,17 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     }, 300);
   };
 
+  const pauseAyah = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setIsPlaying(false);
+  };
+
   // Same audio API path as EnhancedQuranSection.playAyah
   const playAyah = async (surahNumber: number, ayahNumber: number) => {
     const verseKey = `${surahNumber}-${ayahNumber}`;
+    const requestId = ++playRequestIdRef.current;
     try {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -283,10 +293,16 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
       setIsPlaying(true);
 
       const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${DEFAULT_RECITER}`);
+      if (requestId !== playRequestIdRef.current) {
+        return;
+      }
       if (!response.ok) {
         throw new Error(`Quran audio request failed with status ${response.status}`);
       }
       const data = await response.json();
+      if (requestId !== playRequestIdRef.current) {
+        return;
+      }
 
       if (data.data?.audio && (!data.data.edition || data.data.edition.format === "audio")) {
         if (audioRef.current) {
@@ -294,8 +310,15 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
           audioRef.current.load();
           try {
             await audioRef.current.play();
+            if (requestId !== playRequestIdRef.current) {
+              audioRef.current.pause();
+              return;
+            }
             setAudioLoading(false);
           } catch (playError) {
+            if (requestId !== playRequestIdRef.current) {
+              return;
+            }
             console.error("Error playing audio:", playError);
             setIsPlaying(false);
             setAudioLoading(false);
@@ -309,6 +332,9 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
         throw new Error("No valid audio edition URL found");
       }
     } catch (error) {
+      if (requestId !== playRequestIdRef.current) {
+        return;
+      }
       console.error("Error in playAyah:", error);
       setIsPlaying(false);
       setAudioLoading(false);
@@ -317,6 +343,15 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
         ? "تعذر تحميل صوت هذه الآية. يرجى المحاولة مرة أخرى."
         : "This verse audio could not be loaded. Please try again.");
     }
+  };
+
+  const togglePlayPause = (surahNumber: number, ayahNumber: number) => {
+    const verseKey = `${surahNumber}-${ayahNumber}`;
+    if (isPlaying && currentPlayingKey === verseKey) {
+      pauseAyah();
+      return;
+    }
+    void playAyah(surahNumber, ayahNumber);
   };
 
   const handleShare = async (verse: BookmarkedVerse) => {
@@ -458,7 +493,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                           </div>
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => playAyah(verse.surahNumber, verse.ayahNumber)}
+                              onClick={() => togglePlayPause(verse.surahNumber, verse.ayahNumber)}
                               className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-colors duration-300"
                               disabled={audioLoading && currentPlayingKey === `${verse.surahNumber}-${verse.ayahNumber}`}
                               aria-label={isPlaying && currentPlayingKey === `${verse.surahNumber}-${verse.ayahNumber}`

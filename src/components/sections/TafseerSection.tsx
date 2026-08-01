@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { Book, Search, ChevronDown, Globe, X, Loader2 } from "lucide-react";
 import SectionTitleLink from "./SectionTitleLink";
 import BidiText from "../BidiText";
-import { localeDirection } from "@/config/site";
 
 interface TafseerEdition {
   id: number;
@@ -162,11 +161,12 @@ const SURAHS: Surah[] = [
 
 export default function TafseerSection() {
   const { t, locale } = useLanguage();
-  const tafseerDirection = localeDirection(locale);
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [selectedAyah, setSelectedAyah] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEdition, setSelectedEdition] = useState(TAFSEER_EDITIONS[0]);
+  // Direction follows the tafseer edition language, not the UI locale.
+  const tafseerDirection = selectedEdition.language === "english" ? "ltr" : "rtl";
   const [tafseer, setTafseer] = useState<TafseerResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [showEditions, setShowEditions] = useState(false);
