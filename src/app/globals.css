@@ -255,8 +255,14 @@ h3.font-tajawal {
   font-family: 'Tajawal', sans-serif !important;
 }
 
+/* Beat html[dir="ltr"] h3 { text-align: left !important } for centered titles (e.g. Latin surah names). */
+html[dir="ltr"] .text-center h3:not(.font-arabic):not(.font-tajawal),
+html[dir="ltr"] .text-center h3.not-arabic-text:not(.font-tajawal),
+html[dir="ltr"] h3.text-center:not(.font-arabic):not(.font-tajawal),
+html[dir="ltr"] h3.text-center.not-arabic-text:not(.font-tajawal),
 .text-center h3,
-.text-center h3:not(.font-arabic) {
+.text-center h3:not(.font-arabic),
+h3.text-center {
   text-align: center !important;
 }
 
