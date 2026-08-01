@@ -15,10 +15,10 @@ import {
   localeDirection,
   siteAssetUrl,
   siteConfig,
-  siteCssVariables,
+  siteCssVariablesBlock,
   type SupportedLocale,
 } from "@/config/site";
-import { translate } from "@/lib/translations";
+import { translate, translations } from "@/lib/translations";
 import { getCspNonce } from "@/lib/csp-nonce";
 
 // The document language and direction depend on this root segment's URL.
@@ -188,7 +188,13 @@ function LanguageContent({
   locale: SupportedLocale;
 }) {
   return (
-    <LanguageProvider initialLocale={locale}>
+    // `key` forces a clean remount when the locale segment changes so the
+    // active dictionary from the server replaces client state.
+    <LanguageProvider
+      key={locale}
+      initialLocale={locale}
+      initialMessages={translations[locale]}
+    >
       {children}
       <DeferredClientShell />
     </LanguageProvider>
@@ -219,11 +225,14 @@ export default async function LanguageLayout({
       lang={lang}
       dir={direction}
       className="dark"
-      style={siteCssVariables}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>
+        <style
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: siteCssVariablesBlock }}
+        />
         <SEOScripts nonce={nonce} />
         <AppleSplashLinks />
         {/* Preload only the above-the-fold UI font for this direction. */}

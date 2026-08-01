@@ -22,31 +22,36 @@ Baseline directives:
 - `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`
 - **Production removes `'unsafe-eval'`**
 - **Production `script-src` has no `'unsafe-inline'`** — per-request `'nonce-…'` + `'strict-dynamic'`
+- **Production `style-src` has no `'unsafe-inline'`** — per-request `'nonce-…'` on Next stylesheet `<link>` tags and explicit brand `<style>` tags
+- `experimental.inlineCss` is **off**: its `<style precedence>` tags currently omit the request nonce, which breaks nonce-only `style-src` (CSP2 ignores `'unsafe-inline'` when a nonce is present)
 
 ### Nonce + Cache Components tradeoff
 
-Next.js 16’s nonce CSP guide requires **request-time HTML** so framework scripts receive matching `nonce` attributes. This app calls `connection()` in [`src/app/[lang]/layout.tsx`](../src/app/[lang]/layout.tsx) and forwards `Content-Security-Policy` + `x-nonce` on the **request** from Proxy.
+Next.js 16’s nonce CSP guide requires **request-time HTML** so framework scripts (and inlined CSS) receive matching `nonce` attributes. This app calls `connection()` in [`src/app/[lang]/layout.tsx`](../src/app/[lang]/layout.tsx) and forwards `Content-Security-Policy` + `x-nonce` on the **request** from Proxy.
 
-Tradeoffs (accepted for Observatory script-src pass):
+Tradeoffs (accepted for Observatory script-src / style-src pass):
 
 | Keep | Give up |
 | --- | --- |
-| Strict `script-src` (no `'unsafe-inline'`) | Fully static HTML shells for locale layouts |
+| Strict `script-src` / `style-src` (no `'unsafe-inline'`) | Fully static HTML shells for locale layouts |
 | Cache Components for data / client lazy sections | Partial Prefetch / instant shells on `[lang]` |
 | Short private `Cache-Control` on locale HTML | Long CDN HTML cache (HTML is nonce-bound) |
 
-Mozilla Observatory scores:
+### Mozilla Observatory expectation
 
-- `script-src` with `'unsafe-inline'` → **−20**
-- `'unsafe-inline'` only in `style-src` → **0** (style-src-only)
-- `default-src 'none'` and no unsafe in script → path to **A+/100** with other header bonuses
+Local grader path: `node scripts/verify-security-headers.mjs http://127.0.0.1:3456/ar`.
 
-### Why `'unsafe-inline'` remains on style-src
+| Check | Expected |
+| --- | --- |
+| `default-src 'none'` + no unsafe in `script-src` / `style-src` | `csp-implemented-with-no-unsafe-default-src-none` (**+10**) |
+| `script-src` with `'unsafe-inline'` | would be **−20** (must stay clean) |
+| `'unsafe-inline'` only in legacy `style-src` | **0** (style-src-only) — **avoided** via style nonces |
+| SRI on same-origin scripts | bonus when `experimental.sri` applies |
+| Other headers (HSTS, XFO, nosniff, Referrer-Policy, COOP) | pass |
 
-- React `style={…}` attributes across the UI
-- `experimental.inlineCss` inlines critical CSS as `<style>` tags
+**Residual (accepted):** `style-src-attr 'unsafe-inline'` for React `style={…}` attributes. Observatory’s CSP analyzer scores `style-src` / `script-src` / `object-src` only — it does **not** treat `style-src-attr` as the −20 unsafe-inline case. Removing this residual would require migrating every React style attribute to classes / CSS variables.
 
-Removing style `'unsafe-inline'` would require a full CSS-attr migration or style nonces on every tag; Observatory does **not** require that for a 100 score when script-src is clean.
+Overall Observatory target with the above: **A+ / 100** (CSP +10 path), modulo third-party / hosting header differences on a given deploy URL.
 
 ### Subresource Integrity
 
@@ -57,6 +62,7 @@ Removing style `'unsafe-inline'` would require a full CSS-attr migration or styl
 - Scripts / connect: Vercel Live, Vercel Analytics / vitals, optional Google Analytics hosts (fallback allowlists; ignored under CSP3 `strict-dynamic`)
 - Frames: YouTube (and nocookie), Vercel Live
 - Connect also: Aladhan, AlQuran Cloud, Quran.com, ipapi, jsDelivr (PDF worker), Google Fonts endpoints
+- `style-src` also allows `https://fonts.googleapis.com` (host allowlist; inlined CSS uses nonce)
 
 ### Trusted Types (phased)
 

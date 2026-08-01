@@ -174,6 +174,11 @@ export const siteCssVariables = {
   "--color-background-light-accent-rgb": colorChannels(siteConfig.colors.backgroundLightAccent),
 } as CSSProperties;
 
+/** `:root { … }` block for a nonce'd `<style>` tag (avoids html style= attrs). */
+export const siteCssVariablesBlock = `:root{${Object.entries(siteCssVariables)
+  .map(([key, value]) => `${key}:${value}`)
+  .join(";")}}`;
+
 export function siteAssetUrl(path: string) {
   return path.startsWith("http") ? path : `${siteConfig.identity.siteUrl}${path}`;
 }

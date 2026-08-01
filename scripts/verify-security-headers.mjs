@@ -58,8 +58,18 @@ if (!scriptSrc.includes("'strict-dynamic'")) {
   note("script-src strict-dynamic ✓");
 }
 
-if (styleSrc.includes("'unsafe-inline'")) {
-  note("style-src 'unsafe-inline' present (Observatory style-src-only = 0) ✓");
+if (styleSrc.includes("'unsafe-inline'") && !/'nonce-[A-Za-z0-9+/=_-]+'/.test(styleSrc)) {
+  note("style-src 'unsafe-inline' without nonce (Observatory style-src-only = 0)");
+} else if (/'nonce-[A-Za-z0-9+/=_-]+'/.test(styleSrc) && !styleSrc.includes("'unsafe-inline'")) {
+  note("style-src nonce without 'unsafe-inline' (Observatory no-unsafe +10 path) ✓");
+} else if (/'nonce-[A-Za-z0-9+/=_-]+'/.test(styleSrc) && styleSrc.includes("'unsafe-inline'")) {
+  note("style-src nonce + 'unsafe-inline' (Observatory ignores unsafe-inline when nonce present) ✓");
+} else {
+  fail("style-src missing nonce and has no 'unsafe-inline' fallback");
+}
+
+if (csp.includes("style-src-attr") && /style-src-attr[^;]*'unsafe-inline'/.test(csp)) {
+  note("style-src-attr 'unsafe-inline' residual for React style attrs (Observatory ignores) ✓");
 }
 
 const required = {

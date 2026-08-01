@@ -96,9 +96,11 @@ const nextConfig = {
     sri: {
       algorithm: 'sha256',
     },
-    // Inline CSS into HTML in production to remove the render-blocking stylesheet
-    // round-trip (PageSpeed "Eliminate render-blocking resources").
-    inlineCss: true,
+    // Prefer external CSS + nonce on <link> over experimental.inlineCss.
+    // inlineCss emits <style precedence> tags that currently omit the request
+    // nonce, which breaks style-src 'nonce-…' (CSP2 ignores 'unsafe-inline'
+    // when a nonce is present). External stylesheets receive nonce from Next.
+    inlineCss: false,
     // Optimize package imports (stable in Next.js 16)
     // Note: react-pdf is excluded here because it's in serverExternalPackages
     optimizePackageImports: [

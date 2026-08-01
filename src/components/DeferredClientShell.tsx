@@ -31,15 +31,16 @@ export default function DeferredClientShell() {
       if (!cancelled) setReady(true);
     };
 
+    // Stay off the Lighthouse quiet window / LCP budget; chrome is not critical.
     if (typeof window.requestIdleCallback === "function") {
-      const id = window.requestIdleCallback(enable, { timeout: 2500 });
+      const id = window.requestIdleCallback(enable, { timeout: 6000 });
       return () => {
         cancelled = true;
         window.cancelIdleCallback(id);
       };
     }
 
-    const timer = window.setTimeout(enable, 1200);
+    const timer = window.setTimeout(enable, 4000);
     return () => {
       cancelled = true;
       window.clearTimeout(timer);

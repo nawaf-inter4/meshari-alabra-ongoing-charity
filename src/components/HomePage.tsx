@@ -2,7 +2,6 @@
 
 import { lazy, Suspense, type ReactNode } from "react";
 import ClientHeader from "./ClientHeader";
-import Footer from "./Footer";
 import SectionSkeleton from "./SectionSkeleton";
 import DeferredSection from "./DeferredSection";
 
@@ -19,6 +18,7 @@ const QuranStoriesSection = lazy(() => import("./sections/QuranStoriesSection"))
 const MeshariFavoriteReciter = lazy(() => import("./sections/MeshariFavoriteReciter"));
 const IslamicChantSection = lazy(() => import("./sections/IslamicChantSection"));
 const SectionNavigation = lazy(() => import("./sections/SectionNavigation"));
+const Footer = lazy(() => import("./Footer"));
 
 const SectionLoader = () => <SectionSkeleton compact label="Loading section" />;
 
@@ -54,7 +54,7 @@ export default function HomePage({ hero }: HomePageProps) {
       <Gated><MeshariFavoriteReciter /></Gated>
       <Gated><IslamicChantSection /></Gated>
       <Gated><SectionNavigation /></Gated>
-      <Footer />
+      <Gated><Footer /></Gated>
     </main>
   );
 }

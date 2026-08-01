@@ -1,9 +1,12 @@
 /**
  * Content-Security-Policy builders shared by Proxy and docs/verification.
  *
- * Observatory grades `script-src 'unsafe-inline'` as -20. `style-src
- * 'unsafe-inline'` alone is scored as style-src-only (0) and still allows
- * `default-src 'none'` pages to reach A+/100 with other header bonuses.
+ * Observatory grades `script-src 'unsafe-inline'` as -20.
+ * `style-src` uses per-request nonces (Next stamps them on
+ * `experimental.inlineCss` <style> tags). React `style={…}` attributes are
+ * covered by `style-src-attr 'unsafe-inline'` — Observatory’s CSP grader only
+ * inspects `style-src` / `script-src` / `object-src`, so this residual does
+ * not block `csp-implemented-with-no-unsafe-default-src-none` (+10).
  *
  * Script trust uses per-request nonces + `strict-dynamic` (Next.js 16 Proxy
  * guide). That requires request-time HTML so Next can stamp `nonce` on
@@ -50,9 +53,12 @@ export function buildContentSecurityPolicy(nonce: string): string {
     "default-src 'none'",
     `script-src ${scriptSrc}`,
     "script-src-attr 'none'",
-    // Inline React style attrs + experimental.inlineCss <style> tags.
-    // Observatory: style-src unsafe alone → 0 modifier (not -20).
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    // Next stamps `nonce` on experimental.inlineCss <style> tags (and
+    // stylesheet links). React `style={…}` attrs use style-src-attr instead.
+    // Avoid style-src 'unsafe-inline' — with a nonce present, browsers ignore
+    // it anyway, and Observatory still treats style-only unsafe as 0.
+    `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
+    // Residual: React inline style attributes require this under CSP3.
     "style-src-attr 'unsafe-inline'",
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: https: blob:",

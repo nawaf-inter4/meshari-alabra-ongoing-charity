@@ -19,16 +19,12 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
   const sadaqallah = heroVerse(locale, "sadaqallah");
 
   return (
-    <section
-      className="relative min-h-screen flex items-center justify-center px-4 pb-20 sm:pt-32 md:pt-28"
-      style={{ paddingTop: "calc(7rem + env(safe-area-inset-top, 0px))" }}
-    >
+    <section className="hero-section relative min-h-screen flex items-center justify-center px-4 pb-20 sm:pt-32 md:pt-28">
       <HeroStars />
 
       <div className="relative z-10 max-w-4xl mx-auto text-center">
         <div
-          className="bg-light-secondary dark:bg-dark-secondary md:bg-light-secondary/95 md:dark:bg-dark-secondary/95 md:backdrop-blur-sm rounded-2xl p-8 border-2 border-islamic-gold/30 glow"
-          style={{ borderColor: "var(--color-brand-border)" }}
+          className="hero-memorial-card bg-light-secondary dark:bg-dark-secondary md:bg-light-secondary/95 md:dark:bg-dark-secondary/95 md:backdrop-blur-sm rounded-2xl p-8 border-2 border-islamic-gold/30 glow"
           data-memorial-card
         >
           <h1 className="text-3xl md:text-4xl font-bold mb-3">{memorialName}</h1>
@@ -50,21 +46,18 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
         <div className="mt-8" data-hero-verse>
           <div className="space-y-6">
             <p
-              className={`text-xl md:text-2xl ${rtl ? "font-tajwal" : ""} text-islamic-green leading-relaxed min-h-[2.5em]`}
-              style={{ lineHeight: 1.75 }}
+              className={`hero-verse-bismillah text-xl md:text-2xl ${rtl ? "font-tajwal" : ""} text-islamic-green leading-relaxed min-h-[2.5em]`}
             >
               {bismillah}
             </p>
             <p
-              className={`text-2xl md:text-3xl ${rtl ? "font-tajwal" : ""} text-islamic-gold max-w-4xl mx-auto min-h-[7.5em] md:min-h-[6.5em]`}
-              style={{ lineHeight: 2.5 }}
+              className={`hero-verse-main text-2xl md:text-3xl ${rtl ? "font-tajwal" : ""} text-islamic-gold max-w-4xl mx-auto min-h-[7.5em] md:min-h-[6.5em]`}
               data-lcp-verse
             >
               {verse}
             </p>
             <p
-              className={`text-lg md:text-xl ${rtl ? "font-tajwal" : ""} text-islamic-green leading-relaxed min-h-[1.75em]`}
-              style={{ lineHeight: 1.75 }}
+              className={`hero-verse-sadaqallah text-lg md:text-xl ${rtl ? "font-tajwal" : ""} text-islamic-green leading-relaxed min-h-[1.75em]`}
             >
               {sadaqallah}
             </p>

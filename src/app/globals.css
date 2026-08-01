@@ -74,6 +74,34 @@
   -webkit-backface-visibility: hidden;
 }
 
+/* CSS-only hero sparkles (no lucide SVG / inline style attrs on the LCP path). */
+.hero-star-dot {
+  position: absolute;
+  display: block;
+  border-radius: 9999px;
+  color: rgb(212 175 55 / 0.6);
+  background: currentColor;
+  box-shadow: 0 0 4px currentColor;
+  animation: hero-star-pulse 3.2s ease-in-out infinite;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.hero-star-dot:nth-child(1) { top: 12%; left: 8%; width: 6px; height: 6px; animation-delay: 0s; }
+.hero-star-dot:nth-child(2) { top: 22%; left: 78%; width: 4.5px; height: 4.5px; animation-delay: 0.4s; }
+.hero-star-dot:nth-child(3) { top: 38%; left: 18%; width: 7.5px; height: 7.5px; animation-delay: 0.8s; }
+.hero-star-dot:nth-child(4) { top: 48%; left: 88%; width: 4.5px; height: 4.5px; animation-delay: 1.2s; }
+.hero-star-dot:nth-child(5) { top: 62%; left: 12%; width: 6px; height: 6px; animation-delay: 1.6s; }
+.hero-star-dot:nth-child(6) { top: 72%; left: 72%; width: 7.5px; height: 7.5px; animation-delay: 2s; }
+.hero-star-dot:nth-child(7) { top: 18%; left: 52%; width: 4.5px; height: 4.5px; animation-delay: 0.6s; }
+.hero-star-dot:nth-child(8) { top: 80%; left: 42%; width: 6px; height: 6px; animation-delay: 1.4s; }
+
+@media (hover: none), (pointer: coarse) {
+  .hero-star-dot:nth-child(n + 5) {
+    display: none;
+  }
+}
+
 @keyframes hero-scroll-nudge {
   0%,
   100% {
@@ -88,6 +116,24 @@
   animation: hero-scroll-nudge 1.6s ease-in-out infinite;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+
+/* Server hero — keep padding / verse metrics out of inline style attrs. */
+.hero-section {
+  padding-top: calc(7rem + env(safe-area-inset-top, 0px));
+}
+
+.hero-memorial-card {
+  border-color: var(--color-brand-border);
+}
+
+.hero-verse-bismillah,
+.hero-verse-sadaqallah {
+  line-height: 1.75;
+}
+
+.hero-verse-main {
+  line-height: 2.5;
 }
 
 /* Bookmark empty-state CTA chevron — CSS instead of framer infinite loop. */
