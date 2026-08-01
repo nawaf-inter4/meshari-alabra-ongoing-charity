@@ -104,16 +104,22 @@ export default function NativeYouTubeIframe({
       }
       if (!data || typeof data !== "object") return;
 
-      const payload = data as { event?: string; info?: number | { playerState?: number } };
-      // YT.PlayerState.PLAYING === 1
+      const payload = data as {
+        event?: string;
+        info?: number | { playerState?: number };
+        data?: number;
+      };
+      // YT.PlayerState.PLAYING === 1 (shapes vary by embed revision)
       const state =
         typeof payload.info === "number"
           ? payload.info
           : typeof payload.info === "object" && payload.info
             ? payload.info.playerState
-            : undefined;
+            : typeof payload.data === "number"
+              ? payload.data
+              : undefined;
 
-      if (payload.event === "onStateChange" && state === 1) {
+      if (state === 1 || (payload.event === "onStateChange" && state === 1)) {
         notifyExternalMediaPlay("youtube");
       }
     };
@@ -135,8 +141,19 @@ export default function NativeYouTubeIframe({
     }
   };
 
+  // postMessage play detection is unreliable on some embeds / HTTP localhost —
+  // pause memorial as soon as the user engages the player chrome.
+  const onUserEngage = () => {
+    notifyExternalMediaPlay("youtube");
+  };
+
   return (
-    <div ref={containerRef} className={className}>
+    <div
+      ref={containerRef}
+      className={className}
+      onPointerDown={onUserEngage}
+      onFocusCapture={onUserEngage}
+    >
       {shouldLoad ? (
         <iframe
           className={iframeClassName}

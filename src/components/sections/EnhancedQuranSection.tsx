@@ -332,6 +332,7 @@ export default function EnhancedQuranSection() {
   const [skipAnimations, setSkipAnimations] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement>(null);
+  const playRequestIdRef = useRef(0);
   const searchRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const reciterDropdownRef = useRef<HTMLDivElement>(null);
@@ -1105,13 +1106,17 @@ export default function EnhancedQuranSection() {
 
 
   const pauseAyah = () => {
+    // Invalidate in-flight fetch/play so a late response cannot restart audio.
+    playRequestIdRef.current += 1;
     if (audioRef.current) {
       audioRef.current.pause();
     }
     setIsPlaying(false);
+    setAudioLoading(false);
   };
 
   const playAyah = async (surahNumber: number, ayahNumber: number) => {
+    const requestId = ++playRequestIdRef.current;
     try {
       // Stop any currently playing audio
       if (audioRef.current) {
@@ -1125,10 +1130,12 @@ export default function EnhancedQuranSection() {
       notifyExternalMediaPlay("quran");
 
       const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${selectedReciter}`);
+      if (requestId !== playRequestIdRef.current) return;
       if (!response.ok) {
         throw new Error(`Quran audio request failed with status ${response.status}`);
       }
       const data = await response.json();
+      if (requestId !== playRequestIdRef.current) return;
 
       if (data.data?.audio && (!data.data.edition || data.data.edition.format === "audio")) {
         if (audioRef.current) {
@@ -1137,8 +1144,13 @@ export default function EnhancedQuranSection() {
 
           try {
             await audioRef.current.play();
+            if (requestId !== playRequestIdRef.current) {
+              audioRef.current.pause();
+              return;
+            }
             setAudioLoading(false);
           } catch (playError) {
+            if (requestId !== playRequestIdRef.current) return;
             console.error("Error playing audio:", playError);
             setIsPlaying(false);
             setAudioLoading(false);
@@ -1153,6 +1165,7 @@ export default function EnhancedQuranSection() {
         throw new Error("No valid audio edition URL found");
       }
     } catch (error) {
+      if (requestId !== playRequestIdRef.current) return;
       console.error("Error in playAyah:", error);
       setIsPlaying(false);
       setAudioLoading(false);
@@ -1165,28 +1178,30 @@ export default function EnhancedQuranSection() {
   const togglePlayPause = async (surahNumber?: number, ayahNumber?: number) => {
     const targetSurah = surahNumber ?? selectedSurah;
     const targetAyah = ayahNumber ?? currentAyah;
+    const sameAyah =
+      currentAyah === targetAyah && Number(selectedSurah) === Number(targetSurah);
+    const audio = audioRef.current;
+    const activelyPlaying =
+      sameAyah &&
+      (isPlaying || audioLoading || (audio != null && !audio.paused && Boolean(audio.src)));
 
-    if (
-      isPlaying &&
-      currentAyah === targetAyah &&
-      selectedSurah === targetSurah &&
-      audioRef.current?.src
-    ) {
+    // Pause must win even while the ayah URL is still loading (no src yet).
+    // Previously a missing src fell through to playAyah() and looked like "replay".
+    if (activelyPlaying) {
       pauseAyah();
       return;
     }
 
     if (
-      !isPlaying &&
-      currentAyah === targetAyah &&
-      selectedSurah === targetSurah &&
-      audioRef.current?.src &&
-      !audioRef.current.ended
+      sameAyah &&
+      audio?.src &&
+      !audio.ended &&
+      audio.paused
     ) {
       try {
         notifyExternalMediaPlay("quran");
-        await audioRef.current.play();
         setIsPlaying(true);
+        await audio.play();
       } catch (error) {
         console.error("Error resuming audio:", error);
         await playAyah(targetSurah, targetAyah);

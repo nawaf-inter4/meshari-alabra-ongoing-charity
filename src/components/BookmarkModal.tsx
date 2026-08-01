@@ -277,10 +277,12 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
   };
 
   const pauseAyah = () => {
+    playRequestIdRef.current += 1;
     if (audioRef.current) {
       audioRef.current.pause();
     }
     setIsPlaying(false);
+    setAudioLoading(false);
   };
 
   // Same audio API path as EnhancedQuranSection.playAyah
@@ -353,10 +355,26 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
 
   const togglePlayPause = (surahNumber: number, ayahNumber: number) => {
     const verseKey = `${surahNumber}-${ayahNumber}`;
-    if (isPlaying && currentPlayingKey === verseKey) {
+    const audio = audioRef.current;
+    const sameVerse = currentPlayingKey === verseKey;
+    const activelyPlaying =
+      sameVerse &&
+      (isPlaying || audioLoading || (audio != null && !audio.paused && Boolean(audio.src)));
+
+    if (activelyPlaying) {
       pauseAyah();
       return;
     }
+
+    if (sameVerse && audio?.src && !audio.ended && audio.paused) {
+      notifyExternalMediaPlay("quran");
+      setIsPlaying(true);
+      void audio.play().catch(() => {
+        void playAyah(surahNumber, ayahNumber);
+      });
+      return;
+    }
+
     void playAyah(surahNumber, ayahNumber);
   };
 
