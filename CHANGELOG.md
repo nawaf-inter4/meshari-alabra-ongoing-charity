@@ -6,6 +6,13 @@ This project uses [Semantic Versioning](https://semver.org/) and automated relea
 
 Patch and minor changes are batched: Release Please opens one release pull request on `main` that accumulates `fix:` (patch) and `feat:` (minor) commits since the last tag. Merging that pull request publishes the GitHub release and tag.
 
+## [1.1.3](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.1.2...v1.1.3) (2026-08-01)
+
+
+### Bug Fixes
+
+* ship Spanish, Portuguese, Hindi locales and UI polish ([#34](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/issues/34)) ([dd5cb78](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/commit/dd5cb783dd7f5efdabc074042b2bae9a72242e52))
+
 ## [1.1.2](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.1.1...v1.1.2) (2026-07-31)
 
 
