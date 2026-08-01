@@ -20,6 +20,12 @@ import {
 } from "@/config/site";
 import { translate, translations } from "@/lib/translations";
 import { getCspNonce } from "@/lib/csp-nonce";
+import {
+  enrichMemorialDescription,
+  formatHomeTitle,
+  getHomeKeywords,
+  memorialLegalName,
+} from "@/lib/seo";
 
 // The document language and direction depend on this root segment's URL.
 // Deeper pages still validate instant navigation within the active locale.
@@ -95,24 +101,18 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!isSupportedLocale(lang)) notFound();
 
-  const title =
-    siteConfig.seo.title ||
-    translate(lang, "seo.title", translate(lang, "site.title", siteConfig.identity.name));
-  const description =
+  const title = formatHomeTitle(lang);
+  const description = enrichMemorialDescription(
     siteConfig.seo.description ||
-    translate(
-      lang,
-      "seo.description",
-      translate(lang, "hero.description", translate(lang, "site.subtitle")),
-    );
+      translate(
+        lang,
+        "seo.description",
+        translate(lang, "hero.description", translate(lang, "site.subtitle")),
+      ),
+    lang,
+  );
   const currentUrl = `${siteConfig.identity.siteUrl}/${lang}`;
-  const keywords = siteConfig.seo.keywords || [
-    title,
-    translate(lang, "hero.title"),
-    translate(lang, "quran.title"),
-    translate(lang, "supplications.title"),
-    siteConfig.content.memorialLegalName,
-  ];
+  const keywords = getHomeKeywords(lang);
 
   return {
     title,
@@ -122,7 +122,7 @@ export async function generateMetadata({
     creator: siteConfig.identity.organizationName,
     publisher: siteConfig.identity.organizationName,
     metadataBase: new URL(siteConfig.identity.siteUrl),
-    applicationName: siteConfig.identity.shortName,
+    applicationName: memorialLegalName(),
     manifest: "/manifest.webmanifest",
     icons: {
       icon: [{ url: siteConfig.assets.favicon }],
@@ -130,7 +130,7 @@ export async function generateMetadata({
     },
     appleWebApp: {
       capable: true,
-      title: siteConfig.identity.shortName,
+      title: memorialLegalName(),
       statusBarStyle: "black-translucent",
     },
     alternates: {

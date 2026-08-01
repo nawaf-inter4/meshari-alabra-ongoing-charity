@@ -5,12 +5,27 @@ import {
   siteConfig,
 } from "@/config/site";
 import { translate } from "@/lib/translations";
+import {
+  enrichMemorialDescription,
+  formatHomeTitle,
+  memorialAlternateName,
+  memorialLegalName,
+} from "@/lib/seo";
 
 export default function SEOScripts({ nonce }: { nonce?: string }) {
   const { identity, content, seo } = siteConfig;
-  const description = seo.description || translate(identity.defaultLocale, "seo.description", translate(identity.defaultLocale, "hero.description"));
+  const description = enrichMemorialDescription(
+    seo.description ||
+      translate(
+        identity.defaultLocale,
+        "seo.description",
+        translate(identity.defaultLocale, "hero.description"),
+      ),
+    identity.defaultLocale,
+  );
   const websiteId = `${identity.siteUrl}/#website`;
   const personId = `${identity.siteUrl}/#person`;
+  const legalName = memorialLegalName();
 
   const schema = {
     "@context": "https://schema.org",
@@ -19,7 +34,8 @@ export default function SEOScripts({ nonce }: { nonce?: string }) {
         "@type": "WebSite",
         "@id": websiteId,
         url: identity.siteUrl,
-        name: identity.name,
+        name: formatHomeTitle(identity.defaultLocale),
+        alternateName: [identity.name, identity.shortName, legalName],
         description,
         inLanguage: SUPPORTED_LOCALES,
         publisher: {
@@ -30,13 +46,19 @@ export default function SEOScripts({ nonce }: { nonce?: string }) {
             url: siteAssetUrl(siteConfig.assets.logo),
           },
         },
+        about: { "@id": personId },
       },
       {
         "@type": "Person",
         "@id": personId,
-        name: content.memorialLegalName,
-        alternateName: content.memorialAlternateName,
+        name: legalName,
+        alternateName: [
+          memorialAlternateName(),
+          "Meshari Alabra",
+          "مشاري العبره",
+        ],
         deathDate: content.memorialDeathDate,
+        description,
       },
     ],
   };

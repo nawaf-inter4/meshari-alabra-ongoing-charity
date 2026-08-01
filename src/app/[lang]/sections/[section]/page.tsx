@@ -26,6 +26,7 @@ import {
   isSupportedLocale,
   type SupportedLocale,
 } from "@/config/site";
+import { formatMemorialTitle } from "@/lib/seo";
 
 const sectionComponents: Record<SectionId, ComponentType> = {
   quran: QuranSectionWrapper,
@@ -76,7 +77,7 @@ async function LocalizedSectionContent({ params }: SectionPageProps) {
     <>
       <SectionSchema sectionId={section} locale={locale} />
       <div className="pt-20">
-        <h1 className="sr-only">{title}</h1>
+        <h1 className="sr-only">{formatMemorialTitle(locale, title)}</h1>
         <Suspense fallback={<LoadingSection title={title} />}>
           <SectionComponent />
         </Suspense>
