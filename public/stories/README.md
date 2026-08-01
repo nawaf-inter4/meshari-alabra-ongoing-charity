@@ -38,6 +38,18 @@ Supported UI locales: `ar`, `en`, `ur`, `tr`, `id`, `ms`, `bn`, `fr`, `zh`, `it`
 
 When you add a translated PDF, place it at `/stories/{slug}/{locale}.pdf` and add that locale to `STORY_PDF_LOCALES` for the slug.
 
+## Regenerate non-Arabic PDFs
+
+Non-Arabic PDFs are generated from locale JSON titles/descriptions plus
+`src/content/stories/stories.ts` body text:
+
+```bash
+npx playwright install chromium
+npm run generate:story-pdfs
+```
+
+Arabic `ar.pdf` files are never overwritten.
+
 ## Legacy filenames
 
 Arabic-named PDFs may still exist at the root of `public/stories/` for backwards compatibility. New code should use the slug/locale layout above. Static `/stories/*` paths continue to be served without locale rewriting (see `src/proxy.ts`).
