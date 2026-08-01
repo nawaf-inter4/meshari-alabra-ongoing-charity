@@ -47,19 +47,23 @@ function isUtilityPath(pathname: string) {
     /\.[a-z0-9]+$/i.test(pathname);
 }
 
+/**
+ * Build CSP for Cache Components / statically generated locale shells.
+ *
+ * Next.js 16 documents nonce + `strict-dynamic` via Proxy (`x-nonce`), but that
+ * path requires per-request dynamic HTML (`connection()` / `headers()`), which
+ * disables static shells and Partial Prefetch — a Core Web Vitals regression
+ * for this memorial site. We therefore keep a strong static CSP:
+ * - `default-src 'none'` + explicit allowlists
+ * - production: no `'unsafe-eval'`
+ * - `'unsafe-inline'` remains on script-src / style-src (Next bootstrapping,
+ *   JSON-LD Script, and React style attributes)
+ * - Trusted Types `require-trusted-types-for` is not enabled (breaks Next +
+ *   Vercel Analytics without a full TT migration)
+ */
 function buildContentSecurityPolicy() {
   const isDev = process.env.NODE_ENV !== 'production';
 
-  // Strongest practical CSP for Cache Components / statically generated locale
-  // shells: Next.js cannot inject per-request nonces into build-time HTML, so
-  // nonce + strict-dynamic would block framework scripts unless every page is
-  // forced dynamic (a large Core Web Vitals regression for this memorial site).
-  //
-  // Production removes 'unsafe-eval'. 'unsafe-inline' remains for Next/React
-  // inline bootstrapping and JSON-LD <Script> tags — residual XSS risk if an
-  // injection path appears; prefer output encoding and avoid user HTML.
-  // Trusted Types (`require-trusted-types-for 'script'`) is deferred: it breaks
-  // Next.js + third-party analytics without a full TT migration.
   const scriptSrc = [
     "'self'",
     "'unsafe-inline'",
@@ -71,16 +75,35 @@ function buildContentSecurityPolicy() {
     'https://www.google-analytics.com',
   ].join(' ');
 
+  const connectSrc = [
+    "'self'",
+    'https://api.aladhan.com',
+    'https://api.alquran.cloud',
+    'https://api.quran.com',
+    'https://ipapi.co',
+    'https://cdn.jsdelivr.net',
+    'https://vitals.vercel-insights.com',
+    'https://va.vercel-scripts.com',
+    'https://www.google-analytics.com',
+    'https://fonts.googleapis.com',
+    'https://fonts.gstatic.com',
+    'https://vercel.live',
+  ].join(' ');
+
   return [
-    "default-src 'self'",
+    "default-src 'none'",
     `script-src ${scriptSrc}`,
+    "script-src-attr 'none'",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src 'self' https://fonts.gstatic.com",
+    "style-src-attr 'unsafe-inline'",
+    "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: https: blob:",
-    "media-src 'self' https:",
-    "connect-src 'self' https://api.aladhan.com https://api.alquran.cloud https://api.quran.com https://ipapi.co https://cdn.jsdelivr.net https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.google-analytics.com https://fonts.googleapis.com https://fonts.gstatic.com https://vercel.live",
+    "media-src 'self' https: blob:",
+    `connect-src ${connectSrc}`,
     "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://vercel.live",
     "worker-src 'self' blob:",
+    "child-src 'self' blob:",
+    "manifest-src 'self'",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -100,8 +123,8 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
 
   // Allow payment / OAuth popups without full cross-origin isolation (COEP would
-  // break YouTube embeds). Do not set Cross-Origin-Resource-Policy globally —
-  // CORP on HTML can interfere with third-party media embedding.
+  // break YouTube embeds). Do not set Cross-Origin-Resource-Policy on HTML —
+  // CORP on documents can interfere with third-party media embedding.
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
 
   const acceptEncoding = request.headers.get('accept-encoding') || '';
@@ -114,6 +137,8 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/icons/') ||
       request.nextUrl.pathname.startsWith('/_next/static/')) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    // Safe CORP for first-party static assets (not HTML).
+    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
 
     if (request.nextUrl.pathname.endsWith('.css')) {
       response.headers.set('Content-Type', 'text/css; charset=utf-8');
@@ -122,15 +147,18 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
 
   if (request.nextUrl.pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico)$/)) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
   }
 
   if (request.nextUrl.pathname.match(/\.(woff|woff2|ttf|eot)$/)) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
   }
 
   if (request.nextUrl.pathname.match(/\.(mp3|ogg|wav|m4a)$/)) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
     response.headers.set('Accept-Ranges', 'bytes');
+    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
   }
 
   if (request.nextUrl.pathname === '/' ||

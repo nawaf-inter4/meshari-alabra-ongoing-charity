@@ -4,7 +4,8 @@
   src: url('/fonts/amiri-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  /* Match UI fonts: avoid late swap CLS on hero / Quran verse. */
+  font-display: optional;
 }
 
 @font-face {

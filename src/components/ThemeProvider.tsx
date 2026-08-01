@@ -42,14 +42,16 @@ export function ThemeProvider({
     const root = document.documentElement;
     if (disableTransitionOnChange) {
       root.classList.add("theme-changing");
-      void root.offsetHeight;
     }
     root.classList.toggle("dark", resolved === "dark");
     root.style.colorScheme = resolved;
     setResolvedTheme(resolved);
     if (disableTransitionOnChange) {
+      // Double-rAF flushes styles without a forced layout read (offsetHeight).
       requestAnimationFrame(() => {
-        root.classList.remove("theme-changing");
+        requestAnimationFrame(() => {
+          root.classList.remove("theme-changing");
+        });
       });
     }
   }, [disableTransitionOnChange, enableSystem]);

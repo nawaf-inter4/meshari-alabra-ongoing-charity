@@ -114,14 +114,55 @@ export default function PrayerTimesSection() {
   const athanAudioRef = useRef<HTMLAudioElement>(null);
   const prayerCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Defer Aladhan / geolocation until the section nears the viewport (off LCP path).
   useEffect(() => {
-    fetchPrayerTimes();
-    updateHijriDate();
-    // Note: Notification permission should only be requested on user interaction
-    // Removed automatic request to avoid console violations
-    startPrayerTracking();
-    
+    const section = document.getElementById("prayer-times");
+    let cancelled = false;
+    let started = false;
+
+    const start = () => {
+      if (cancelled || started) return;
+      started = true;
+      fetchPrayerTimes();
+      updateHijriDate();
+      startPrayerTracking();
+    };
+
+    if (!section || typeof IntersectionObserver === "undefined") {
+      const idle =
+        typeof window !== "undefined" && "requestIdleCallback" in window
+          ? (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback
+          : null;
+      const handle = idle
+        ? idle(() => start(), { timeout: 4000 })
+        : window.setTimeout(start, 2000);
+      return () => {
+        cancelled = true;
+        if (idle) {
+          (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(handle as number);
+        } else {
+          clearTimeout(handle as number);
+        }
+        if (prayerCheckIntervalRef.current) {
+          clearInterval(prayerCheckIntervalRef.current);
+        }
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          start();
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "400px" },
+    );
+    observer.observe(section);
+
     return () => {
+      cancelled = true;
+      observer.disconnect();
       if (prayerCheckIntervalRef.current) {
         clearInterval(prayerCheckIntervalRef.current);
       }
@@ -639,18 +680,8 @@ export default function PrayerTimesSection() {
     <section id="prayer-times" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ 
-            duration: 0.6,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
+          initial={false}
           className="text-center mb-12 motion-safe"
-          style={{
-            willChange: 'transform, opacity',
-            transform: 'translateZ(0)',
-          }}
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <Clock className="w-8 h-8 text-islamic-gold" />
@@ -667,19 +698,8 @@ export default function PrayerTimesSection() {
 
         {/* Date and Prayer Status */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ 
-            duration: 0.6, 
-            delay: 0.2,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
+          initial={false}
           className="text-center mb-8 p-6 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-full motion-safe"
-          style={{
-            willChange: 'transform, opacity',
-            transform: 'translateZ(0)',
-          }}
         >
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{mounted ? (t("hijri.title") !== "hijri.title" ? t("hijri.title") : "التاريخ الهجري") : "التاريخ الهجري"}</p>
           <p className="text-2xl md:text-3xl font-bold text-islamic-gold">{hijriDate}</p>
@@ -726,10 +746,7 @@ export default function PrayerTimesSection() {
 
         {/* Location Selector */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          initial={false}
           className="flex items-center justify-center mb-8"
         >
           <div className="relative" ref={locationDropdownRef}>
@@ -811,21 +828,8 @@ export default function PrayerTimesSection() {
             {prayers.map((prayer, index) => (
               <motion.div
                 key={prayer.key}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ 
-                  duration: 0.4, 
-                  delay: 0.1 * index,
-                  ease: [0.25, 0.1, 0.25, 1],
-                }}
-                className="bg-light-secondary dark:bg-dark-secondary rounded-full w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 flex flex-col items-center justify-center text-center border-2 border-transparent hover:border-islamic-gold transition-all duration-300 card-hover mx-auto motion-safe"
-                style={{
-                  willChange: 'transform, opacity',
-                  transform: 'translateZ(0)',
-                  backfaceVisibility: 'hidden',
-                  WebkitBackfaceVisibility: 'hidden',
-                }}
+                initial={false}
+                className="bg-light-secondary dark:bg-dark-secondary rounded-full w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 flex flex-col items-center justify-center text-center border-2 border-transparent hover:border-islamic-gold transition-transform duration-300 card-hover mx-auto motion-safe"
               >
                 <Bell className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-islamic-gold mb-1" />
                 <h3 className="font-bold text-xs sm:text-sm md:text-base mb-1 leading-tight">{prayer.name}</h3>

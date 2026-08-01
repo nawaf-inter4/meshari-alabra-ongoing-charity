@@ -3,11 +3,10 @@
 import { lazy, Suspense } from "react";
 import ClientHeader from "./ClientHeader";
 import HeroSection from "./sections/HeroSection";
-import SectionNavigation from "./sections/SectionNavigation";
 import Footer from "./Footer";
 import SectionSkeleton from "./SectionSkeleton";
 
-// Lazy load heavy sections for better performance - reduces initial bundle size
+// Lazy load below-fold sections (incl. framer-motion nav) to cut unused JS on LCP.
 const YouTubePlaylist = lazy(() => import("./sections/YouTubePlaylist"));
 const DonationSection = lazy(() => import("./sections/DonationSection"));
 const PrayerTimesSection = lazy(() => import("./sections/PrayerTimesSection"));
@@ -20,6 +19,7 @@ const QiblaFinder = lazy(() => import("./sections/QiblaFinder"));
 const QuranStoriesSection = lazy(() => import("./sections/QuranStoriesSection"));
 const MeshariFavoriteReciter = lazy(() => import("./sections/MeshariFavoriteReciter"));
 const IslamicChantSection = lazy(() => import("./sections/IslamicChantSection"));
+const SectionNavigation = lazy(() => import("./sections/SectionNavigation"));
 
 const SectionLoader = () => <SectionSkeleton compact label="Loading section" />;
 
@@ -76,7 +76,9 @@ export default function HomePage({ language }: HomePageProps) {
         <IslamicChantSection />
       </Suspense>
       
-      <SectionNavigation />
+      <Suspense fallback={<SectionLoader />}>
+        <SectionNavigation />
+      </Suspense>
       <Footer />
     </main>
   );

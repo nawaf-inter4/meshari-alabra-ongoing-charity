@@ -49,7 +49,6 @@ test("landing-page section titles are links that preserve the active locale", as
 
     const title = page.locator('#quran a[data-section-title-link="quran"]');
     await expect(title).toBeVisible({ timeout: 5_000 });
-    // framer-motion starts at opacity 0 until whileInView paints.
     await expect
       .poll(() => title.evaluate((el) => Number.parseFloat(getComputedStyle(el).opacity)), {
         timeout: 5_000,

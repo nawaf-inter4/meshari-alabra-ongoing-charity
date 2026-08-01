@@ -1,45 +1,25 @@
 "use client";
 
 import { useLanguage } from "../LanguageProvider";
-import { motion } from "framer-motion";
 import { siteConfig } from "@/config/site";
 import { Heart, Gift, Users, Star } from "lucide-react";
-import { useState, useEffect } from "react";
 import SectionTitleLink from "./SectionTitleLink";
 
 export default function DonationSection() {
   const { t } = useLanguage();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const benefits = [
-    { icon: Star, text: mounted ? t("donation.benefit1") : "صدقة جارية" },
-    { icon: Users, text: mounted ? t("donation.benefit2") : "مساعدة المحتاجين" },
-    { icon: Gift, text: mounted ? t("donation.benefit3") : "نشر الخير" },
+    { icon: Star, text: t("donation.benefit1") },
+    { icon: Users, text: t("donation.benefit2") },
+    { icon: Gift, text: t("donation.benefit3") },
   ];
 
   return (
     <section id="donation" className="py-20 px-4 bg-light-secondary dark:bg-dark-secondary">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ 
-            duration: 0.6,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
-          className="text-center mb-12 motion-safe"
-          style={{
-            willChange: 'transform, opacity',
-            transform: 'translateZ(0)',
-          }}
-        >
+        <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-4">
-            <Heart className="w-8 h-8 text-islamic-gold" fill="currentColor" />
+            <Heart className="w-8 h-8 text-islamic-gold" fill="currentColor" aria-hidden="true" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-1">
               <SectionTitleLink section="donation">{t("donation.title")}</SectionTitleLink>
             </h2>
@@ -50,62 +30,36 @@ export default function DonationSection() {
           <p className="text-lg leading-loose max-w-3xl mx-auto py-4 px-6">
             {t("donation.description")}
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ 
-            duration: 0.6, 
-            delay: 0.2,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
-          className="motion-safe bg-gradient-to-br from-islamic-gold/10 via-islamic-green/10 to-islamic-blue/10 rounded-2xl p-8 md:p-12 border-2 border-islamic-gold/30 glow mb-12"
-          style={{
-            willChange: 'transform, opacity',
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden',
-          }}
-        >
+        <div className="bg-gradient-to-br from-islamic-gold/10 via-islamic-green/10 to-islamic-blue/10 rounded-2xl p-8 md:p-12 border-2 border-islamic-gold/30 glow mb-12">
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {benefits.map((benefit, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
                 className="flex items-start gap-3 bg-light/50 dark:bg-dark/50 p-4 rounded-full"
               >
-                <benefit.icon className="w-6 h-6 text-islamic-gold flex-shrink-0 mt-1" />
+                <benefit.icon className="w-6 h-6 text-islamic-gold flex-shrink-0 mt-1" aria-hidden="true" />
                 <p className="text-sm leading-loose py-2">{benefit.text}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="text-center"
-          >
+          <div className="text-center">
             <a
               href={siteConfig.content.donationUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue text-white font-bold text-lg rounded-full hover:scale-105 transition-transform duration-300 glow"
             >
-              <Heart className="w-6 h-6" fill="currentColor" />
+              <Heart className="w-6 h-6" fill="currentColor" aria-hidden="true" />
               {t("donation.button")}
             </a>
             <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
               {t("donation.balance_text")}
             </p>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );

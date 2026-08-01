@@ -83,13 +83,15 @@ html.theme-changing *::after {
   transition: none !important;
 }
 
-/* Critical UI fonts only. Quranic Amiri / Scheherazade load via /fonts/quran-fonts.css. */
+/* Critical UI fonts only. Quranic Amiri / Scheherazade load via /fonts/quran-fonts.css.
+ * `optional` avoids late font-swap CLS on the Arabic hero (Lighthouse CLS).
+ * Preloaded faces still apply when they win the display window. */
 @font-face {
   font-family: 'Lexend Deca';
   src: url('/fonts/lexend-deca-latin.woff2') format('woff2');
   font-style: normal;
   font-weight: 400 700;
-  font-display: swap;
+  font-display: optional;
 }
 
 @font-face {
@@ -97,7 +99,7 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
+  font-display: optional;
 }
 
 @font-face {
@@ -105,7 +107,7 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: swap;
+  font-display: optional;
 }
 
 :root {
@@ -121,23 +123,55 @@ html.theme-changing *::after {
 }
 
 /*
- * Compositor-friendly motion hints. Avoid permanent will-change and
- * perspective — both cause WebKit flicker on iOS Safari / PWA.
+ * Compositor-friendly motion hints.
+ * Do NOT use permanent will-change or translateZ(0) — both promote layers
+ * that thrash / blink on iOS Safari & standalone PWA.
  */
 .motion-safe {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  transform: translateZ(0);
 }
 
+/*
+ * CSS enter reveal (MotionReveal) — transform only, no opacity:0.
+ * Avoids hydration blink (SSR visible) and WebKit opacity paint jank.
+ */
+.motion-reveal {
+  transform: translate3d(0, 14px, 0);
+  transition: transform 0.42s cubic-bezier(0.25, 0.1, 0.25, 1);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.motion-reveal.is-visible {
+  transform: translate3d(0, 0, 0);
+}
+
+/* Touch / coarse pointer: skip enter motion entirely (WebKit jank hotspot). */
+@media (hover: none), (pointer: coarse) {
+  .motion-reveal {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Soften backdrop-filter on mobile GPUs (hero cards, modals). */
 @media (max-width: 768px) {
   .motion-safe {
-    /* Soften expensive blurs that thrash on mobile GPUs */
-    --tw-backdrop-blur: blur(8px);
+    --tw-backdrop-blur: blur(6px);
   }
 
   .glow {
     box-shadow: 0 0 12px rgb(var(--color-brand-rgb) / 0.22);
+  }
+}
+
+/* iOS Safari / WebKit touch: prefer lighter blur (Chrome iOS = WebKit too). */
+@supports (-webkit-touch-callout: none) {
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-sm {
+    --tw-backdrop-blur: blur(6px);
   }
 }
 
@@ -150,6 +184,19 @@ html.theme-changing *::after {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .motion-reveal {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .hero-star,
+  .hero-scroll-indicator,
+  .skeleton-pulse,
+  .shimmer,
+  .shimmer::after {
+    animation: none !important;
   }
 
   .glow {
@@ -299,27 +346,42 @@ h3.text-center {
   padding-block: 0.2em;
 }
 
-/* Loading Shimmer */
+/*
+ * Loading shimmer — transform/opacity on a pseudo (compositor-friendly).
+ * Do not animate background-position (paints every frame on WebKit).
+ */
 .shimmer {
+  position: relative;
+  overflow: hidden;
   background-color: rgb(var(--color-background-light-accent-rgb) / 0.85);
-  background-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(var(--color-brand-rgb) / 0.12) 45%,
-    transparent 100%
-  );
-  animation: shimmer 2s infinite;
-  background-size: 200% 100%;
 }
 
 .dark .shimmer {
   background-color: rgb(var(--color-background-dark-accent-rgb) / 0.55);
-  background-image: linear-gradient(
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translate3d(-100%, 0, 0);
+  background: linear-gradient(
     90deg,
     transparent 0%,
-    rgb(var(--color-brand-rgb) / 0.18) 45%,
+    rgb(var(--color-brand-rgb) / 0.16) 45%,
     transparent 100%
   );
+  animation: shimmer-slide 1.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmer-slide {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(100%, 0, 0);
+  }
 }
 
 /* Soft skeleton pulse for route/section placeholders */
@@ -339,7 +401,8 @@ h3.text-center {
 
 @media (prefers-reduced-motion: reduce) {
   .skeleton-pulse,
-  .shimmer {
+  .shimmer,
+  .shimmer::after {
     animation: none;
   }
 }
