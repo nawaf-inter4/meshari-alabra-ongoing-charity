@@ -115,8 +115,9 @@ function applySecurityHeaders(
 
   if (request.nextUrl.pathname === '/' ||
       request.nextUrl.pathname.match(/^\/[a-z]{2}$/)) {
-    // Short CDN TTL: HTML is request-rendered for CSP nonces.
-    response.headers.set('Cache-Control', 'private, no-cache, no-store, max-age=0, must-revalidate');
+    // Revalidate each navigation (CSP nonce HTML) but omit no-store so the
+    // page can enter bfcache — Lighthouse flags no-store as a bfcache blocker.
+    response.headers.set('Cache-Control', 'private, no-cache, max-age=0, must-revalidate');
   }
 
   // HSTS: keep preload + includeSubDomains (aligned with next.config.js).

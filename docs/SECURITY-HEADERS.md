@@ -24,7 +24,7 @@ Baseline directives:
 - **Production `script-src` has no `'unsafe-inline'`** — per-request `'nonce-…'` + `'strict-dynamic'`
 - **Production `style-src` uses `'unsafe-inline'` without a style nonce** — React CSSOM / Safari require it; a style-src nonce makes browsers ignore `'unsafe-inline'` and breaks the app. Scripts still use nonce + `strict-dynamic` (no script `'unsafe-inline'`).
 - **`upgrade-insecure-requests` only on HTTPS** — must not ship on local `http://127.0.0.1` or CSS/fonts/PDF workers fail after forced https upgrades.
-- `experimental.inlineCss` is **off** (external stylesheets).
+- `experimental.inlineCss` is **on** — inlines CSS to avoid a render-blocking stylesheet request (mobile Lighthouse). Requires `style-src 'unsafe-inline'` (no style nonce).
 
 ### Nonce + Cache Components tradeoff
 
@@ -34,9 +34,9 @@ Tradeoffs (accepted for Observatory script-src / style-src pass):
 
 | Keep | Give up |
 | --- | --- |
-| Strict `script-src` / `style-src` (no `'unsafe-inline'`) | Fully static HTML shells for locale layouts |
+| Strict `script-src` (no `'unsafe-inline'`); styles use `'unsafe-inline'` | Fully static HTML shells for locale layouts |
 | Cache Components for data / client lazy sections | Partial Prefetch / instant shells on `[lang]` |
-| Short private `Cache-Control` on locale HTML | Long CDN HTML cache (HTML is nonce-bound) |
+| Private `no-cache` HTML (no `no-store`, bfcache-friendly) | Long CDN HTML cache (HTML is nonce-bound) |
 
 ### Mozilla Observatory expectation
 
