@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { isSupportedLocale, localeDirection, siteConfig, type SupportedLocale } from '@/config/site';
 import { isSectionId } from '@/lib/routes';
+import { isStorySlug } from '@/content/stories';
 import { translate } from '@/lib/translations';
 
 function escapeHtml(value: string) {
@@ -183,7 +184,11 @@ function proxy(request: NextRequest) {
     const validSectionPath = segments.length === 3 &&
       segments[1] === 'sections' &&
       isSectionId(segments[2]);
-    if (!validSectionPath) {
+    const validStoriesIndex = segments.length === 2 && segments[1] === 'stories';
+    const validStoryPath = segments.length === 3 &&
+      segments[1] === 'stories' &&
+      isStorySlug(segments[2]);
+    if (!validSectionPath && !validStoriesIndex && !validStoryPath) {
       return notFoundResponse(request, locale);
     }
   }

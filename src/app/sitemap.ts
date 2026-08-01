@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SUPPORTED_LOCALES, siteConfig } from "@/config/site";
+import { STORY_SLUGS } from "@/content/stories";
 import { SECTION_IDS } from "@/lib/routes";
 
 function languageAlternates(suffix = "") {
@@ -32,5 +33,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   );
 
-  return [...landingPages, ...sectionPages];
+  const storyIndexPages: MetadataRoute.Sitemap = SUPPORTED_LOCALES.map((locale) => ({
+    url: `${siteConfig.identity.siteUrl}/${locale}/stories`,
+    changeFrequency: "weekly" as const,
+    priority: 0.75,
+    alternates: { languages: languageAlternates("/stories") },
+  }));
+
+  const storyPages: MetadataRoute.Sitemap = SUPPORTED_LOCALES.flatMap((locale) =>
+    STORY_SLUGS.map((slug) => ({
+      url: `${siteConfig.identity.siteUrl}/${locale}/stories/${slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.72,
+      alternates: { languages: languageAlternates(`/stories/${slug}`) },
+    })),
+  );
+
+  return [...landingPages, ...sectionPages, ...storyIndexPages, ...storyPages];
 }

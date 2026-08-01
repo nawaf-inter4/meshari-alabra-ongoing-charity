@@ -3,8 +3,9 @@ import { expect, test } from "@playwright/test";
 const locales = ["ar", "en", "ur", "tr", "id", "ms", "bn", "fr", "zh", "it", "ja", "ko", "es", "pt", "hi"] as const;
 const rtlLocales = new Set(["ar", "ur"]);
 const sections = ["quran", "tafseer", "dhikr", "prayer-times", "qibla", "donation", "supplications", "hadith", "youtube"] as const;
+const stories = ["al-khidr-or-destiny", "ash-shura", "al-jinn", "an-naml"] as const;
 const siteUrl = "https://meshari.charity";
-const expectedPageCount = locales.length * (1 + sections.length);
+const expectedPageCount = locales.length * (1 + sections.length + 1 + stories.length);
 
 function tags(html: string, name: string) {
   return html.match(new RegExp(`<${name}\\b[^>]*>`, "gi")) || [];
@@ -82,6 +83,31 @@ test("every localized section is a real self-canonical server page", async ({ re
   }
 });
 
+test("every localized Quran story page is self-canonical with schema", async ({ request }) => {
+  for (const locale of locales) {
+    const indexPath = `/${locale}/stories`;
+    const indexResponse = await request.get(indexPath);
+    expect(indexResponse.status(), indexPath).toBe(200);
+    const indexHtml = await indexResponse.text();
+    expect(canonical(indexHtml), indexPath).toBe(`${siteUrl}${indexPath}`);
+    expectLocaleCluster(hreflangMap(indexHtml), "/stories");
+
+    for (const slug of stories) {
+      const path = `/${locale}/stories/${slug}`;
+      const response = await request.get(path);
+      expect(response.status(), path).toBe(200);
+      const html = await response.text();
+      const htmlTag = tags(html, "html")[0];
+      expect(attribute(htmlTag || "", "lang"), `${path} lang`).toBe(locale);
+      expect(attribute(htmlTag || "", "dir"), `${path} dir`).toBe(rtlLocales.has(locale) ? "rtl" : "ltr");
+      expect(canonical(html), `${path} canonical`).toBe(`${siteUrl}${path}`);
+      expectLocaleCluster(hreflangMap(html), `/stories/${slug}`);
+      expect(html).toMatch(/<h1\b/i);
+      expect(html).toContain(`story-schema-${slug}`);
+    }
+  }
+});
+
 test(`sitemap contains only the ${expectedPageCount} canonical localized HTML pages`, async ({ request }) => {
   const response = await request.get("/sitemap.xml");
   expect(response.status()).toBe(200);
@@ -91,6 +117,8 @@ test(`sitemap contains only the ${expectedPageCount} canonical localized HTML pa
   const expected = [
     ...locales.map((locale) => `${siteUrl}/${locale}`),
     ...locales.flatMap((locale) => sections.map((section) => `${siteUrl}/${locale}/sections/${section}`)),
+    ...locales.map((locale) => `${siteUrl}/${locale}/stories`),
+    ...locales.flatMap((locale) => stories.map((slug) => `${siteUrl}/${locale}/stories/${slug}`)),
   ];
 
   expect(new Set(locations).size).toBe(expectedPageCount);
