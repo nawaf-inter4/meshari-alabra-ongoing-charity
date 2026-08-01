@@ -50,7 +50,7 @@ export default function DonationSection() {
               href={siteConfig.content.donationUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue text-white font-bold text-lg rounded-full hover:scale-105 transition-transform duration-300 glow"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-islamic-gold via-islamic-green to-islamic-blue text-white font-bold text-lg rounded-full hover:from-islamic-green hover:via-islamic-blue hover:to-islamic-gold hover:scale-105 transition-all duration-300 glow"
             >
               <Heart className="w-6 h-6" fill="currentColor" aria-hidden="true" />
               {t("donation.button")}

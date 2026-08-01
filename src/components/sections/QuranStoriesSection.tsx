@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useLanguage } from "../LanguageProvider";
 import { BookOpen, ExternalLink, FileText } from "lucide-react";
 import QuranStoriesCardGrid from "./QuranStoriesCardGrid";
+import SectionTitleLink from "./SectionTitleLink";
 
 const PDFViewer = dynamic(() => import("../PDFViewer"), { ssr: false });
 import {
@@ -61,7 +62,9 @@ export default function QuranStoriesSection() {
           <div className="inline-flex items-center gap-2 mb-4">
             <BookOpen className="w-8 h-8 text-islamic-gold" aria-hidden="true" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-2">
-              {t("quran_stories.title")}
+              <SectionTitleLink section="quran-stories">
+                {t("quran_stories.title")}
+              </SectionTitleLink>
             </h2>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">

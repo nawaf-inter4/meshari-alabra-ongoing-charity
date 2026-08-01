@@ -3,7 +3,8 @@
 import { useState, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { useLanguage } from "./LanguageProvider";
-import { Heart, Share2, Github } from "lucide-react";
+import { Share2, Github } from "lucide-react";
+import Image from "next/image";
 import { siteConfig } from "@/config/site";
 
 const ShareModal = dynamic(() => import("./ShareModal"), { ssr: false });
@@ -135,11 +136,21 @@ export default function Footer() {
   };
 
   return (
-    <footer className="py-12 px-4 bg-light-secondary dark:bg-dark-secondary border-t-2 border-islamic-gold/30">
+    <footer className="py-12 px-4 bg-light-secondary dark:bg-dark-secondary">
       <div className="max-w-6xl mx-auto">
+        {/* Soft edge above footer (same treatment as social divider below) */}
+        <div className="mb-8 h-px bg-gradient-to-r from-transparent via-islamic-gold to-transparent" aria-hidden="true" />
+
         {/* Memorial */}
         <div className="text-center mb-8">
-          <Heart className="w-12 h-12 text-islamic-gold mx-auto mb-4" fill="currentColor" />
+          <Image
+            src={siteConfig.assets.logo}
+            alt=""
+            width={48}
+            height={48}
+            className="w-12 h-12 mx-auto mb-4 rounded-full"
+            aria-hidden="true"
+          />
           <h3 className={`text-2xl md:text-3xl font-bold mb-2 gradient-text text-center leading-tight py-1 ${safeDirection === 'rtl' ? 'font-arabic' : ''}`}>
             {memoizedTranslations.memorialName}
           </h3>
