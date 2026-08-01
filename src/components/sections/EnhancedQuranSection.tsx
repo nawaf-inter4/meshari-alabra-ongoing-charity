@@ -352,7 +352,10 @@ export default function EnhancedQuranSection() {
       'zh': 'zh.jian',
       'it': 'it.piccardo',
       'ja': 'ja.japanese',
-      'ko': 'ko.korean'
+      'ko': 'ko.korean',
+      'es': 'es.asad',
+      'pt': 'pt.elhayek',
+      'hi': 'hi.hindi',
     };
     return translationMap[locale] || 'en.sahih';
   };

@@ -36,6 +36,9 @@ const openGraphLocales: Record<SupportedLocale, string> = {
   it: "it_IT",
   ja: "ja_JP",
   ko: "ko_KR",
+  es: "es_ES",
+  pt: "pt_PT",
+  hi: "hi_IN",
 };
 
 const skipToContentLabels: Record<SupportedLocale, string> = {
@@ -51,6 +54,9 @@ const skipToContentLabels: Record<SupportedLocale, string> = {
   it: "Vai al contenuto principale",
   ja: "メインコンテンツへ移動",
   ko: "주요 콘텐츠로 건너뛰기",
+  es: "Ir al contenido principal",
+  pt: "Ir para o conteúdo principal",
+  hi: "मुख्य सामग्री पर जाएँ",
 };
 
 export const viewport: Viewport = {
@@ -87,9 +93,16 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!isSupportedLocale(lang)) notFound();
 
-  const title = siteConfig.seo.title || translate(lang, "site.title", siteConfig.identity.name);
+  const title =
+    siteConfig.seo.title ||
+    translate(lang, "seo.title", translate(lang, "site.title", siteConfig.identity.name));
   const description =
-    siteConfig.seo.description || translate(lang, "hero.description", translate(lang, "site.subtitle"));
+    siteConfig.seo.description ||
+    translate(
+      lang,
+      "seo.description",
+      translate(lang, "hero.description", translate(lang, "site.subtitle")),
+    );
   const currentUrl = `${siteConfig.identity.siteUrl}/${lang}`;
   const keywords = siteConfig.seo.keywords || [
     title,

@@ -10,6 +10,9 @@ import zh from "@/locales/zh.json";
 import it from "@/locales/it.json";
 import ja from "@/locales/ja.json";
 import ko from "@/locales/ko.json";
+import es from "@/locales/es.json";
+import pt from "@/locales/pt.json";
+import hi from "@/locales/hi.json";
 import type { SupportedLocale } from "@/config/site";
 
 export const translations: Record<SupportedLocale, Record<string, unknown>> = {
@@ -25,6 +28,9 @@ export const translations: Record<SupportedLocale, Record<string, unknown>> = {
   it,
   ja,
   ko,
+  es,
+  pt,
+  hi,
 };
 
 export function translate(locale: SupportedLocale, key: string, fallback = key) {

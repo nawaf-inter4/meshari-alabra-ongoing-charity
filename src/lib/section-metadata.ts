@@ -29,7 +29,6 @@ export function getSectionCopy(sectionId: SectionId, locale: SupportedLocale) {
   const configuredTranslations = siteConfig.content.translations[locale] || {};
   const globalTranslations = siteConfig.content.translations["*"] || {};
 
-
   return {
     title:
       configuredTranslations[keys.title] ||
@@ -39,6 +38,27 @@ export function getSectionCopy(sectionId: SectionId, locale: SupportedLocale) {
       configuredTranslations[keys.subtitle] ||
       globalTranslations[keys.subtitle] ||
       translate(locale, keys.subtitle),
+  };
+}
+
+function getSectionSeo(sectionId: SectionId, locale: SupportedLocale) {
+  const { title: uiTitle, description: uiDescription } = getSectionCopy(sectionId, locale);
+  const siteName = siteConfig.identity.shortName;
+  const seoTitleKey = `seo.${sectionId}.title`;
+  const seoDescriptionKey = `seo.${sectionId}.description`;
+  const seoTitle = translate(locale, seoTitleKey);
+  const seoDescription = translate(locale, seoDescriptionKey);
+
+  // Keep the localized SEO lead-in, but always end with the configured short name
+  // so white-label deployments stay brand-correct.
+  const title =
+    seoTitle !== seoTitleKey
+      ? `${seoTitle.split("|")[0].trim()} | ${siteName}`
+      : `${uiTitle} | ${siteName}`;
+
+  return {
+    title,
+    description: seoDescription !== seoDescriptionKey ? seoDescription : uiDescription,
   };
 }
 
@@ -55,6 +75,9 @@ const localeMap: Record<string, string> = {
   it: 'it_IT',
   ja: 'ja_JP',
   ko: 'ko_KR',
+  es: 'es_ES',
+  pt: 'pt_PT',
+  hi: 'hi_IN',
 };
 
 export function generateSectionMetadata(
@@ -64,7 +87,7 @@ export function generateSectionMetadata(
   const currentLang: SupportedLocale = isSupportedLocale(lang)
     ? lang
     : siteConfig.identity.defaultLocale;
-  const { title, description } = getSectionCopy(sectionId, currentLang);
+  const { title, description } = getSectionSeo(sectionId, currentLang);
   const siteName = siteConfig.identity.shortName;
   
   const siteUrl = siteConfig.identity.siteUrl;
@@ -95,7 +118,7 @@ export function generateSectionMetadata(
   const allKeywords = [...baseKeywords, ...sectionSpecificKeywords].filter(Boolean);
 
   return {
-    title: `${title} | ${siteName}`,
+    title,
     description,
     keywords: allKeywords.join(', '),
     category: sectionId,
@@ -108,7 +131,7 @@ export function generateSectionMetadata(
       languages: alternates,
     },
     openGraph: {
-      title: `${title} | ${siteName}`,
+      title,
       description,
       url: canonicalUrl,
       siteName,
@@ -126,7 +149,7 @@ export function generateSectionMetadata(
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${title} | ${siteName}`,
+      title,
       description,
       images: [siteAssetUrl(siteConfig.assets.openGraphImage)],
       site: siteConfig.seo.socialHandle,
@@ -156,7 +179,8 @@ export function generateSectionSchema(
   const currentLang: SupportedLocale = isSupportedLocale(lang)
     ? lang
     : siteConfig.identity.defaultLocale;
-  const { title, description } = getSectionCopy(sectionId, currentLang);
+  const { title, description } = getSectionSeo(sectionId, currentLang);
+  const { title: sectionTitle } = getSectionCopy(sectionId, currentLang);
   const siteName = siteConfig.identity.shortName;
   
   const siteUrl = siteConfig.identity.siteUrl;
@@ -166,7 +190,7 @@ export function generateSectionSchema(
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     '@id': `${url}#section`,
-    name: `${title} | ${siteName}`,
+    name: title,
     description,
     url,
     inLanguage: currentLang,
@@ -187,7 +211,7 @@ export function generateSectionSchema(
         {
           '@type': 'ListItem',
           position: 2,
-          name: title,
+          name: sectionTitle,
           item: url,
         },
       ],

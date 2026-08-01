@@ -8,7 +8,7 @@ import { translate } from "@/lib/translations";
 
 export default function SEOScripts() {
   const { identity, content, seo } = siteConfig;
-  const description = seo.description || translate(identity.defaultLocale, "hero.description");
+  const description = seo.description || translate(identity.defaultLocale, "seo.description", translate(identity.defaultLocale, "hero.description"));
   const websiteId = `${identity.siteUrl}/#website`;
   const personId = `${identity.siteUrl}/#person`;
 

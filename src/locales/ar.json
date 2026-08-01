@@ -4,15 +4,12 @@
   "memorial.name": "مشاري بن أحمد بن سليمان العبره",
   "memorial.death": "توفي في ٢٩ مارس ٢٠٢٣م - الرياض، المملكة العربية السعودية",
   "memorial.description": "رحمه الله وأسكنه فسيح جناته وجعل هذا العمل في ميزان حسناته",
-
   "hero.title": "صدقة جارية",
   "hero.subtitle": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
   "hero.description": "صفحة مخصصة لأخي مشاري، توفي إثر مرض سرطان الدماغ. اللهم اغفر له وارحمه واجعل القرآن والصدقة الجارية شفيعاً له",
   "hero.supplications_button": "أدعية لمشاري رحمه الله",
-
   "youtube.title": "مقاطع القرآن الكريم",
   "youtube.description": "استمع إلى تلاوات القرآن الكريم كصدقة جارية",
-
   "donation.title": "كفالة يتيم",
   "donation.subtitle": "ساهم في استمرار الخير باسم مشاري",
   "donation.description": "الصدقة الجارية من أعظم الأعمال التي تنفع الميت، وكفالة اليتيم من أحب الأعمال إلى الله",
@@ -22,7 +19,6 @@
   "donation.benefit1": "رفقة النبي ﷺ في الجنة",
   "donation.benefit2": "سد حاجة من فقد عائله",
   "donation.benefit3": "صدقة جارية تستمر أجرها",
-
   "supplications.title": "أدعية وأذكار",
   "supplications.subtitle": "أدعية للميت من القرآن والسنة",
   "supplications.daily": "أذكار يومية",
@@ -39,7 +35,6 @@
   "supplications.gratitude": "الشكر",
   "supplications.sleep": "النوم",
   "supplications.waking": "الاستيقاظ",
-
   "prayer.title": "مواقيت الصلاة",
   "prayer.subtitle": "مواقيت الصلاة حسب موقعك",
   "prayer.fajr": "الفجر",
@@ -52,17 +47,14 @@
   "prayer.remaining": "باقي",
   "prayer.location": "الموقع",
   "prayer.enable": "تفعيل تنبيهات الصلاة",
-
   "hijri.title": "التاريخ الهجري",
   "hijri.gregorian": "الميلادي",
-
   "bookmarks.title": "الآيات المفضلة",
   "bookmarks.bookmarked_verses": "الآيات المفضلة",
   "bookmarks.go_to_verse": "الانتقال إلى الآية",
   "bookmarks.no_bookmarks": "لا توجد آيات مفضلة",
   "bookmarks.start_bookmarking": "ابدأ بإضافة آيات إلى المفضلة",
   "bookmarks.remove_bookmark": "إزالة من المفضلة",
-
   "quran.title": "القرآن الكريم",
   "quran.subtitle": "اقرأ وتدبر آيات الله",
   "quran.select_surah": "اختر السورة",
@@ -83,7 +75,6 @@
   "quran.no_results": "لا توجد نتائج",
   "quran.searching": "جاري البحث...",
   "quran.clear_search": "مسح البحث",
-
   "tafseer.title": "تفسير القرآن",
   "tafseer.subtitle": "فهم معاني كلام الله",
   "tafseer.select": "اختر التفسير",
@@ -91,7 +82,6 @@
   "tafseer.tabari": "تفسير الطبري",
   "tafseer.kathir": "تفسير ابن كثير",
   "tafseer.saadi": "تفسير السعدي",
-
   "hadith.title": "الأحاديث النبوية",
   "hadith.subtitle": "من هدي النبي ﷺ",
   "hadith.source": "المصدر",
@@ -111,7 +101,6 @@
   "hadith.categories.purity": "الطهارة",
   "hadith.categories.hospitality": "الكرم",
   "hadith.categories.safety": "الأمان",
-
   "dhikr.title": "عداد التسبيح",
   "dhikr.subtitle": "سبح الله في كل وقت",
   "dhikr.count": "العدد",
@@ -119,41 +108,34 @@
   "dhikr.subhanallah": "سبحان الله",
   "dhikr.alhamdulillah": "الحمد لله",
   "dhikr.allahuakbar": "الله أكبر",
-
   "qibla.title": "اتجاه القبلة",
   "qibla.subtitle": "اعرف اتجاه الكعبة المشرفة",
   "qibla.direction": "القبلة في اتجاه",
   "qibla.distance": "المسافة إلى مكة",
   "qibla.instruction": "أمسك الجهاز بشكل مسطح ووجه السهم نحو القبلة",
   "qibla.error": "تعذر تحديد الموقع. استخدام الموقع الافتراضي (الرياض).",
-  "qibla.location_hint": "للحصول على دقة أفضل، يرجى السماح بالوصول إلى الموقع في إعدادات المتصفح.",
-  "qibla.refresh": "تحديث الموقع",
+  "qibla.location_hint": "أمسك الجهاز بشكل مسطح ووجه السهم نحو القبلة",
+  "qibla.refresh": "إعادة المحاولة",
   "qibla.allow_location": "السماح بالوصول للموقع",
-
   "footer.title": "رحمه الله وغفر له",
   "footer.description": "اللهم اجعل القرآن الكريم شفيعاً لأخي مشاري يوم القيامة، واجعل كل حرف منه نوراً في قبره",
   "footer.charity": "صدقة جارية لمشاري بن أحمد بن سليمان العبره (رحمه الله)",
   "footer.all_rights": "جميع الحقوق محفوظة © {{year}}",
   "footer.technology": "تم تطويره في سبيل الله باستخدام تقنيات الويب الحديثة",
-
   "theme.toggle": "تبديل الوضع",
   "theme.light": "وضع نهاري",
   "theme.dark": "وضع ليلي",
   "theme.system": "وضع النظام",
-
   "language.select": "اختر اللغة",
   "language.ar": "العربية",
   "language.en": "English",
-
   "notifications.title": "التنبيهات",
   "notifications.enable": "تفعيل التنبيهات",
   "notifications.prayer_times": "تنبيهات الصلاة",
   "notifications.daily_supplications": "أذكار يومية",
   "notifications.permission_required": "يرجى السماح بإشعارات المتصفح",
-
   "offline.title": "أنت غير متصل بالإنترنت",
   "offline.message": "بعض الميزات قد لا تعمل بدون اتصال بالإنترنت",
-
   "loading": "جاري التحميل...",
   "error": "حدث خطأ",
   "retry": "إعادة المحاولة",
@@ -182,7 +164,6 @@
   "next": "التالي",
   "previous": "السابق",
   "search": "بحث",
-
   "accessibility": {
     "increment_counter": "زيادة العداد",
     "reset_counter": "إعادة تعيين العداد",
@@ -193,7 +174,6 @@
     "toggle_menu": "فتح/إغلاق القائمة",
     "close_modal": "إغلاق النافذة"
   },
-
   "dhikr": {
     "increment": "تسبيح",
     "milestone_33": "المرحلة الأولى: ٣٣",
@@ -213,13 +193,11 @@
   "dhikr.categories.patience": "الصبر",
   "dhikr.auto_saved": "تم الحفظ تلقائياً",
   "dhikr.tasbih": "تسبيح",
-
   "supplications": {
     "deceased_1": "اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ وَعَافِهِ وَاعْفُ عَنْهُ، وَأَكْرِمْ نُزُلَهُ، وَوَسِّعْ مُدْخَلَهُ، وَاغْسِلْهُ بِالْمَاءِ وَالثَّلْجِ وَالْبَرَدِ، وَنَقِّهِ مِنَ الْخَطَايَا كَمَا نَقَّيْتَ الثَّوْبَ الْأَبْيَضَ مِنَ الدَّنَسِ",
     "deceased_2": "اللَّهُمَّ اجْعَلْ قَبْرَهُ رَوْضَةً مِنْ رِيَاضِ الْجَنَّةِ، وَلَا تَجْعَلْهُ حُفْرَةً مِنْ حُفَرِ النَّارِ",
     "deceased_3": "اللَّهُمَّ أَبْدِلْهُ دَاراً خَيْراً مِنْ دَارِهِ، وَأَهْلاً خَيْراً مِنْ أَهْلِهِ، وَأَدْخِلْهُ الْجَنَّةَ وَأَعِذْهُ مِنْ عَذَابِ الْقَبْرِ وَمِنْ عَذَابِ النَّارِ"
   },
-
   "hadith": {
     "title": "الحديث",
     "subtitle": "كلمات الحكمة من النبي محمد صلى الله عليه وسلم",
@@ -227,7 +205,6 @@
     "random_button": "حديث عشوائي",
     "click_button": "اضغط على الزر للحصول على حديث عشوائي"
   },
-
   "footer": {
     "charity": "مؤسسة مشاري العبرة الخيرية المستمرة",
     "all_rights": "جميع الحقوق محفوظة © ",
@@ -237,7 +214,6 @@
     "llm_txt": "ملف الذكاء الاصطناعي"
   },
   "social.github": "GitHub",
-  "social.x_account": "حساب مشاري على إكس",
   "footer.sitemap": "خريطة الموقع",
   "footer.llm_txt": "ملف الذكاء الاصطناعي",
   "navigation.sections_title": "الأقسام المتاحة",
@@ -245,21 +221,13 @@
   "navigation.visit_section": "زيارة القسم",
   "navigation.back_to_home": "العودة للرئيسية",
   "prayer.select_location": "اختر الموقع",
-  "qibla.title": "اتجاه القبلة",
-  "qibla.subtitle": "اعرف اتجاه الكعبة المشرفة",
-  "qibla.direction": "القبلة في اتجاه",
-  "qibla.distance": "المسافة إلى مكة",
-  "qibla.instruction": "أمسك الجهاز بشكل مسطح ووجه السهم نحو القبلة",
   "meshari_favorite_reciter.title": "القارء المفضل لمشاري رحمه الله",
   "meshari_favorite_reciter.subtitle": "استمع إلى القرآن الكريم بصوت القارء المفضل لمشاري رحمه الله",
   "islamic_chant.title": "النشيد المفضل لمشاري رحمه الله",
   "islamic_chant.subtitle": "نشيد إسلامي جميل كان يحبه مشاري كثيراً، يبعث على الطمأنينة والسلام",
   "donation.balance_text": "جَعَلَهُ اللَّهُ فِي مِيزَانِ حَسَنَاتِهِ",
-  "qibla.error": "تعذر تحديد الموقع. استخدام الموقع الافتراضي (الرياض).",
   "qibla.error_geolocation_not_supported": "الموقع الجغرافي غير مدعوم في متصفحك. استخدام الموقع الافتراضي (الرياض).",
   "qibla.error_orientation_permission": "تم رفض الوصول إلى اتجاه الجهاز. قد لا يدور البوصلة.",
-  "qibla.location_hint": "أمسك الجهاز بشكل مسطح ووجه السهم نحو القبلة",
-  "qibla.refresh": "إعادة المحاولة",
   "qibla.find_direction": "العثور على اتجاه القبلة",
   "qibla.detecting_location": "جاري تحديد موقعك...",
   "qibla.please_allow": "يرجى السماح بالوصول إلى الموقع إذا تم الطلب",
@@ -272,24 +240,29 @@
   "quran_stories.download": "تحميل",
   "location.riyadh": "الرياض",
   "location.saudi_arabia": "المملكة العربية السعودية",
-  "hadith.categories.title": "فئات الأحاديث",
-  "dhikr.categories.title": "فئات الأذكار",
-  "dhikr.select_dhikr": "اختر الذكر",
   "tafseer.select_instruction": "اختر السورة والآية للحصول على التفسير",
   "tafseer.available_translations": "متوفر تفسيرات متعددة باللغات العربية والإنجليزية والأردية",
-  "hadith.categories.all": "الكل",
-  "hadith.categories.charity": "الصدقة",
-  "hadith.categories.speech": "الكلام",
-  "hadith.categories.religion": "الدين",
-  "hadith.categories.brotherhood": "الأخوة",
-  "hadith.categories.knowledge": "العلم",
-  "hadith.categories.mercy": "الرحمة",
-  "hadith.categories.faith": "الإيمان",
-  "hadith.categories.help": "المساعدة",
-  "hadith.categories.love": "المحبة",
-  "hadith.categories.purity": "الطهارة",
-  "hadith.categories.hospitality": "الكرم",
-  "hadith.categories.safety": "الأمان",
-  "hadith.random_button": "حديث عشوائي",
-  "hadith.click_button": "اضغط على الزر للحصول على حديث عشوائي"
+  "seo.title": "صدقة مشاري الجارية | قرآن وأدعية وكفالة أيتام",
+  "seo.description": "صدقة جارية لذكرى مشاري العبره: اقرأ القرآن، ادعُ، تابع مواقيت الصلاة والقبلة، اطلع على الأحاديث، واكفل يتيماً باسمه. رحمه الله.",
+  "seo.quran.title": "قارئ القرآن الكريم | صدقة مشاري الجارية",
+  "seo.quran.description": "اقرأ وابحث واستمع إلى القرآن الكريم مع الترجمات والصوت—صدقة جارية مهداة لمشاري العبره. رحمه الله تعالى.",
+  "seo.tafseer.title": "تفسير القرآن | صدقة مشاري الجارية",
+  "seo.tafseer.description": "استكشف تفاسير كلاسيكية لفهم كلام الله. قسم تذكاري من صدقة مشاري الجارية للتأمل والتعلم.",
+  "seo.dhikr.title": "عداد الذكر | صدقة مشاري الجارية",
+  "seo.dhikr.description": "تتبّع التسبيح والذكر اليومي بعداد بسيط. سبّح الله في أي وقت صدقة جارية لذكرى مشاري العبره.",
+  "seo.prayer-times.title": "مواقيت الصلاة حسب موقعك | صدقة مشاري الجارية",
+  "seo.prayer-times.description": "مواقيت صلاة دقيقة حسب موقعك مع عدّاد للصلاة القادمة. حافظ على أداء الصلاة ضمن صدقة مشاري التذكارية.",
+  "seo.qibla.title": "اتجاه القبلة | صدقة مشاري الجارية",
+  "seo.qibla.description": "اعثر على اتجاه القبلة نحو الكعبة المشرفة بدليل يشبه البوصلة. اعرف اتجاه الصلاة أينما كنت، مهداة لمشاري.",
+  "seo.donation.title": "كفالة الأيتام | صدقة مشاري الجارية",
+  "seo.donation.description": "اكفل يتيماً صدقة جارية باسم مشاري العبره. ادعم من فقدوا وليّهم وأبقِ الأجر جارياً له. رحمه الله.",
+  "seo.supplications.title": "الأدعية والأذكار | صدقة مشاري الجارية",
+  "seo.supplications.description": "أدعية أصيلة للميت وأذكار الصباح والمساء من القرآن والسنة—دعاء لمشاري، رحمه الله تعالى.",
+  "seo.hadith.title": "أحاديث نبوية | صدقة مشاري الجارية",
+  "seo.hadith.description": "اقرأ أحاديث عن الصدقة والرحمة والإيمان. هدي النبي محمد ﷺ ضمن صدقة مشاري الجارية التذكارية.",
+  "seo.youtube.title": "تلاوات القرآن | صدقة مشاري الجارية",
+  "seo.youtube.description": "استمع لتلاوات القرآن والقارئ المفضل لمشاري صدقة جارية. صوت مطمئن لذكراه—غفر الله له.",
+  "language.es": "Español",
+  "language.pt": "Português",
+  "language.hi": "हिन्दी"
 }

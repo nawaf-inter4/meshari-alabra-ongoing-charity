@@ -240,8 +240,8 @@
   "supplications.waking": "Réveil",
   "dhikr.auto_saved": "Sauvegardé automatiquement",
   "islamic_chant": {
-    "title": "Chant Islamique Préféré de Meshari",
-    "description": "Un beau chant islamique que Meshari aimait beaucoup, apportant paix et tranquillité"
+    "title": "Chant Islamique",
+    "subtitle": "Écoutez de beaux chants islamiques comme aumône continue"
   },
   "quran_verse": {
     "bismillah": "Au nom d'Allah, le Tout Miséricordieux, le Très Miséricordieux",
@@ -249,11 +249,8 @@
     "sadaqallah": "Allah le Très-Haut a dit la vérité"
   },
   "meshari_favorite_reciter": {
-    "title": "Récitateurs de Coran Préférés de Meshari",
-    "subtitle": "Écoutez les récitations de Coran préférées de Meshari",
-    "reciter_title": "Ahmad Al-Ajmi - Récitation Bénie",
-    "description": "Une belle récitation coranique du Cheikh Ahmad Al-Ajmi, que Meshari aimait beaucoup écouter. Cette récitation apporte la tranquillité et la dévotion au cœur.",
-    "feature_1": "Récitation de Haute Qualité"
+    "title": "Récitateur Préféré de Meshari",
+    "subtitle": "Écoutez le Saint Coran avec le récitateur préféré de Meshari (Qu'Allah lui fasse miséricorde)"
   },
   "social": {
     "x_account": "Compte X de Meshari",
@@ -274,14 +271,6 @@
   "quran_stories.read": "Lire",
   "location.riyadh": "Riyad",
   "location.saudi_arabia": "Arabie Saoudite",
-  "meshari_favorite_reciter": {
-    "title": "Récitateur Préféré de Meshari",
-    "subtitle": "Écoutez le Saint Coran avec le récitateur préféré de Meshari (Qu'Allah lui fasse miséricorde)"
-  },
-  "islamic_chant": {
-    "title": "Chant Islamique",
-    "subtitle": "Écoutez de beaux chants islamiques comme aumône continue"
-  },
   "donation.balance_text": "Qu'Allah le place dans la balance de ses bonnes actions",
   "qibla.find_direction": "Trouver la Direction de la Qibla",
   "qibla.detecting_location": "Détection de votre localisation...",
@@ -294,5 +283,28 @@
   "meshari_favorite_reciter.title": "Récitateur Préféré de Meshari",
   "meshari_favorite_reciter.subtitle": "Écoutez le Saint Coran avec le récitateur préféré de Meshari (Qu'Allah lui fasse miséricorde)",
   "islamic_chant.title": "Chant Islamique Préféré de Meshari",
-  "islamic_chant.subtitle": "Un beau chant islamique que Meshari aimait beaucoup, apportant paix et tranquillité"
+  "islamic_chant.subtitle": "Un beau chant islamique que Meshari aimait beaucoup, apportant paix et tranquillité",
+  "seo.title": "Charité Continue de Meshari | Coran, invocations et orphelins",
+  "seo.description": "Charité continue à la mémoire de Meshari Alabra : lisez le Coran, invoquez, consultez les horaires de prière et la qibla, les hadiths, et parrainez des orphelins en son nom.",
+  "seo.quran.title": "Lecteur du Saint Coran | Charité Continue de Meshari",
+  "seo.quran.description": "Lisez, cherchez et écoutez le Saint Coran avec traductions et audio en charité continue pour Meshari Alabra. Qu'Allah lui fasse miséricorde.",
+  "seo.tafseer.title": "Tafsir du Coran | Charité Continue de Meshari",
+  "seo.tafseer.description": "Explorez des tafsirs classiques pour comprendre la parole d'Allah. Section mémoriale de la charité continue de Meshari pour la réflexion.",
+  "seo.dhikr.title": "Compteur de dhikr | Charité Continue de Meshari",
+  "seo.dhikr.description": "Suivez le tasbih et le dhikr quotidien. Glorifiez Allah à tout moment en charité continue à la mémoire de Meshari Alabra.",
+  "seo.prayer-times.title": "Horaires de prière | Charité Continue de Meshari",
+  "seo.prayer-times.description": "Horaires de prière précis selon votre position, avec compte à rebours. Restez ponctuel dans la salat au sein de la charité mémoriale de Meshari.",
+  "seo.qibla.title": "Direction de la qibla | Charité Continue de Meshari",
+  "seo.qibla.description": "Trouvez la qibla vers la Sainte Kaaba avec un guide type boussole. Connaissez la direction de prière partout, dédiée à Meshari.",
+  "seo.donation.title": "Parrainage d'orphelins | Charité Continue de Meshari",
+  "seo.donation.description": "Parrainez des orphelins en sadaqa jariya au nom de Meshari Alabra. Soutenez ceux qui ont perdu leur tuteur et maintenez sa récompense.",
+  "seo.supplications.title": "Invocations et dhikr | Charité Continue de Meshari",
+  "seo.supplications.description": "Invocations authentiques pour le défunt, rappels du matin et du soir du Coran et de la Sunna—prières pour Meshari, qu'Allah lui fasse miséricorde.",
+  "seo.hadith.title": "Hadiths et sagesse | Charité Continue de Meshari",
+  "seo.hadith.description": "Lisez des hadiths sur la charité, la miséricorde et la foi. Guidance du Prophète Muhammad ﷺ en charité mémoriale continue de Meshari.",
+  "seo.youtube.title": "Récitations du Coran | Charité Continue de Meshari",
+  "seo.youtube.description": "Écoutez des récitations du Coran et le récitateur préféré de Meshari en charité continue. Audio apaisant à sa mémoire—qu'Allah lui pardonne.",
+  "language.es": "Español",
+  "language.pt": "Português",
+  "language.hi": "हिन्दी"
 }
