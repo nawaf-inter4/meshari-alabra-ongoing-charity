@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookmarkCheck, Bookmark, ChevronRight, ChevronLeft } from "lucide-react";
+import { X, BookmarkCheck, Bookmark, ChevronRight, ChevronLeft, Play, Pause, Share2 } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
 import { useRouter } from "next/navigation";
+import BidiText from "./BidiText";
+import ShareModal from "./ShareModal";
 
 interface BookmarkedVerse {
   surahNumber: number;
@@ -13,6 +15,8 @@ interface BookmarkedVerse {
   arabicText?: string;
   translation?: string;
 }
+
+const DEFAULT_RECITER = "ar.ahmedajamy";
 
 // Component for individual ayah translation (same as in EnhancedQuranSection)
 function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: { 
@@ -52,13 +56,15 @@ function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: {
   // RTL languages: Arabic, Urdu, Hebrew, Farsi, Yiddish, Pashto
   const rtlLanguages = ['ar', 'ur', 'he', 'fa', 'yi', 'ps'];
   const isRTL = rtlLanguages.includes(locale);
+  const textDirection = isRTL ? "rtl" : "ltr";
   
   return (
     <div 
       className={isRTL ? "font-arabic text-right leading-relaxed" : "font-lexend text-left leading-relaxed"} 
-      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
+      dir={textDirection}
+      data-quran-translation
     >
-      {translationText}
+      <BidiText text={translationText} direction={textDirection} />
     </div>
   );
 }
@@ -68,6 +74,8 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const isRTL = direction === "rtl";
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const playRequestIdRef = useRef(0);
 
   // Language-based translation mapping (same as in EnhancedQuranSection)
   const getTranslationIdentifier = (locale: string): string => {
@@ -83,7 +91,10 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
       'zh': 'zh.jian',
       'it': 'it.piccardo',
       'ja': 'ja.japanese',
-      'ko': 'ko.korean'
+      'ko': 'ko.korean',
+      'es': 'es.asad',
+      'pt': 'pt.elhayek',
+      'hi': 'hi.hindi',
     };
     return translationMap[locale] || 'en.sahih';
   };
@@ -94,10 +105,31 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [bookmarkedVerses, setBookmarkedVerses] = useState<BookmarkedVerse[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentPlayingKey, setCurrentPlayingKey] = useState<string | null>(null);
+  const [audioLoading, setAudioLoading] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [selectedVerseForShare, setSelectedVerseForShare] = useState<{
+    surahNumber: number;
+    surahName: string;
+    ayahNumber: number;
+    arabicText: string;
+    translation?: string;
+  } | null>(null);
 
   useEffect(() => {
     if (isOpen) {
       loadBookmarks();
+    } else {
+      // Stop audio when modal closes and invalidate in-flight play requests
+      playRequestIdRef.current += 1;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      setIsPlaying(false);
+      setCurrentPlayingKey(null);
+      setAudioLoading(false);
     }
   }, [isOpen]);
 
@@ -112,6 +144,36 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     window.addEventListener('bookmarks-updated', handleBookmarksUpdate as EventListener);
     return () => {
       window.removeEventListener('bookmarks-updated', handleBookmarksUpdate as EventListener);
+    };
+  }, []);
+
+  // Mirror EnhancedQuranSection audio event wiring
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setCurrentPlayingKey(null);
+    };
+    const handleError = () => {
+      setIsPlaying(false);
+      setAudioLoading(false);
+      console.error("Audio playback error");
+    };
+
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('error', handleError);
+
+    return () => {
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('error', handleError);
     };
   }, []);
 
@@ -209,6 +271,115 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     }, 300);
   };
 
+  const pauseAyah = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setIsPlaying(false);
+  };
+
+  // Same audio API path as EnhancedQuranSection.playAyah
+  const playAyah = async (surahNumber: number, ayahNumber: number) => {
+    const verseKey = `${surahNumber}-${ayahNumber}`;
+    const requestId = ++playRequestIdRef.current;
+    try {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+
+      setCurrentPlayingKey(verseKey);
+      setAudioLoading(true);
+      setIsPlaying(true);
+
+      const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${DEFAULT_RECITER}`);
+      if (requestId !== playRequestIdRef.current) {
+        return;
+      }
+      if (!response.ok) {
+        throw new Error(`Quran audio request failed with status ${response.status}`);
+      }
+      const data = await response.json();
+      if (requestId !== playRequestIdRef.current) {
+        return;
+      }
+
+      if (data.data?.audio && (!data.data.edition || data.data.edition.format === "audio")) {
+        if (audioRef.current) {
+          audioRef.current.src = data.data.audio;
+          audioRef.current.load();
+          try {
+            await audioRef.current.play();
+            if (requestId !== playRequestIdRef.current) {
+              audioRef.current.pause();
+              return;
+            }
+            setAudioLoading(false);
+          } catch (playError) {
+            if (requestId !== playRequestIdRef.current) {
+              return;
+            }
+            console.error("Error playing audio:", playError);
+            setIsPlaying(false);
+            setAudioLoading(false);
+            setCurrentPlayingKey(null);
+            alert(locale === "ar"
+              ? "تعذر تشغيل صوت هذه الآية. يرجى المحاولة مرة أخرى."
+              : "This verse audio could not be played. Please try again.");
+          }
+        }
+      } else {
+        throw new Error("No valid audio edition URL found");
+      }
+    } catch (error) {
+      if (requestId !== playRequestIdRef.current) {
+        return;
+      }
+      console.error("Error in playAyah:", error);
+      setIsPlaying(false);
+      setAudioLoading(false);
+      setCurrentPlayingKey(null);
+      alert(locale === "ar"
+        ? "تعذر تحميل صوت هذه الآية. يرجى المحاولة مرة أخرى."
+        : "This verse audio could not be loaded. Please try again.");
+    }
+  };
+
+  const togglePlayPause = (surahNumber: number, ayahNumber: number) => {
+    const verseKey = `${surahNumber}-${ayahNumber}`;
+    if (isPlaying && currentPlayingKey === verseKey) {
+      pauseAyah();
+      return;
+    }
+    void playAyah(surahNumber, ayahNumber);
+  };
+
+  const handleShare = async (verse: BookmarkedVerse) => {
+    let translationText = verse.translation || '';
+    if (!translationText) {
+      try {
+        const response = await fetch(
+          `/api/quran/ayah/${verse.surahNumber}:${verse.ayahNumber}/${getTranslationIdentifier(locale)}`
+        );
+        const data = await response.json();
+        if (data.data?.text) {
+          translationText = data.data.text;
+        }
+      } catch (error) {
+        console.error('Error fetching translation for share:', error);
+      }
+    }
+
+    setSelectedVerseForShare({
+      surahNumber: verse.surahNumber,
+      surahName: verse.surahName || `Surah ${verse.surahNumber}`,
+      ayahNumber: verse.ayahNumber,
+      arabicText: verse.arabicText || '',
+      translation: translationText,
+    });
+    setIsShareModalOpen(true);
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -282,7 +453,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                           }
                         }, 300);
                       }}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-gray-950 font-semibold rounded-full hover:bg-islamic-green hover:text-white transition-all duration-300 glow"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-semibold rounded-full hover:bg-islamic-green transition-all duration-300 glow"
                     >
                       {t("bookmarks.go_to_quran")}
                       <motion.div
@@ -320,13 +491,42 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                               {locale === 'ar' ? 'سورة' : locale === 'ur' ? 'سورہ' : 'Surah'} {verse.surahNumber}
                             </p>
                           </div>
-                          <button
-                            onClick={() => removeBookmark(verse.surahNumber, verse.ayahNumber)}
-                            className="p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors"
-                            title={t("bookmarks.remove_bookmark")}
-                          >
-                            <BookmarkCheck className="w-5 h-5 text-islamic-gold" fill="currentColor" />
-                          </button>
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => togglePlayPause(verse.surahNumber, verse.ayahNumber)}
+                              className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-colors duration-300"
+                              disabled={audioLoading && currentPlayingKey === `${verse.surahNumber}-${verse.ayahNumber}`}
+                              aria-label={isPlaying && currentPlayingKey === `${verse.surahNumber}-${verse.ayahNumber}`
+                                ? (locale === 'ar' ? 'إيقاف التشغيل' : 'Pause audio')
+                                : (locale === 'ar' ? 'تشغيل الآية' : 'Play verse audio')
+                              }
+                            >
+                              {audioLoading && currentPlayingKey === `${verse.surahNumber}-${verse.ayahNumber}` ? (
+                                <div className="w-5 h-5 border-2 border-islamic-gold border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+                              ) : isPlaying && currentPlayingKey === `${verse.surahNumber}-${verse.ayahNumber}` ? (
+                                <Pause className="w-5 h-5 text-islamic-gold" aria-hidden="true" />
+                              ) : (
+                                <Play className="w-5 h-5 text-islamic-gold" aria-hidden="true" />
+                              )}
+                            </button>
+
+                            <button
+                              onClick={() => removeBookmark(verse.surahNumber, verse.ayahNumber)}
+                              className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-colors duration-300"
+                              title={t("bookmarks.remove_bookmark")}
+                              aria-label={t("bookmarks.remove_bookmark")}
+                            >
+                              <BookmarkCheck className="w-5 h-5 text-islamic-gold" fill="currentColor" aria-hidden="true" />
+                            </button>
+
+                            <button
+                              onClick={() => handleShare(verse)}
+                              className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-300"
+                              aria-label={locale === 'ar' ? 'مشاركة الآية' : 'Share verse'}
+                            >
+                              <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-400" aria-hidden="true" />
+                            </button>
+                          </div>
                         </div>
                         
                         {verse.arabicText && (
@@ -365,6 +565,33 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
               </div>
             </div>
           </motion.div>
+
+          {/* Hidden Audio Element — same pattern as EnhancedQuranSection */}
+          <audio
+            ref={audioRef}
+            onEnded={() => {
+              setIsPlaying(false);
+              setCurrentPlayingKey(null);
+            }}
+            onError={(e) => {
+              console.error("Audio error:", e);
+              setIsPlaying(false);
+              setAudioLoading(false);
+            }}
+            preload="none"
+          />
+
+          {/* Share Modal */}
+          {selectedVerseForShare && (
+            <ShareModal
+              isOpen={isShareModalOpen}
+              onClose={() => {
+                setIsShareModalOpen(false);
+                setSelectedVerseForShare(null);
+              }}
+              verse={selectedVerseForShare}
+            />
+          )}
         </>
       )}
     </AnimatePresence>

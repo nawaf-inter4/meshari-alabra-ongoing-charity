@@ -33,7 +33,7 @@ export default function Footer() {
       memorialDeath: getTrans("memorial.death", locale === 'ar' ? "(رحمه الله)" : "(May Allah have mercy on him)"),
       footerDescription: getTrans("footer.description", locale === 'ar' ? "هذا الموقع صدقة جارية" : "This website is an ongoing charity"),
       share: getTrans("share", locale === 'ar' ? "مشاركة" : "Share"),
-      socialXAccount: getTrans("social.x_account", locale === 'ar' ? "تابعنا على X" : "Follow on X"),
+      socialXAccount: getTrans("social.x_account", locale === 'ar' ? "حساب مشاري على إكس" : "Meshari's X Account"),
       socialGithub: getTrans("social.github", locale === 'ar' ? "على GitHub" : "On GitHub"),
       // CRITICAL: Use full text to match translation file - this prevents hydration mismatch
       footerCharity: siteConfig.content.footerCharity || getTrans("footer.charity", siteConfig.content.memorialLegalName),
@@ -86,6 +86,9 @@ export default function Footer() {
                locale === 'zh' ? "奉至仁至慈的真主之名" :
                locale === 'it' ? "Nel nome di Allah, il Compassionevole, il Misericordioso" :
                locale === 'ja' ? "慈悲深く慈愛あまねきアッラーの御名において" :
+               locale === 'es' ? "En el nombre de Allah, el Compasivo, el Misericordioso" :
+               locale === 'pt' ? "Em nome de Allah, o Clemente, o Misericordioso" :
+               locale === 'hi' ? "अल्लाह के नाम से जो बड़ा मेहरबान निहायत रहम वाला है" :
                "In the name of Allah, the Most Gracious, the Most Merciful";
       } else if (part === 'verse') {
         return locale === 'ar' ? "وَبَشِّرِ الصَّابِرِينَ الَّذِينَ إِذَا أَصَابَتْهُمْ مُصِيبَةٌ قَالُوا إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ أُوْلَئِكَ عَلَيْهِمْ صَلَوَاتٌ مِنْ رَبِّهِمْ وَرَحْمَةٌ وَأُوْلَئِكَ هُمُ الْمُهْتَدُونَ" :
@@ -99,6 +102,9 @@ export default function Footer() {
                locale === 'zh' ? "你当向坚忍的人报喜。他们遭难的时候，说：'我们确是真主所有的，我们必定只归依他。'这等人，是蒙主的慈恩和佑护的；这等人，确是遵循正道的。" :
                locale === 'it' ? "E da' la buona novella ai pazienti, che quando li colpisce una disgrazia dicono: 'In verità apparteniamo ad Allah e a Lui faremo ritorno.' Essi sono quelli su cui scendono benedizioni e misericordia dal loro Signore, e sono quelli che sono ben guidati." :
                locale === 'ja' ? "そして忍耐する者たちに吉報を伝えよ。災難が彼らに降りかかった時、彼らは言う：'私たちはアッラーに属し、私たちは彼に帰る。'これらは主からの祝福と慈悲を受ける者たちであり、これらは正しく導かれた者たちである。" :
+               locale === 'es' ? "Y anuncia la buena nueva a los pacientes, que cuando les alcanza una desgracia dicen: 'En verdad pertenecemos a Allah y a Él regresaremos.' Sobre ellos hay bendiciones y misericordia de su Señor, y ellos son los bien guiados." :
+               locale === 'pt' ? "E anuncie a boa nova aos pacientes, que quando uma desgraça os atinge dizem: 'Em verdade pertencemos a Allah e a Ele retornaremos.' Sobre eles há bênçãos e misericórdia de seu Senhor, e eles são os bem guiados." :
+               locale === 'hi' ? "और सब्र करने वालों को खुशख़बरी दो, जो जब उन पर कोई मुसीबत आए तो कहते हैं: 'निश्चय हम अल्लाह के हैं और उसी की ओर लौटने वाले हैं।' यही वे हैं जिन पर उनके रब की तरफ़ से बरकतें और रहमत है, और यही हिदायत पाए हुए हैं।" :
                "And give good tidings to the patient, who, when disaster strikes them, say, 'Indeed we belong to Allah, and indeed to Him we will return.' Those are the ones upon whom are blessings from their Lord and mercy. And it is those who are the [rightly] guided.";
       } else {
         return locale === 'ar' ? "صدق الله العلي العظيم" :
@@ -112,6 +118,9 @@ export default function Footer() {
                locale === 'zh' ? "至高至大的真主说了实话" :
                locale === 'it' ? "Allah l'Altissimo e il Grandissimo ha detto la verità" :
                locale === 'ja' ? "アッラー、至高にして偉大なる方が真実を語られた" :
+               locale === 'es' ? "Allah, el Altísimo y el Grandísimo, ha dicho la verdad" :
+               locale === 'pt' ? "Allah, o Altíssimo e o Grandioso, disse a verdade" :
+               locale === 'hi' ? "अल्लाह तआला ने सच फ़रमाया" :
                "Allah Almighty has spoken the truth";
       }
     }
@@ -129,7 +138,7 @@ export default function Footer() {
         {/* Memorial */}
         <div className="text-center mb-8">
           <Heart className="w-12 h-12 text-islamic-gold mx-auto mb-4" fill="currentColor" />
-          <h3 className={`text-2xl md:text-3xl font-bold mb-2 gradient-text leading-tight py-1 ${safeDirection === 'rtl' ? 'font-arabic' : ''}`}>
+          <h3 className={`text-2xl md:text-3xl font-bold mb-2 gradient-text text-center leading-tight py-1 ${safeDirection === 'rtl' ? 'font-arabic' : ''}`}>
             {memoizedTranslations.memorialName}
           </h3>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">
@@ -166,7 +175,7 @@ export default function Footer() {
               const isX = link.includes('x.com/') || link.includes('twitter.com/');
               const isGitHub = link.includes('github.com/');
               const label = isX
-                ? (memoizedTranslations.socialXAccount || "Follow on X")
+                ? (memoizedTranslations.socialXAccount || "Meshari's X Account")
                 : isGitHub
                   ? (memoizedTranslations.socialGithub || "View on GitHub")
                   : link;

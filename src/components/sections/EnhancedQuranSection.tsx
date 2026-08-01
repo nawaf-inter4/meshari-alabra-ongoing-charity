@@ -352,7 +352,10 @@ export default function EnhancedQuranSection() {
       'zh': 'zh.jian',
       'it': 'it.piccardo',
       'ja': 'ja.japanese',
-      'ko': 'ko.korean'
+      'ko': 'ko.korean',
+      'es': 'es.asad',
+      'pt': 'pt.elhayek',
+      'hi': 'hi.hindi',
     };
     return translationMap[locale] || 'en.sahih';
   };
@@ -1536,8 +1539,8 @@ export default function EnhancedQuranSection() {
                         )}
                         {/* Show translation below Arabic text if available */}
                         {translationText && translationText !== arabicText && (
-                          <div className="text-gray-600 dark:text-gray-400 text-sm mt-2 p-2 bg-light-secondary dark:bg-dark-secondary rounded" dir={localeDirection(locale)}>
-                            {translationText}
+                          <div className="text-gray-600 dark:text-gray-400 text-sm mt-2 p-2 bg-light-secondary dark:bg-dark-secondary rounded" dir={localeDirection(locale)} data-quran-translation>
+                            <BidiText text={translationText} direction={localeDirection(locale)} />
                           </div>
                         )}
                       </div>
@@ -1569,14 +1572,12 @@ export default function EnhancedQuranSection() {
               className="text-center mb-8 p-8 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-2xl border-2 border-islamic-gold/30"
             >
               <h3 
-                className="text-3xl md:text-4xl font-bold text-islamic-gold mb-20" 
+                className="text-3xl md:text-4xl font-bold text-islamic-gold text-center mb-20" 
                 style={{ 
-                  textAlign: 'center !important' as any,
                   display: 'block',
                   width: '100%',
                   direction: hasArabic ? 'rtl' : 'ltr',
                   unicodeBidi: hasArabic ? 'plaintext' : 'normal',
-                  margin: '0 auto',
                   fontFamily: 'Amiri',
                   paddingTop: '10px',
                   paddingBottom: '10px'

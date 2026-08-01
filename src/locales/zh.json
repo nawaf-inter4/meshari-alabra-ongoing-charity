@@ -248,7 +248,7 @@
   },
   "quran.meshari_favorite": "Meshari的最爱",
   "social": {
-    "x_account": "X账户",
+    "x_account": "Meshari的X账号",
     "github": "GitHub"
   },
   "navigation": {
@@ -278,5 +278,28 @@
   "meshari_favorite_reciter.title": "Meshari最喜欢的诵经者",
   "meshari_favorite_reciter.subtitle": "与Meshari最喜欢的诵经者一起聆听神圣古兰经（愿真主怜悯他）",
   "islamic_chant.title": "Meshari最喜欢的伊斯兰圣歌",
-  "islamic_chant.subtitle": "Meshari非常喜爱的美丽伊斯兰圣歌，带来和平与宁静"
+  "islamic_chant.subtitle": "Meshari非常喜爱的美丽伊斯兰圣歌，带来和平与宁静",
+  "seo.title": "米沙里的持续慈善 | 古兰经、祷词与孤儿赞助",
+  "seo.description": "纪念米沙里·阿拉布拉的持续慈善：诵读古兰经、做杜阿、查看礼拜时间与朝向、阅读圣训，并以他的名义赞助孤儿。",
+  "seo.quran.title": "古兰经阅读 | 米沙里的持续慈善",
+  "seo.quran.description": "阅读、搜索并聆听附带译文与音频的古兰经——献给米沙里·阿拉布拉的持续慈善。愿安拉慈悯他。",
+  "seo.tafseer.title": "古兰经经注 | 米沙里的持续慈善",
+  "seo.tafseer.description": "探索经典经注以理解安拉的话语。米沙里持续慈善中用于沉思与学习的纪念栏目。",
+  "seo.dhikr.title": "赞念计数器 | 米沙里的持续慈善",
+  "seo.dhikr.description": "用简易计数器记录泰斯比哈与日常赞念。随时赞颂安拉，作为纪念米沙里的持续慈善。",
+  "seo.prayer-times.title": "礼拜时间 | 米沙里的持续慈善",
+  "seo.prayer-times.description": "根据您的位置提供准确礼拜时间及下一拜倒计时。在米沙里纪念慈善中坚持按时礼拜。",
+  "seo.qibla.title": "朝向指引 | 米沙里的持续慈善",
+  "seo.qibla.description": "以指南针式指引找到朝向神圣克尔白的方向。随处可知礼拜朝向——献给米沙里的持续慈善。",
+  "seo.donation.title": "孤儿赞助捐赠 | 米沙里的持续慈善",
+  "seo.donation.description": "以米沙里·阿拉布拉的名义赞助孤儿作为川流不息的施舍。帮助失去监护人的儿童并延续回赐。",
+  "seo.supplications.title": "祷词与记主 | 米沙里的持续慈善",
+  "seo.supplications.description": "为亡者所作的可靠祷词，以及出自古兰经与圣训的晨昏记主——为米沙里祈求，愿安拉慈悯他。",
+  "seo.hadith.title": "圣训与先知智慧 | 米沙里的持续慈善",
+  "seo.hadith.description": "阅读关于施舍、慈悯与信仰的圣训。先知穆罕默德ﷺ的指引——作为米沙里的纪念持续慈善。",
+  "seo.youtube.title": "古兰经诵读 | 米沙里的持续慈善",
+  "seo.youtube.description": "聆听古兰经诵读与米沙里喜爱的诵经家——作为持续慈善。纪念他的宁静音频；愿安拉宽恕他。",
+  "language.es": "Español",
+  "language.pt": "Português",
+  "language.hi": "हिन्दी"
 }

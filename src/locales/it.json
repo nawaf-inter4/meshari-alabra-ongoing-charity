@@ -248,7 +248,7 @@
   },
   "quran.meshari_favorite": "Preferito di Meshari",
   "social": {
-    "x_account": "Account X",
+    "x_account": "Account X di Meshari",
     "github": "GitHub"
   },
   "navigation": {
@@ -278,5 +278,28 @@
   "meshari_favorite_reciter.title": "Recitatore Preferito di Meshari",
   "meshari_favorite_reciter.subtitle": "Ascolta il Sacro Corano con il recitatore preferito di Meshari (Che Allah abbia misericordia di lui)",
   "islamic_chant.title": "Canto Islamico Preferito di Meshari",
-  "islamic_chant.subtitle": "Un bel canto islamico che Meshari amava molto, portando pace e tranquillità"
+  "islamic_chant.subtitle": "Un bel canto islamico che Meshari amava molto, portando pace e tranquillità",
+  "seo.title": "Carità Continua di Meshari | Corano, dua e orfani",
+  "seo.description": "Carità continua in memoria di Meshari Alabra: leggi il Corano, fai dua, consulta orari di preghiera e qibla, hadith e sponsorizza orfani a suo nome.",
+  "seo.quran.title": "Lettore del Sacro Corano | Carità Continua di Meshari",
+  "seo.quran.description": "Leggi, cerca e ascolta il Sacro Corano con traduzioni e audio come carità continua per Meshari Alabra. Che Allah abbia misericordia di lui.",
+  "seo.tafseer.title": "Tafsir del Corano | Carità Continua di Meshari",
+  "seo.tafseer.description": "Esplora tafsir classici per comprendere la parola di Allah. Sezione commemorativa della carità continua di Meshari per riflessione e studio.",
+  "seo.dhikr.title": "Contatore di dhikr | Carità Continua di Meshari",
+  "seo.dhikr.description": "Traccia tasbih e dhikr quotidiano con un contatore semplice. Glorifica Allah in ogni momento come carità continua in memoria di Meshari.",
+  "seo.prayer-times.title": "Orari di preghiera | Carità Continua di Meshari",
+  "seo.prayer-times.description": "Orari di preghiera precisi in base alla tua posizione, con conto alla rovescia. Resta puntuale nella salah nella carità commemorativa di Meshari.",
+  "seo.qibla.title": "Direzione della qibla | Carità Continua di Meshari",
+  "seo.qibla.description": "Trova la qibla verso la Santa Kaaba con guida tipo bussola. Conosci la direzione di preghiera ovunque, dedicata a Meshari.",
+  "seo.donation.title": "Sponsorizzazione orfani | Carità Continua di Meshari",
+  "seo.donation.description": "Sponsorizza orfani come sadaqah jariyah a nome di Meshari Alabra. Aiuta chi ha perso il tutore e mantieni viva la sua ricompensa.",
+  "seo.supplications.title": "Dua e invocazioni | Carità Continua di Meshari",
+  "seo.supplications.description": "Dua autentiche per il defunto, ricordi del mattino e della sera da Corano e Sunnah—preghiere per Meshari, che Allah abbia misericordia di lui.",
+  "seo.hadith.title": "Hadith e saggezza | Carità Continua di Meshari",
+  "seo.hadith.description": "Leggi hadith su carità, misericordia e fede. Guida del Profeta Muhammad ﷺ come carità commemorativa continua di Meshari.",
+  "seo.youtube.title": "Recitazioni del Corano | Carità Continua di Meshari",
+  "seo.youtube.description": "Ascolta recitazioni del Corano e il recitatore preferito di Meshari come carità continua. Audio sereno in sua memoria—che Allah lo perdoni.",
+  "language.es": "Español",
+  "language.pt": "Português",
+  "language.hi": "हिन्दी"
 }

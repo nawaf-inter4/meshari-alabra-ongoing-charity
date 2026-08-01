@@ -203,6 +203,13 @@ html[dir="ltr"] body {
   font-feature-settings: "liga" 1, "clig" 1, "calt" 1, "kern" 1 !important;
 }
 
+/* Hindi (Devanagari) is LTR; prefer system Devanagari faces over Latin-only Lexend. */
+html[lang="hi"] body,
+html[lang="hi"] .font-lexend {
+  font-family: "Noto Sans Devanagari", "Noto Sans", "Mangal", "Kohinoor Devanagari",
+    "Devanagari Sangam MN", "Lexend Deca", system-ui, sans-serif !important;
+}
+
 .font-lexend {
   font-family: 'Lexend Deca', sans-serif !important;
   text-rendering: optimizeLegibility;
@@ -255,8 +262,14 @@ h3.font-tajawal {
   font-family: 'Tajawal', sans-serif !important;
 }
 
+/* Beat html[dir="ltr"] h3 { text-align: left !important } for centered titles (e.g. Latin surah names). */
+html[dir="ltr"] .text-center h3:not(.font-arabic):not(.font-tajawal),
+html[dir="ltr"] .text-center h3.not-arabic-text:not(.font-tajawal),
+html[dir="ltr"] h3.text-center:not(.font-arabic):not(.font-tajawal),
+html[dir="ltr"] h3.text-center.not-arabic-text:not(.font-tajawal),
 .text-center h3,
-.text-center h3:not(.font-arabic) {
+.text-center h3:not(.font-arabic),
+h3.text-center {
   text-align: center !important;
 }
 

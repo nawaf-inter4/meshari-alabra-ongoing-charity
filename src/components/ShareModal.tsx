@@ -1631,7 +1631,10 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                             }
                           }}
                         >
-                          {verse?.translation || ''}
+                          <BidiText
+                            text={verse?.translation || ''}
+                            direction={isArabicTranslation ? "rtl" : "ltr"}
+                          />
                         </p>
                       </div>
                     );

@@ -236,8 +236,8 @@
   "supplications.waking": "Uyanma",
   "dhikr.auto_saved": "Otomatik kaydedildi",
   "islamic_chant": {
-    "title": "Meshari'nin Favori İslami İlahisi",
-    "description": "Meshari'nin çok sevdiği, huzur ve sükunet veren güzel bir İslami ilahi"
+    "title": "İslami İlahi",
+    "subtitle": "Sürekli sadaka olarak güzel İslami ilahileri dinleyin"
   },
   "quran_verse": {
     "bismillah": "Rahman ve Rahim olan Allah'ın adıyla",
@@ -252,7 +252,7 @@
     "feature_1": "Yüksek Kaliteli Tilavet"
   },
   "social": {
-    "x_account": "X Hesabı",
+    "x_account": "Meshari'nin X Hesabı",
     "github": "GitHub"
   },
   "navigation": {
@@ -270,10 +270,6 @@
   "quran_stories.read": "Oku",
   "location.riyadh": "Riyad",
   "location.saudi_arabia": "Suudi Arabistan",
-  "islamic_chant": {
-    "title": "İslami İlahi",
-    "subtitle": "Sürekli sadaka olarak güzel İslami ilahileri dinleyin"
-  },
   "donation.balance_text": "Allah onu iyiliklerinin terazisine koysun",
   "qibla.find_direction": "Kıble Yönünü Bul",
   "qibla.detecting_location": "Konumunuz tespit ediliyor...",
@@ -286,5 +282,28 @@
   "meshari_favorite_reciter.title": "Meshari'nin Favori Kuran Okuyucusu",
   "meshari_favorite_reciter.subtitle": "Meshari'nin favori Kuran okuyucusu ile Kutsal Kuran'ı dinleyin (Allah ona rahmet etsin)",
   "islamic_chant.title": "Meshari'nin Favori İslami İlahisi",
-  "islamic_chant.subtitle": "Meshari'nin çok sevdiği, huzur ve sükunet veren güzel bir İslami ilahi"
+  "islamic_chant.subtitle": "Meshari'nin çok sevdiği, huzur ve sükunet veren güzel bir İslami ilahi",
+  "seo.title": "Meshari'nin Süregelen Sadakası | Kur'an, Dualar ve Yetim",
+  "seo.description": "Meshari Alabra anısına süregelen sadaka: Kur'an okuyun, dua edin, namaz vakitleri ve kıbleye bakın, hadis okuyun ve onun adına yetim sponsorluğu yapın.",
+  "seo.quran.title": "Kur'an Okuyucu | Meshari'nin Süregelen Sadakası",
+  "seo.quran.description": "Mealler ve ses ile Kur'an-ı Kerim'i okuyun, arayın ve dinleyin—Meshari Alabra için süregelen sadaka. Allah ona rahmet etsin.",
+  "seo.tafseer.title": "Kur'an Tefsiri | Meshari'nin Süregelen Sadakası",
+  "seo.tafseer.description": "Allah'ın kelamını anlamak için klasik tefsirleri keşfedin. Meshari'nin süregelen sadakasının tefekkür ve öğrenme bölümü.",
+  "seo.dhikr.title": "Zikir Sayacı | Meshari'nin Süregelen Sadakası",
+  "seo.dhikr.description": "Tesbih ve günlük zikri basit bir sayaçla takip edin. Meshari Alabra anısına süregelen sadaka olarak Allah'ı zikredin.",
+  "seo.prayer-times.title": "Namaz Vakitleri | Meshari'nin Süregelen Sadakası",
+  "seo.prayer-times.description": "Konumunuza göre doğru namaz vakitleri ve sonraki namaz sayacı. Meshari'nin anma sadakası olarak namaza devam edin.",
+  "seo.qibla.title": "Kıble Yönü | Meshari'nin Süregelen Sadakası",
+  "seo.qibla.description": "Pusula tarzı rehberle Kâbe'ye doğru kıbleyi bulun. Her yerde namaz yönünü bilin—Meshari'nin süregelen sadakası.",
+  "seo.donation.title": "Yetim Sponsorluğu | Meshari'nin Süregelen Sadakası",
+  "seo.donation.description": "Meshari Alabra adına sadaka-i cariye olarak yetimlere sponsor olun. Velisini kaybeden çocuklara destek olun.",
+  "seo.supplications.title": "Dualar ve Zikirler | Meshari'nin Süregelen Sadakası",
+  "seo.supplications.description": "Vefat eden için sahih dualar, sabah-akşam zikirleri—Kur'an ve Sünnet'ten; Meshari için, Allah ona rahmet etsin.",
+  "seo.hadith.title": "Hadis ve Nebevi Hikmet | Meshari'nin Süregelen Sadakası",
+  "seo.hadith.description": "Sadaka, merhamet ve iman üzerine hadisler okuyun. Peygamber Muhammed ﷺ'in rehberliği—Meshari'nin anma sadakası.",
+  "seo.youtube.title": "Kur'an Tilavetleri | Meshari'nin Süregelen Sadakası",
+  "seo.youtube.description": "Kur'an tilavetlerini ve Meshari'nin sevdiği kârîyi dinleyin—süregelen sadaka. Anısına huzurlu ses; Allah onu bağışlasın.",
+  "language.es": "Español",
+  "language.pt": "Português",
+  "language.hi": "हिन्दी"
 }
