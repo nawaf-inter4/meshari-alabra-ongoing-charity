@@ -27,7 +27,8 @@
     "clean:build": "./scripts/clean-build.sh",
     "stub:polyfills": "node ./scripts/stub-next-polyfills.cjs",
     "postinstall": "node ./scripts/stub-next-polyfills.cjs",
-    "generate:splash": "node scripts/generate-apple-splash.mjs"
+    "generate:splash": "node scripts/generate-apple-splash.mjs",
+    "generate:story-pdfs": "node scripts/generate-story-pdfs.mjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.2",
