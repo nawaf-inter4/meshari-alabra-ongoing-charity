@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, Copy, Check, Download, Share2, MessageCircle, Send, Facebook, Linkedin, Mail, Share } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
 import { useTheme } from "./ThemeProvider";
@@ -28,6 +28,7 @@ interface ShareModalProps {
 export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: ShareModalProps) {
   const { locale, t } = useLanguage();
   const { resolvedTheme } = useTheme();
+  const reduceMotion = useReducedMotion();
   const [copied, setCopied] = useState(false);
   const [downloadingImage, setDownloadingImage] = useState(false);
   const [downloadingPDF, setDownloadingPDF] = useState(false);
@@ -1354,20 +1355,22 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — opacity only. */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0.1 : 0.18 }}
             onClick={onClose}
             className="fixed inset-0 bg-black/50 z-50"
           />
           
-          {/* Modal */}
+          {/* Modal — y + opacity; avoid scale on WebKit. */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            transition={{ duration: reduceMotion ? 0.12 : 0.22, ease: [0.25, 0.1, 0.25, 1] }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             onClick={(e) => e.stopPropagation()}
           >

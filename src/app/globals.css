@@ -64,13 +64,46 @@
   -webkit-backface-visibility: hidden;
 }
 
+/* Bookmark empty-state CTA chevron — CSS instead of framer infinite loop. */
+@keyframes bookmark-cta-nudge {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+html[dir="rtl"] .bookmark-cta-nudge {
+  animation-name: bookmark-cta-nudge-rtl;
+}
+
+@keyframes bookmark-cta-nudge-rtl {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-4px, 0, 0);
+  }
+}
+
+.bookmark-cta-nudge {
+  display: inline-flex;
+  animation: bookmark-cta-nudge 1.5s ease-in-out infinite;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-star {
     animation: none;
     opacity: 0.55;
   }
 
-  .hero-scroll-indicator {
+  .hero-scroll-indicator,
+  .bookmark-cta-nudge {
     animation: none;
   }
 }
