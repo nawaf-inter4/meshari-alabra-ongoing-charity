@@ -1,12 +1,10 @@
 import { FileText } from "lucide-react";
-import { localeDirection, siteConfig, type SupportedLocale } from "@/config/site";
+import { siteConfig, type SupportedLocale } from "@/config/site";
 import { translate } from "@/lib/translations";
 import { heroVerse } from "@/lib/hero-verse";
 import HeroStars from "./HeroStars";
 
 export default function ServerHeroSection({ locale }: { locale: SupportedLocale }) {
-  const direction = localeDirection(locale);
-  const rtl = direction === "rtl";
   const memorialName =
     siteConfig.content.memorialName || translate(locale, "memorial.name");
   const memorialDate =
@@ -44,20 +42,26 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
         </div>
 
         <div className="mt-8" data-hero-verse>
-          <div className="space-y-6">
+          <div className="space-y-3">
             <p
-              className={`hero-verse-bismillah text-xl md:text-2xl ${rtl ? "font-tajwal" : ""} text-islamic-green leading-relaxed min-h-[2.5em]`}
+              className="hero-verse-bismillah text-xl md:text-2xl font-arabic arabic-quran-text text-islamic-green"
+              dir="rtl"
+              lang="ar"
             >
               {bismillah}
             </p>
             <p
-              className={`hero-verse-main text-2xl md:text-3xl ${rtl ? "font-tajwal" : ""} text-islamic-gold max-w-4xl mx-auto min-h-[7.5em] md:min-h-[6.5em]`}
+              className="hero-verse-main text-2xl md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
               data-lcp-verse
+              dir="rtl"
+              lang="ar"
             >
               {verse}
             </p>
             <p
-              className={`hero-verse-sadaqallah text-lg md:text-xl ${rtl ? "font-tajwal" : ""} text-islamic-green leading-relaxed min-h-[1.75em]`}
+              className="hero-verse-sadaqallah text-lg md:text-xl font-arabic arabic-quran-text text-islamic-green"
+              dir="rtl"
+              lang="ar"
             >
               {sadaqallah}
             </p>

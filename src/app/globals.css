@@ -182,12 +182,20 @@ html.dark {
 }
 
 .hero-verse-bismillah,
+.hero-verse-sadaqallah,
+.hero-verse-main {
+  font-family: "Amiri", "Scheherazade New", "Noto Naskh Arabic", "Traditional Arabic", serif !important;
+  /* Beat .font-arabic { line-height: 2.5 } so short lines are not huge. */
+  margin: 0;
+}
+
+.hero-verse-bismillah,
 .hero-verse-sadaqallah {
-  line-height: 1.75;
+  line-height: 1.75 !important;
 }
 
 .hero-verse-main {
-  line-height: 2.5;
+  line-height: 2.2 !important;
 }
 
 /* Bookmark empty-state CTA chevron — CSS instead of framer infinite loop. */

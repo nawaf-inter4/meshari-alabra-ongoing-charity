@@ -228,21 +228,28 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Quranic Verse */}
+        {/* Quranic Verse — Amiri stack (same as hero / surah body), never UI Tajawal. */}
         <div className="text-center mb-8">
-          <div className="space-y-6">
-            {/* Bismillah */}
-            <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed`}>
+          <div className="space-y-3">
+            <p
+              className="hero-verse-bismillah text-xl md:text-2xl font-arabic arabic-quran-text text-islamic-green"
+              dir="rtl"
+              lang="ar"
+            >
               {getQuranVerse('bismillah')}
             </p>
-            
-            {/* Quran Verse */}
-            <p className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold leading-[2.5] max-w-4xl mx-auto`} style={{ lineHeight: '2.5' }}>
+            <p
+              className="hero-verse-main text-2xl md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
+              dir="rtl"
+              lang="ar"
+            >
               {getQuranVerse('verse')}
             </p>
-            
-            {/* Sadaqallah */}
-            <p className={`text-lg md:text-xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed`}>
+            <p
+              className="hero-verse-sadaqallah text-lg md:text-xl font-arabic arabic-quran-text text-islamic-green"
+              dir="rtl"
+              lang="ar"
+            >
               {getQuranVerse('sadaqallah')}
             </p>
           </div>
