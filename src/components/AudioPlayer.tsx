@@ -101,7 +101,7 @@ export default function AudioPlayer() {
 
   return (
     <div className="safe-fixed-bottom-right fixed z-50" data-audio-controls>
-      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-3 shadow-lg border border-islamic-gold/20">
+      <div className="bg-white/95 dark:bg-gray-800/95 rounded-full p-3 shadow-lg border border-islamic-gold/20">
         <div className="flex items-center gap-3">
           <audio
             ref={audioRef}

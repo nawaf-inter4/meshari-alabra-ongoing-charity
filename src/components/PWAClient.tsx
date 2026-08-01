@@ -128,7 +128,7 @@ export default function PWAClient() {
       <PWAInstallPrompt />
       {updateAvailable ? (
         <aside
-          className="safe-fixed-bottom-left fixed z-[60] max-w-[min(22rem,calc(100vw-6.75rem-env(safe-area-inset-left,0px)-env(safe-area-inset-right,0px)))] rounded-full border border-islamic-gold/20 bg-white/90 p-3 text-gray-900 shadow-lg backdrop-blur-sm dark:bg-gray-800/90 dark:text-white sm:rounded-2xl sm:p-4"
+          className="safe-fixed-bottom-left fixed z-[60] max-w-[min(22rem,calc(100vw-6.75rem-env(safe-area-inset-left,0px)-env(safe-area-inset-right,0px)))] rounded-full border border-islamic-gold/20 bg-white/95 p-3 text-gray-900 shadow-lg dark:bg-gray-800/95 dark:text-white sm:rounded-2xl sm:p-4"
           role="status"
           aria-live="polite"
           dir={localeDirection(locale)}

@@ -101,7 +101,7 @@ export default function PWAInstallPrompt() {
         animate={{ opacity: 1, x: 0 }}
         exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: offsetX }}
         transition={{ duration: reduceMotion ? 0.15 : 0.28, ease: "easeOut" }}
-        className="safe-fixed-bottom-left fixed z-50 max-w-[min(20rem,calc(100vw-6.75rem-env(safe-area-inset-left,0px)-env(safe-area-inset-right,0px)))] bg-white/90 p-3 text-gray-900 shadow-lg backdrop-blur-sm dark:bg-gray-800/90 dark:text-white rounded-full border border-islamic-gold/20"
+        className="safe-fixed-bottom-left fixed z-50 max-w-[min(20rem,calc(100vw-6.75rem-env(safe-area-inset-left,0px)-env(safe-area-inset-right,0px)))] bg-white/95 p-3 text-gray-900 shadow-lg dark:bg-gray-800/95 dark:text-white rounded-full border border-islamic-gold/20"
         role="dialog"
         aria-labelledby="pwa-install-title"
         dir={direction}

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
+import { revealUp } from "@/lib/safe-motion";
 import { BookOpen, ChevronDown, Play, Pause, Volume2, Download, Share2, Bookmark, BookmarkCheck, Search, X } from "lucide-react";
 import ShareModal from "../ShareModal";
 import BidiText from "../BidiText";
@@ -1223,10 +1224,7 @@ export default function EnhancedQuranSection() {
     <section id="quran" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ y: 14 }}
-          whileInView={{ y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+          {...revealUp}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 mb-4">
