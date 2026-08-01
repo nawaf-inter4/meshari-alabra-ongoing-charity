@@ -97,6 +97,11 @@
 .hero-star-dot:nth-child(8) { top: 80%; left: 42%; width: 6px; height: 6px; animation-delay: 1.4s; }
 
 @media (hover: none), (pointer: coarse) {
+  .hero-star-dot {
+    animation: none;
+    opacity: 0.55;
+  }
+
   .hero-star-dot:nth-child(n + 5) {
     display: none;
   }
@@ -120,11 +125,47 @@
 
 /* Server hero — keep padding / verse metrics out of inline style attrs. */
 .hero-section {
-  padding-top: calc(7rem + env(safe-area-inset-top, 0px));
+  padding-top: calc(5.5rem + env(safe-area-inset-top, 0px));
+}
+
+@media (min-width: 768px) {
+  .hero-section {
+    padding-top: calc(7rem + env(safe-area-inset-top, 0px));
+  }
 }
 
 .hero-memorial-card {
   border-color: var(--color-brand-border);
+}
+
+/*
+ * Hero H1: brand faces once ready. Until then, UA stack avoids Slow-4G LCP
+ * waiting on woff2. Metric overrides on @font-face keep swap CLS small.
+ */
+html[dir="rtl"] .hero-lcp-title {
+  font-family: "Tajawal", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+}
+
+html[dir="ltr"] .hero-lcp-title,
+.hero-lcp-title {
+  font-family: "Lexend Deca", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+}
+
+html[dir="rtl"]:not(.brand-fonts-ready) .hero-lcp-title,
+html[dir="ltr"]:not(.brand-fonts-ready) .hero-lcp-title {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+}
+
+/*
+ * Mobile RTL: keep the UA stack until `brand-fonts-ready` (set after load).
+ * Otherwise header/verse request Tajawal during Slow-4G LCP and reflow the hero.
+ */
+@media (max-width: 767px) {
+  html[dir="rtl"]:not(.brand-fonts-ready) body,
+  html[dir="rtl"]:not(.brand-fonts-ready) .font-tajwal,
+  html[dir="rtl"]:not(.brand-fonts-ready) .hero-memorial-card {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  }
 }
 
 .hero-verse-bismillah,
@@ -189,14 +230,18 @@ html.theme-changing *::after {
 }
 
 /* Critical UI fonts only. Quranic Amiri / Scheherazade load via /fonts/quran-fonts.css.
- * `optional` avoids late font-swap CLS on the Arabic hero (Lighthouse CLS).
- * Preloaded faces still apply when they win the display window. */
+ * `swap` + size-adjust: brand faces apply after load without leaving the wrong
+ * face stuck (optional often never paints when deferred past the short window). */
 @font-face {
   font-family: 'Lexend Deca';
   src: url('/fonts/lexend-deca-latin.woff2') format('woff2');
   font-style: normal;
   font-weight: 400 700;
-  font-display: optional;
+  font-display: swap;
+  size-adjust: 100%;
+  ascent-override: 92%;
+  descent-override: 24%;
+  line-gap-override: 0%;
 }
 
 @font-face {
@@ -204,8 +249,7 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  /* optional + preload: avoid LCP waiting on late font swap. */
-  font-display: optional;
+  font-display: swap;
   size-adjust: 100%;
   ascent-override: 95%;
   descent-override: 25%;
@@ -217,7 +261,7 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: optional;
+  font-display: swap;
   size-adjust: 100%;
   ascent-override: 95%;
   descent-override: 25%;
@@ -473,6 +517,20 @@ h3.text-center {
   line-height: 1.25;
   padding-block: 0.08em;
   overflow: visible;
+}
+
+/* Section title links: never use opacity (breaks bg-clip-text). */
+.section-title-link {
+  text-decoration: none;
+  transition: filter 0.2s ease;
+}
+
+.section-title-link:hover {
+  filter: brightness(1.12);
+}
+
+.section-title-link:active {
+  filter: brightness(1.05);
 }
 
 [data-dhikr-count] {
