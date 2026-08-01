@@ -68,7 +68,17 @@ if (styleSrc.includes("'unsafe-inline'") && !/'nonce-[A-Za-z0-9+/=_-]+'/.test(st
   fail("style-src missing nonce and has no 'unsafe-inline' fallback");
 }
 
-if (csp.includes("style-src-attr") && /style-src-attr[^;]*'unsafe-inline'/.test(csp)) {
+// Nonce/hash in style-src covers <style>/stylesheet tags only. React style={…}
+// / CSSOM cssText require style-src-attr 'unsafe-inline' (CSP3). Without it,
+// browsers fall back to style-src and block every inline style attribute.
+if (/'nonce-[A-Za-z0-9+/=_-]+'/.test(styleSrc) || /'sha256-/.test(styleSrc)) {
+  if (!/style-src-attr[^;]*'unsafe-inline'/.test(csp)) {
+    fail(
+      "style-src uses nonce/hash but style-src-attr 'unsafe-inline' is missing (React style props will break)",
+    );
+  }
+  note("style-src-attr 'unsafe-inline' residual for React style attrs (Observatory ignores) ✓");
+} else if (csp.includes("style-src-attr") && /style-src-attr[^;]*'unsafe-inline'/.test(csp)) {
   note("style-src-attr 'unsafe-inline' residual for React style attrs (Observatory ignores) ✓");
 }
 

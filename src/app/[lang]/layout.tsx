@@ -188,6 +188,9 @@ function LanguageContent({
   locale: SupportedLocale;
 }) {
   return (
+    // Must wrap children AND DeferredClientShell (PWA / useLanguage consumers).
+    // Do not move LanguageProvider under a deferred homepage gate — that leaves
+    // DeferredClientShell outside the provider and crashes on useLanguage.
     // `key` forces a clean remount when the locale segment changes so the
     // active dictionary from the server replaces client state.
     <LanguageProvider

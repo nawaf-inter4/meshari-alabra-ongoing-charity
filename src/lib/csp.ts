@@ -53,12 +53,13 @@ export function buildContentSecurityPolicy(nonce: string): string {
     "default-src 'none'",
     `script-src ${scriptSrc}`,
     "script-src-attr 'none'",
-    // Next stamps `nonce` on experimental.inlineCss <style> tags (and
-    // stylesheet links). React `style={…}` attrs use style-src-attr instead.
-    // Avoid style-src 'unsafe-inline' — with a nonce present, browsers ignore
-    // it anyway, and Observatory still treats style-only unsafe as 0.
+    // Nonce covers <style> tags + stylesheet <link>s (not style= attributes).
+    // Do NOT put 'unsafe-inline' here: with a nonce/hash present, CSP2/3
+    // browsers ignore it for style-src, which does not help React anyway.
     `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
-    // Residual: React inline style attributes require this under CSP3.
+    // REQUIRED for React style={{…}} / cssText. Keep this directive even if
+    // style-src grows sha256 hashes (%%CSP_STYLE_HASHES%% post-build inject).
+    // Without it, attribute styles fall back to nonce-only style-src and break.
     "style-src-attr 'unsafe-inline'",
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: https: blob:",
