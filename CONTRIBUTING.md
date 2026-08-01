@@ -6,7 +6,7 @@ Thank you for helping improve Meshari's Continuous Charity. This is a memorial p
 
 | Branch | Purpose |
 | --- | --- |
-| `sandbox` | Default integration branch. Open feature PRs here only. Vercel **Preview** deploys for this branch (not for feature branches). |
+| `sandbox` | Default integration branch. Open feature PRs here only. Vercel **Preview** deploys for this branch only (stable alias: [sandbox.meshari.charity](https://sandbox.meshari.charity); not for feature branches). |
 | `main` | Production branch for [meshari.charity](https://meshari.charity), Release Please, and GitHub Releases. |
 
 1. Create your feature branch from `sandbox` (`git fetch origin && git checkout -b my-change origin/sandbox`).
@@ -95,10 +95,15 @@ Pull requests targeting `sandbox` or `main` run:
 
 | Job | What |
 | --- | --- |
+| **Dependency review** | GitHub Dependency Review on pull requests (fails on high/critical advisories) |
 | **Security** | `npm audit --audit-level=high` (fails on high/critical) and gitleaks secret scan |
 | **Quality** | lint, type-check, Playwright e2e, production build |
 
 Feature PRs → `sandbox`: one full CI run. Promote PRs → `main`: one full CI run. Avoid stacking redundant Preview builds on feature branches (disabled in `vercel.json`).
+
+### Dependabot
+
+Dependabot PRs target **`sandbox`**, not `main`. Review and merge them like other integration-lane changes after Security + Quality CI are green. See [SECURITY.md](./SECURITY.md) for the full Security CI matrix.
 
 ## Memorial and content standards
 

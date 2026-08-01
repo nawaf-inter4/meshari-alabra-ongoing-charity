@@ -201,14 +201,14 @@ npm run build:analyze   # Bundle analyzer
 
 | Branch | Role |
 | --- | --- |
-| `sandbox` | Integration lane. Open feature PRs **here only**. Sole Vercel **Preview** branch. |
+| `sandbox` | Integration lane. Open feature PRs **here only**. Sole Vercel **Preview** branch ([sandbox.meshari.charity](https://sandbox.meshari.charity)). |
 | `main` | Production ([meshari.charity](https://meshari.charity)). Release Please + GitHub Releases. |
 
 Recommended flow:
 
 1. Always create a feature branch from `sandbox`
 2. Open a PR **into `sandbox`** (full CI: quality + security). Feature branches do **not** get Vercel Preview deploys
-3. After merge, verify the Preview deployment built from `sandbox`
+3. After merge, verify [sandbox.meshari.charity](https://sandbox.meshari.charity) (stable Preview alias). GitHub Checks may still link to a unique `*.vercel.app` URL — that is expected
 4. Promote with a conventional title: `./scripts/promote-sandbox-to-main.sh fix "summary"` (or `feat:`) — never a bare “Promote sandbox…” title
 5. Release Please on `main` opens/publishes patch/minor from conventional commits; an automated workflow syncs version files back to `sandbox` (no manual main→sandbox rebase)
 
@@ -242,7 +242,7 @@ This application needs a real Next.js runtime (API routes + Cache Components). D
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Cloudflare](https://img.shields.io/badge/Deploy%20to-Cloudflare-F38020?style=flat&logo=cloudflare&logoColor=white)](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 
-- **Vercel:** native Next.js via `vercel.json`. Production = `main` only. Preview deploys = `sandbox` only (`git.deploymentEnabled`; feature branches ignored).
+- **Vercel:** native Next.js via `vercel.json`. Production = `main` → [meshari.charity](https://meshari.charity). Preview deploys = `sandbox` only → [sandbox.meshari.charity](https://sandbox.meshari.charity) (Git Branch domain in Project Settings → Domains; `git.deploymentEnabled` ignores feature branches). See [DEPLOYMENT.md](./DEPLOYMENT.md) for Domains UI steps and GitHub URL behavior.
 - **Netlify:** Next.js runtime via `netlify.toml` and Netlify's official adapter.
 - **Render:** Docker via `render.yaml` and `Dockerfile`.
 - **Cloudflare:** Workers via `@opennextjs/cloudflare`, `wrangler.jsonc`, and the official [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity) button. Plain Cloudflare Pages static export is unsupported.
