@@ -19,10 +19,15 @@
 
 [Live site](https://meshari.charity) · [Deployment guide](./DEPLOYMENT.md) · [White-label guide](./WHITE_LABELING.md) · [Donate for orphans](https://ehsan.sa/campaign/6FC11E15DA)
 
-[![Deploy with Vercel](https://img.shields.io/badge/Deploy%20with-Vercel-black?style=flat&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME)
+[![Deploy with Vercel](https://img.shields.io/badge/Deploy%20with-Vercel-black?style=flat&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME,NEXT_PUBLIC_MEMORIAL_NAME,NEXT_PUBLIC_DONATION_URL,NEXT_PUBLIC_COLOR_BRAND,NEXT_PUBLIC_COLOR_ACCENT&envDescription=Public%20HTTPS%20site%20URL%20and%20memorial%20white-label%20values.%20See%20.env.example.&envLink=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/blob/sandbox/.env.example)
 [![Deploy to Netlify](https://img.shields.io/badge/Deploy%20to-Netlify-00C7B7?style=flat&logo=netlify&logoColor=white)](https://app.netlify.com/start/deploy?repository=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Cloudflare](https://img.shields.io/badge/Deploy%20to-Cloudflare-F38020?style=flat&logo=cloudflare&logoColor=white)](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy on Railway](https://img.shields.io/badge/Deploy%20on-Railway-0B0D0E?style=flat&logo=railway&logoColor=white)](https://railway.com/new/template?template=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy with Docker](https://img.shields.io/badge/Deploy%20with-Docker-2496ED?style=flat&logo=docker&logoColor=white)](./DEPLOYMENT.md#docker)
+[![Deploy on CranL](https://img.shields.io/badge/Deploy%20on-CranL-0F766E?style=flat)](https://app.cranl.com)
+[![Deploy with Coolify](https://img.shields.io/badge/Deploy%20with-Coolify-111827?style=flat)](https://app.coolify.io)
+[![Deploy with Dokploy](https://img.shields.io/badge/Deploy%20with-Dokploy-0284C7?style=flat)](https://app.dokploy.com)
 
 </div>
 
@@ -73,7 +78,7 @@ Built on Next.js 16.3 Instant Navigations, Cache Components, Partial Prefetching
 - Native one-click YouTube playlist players with deferred third-party work
 - Central config for identity, memorial content, assets, SEO, PWA, colors, and media
 - Dynamic `/manifest.webmanifest` and dependency-free service worker
-- Deploy templates for Vercel, Netlify, Render, Cloudflare Workers, Railway, and Docker
+- One-click deploy paths for Vercel, Netlify, Render, Cloudflare Workers, Railway, Docker, CranL, Coolify, and Dokploy
 - LTR interface font: Lexend Deca · RTL interface font: Tajawal
 
 ### Sections
@@ -233,30 +238,39 @@ Crawl inventory (approximate):
 
 ## Deployment
 
-This application needs a real Next.js runtime (API routes + Cache Components). Do not deploy it as a static export. Full provider notes: [DEPLOYMENT.md](./DEPLOYMENT.md).
+Families can publish a memorial site without writing code: fork on GitHub, click a badge, set a few names and colors, then check `/health`. This app needs a real Next.js runtime (not a static export). Plain-language steps for every host: [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ### One-click platforms
 
-[![Deploy with Vercel](https://img.shields.io/badge/Deploy%20with-Vercel-black?style=flat&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME)
+[![Deploy with Vercel](https://img.shields.io/badge/Deploy%20with-Vercel-black?style=flat&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME,NEXT_PUBLIC_MEMORIAL_NAME,NEXT_PUBLIC_DONATION_URL,NEXT_PUBLIC_COLOR_BRAND,NEXT_PUBLIC_COLOR_ACCENT&envDescription=Public%20HTTPS%20site%20URL%20and%20memorial%20white-label%20values.%20See%20.env.example.&envLink=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/blob/sandbox/.env.example)
 [![Deploy to Netlify](https://img.shields.io/badge/Deploy%20to-Netlify-00C7B7?style=flat&logo=netlify&logoColor=white)](https://app.netlify.com/start/deploy?repository=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Cloudflare](https://img.shields.io/badge/Deploy%20to-Cloudflare-F38020?style=flat&logo=cloudflare&logoColor=white)](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy on Railway](https://img.shields.io/badge/Deploy%20on-Railway-0B0D0E?style=flat&logo=railway&logoColor=white)](https://railway.com/new/template?template=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy with Docker](https://img.shields.io/badge/Deploy%20with-Docker-2496ED?style=flat&logo=docker&logoColor=white)](./DEPLOYMENT.md#docker)
+[![Deploy on CranL](https://img.shields.io/badge/Deploy%20on-CranL-0F766E?style=flat)](https://app.cranl.com)
+[![Deploy with Coolify](https://img.shields.io/badge/Deploy%20with-Coolify-111827?style=flat)](https://app.coolify.io)
+[![Deploy with Dokploy](https://img.shields.io/badge/Deploy%20with-Dokploy-0284C7?style=flat)](https://app.dokploy.com)
 
-- **Vercel:** native Next.js via `vercel.json`. Production = `main` → [meshari.charity](https://meshari.charity). Preview deploys = `sandbox` only → [sandbox.meshari.charity](https://sandbox.meshari.charity) (Git Branch domain in Project Settings → Domains; `git.deploymentEnabled` ignores feature branches). See [DEPLOYMENT.md](./DEPLOYMENT.md) for Domains UI steps and GitHub URL behavior.
-- **Netlify:** Next.js runtime via `netlify.toml` and Netlify's official adapter.
-- **Render:** Docker via `render.yaml` and `Dockerfile`.
+- **Vercel:** native Next.js via `vercel.json`. Prompts for site URL, memorial name, donation URL, and colors. Production = `main` → [meshari.charity](https://meshari.charity). Preview deploys = `sandbox` only → [sandbox.meshari.charity](https://sandbox.meshari.charity) (Git Branch domain in Project Settings → Domains; `git.deploymentEnabled` ignores feature branches). See [DEPLOYMENT.md](./DEPLOYMENT.md) for Domains UI steps and GitHub URL behavior.
+- **Netlify:** Next.js runtime via `netlify.toml` (template environment hints for white-label keys).
+- **Render:** Docker via `render.yaml` and `Dockerfile`, with `/health` and prompted white-label env vars.
 - **Cloudflare:** Workers via `@opennextjs/cloudflare`, `wrangler.jsonc`, and the official [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity) button. Plain Cloudflare Pages static export is unsupported.
+- **Railway:** Dockerfile deploy via `railway.json` and Railway’s [template-from-GitHub](https://railway.com/new/template?template=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity) button; set `NEXT_PUBLIC_*` variables then redeploy.
+- **Docker:** one-command Compose — see [DEPLOYMENT.md § Docker](./DEPLOYMENT.md#docker).
+- **CranL:** hosted PaaS at [app.cranl.com](https://app.cranl.com) — connect GitHub, build with `Dockerfile`, port `3000` ([guide](./DEPLOYMENT.md#cranl)). Distinct from Coolify.
+- **Coolify:** Coolify Cloud or self-hosted — public/GitHub repo + Dockerfile ([guide](./DEPLOYMENT.md#coolify)).
+- **Dokploy:** Dokploy Cloud or self-hosted — GitHub application or Compose ([guide](./DEPLOYMENT.md#dokploy)).
 
-### Railway and Docker
-
-`railway.json` is included. For any Docker-compatible host:
+### Railway and Docker (quick)
 
 ```bash
 cp .env.example .env.local
-docker compose --env-file .env.local up --build
+# edit memorial name, colors, donation URL, and NEXT_PUBLIC_SITE_URL
+docker compose --env-file .env.local up --build -d
 ```
 
-The container listens on port `3000`, runs as a non-root user, and uses Next.js standalone output.
+The container listens on port `3000`, runs as a non-root user, exposes `/health`, and uses Next.js standalone output. `railway.json` selects the same Dockerfile on Railway.
 
 ### White-label before deploying
 
@@ -299,7 +313,7 @@ Branding and deployment inputs:
 - Brand, accent, link, light, and dark colors: [COLORS]
 - Quran playlist and representative thumbnail video IDs: [IDS]
 - Favorite-reciter playlist and representative thumbnail video IDs: [IDS]
-- Deployment target: [Vercel, Netlify, Render, Cloudflare, Railway, or Docker]
+- Deployment target: [Vercel, Netlify, Render, Cloudflare, Railway, Docker, CranL, Coolify, or Dokploy]
 
 Requirements:
 1. Read README.md, WHITE_LABELING.md, `/llms.txt`, .env.example,
