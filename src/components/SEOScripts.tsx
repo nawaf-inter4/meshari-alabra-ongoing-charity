@@ -6,7 +6,7 @@ import {
 } from "@/config/site";
 import { translate } from "@/lib/translations";
 
-export default function SEOScripts() {
+export default function SEOScripts({ nonce }: { nonce?: string }) {
   const { identity, content, seo } = siteConfig;
   const description = seo.description || translate(identity.defaultLocale, "seo.description", translate(identity.defaultLocale, "hero.description"));
   const websiteId = `${identity.siteUrl}/#website`;
@@ -45,6 +45,7 @@ export default function SEOScripts() {
     <Script
       id="site-schema"
       type="application/ld+json"
+      nonce={nonce}
       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }}
     />
   );

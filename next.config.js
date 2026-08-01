@@ -92,6 +92,10 @@ const nextConfig = {
   experimental: {
     // TypeScript 7 uses the CLI because it no longer exposes the compiler API.
     useTypeScriptCli: true,
+    // Subresource Integrity on script tags (Observatory SRI bonus; pairs with nonce CSP).
+    sri: {
+      algorithm: 'sha256',
+    },
     // Inline CSS into HTML in production to remove the render-blocking stylesheet
     // round-trip (PageSpeed "Eliminate render-blocking resources").
     inlineCss: true,

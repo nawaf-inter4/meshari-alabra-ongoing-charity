@@ -5,8 +5,10 @@ import {
   type SupportedLocale,
 } from "@/config/site";
 import { translate } from "@/lib/translations";
+import { getCspNonce } from "@/lib/csp-nonce";
 
-export default function LandingSchema({ locale }: { locale: SupportedLocale }) {
+export default async function LandingSchema({ locale }: { locale: SupportedLocale }) {
+  const nonce = await getCspNonce();
   const url = `${siteConfig.identity.siteUrl}/${locale}`;
   const schema = {
     "@context": "https://schema.org",
@@ -28,6 +30,7 @@ export default function LandingSchema({ locale }: { locale: SupportedLocale }) {
     <Script
       id="landing-schema"
       type="application/ld+json"
+      nonce={nonce}
       dangerouslySetInnerHTML={{
         __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
       }}

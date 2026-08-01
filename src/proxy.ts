@@ -4,6 +4,7 @@ import { isSupportedLocale, localeDirection, siteConfig, type SupportedLocale } 
 import { isSectionId } from '@/lib/routes';
 import { isStorySlug } from '@/content/stories';
 import { translate } from '@/lib/translations';
+import { buildContentSecurityPolicy, createCspNonce } from '@/lib/csp';
 
 function escapeHtml(value: string) {
   return value.replace(/[&<>'"]/g, (character) => ({
@@ -48,71 +49,14 @@ function isUtilityPath(pathname: string) {
 }
 
 /**
- * Build CSP for Cache Components / statically generated locale shells.
- *
- * Next.js 16 documents nonce + `strict-dynamic` via Proxy (`x-nonce`), but that
- * path requires per-request dynamic HTML (`connection()` / `headers()`), which
- * disables static shells and Partial Prefetch — a Core Web Vitals regression
- * for this memorial site. We therefore keep a strong static CSP:
- * - `default-src 'none'` + explicit allowlists
- * - production: no `'unsafe-eval'`
- * - `'unsafe-inline'` remains on script-src / style-src (Next bootstrapping,
- *   JSON-LD Script, and React style attributes)
- * - Trusted Types `require-trusted-types-for` is not enabled (breaks Next +
- *   Vercel Analytics without a full TT migration)
+ * Apply security headers. For document navigations, also forward CSP + nonce
+ * on the *request* so Next can stamp framework scripts (see Next.js CSP guide).
  */
-function buildContentSecurityPolicy() {
-  const isDev = process.env.NODE_ENV !== 'production';
-
-  const scriptSrc = [
-    "'self'",
-    "'unsafe-inline'",
-    ...(isDev ? ["'unsafe-eval'"] : []),
-    'https://vercel.live',
-    'https://vitals.vercel-insights.com',
-    'https://va.vercel-scripts.com',
-    'https://www.googletagmanager.com',
-    'https://www.google-analytics.com',
-  ].join(' ');
-
-  const connectSrc = [
-    "'self'",
-    'https://api.aladhan.com',
-    'https://api.alquran.cloud',
-    'https://api.quran.com',
-    'https://ipapi.co',
-    'https://cdn.jsdelivr.net',
-    'https://vitals.vercel-insights.com',
-    'https://va.vercel-scripts.com',
-    'https://www.google-analytics.com',
-    'https://fonts.googleapis.com',
-    'https://fonts.gstatic.com',
-    'https://vercel.live',
-  ].join(' ');
-
-  return [
-    "default-src 'none'",
-    `script-src ${scriptSrc}`,
-    "script-src-attr 'none'",
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "style-src-attr 'unsafe-inline'",
-    "font-src 'self' https://fonts.gstatic.com data:",
-    "img-src 'self' data: https: blob:",
-    "media-src 'self' https: blob:",
-    `connect-src ${connectSrc}`,
-    "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://vercel.live",
-    "worker-src 'self' blob:",
-    "child-src 'self' blob:",
-    "manifest-src 'self'",
-    "object-src 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-    "frame-ancestors 'none'",
-    ...(isDev ? [] : ['upgrade-insecure-requests']),
-  ].join('; ');
-}
-
-function applySecurityHeaders(response: NextResponse, request: NextRequest) {
+function applySecurityHeaders(
+  response: NextResponse,
+  request: NextRequest,
+  options?: { nonce?: string; csp?: string },
+) {
   response.headers.set('X-DNS-Prefetch-Control', 'on');
   response.headers.set('X-XSS-Protection', '1; mode=block');
   response.headers.set('X-Frame-Options', 'DENY');
@@ -132,7 +76,8 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
     response.headers.set('Vary', 'Accept-Encoding');
   }
 
-  response.headers.set('Content-Security-Policy', buildContentSecurityPolicy());
+  const csp = options?.csp ?? buildContentSecurityPolicy(options?.nonce ?? createCspNonce());
+  response.headers.set('Content-Security-Policy', csp);
 
   if (request.nextUrl.pathname.startsWith('/icons/') ||
       request.nextUrl.pathname.startsWith('/_next/static/')) {
@@ -163,7 +108,8 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
 
   if (request.nextUrl.pathname === '/' ||
       request.nextUrl.pathname.match(/^\/[a-z]{2}$/)) {
-    response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+    // Short CDN TTL: HTML is request-rendered for CSP nonces.
+    response.headers.set('Cache-Control', 'private, no-cache, no-store, max-age=0, must-revalidate');
   }
 
   // HSTS: keep preload + includeSubDomains (aligned with next.config.js).
@@ -173,8 +119,20 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
 }
 
 function continueWithSecurityHeaders(request: NextRequest) {
-  const response = NextResponse.next();
-  applySecurityHeaders(response, request);
+  const nonce = createCspNonce();
+  const csp = buildContentSecurityPolicy(nonce);
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce);
+  // Next extracts the nonce from the request CSP during SSR.
+  requestHeaders.set('Content-Security-Policy', csp);
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+  applySecurityHeaders(response, request, { nonce, csp });
   return response;
 }
 

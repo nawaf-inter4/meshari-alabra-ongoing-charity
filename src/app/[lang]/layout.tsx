@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import "../globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -18,6 +19,7 @@ import {
   type SupportedLocale,
 } from "@/config/site";
 import { translate } from "@/lib/translations";
+import { getCspNonce } from "@/lib/csp-nonce";
 
 // The document language and direction depend on this root segment's URL.
 // Deeper pages still validate instant navigation within the active locale.
@@ -200,6 +202,13 @@ export default async function LanguageLayout({
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
 }) {
+  // Request-time render so Proxy nonces can be stamped on Next framework
+  // scripts (required for Observatory-grade script-src without unsafe-inline).
+  // Cached route shells / Partial Prefetch for this segment are traded away;
+  // below-fold sections remain client-lazy. See docs/SECURITY-HEADERS.md.
+  await connection();
+  const nonce = await getCspNonce();
+
   const { lang } = await params;
   if (!isSupportedLocale(lang)) notFound();
   const direction = localeDirection(lang);
@@ -215,7 +224,7 @@ export default async function LanguageLayout({
       suppressHydrationWarning
     >
       <head>
-        <SEOScripts />
+        <SEOScripts nonce={nonce} />
         <AppleSplashLinks />
         {/* Preload only the above-the-fold UI font for this direction. */}
         <link
@@ -238,11 +247,7 @@ export default async function LanguageLayout({
       <body className="antialiased">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-50 bg-blue-600 text-white px-4 py-2 rounded"
-          style={{
-            top: "max(1rem, env(safe-area-inset-top, 0px))",
-            left: "max(1rem, env(safe-area-inset-left, 0px))",
-          }}
+          className="sr-only focus:not-sr-only focus:absolute focus:z-50 bg-blue-600 text-white px-4 py-2 rounded skip-to-content"
           aria-label={skipLabel}
         >
           {skipLabel}

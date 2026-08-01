@@ -1,6 +1,6 @@
 # Security headers and CSP
 
-Primary enforcement is in [`src/proxy.ts`](../src/proxy.ts). Platform headers in [`next.config.js`](../next.config.js) stay aligned for responses that do not go through Proxy.
+Primary enforcement is in [`src/proxy.ts`](../src/proxy.ts) using builders in [`src/lib/csp.ts`](../src/lib/csp.ts). Platform headers in [`next.config.js`](../next.config.js) stay aligned for responses that do not go through Proxy.
 
 ## Current posture
 
@@ -13,7 +13,7 @@ Primary enforcement is in [`src/proxy.ts`](../src/proxy.ts). Platform headers in
 | `Cross-Origin-Resource-Policy` | `same-origin` on first-party static assets (`/_next/static/`, fonts, images, audio). **Not** set on HTML documents (avoids breaking YouTube / media embeds). |
 | `Content-Security-Policy` | See below |
 
-## CSP (practical strictness)
+## CSP (Observatory-oriented)
 
 Baseline directives:
 
@@ -21,35 +21,53 @@ Baseline directives:
 - `script-src-attr 'none'`
 - `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`
 - **Production removes `'unsafe-eval'`**
+- **Production `script-src` has no `'unsafe-inline'`** — per-request `'nonce-…'` + `'strict-dynamic'`
 
-### Why `'unsafe-inline'` remains (script-src + style-src)
+### Nonce + Cache Components tradeoff
 
-This app enables **Cache Components** and statically generated locale shells for Core Web Vitals. Next.js 16’s nonce CSP guide (`x-nonce` + `'nonce-…' 'strict-dynamic'`) requires **per-request dynamic HTML** (`connection()` / reading `headers()` for nonces). That disables static shells / Partial Prefetch and is a large LCP regression for the memorial homepage.
+Next.js 16’s nonce CSP guide requires **request-time HTML** so framework scripts receive matching `nonce` attributes. This app calls `connection()` in [`src/app/[lang]/layout.tsx`](../src/app/[lang]/layout.tsx) and forwards `Content-Security-Policy` + `x-nonce` on the **request** from Proxy.
 
-Until the project is willing to opt HTML into dynamic rendering (or an equivalent Cache Components pattern that still stamps nonces without breaking the static shell):
+Tradeoffs (accepted for Observatory script-src pass):
 
-- `script-src` keeps `'unsafe-inline'` for Next/React bootstrapping and JSON-LD `<Script>` tags
-- `style-src` / `style-src-attr` keep `'unsafe-inline'` for Next/React inline styles
+| Keep | Give up |
+| --- | --- |
+| Strict `script-src` (no `'unsafe-inline'`) | Fully static HTML shells for locale layouts |
+| Cache Components for data / client lazy sections | Partial Prefetch / instant shells on `[lang]` |
+| Short private `Cache-Control` on locale HTML | Long CDN HTML cache (HTML is nonce-bound) |
 
-Mozilla Observatory will typically still deduct for `'unsafe-inline'` on script/style. That residual is intentional: Observatory 100 via nonce would trade away Lighthouse performance on `/ar`.
+Mozilla Observatory scores:
+
+- `script-src` with `'unsafe-inline'` → **−20**
+- `'unsafe-inline'` only in `style-src` → **0** (style-src-only)
+- `default-src 'none'` and no unsafe in script → path to **A+/100** with other header bonuses
+
+### Why `'unsafe-inline'` remains on style-src
+
+- React `style={…}` attributes across the UI
+- `experimental.inlineCss` inlines critical CSS as `<style>` tags
+
+Removing style `'unsafe-inline'` would require a full CSS-attr migration or style nonces on every tag; Observatory does **not** require that for a 100 score when script-src is clean.
+
+### Subresource Integrity
+
+`experimental.sri.algorithm = 'sha256'` adds integrity attributes to script tags (Observatory SRI bonus when scripts are same-origin / secure).
 
 ### Allowlisted hosts
 
-- Scripts / connect: Vercel Live, Vercel Analytics / vitals, optional Google Analytics hosts
+- Scripts / connect: Vercel Live, Vercel Analytics / vitals, optional Google Analytics hosts (fallback allowlists; ignored under CSP3 `strict-dynamic`)
 - Frames: YouTube (and nocookie), Vercel Live
 - Connect also: Aladhan, AlQuran Cloud, Quran.com, ipapi, jsDelivr (PDF worker), Google Fonts endpoints
 
-### Residual XSS risk
-
-`'unsafe-inline'` for scripts means a successful HTML injection could still execute inline script. Mitigations: no user-generated HTML, careful `dangerouslySetInnerHTML` (JSON-LD only with escaping), dependency and secret scanning in CI.
-
 ### Trusted Types (phased)
 
-`require-trusted-types-for 'script'` is **not** enabled. It breaks Next.js bootstrapping and third-party analytics without a full Trusted Types migration. Revisit after a nonce/dynamic-rendering CSP path or vendor TT support.
+`require-trusted-types-for 'script'` is **not** enabled. It breaks Next.js bootstrapping and third-party analytics without a full Trusted Types migration.
 
-### Future: nonce + `strict-dynamic`
+## Local verification
 
-Adopt when willing to force dynamic HTML shells (or when Next supports stamping nonces onto Cache Component shells without dynamism). Reference: Next.js App Router CSP guide (Proxy `x-nonce` + Server Component `headers().get('x-nonce')` on `<Script>`).
+```bash
+npm run build && npm start -- -p 3456
+node scripts/verify-security-headers.mjs http://127.0.0.1:3456/ar
+```
 
 ## CI
 
