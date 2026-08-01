@@ -7,5 +7,15 @@
   NPM_FLAGS = "--legacy-peer-deps"
   NEXT_TELEMETRY_DISABLED = "1"
 
+# Shown when someone uses the Deploy to Netlify button — replace with your values.
+[template.environment]
+  NEXT_PUBLIC_SITE_URL = "https://your-site.netlify.app"
+  NEXT_PUBLIC_SITE_NAME = "Example Ongoing Charity"
+  NEXT_PUBLIC_SITE_SHORT_NAME = "Example Charity"
+  NEXT_PUBLIC_MEMORIAL_NAME = "Name of your loved one"
+  NEXT_PUBLIC_DONATION_URL = "https://example.org/donate"
+  NEXT_PUBLIC_COLOR_BRAND = "#D4AF37"
+  NEXT_PUBLIC_COLOR_ACCENT = "#006B3F"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"

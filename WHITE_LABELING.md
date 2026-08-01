@@ -1,6 +1,34 @@
 # White-labeling Guide
 
-This repository is designed to be forked and rebranded without editing UI components one by one.
+This repository is designed to be forked and rebranded for a loved one without editing UI components one by one. Deploy steps in plain language: [DEPLOYMENT.md](./DEPLOYMENT.md).
+
+## 0. Quick start for a family memorial
+
+You only need a handful of values for a respectful first launch. Copy [`.env.example`](./.env.example) or paste these into your host’s Environment Variables panel:
+
+```dotenv
+NEXT_PUBLIC_SITE_URL=https://your-site.example
+NEXT_PUBLIC_SITE_NAME="Ongoing Charity for [Name]"
+NEXT_PUBLIC_SITE_SHORT_NAME="[Name]'s Charity"
+NEXT_PUBLIC_ORGANIZATION_NAME="[Name]'s Ongoing Charity"
+NEXT_PUBLIC_MEMORIAL_NAME="[Full name]"
+NEXT_PUBLIC_MEMORIAL_ALTERNATE_NAME="[Name in another script, optional]"
+NEXT_PUBLIC_MEMORIAL_DEATH_DATE=2023-03-29
+NEXT_PUBLIC_DONATION_URL=https://example.org/donate
+NEXT_PUBLIC_COLOR_BRAND="#D4AF37"
+NEXT_PUBLIC_COLOR_ACCENT="#006B3F"
+NEXT_PUBLIC_DEFAULT_LOCALE=en
+NEXT_PUBLIC_DEFAULT_DIRECTION=ltr
+```
+
+Then:
+
+1. Deploy with any badge in the README / [DEPLOYMENT.md](./DEPLOYMENT.md).
+2. Open `https://your-site.example/health` — you should see `{"status":"ok"}`.
+3. Confirm the memorial name, donate button, and colors on the home page.
+4. Use HTTPS so visitors can install the site as a PWA (Add to Home Screen).
+
+If you change any `NEXT_PUBLIC_*` value later, rebuild/redeploy. Docker users must rebuild with `docker compose --env-file .env.local up --build`.
 
 ## 1. Choose a configuration method
 
@@ -16,7 +44,7 @@ Copy the reusable template:
 cp .env.example .env.local
 ```
 
-Use `.env.local` only on your machine. On Vercel, Netlify, Render, Railway, or another host, enter values in that provider's environment-variable dashboard.
+Use `.env.local` only on your machine. On Vercel, Netlify, Render, Railway, CranL, Coolify, Dokploy, or another host, enter values in that provider's environment-variable dashboard.
 
 > `NEXT_PUBLIC_*` values are visible in browser JavaScript. Never use that prefix for passwords, access tokens, API secrets, private keys, or confidential information.
 
