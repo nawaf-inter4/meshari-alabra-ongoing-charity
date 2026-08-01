@@ -502,12 +502,13 @@ html[dir="rtl"] :is(h1, h2, h3) {
   overflow: visible;
 }
 
-/* Do not force Lexend onto Quran surah titles / ayah faces. */
+/* Do not force Lexend onto Quran surah titles / ayah faces.
+ * Do NOT set text-align here — :not() stack beats h3.text-center and
+ * left-aligns the footer memorial name (and other centered LTR h3s). */
 html[dir="ltr"] h3:not(.font-arabic):not(.font-tajawal):not(.arabic-quran-text):not(.quran-text):not(.surah-name-title),
 html[dir="ltr"] h3.not-arabic-text:not(.font-tajawal):not(.arabic-quran-text):not(.quran-text):not(.surah-name-title) {
   font-family: 'Lexend Deca', sans-serif !important;
   direction: ltr !important;
-  text-align: left !important;
   unicode-bidi: normal !important;
   text-rendering: auto !important;
   font-feature-settings: normal !important;
