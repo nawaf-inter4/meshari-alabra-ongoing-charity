@@ -77,6 +77,8 @@ export const siteConfig = {
   },
   assets: {
     logo: process.env.NEXT_PUBLIC_LOGO_PATH || "/icons/icon-512x512.png",
+    logoLight: process.env.NEXT_PUBLIC_LOGO_LIGHT_PATH || "/logo-light.svg",
+    logoDark: process.env.NEXT_PUBLIC_LOGO_DARK_PATH || "/logo-dark.svg",
     favicon: process.env.NEXT_PUBLIC_FAVICON_PATH || "/favicon.svg",
     appleTouchIcon: process.env.NEXT_PUBLIC_APPLE_TOUCH_ICON_PATH || "/icons/apple-icon-180.png",
     pwaIcon192: process.env.NEXT_PUBLIC_PWA_ICON_192_PATH || "/icons/icon-192x192.png",

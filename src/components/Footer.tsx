@@ -143,12 +143,21 @@ export default function Footer() {
 
         {/* Memorial */}
         <div className="text-center mb-8">
+          {/* Theme logos: light mode → logo-light, dark mode → logo-dark (html.dark class) */}
           <Image
-            src={siteConfig.assets.logo}
+            src={siteConfig.assets.logoLight}
             alt=""
             width={48}
             height={48}
-            className="w-12 h-12 mx-auto mb-4 rounded-full"
+            className="w-12 h-12 mx-auto mb-4 rounded-full dark:hidden"
+            aria-hidden="true"
+          />
+          <Image
+            src={siteConfig.assets.logoDark}
+            alt=""
+            width={48}
+            height={48}
+            className="hidden w-12 h-12 mx-auto mb-4 rounded-full dark:block"
             aria-hidden="true"
           />
           <h3 className={`text-2xl md:text-3xl font-bold mb-2 gradient-text text-center leading-tight py-1 ${safeDirection === 'rtl' ? 'font-arabic' : ''}`}>
