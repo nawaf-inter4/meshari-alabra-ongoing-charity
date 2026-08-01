@@ -18,10 +18,13 @@ const DeferredStyles = dynamic(() => import("@/components/DeferredStyles"), {
 const DeferredAppleSplash = dynamic(() => import("@/components/AppleSplashLinks"), {
   ssr: false,
 });
+const QuranFontLoader = dynamic(() => import("@/components/QuranFontLoader"), {
+  ssr: false,
+});
 
 /**
- * Below-the-fold chrome (audio/PWA/analytics). Fonts are preloaded in layout —
- * do not delay brand/Quran faces behind timers.
+ * Below-the-fold chrome (audio/PWA/analytics).
+ * Amiri warm-up starts immediately; heavier chrome waits for scroll/idle.
  */
 export default function DeferredClientShell() {
   const [ready, setReady] = useState(false);
@@ -38,15 +41,18 @@ export default function DeferredClientShell() {
     };
   }, []);
 
-  if (!ready) return null;
-
   return (
     <>
-      <DeferredStyles />
-      <DeferredAppleSplash />
-      <DeferredAnalytics />
-      <DeferredPWA />
-      <DeferredAudioPlayer />
+      <QuranFontLoader />
+      {ready ? (
+        <>
+          <DeferredStyles />
+          <DeferredAppleSplash />
+          <DeferredAnalytics />
+          <DeferredPWA />
+          <DeferredAudioPlayer />
+        </>
+      ) : null}
     </>
   );
 }

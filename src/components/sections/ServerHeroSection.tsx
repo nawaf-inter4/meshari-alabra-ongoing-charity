@@ -25,7 +25,9 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
           className="hero-memorial-card bg-light-secondary dark:bg-dark-secondary md:bg-light-secondary/95 md:dark:bg-dark-secondary/95 md:backdrop-blur-sm rounded-2xl p-8 border-2 border-islamic-gold/30 glow"
           data-memorial-card
         >
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">{memorialName}</h1>
+          <h1 className="hero-lcp-title text-4xl md:text-5xl font-bold mb-3" data-lcp>
+            {memorialName}
+          </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">{memorialDate}</p>
           <p className="text-xl text-islamic-gold leading-relaxed mb-6">{description}</p>
           <div className="flex justify-center">
@@ -51,8 +53,7 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
               {bismillah}
             </p>
             <p
-              className="hero-verse-main text-2xl md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
-              data-lcp-verse
+              className="hero-verse-main text-xl md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
               dir="rtl"
               lang="ar"
             >

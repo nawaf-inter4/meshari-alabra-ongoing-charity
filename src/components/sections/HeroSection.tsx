@@ -132,7 +132,7 @@ export default function HeroSection() {
           data-memorial-card
           suppressHydrationWarning
         >
-          <h1 className="text-3xl md:text-4xl font-bold mb-3" suppressHydrationWarning>
+          <h1 className="hero-lcp-title text-4xl md:text-5xl font-bold mb-3" data-lcp suppressHydrationWarning>
             {siteConfig.content.memorialName || t("memorial.name")}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4" suppressHydrationWarning>
@@ -167,8 +167,7 @@ export default function HeroSection() {
               {getQuranVerse('bismillah')}
             </p>
             <p
-              className="hero-verse-main text-2xl md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
-              data-lcp-verse
+              className="hero-verse-main text-xl md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
               dir="rtl"
               lang="ar"
             >

@@ -255,13 +255,8 @@ export default async function LanguageLayout({
             crossOrigin="anonymous"
           />
         ) : null}
-        <link
-          rel="preload"
-          href="/fonts/amiri-arabic-400.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        {/* Amiri is loaded after first paint (see QuranFontLoader) so it does not
+            contend with Tajawal/Lexend on the mobile LCP path. */}
       </head>
       <body className="antialiased">
         <a href="#main-content" className="skip-to-content" aria-label={skipLabel}>
