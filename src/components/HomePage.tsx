@@ -2,8 +2,7 @@
 
 import { lazy, Suspense, type ReactNode } from "react";
 import ClientHeader from "./ClientHeader";
-import SectionSkeleton from "./SectionSkeleton";
-import DeferredSection from "./DeferredSection";
+import MotionReveal from "./MotionReveal";
 
 const YouTubePlaylist = lazy(() => import("./sections/YouTubePlaylist"));
 const DonationSection = lazy(() => import("./sections/DonationSection"));
@@ -20,13 +19,16 @@ const IslamicChantSection = lazy(() => import("./sections/IslamicChantSection"))
 const SectionNavigation = lazy(() => import("./sections/SectionNavigation"));
 const Footer = lazy(() => import("./Footer"));
 
-const SectionLoader = () => <SectionSkeleton compact label="Loading section" />;
+/** Quiet reserve while the chunk loads — not a skeleton that replaces the enter animation. */
+const SectionChunkFallback = () => (
+  <div className="min-h-[140px]" aria-hidden="true" />
+);
 
-function Gated({ children }: { children: ReactNode }) {
+function AnimatedSection({ children }: { children: ReactNode }) {
   return (
-    <DeferredSection>
-      <Suspense fallback={<SectionLoader />}>{children}</Suspense>
-    </DeferredSection>
+    <Suspense fallback={<SectionChunkFallback />}>
+      <MotionReveal>{children}</MotionReveal>
+    </Suspense>
   );
 }
 
@@ -37,24 +39,57 @@ interface HomePageProps {
 
 export default function HomePage({ hero }: HomePageProps) {
   return (
-    <main id="main-content" role="main" aria-label="Main content" className="min-h-screen bg-light dark:bg-dark islamic-pattern">
+    <main
+      id="main-content"
+      role="main"
+      aria-label="Main content"
+      className="min-h-screen bg-light dark:bg-dark islamic-pattern"
+    >
       <ClientHeader />
       {hero}
 
-      <Gated><EnhancedQuranSection /></Gated>
-      <Gated><DonationSection /></Gated>
-      <Gated><YouTubePlaylist /></Gated>
-      <Gated><SupplicationsSection /></Gated>
-      <Gated><PrayerTimesSection /></Gated>
-      <Gated><TafseerSection /></Gated>
-      <Gated><HadithSection /></Gated>
-      <Gated><DhikrCounter /></Gated>
-      <Gated><QiblaFinder /></Gated>
-      <Gated><QuranStoriesSection /></Gated>
-      <Gated><MeshariFavoriteReciter /></Gated>
-      <Gated><IslamicChantSection /></Gated>
-      <Gated><SectionNavigation /></Gated>
-      <Gated><Footer /></Gated>
+      <AnimatedSection>
+        <EnhancedQuranSection />
+      </AnimatedSection>
+      <AnimatedSection>
+        <DonationSection />
+      </AnimatedSection>
+      <AnimatedSection>
+        <YouTubePlaylist />
+      </AnimatedSection>
+      <AnimatedSection>
+        <SupplicationsSection />
+      </AnimatedSection>
+      <AnimatedSection>
+        <PrayerTimesSection />
+      </AnimatedSection>
+      <AnimatedSection>
+        <TafseerSection />
+      </AnimatedSection>
+      <AnimatedSection>
+        <HadithSection />
+      </AnimatedSection>
+      <AnimatedSection>
+        <DhikrCounter />
+      </AnimatedSection>
+      <AnimatedSection>
+        <QiblaFinder />
+      </AnimatedSection>
+      <AnimatedSection>
+        <QuranStoriesSection />
+      </AnimatedSection>
+      <AnimatedSection>
+        <MeshariFavoriteReciter />
+      </AnimatedSection>
+      <AnimatedSection>
+        <IslamicChantSection />
+      </AnimatedSection>
+      <AnimatedSection>
+        <SectionNavigation />
+      </AnimatedSection>
+      <AnimatedSection>
+        <Footer />
+      </AnimatedSection>
     </main>
   );
 }

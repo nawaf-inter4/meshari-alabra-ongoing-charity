@@ -330,25 +330,29 @@ html.theme-changing *::after {
 }
 
 /*
- * CSS enter reveal (MotionReveal) — transform only, no opacity:0.
- * Avoids hydration blink (SSR visible) and WebKit opacity paint jank.
+ * CSS enter reveal (MotionReveal) — transform-only on ALL clients.
+ * Safari blink came from opacity:0→1 / framer paint thrash, NOT from
+ * translate. Do not disable this on touch — that hid the animation instead
+ * of fixing WebKit.
  */
 .motion-reveal {
-  transform: translate3d(0, 14px, 0);
-  transition: transform 0.42s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transform: translate3d(0, 18px, 0);
+  transition: transform 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  will-change: transform;
 }
 
 .motion-reveal.is-visible {
   transform: translate3d(0, 0, 0);
+  will-change: auto;
 }
 
-/* Touch / coarse pointer: skip enter motion entirely (WebKit jank hotspot). */
-@media (hover: none), (pointer: coarse) {
+@media (prefers-reduced-motion: reduce) {
   .motion-reveal {
     transform: none;
     transition: none;
+    will-change: auto;
   }
 }
 

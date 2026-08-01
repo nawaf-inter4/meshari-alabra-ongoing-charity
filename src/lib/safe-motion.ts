@@ -69,10 +69,12 @@ export function isAppleWebKitClient(): boolean {
   return /iP(hone|ad|od)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 }
 
-/** Touch / WebKit: skip framer enters — CSS/instant instead. */
+/**
+ * Prefer CSS MotionReveal over framer opacity fades on WebKit.
+ * Do NOT treat all touch as "no motion" — that hid animations site-wide.
+ */
 export function preferCssMotion(): boolean {
   if (typeof window === "undefined") return false;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return true;
-  if (window.matchMedia("(pointer: coarse)").matches) return true;
   return isAppleWebKitClient();
 }

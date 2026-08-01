@@ -11,8 +11,8 @@ type MotionRevealProps = {
 };
 
 /**
- * CSS transform-only enter animation via IntersectionObserver.
- * More stable on Safari / iOS than framer-motion whileInView + opacity.
+ * CSS transform-only enter via IntersectionObserver.
+ * Works on Safari / iOS / mobile Chrome — no opacity keyframes (those blinked).
  */
 export default function MotionReveal({
   children,
@@ -32,21 +32,22 @@ export default function MotionReveal({
       return;
     }
 
-    // Already in view on mount (e.g. short viewports) — show without waiting.
+    const reveal = () => setVisible(true);
+
     const rect = el.getBoundingClientRect();
     if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) {
-      setVisible(true);
+      // Next frame so the initial translate paints before we clear it.
+      requestAnimationFrame(() => requestAnimationFrame(reveal));
       return;
     }
 
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry?.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
+        if (!entry?.isIntersecting) return;
+        reveal();
+        io.disconnect();
       },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+      { rootMargin: "0px 0px -6% 0px", threshold: 0.05 },
     );
     io.observe(el);
     return () => io.disconnect();
