@@ -25,7 +25,7 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
           className="hero-memorial-card bg-light-secondary dark:bg-dark-secondary md:bg-light-secondary/95 md:dark:bg-dark-secondary/95 md:backdrop-blur-sm rounded-2xl p-8 border-2 border-islamic-gold/30 glow"
           data-memorial-card
         >
-          <h1 className="hero-lcp-title text-4xl md:text-5xl font-bold mb-3" data-lcp>
+          <h1 className="hero-lcp-title text-5xl sm:text-5xl md:text-6xl font-bold mb-4 leading-tight" data-lcp>
             {memorialName}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">{memorialDate}</p>
@@ -43,24 +43,24 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
           </div>
         </div>
 
-        <div className="mt-8" data-hero-verse>
-          <div className="space-y-3">
+        <div className="mt-6 md:mt-8" data-hero-verse>
+          <div className="space-y-2 md:space-y-3">
             <p
-              className="hero-verse-bismillah text-xl md:text-2xl font-arabic arabic-quran-text text-islamic-green"
+              className="hero-verse-bismillah text-lg md:text-2xl font-arabic arabic-quran-text text-islamic-green"
               dir="rtl"
               lang="ar"
             >
               {bismillah}
             </p>
             <p
-              className="hero-verse-main text-xl md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
+              className="hero-verse-main text-lg md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
               dir="rtl"
               lang="ar"
             >
               {verse}
             </p>
             <p
-              className="hero-verse-sadaqallah text-lg md:text-xl font-arabic arabic-quran-text text-islamic-green"
+              className="hero-verse-sadaqallah text-base md:text-xl font-arabic arabic-quran-text text-islamic-green"
               dir="rtl"
               lang="ar"
             >

@@ -191,11 +191,26 @@ html.dark {
 
 .hero-verse-bismillah,
 .hero-verse-sadaqallah {
-  line-height: 1.75 !important;
+  line-height: 1.65 !important;
 }
 
 .hero-verse-main {
-  line-height: 2.2 !important;
+  line-height: 1.9 !important;
+}
+
+@media (max-width: 767px) {
+  /* Keep memorial H1 as LCP — long ayah paint area was stealing mobile LCP. */
+  .hero-verse-main {
+    font-size: 1.05rem !important;
+    line-height: 1.75 !important;
+  }
+
+  /* Mobile LCP uses preloaded Tajawal; Amiri (large) applies from md+ / after warm. */
+  .hero-verse-bismillah,
+  .hero-verse-sadaqallah,
+  .hero-verse-main {
+    font-family: "Tajawal", "Amiri", "Scheherazade New", sans-serif !important;
+  }
 }
 
 /* Bookmark empty-state CTA chevron — CSS instead of framer infinite loop. */
