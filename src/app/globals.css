@@ -205,12 +205,6 @@ html.dark {
     line-height: 1.75 !important;
   }
 
-  /* Mobile LCP uses preloaded Tajawal; Amiri (large) applies from md+ / after warm. */
-  .hero-verse-bismillah,
-  .hero-verse-sadaqallah,
-  .hero-verse-main {
-    font-family: "Tajawal", "Amiri", "Scheherazade New", sans-serif !important;
-  }
 }
 
 /* Bookmark empty-state CTA chevron — CSS instead of framer infinite loop. */
@@ -265,13 +259,13 @@ html.theme-changing *::after {
   transition: none !important;
 }
 
-/* Self-hosted UI + Quran fonts. `block` + <link rel=preload> avoids fallback flash. */
+/* Self-hosted UI fonts — swap + preload (block held mobile LCP on the H1). */
 @font-face {
   font-family: 'Lexend Deca';
   src: url('/fonts/lexend-deca-latin.woff2') format('woff2');
   font-style: normal;
   font-weight: 400 700;
-  font-display: block;
+  font-display: swap;
 }
 
 @font-face {
@@ -279,7 +273,7 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  font-display: block;
+  font-display: swap;
 }
 
 @font-face {
@@ -287,7 +281,7 @@ html.theme-changing *::after {
   src: url('/fonts/tajawal-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: block;
+  font-display: swap;
 }
 
 /* Quran faces: swap so LCP (hero verse) is not held for ~110KB Amiri on Slow-4G.
