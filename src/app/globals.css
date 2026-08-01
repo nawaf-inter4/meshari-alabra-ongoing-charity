@@ -471,8 +471,9 @@ html[dir="rtl"] :is(h1, h2, h3) {
   overflow: visible;
 }
 
-html[dir="ltr"] h3:not(.font-arabic):not(.font-tajawal),
-html[dir="ltr"] h3.not-arabic-text:not(.font-tajawal) {
+/* Do not force Lexend onto Quran surah titles / ayah faces. */
+html[dir="ltr"] h3:not(.font-arabic):not(.font-tajawal):not(.arabic-quran-text):not(.quran-text):not(.surah-name-title),
+html[dir="ltr"] h3.not-arabic-text:not(.font-tajawal):not(.arabic-quran-text):not(.quran-text):not(.surah-name-title) {
   font-family: 'Lexend Deca', sans-serif !important;
   direction: ltr !important;
   text-align: left !important;
@@ -517,20 +518,60 @@ h3.text-center {
   line-height: 1.25;
   padding-block: 0.08em;
   overflow: visible;
+  /* Safari: keep fill clipped even when descendants are interactive links */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
-/* Section title links: never use opacity (breaks bg-clip-text). */
+/*
+ * Section title links inside .gradient-text.
+ * NEVER use opacity or filter on the link — both flatten the child into a
+ * transparent buffer and the parent bg-clip gradient no longer paints through,
+ * so the title appears to vanish on hover (light + dark).
+ */
+.gradient-text .section-title-link,
 .section-title-link {
+  color: inherit;
+  -webkit-text-fill-color: inherit;
   text-decoration: none;
-  transition: filter 0.2s ease;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 0.08em;
+  opacity: 1;
+  filter: none;
+  /* Avoid transform/filter/opacity — they isolate the child and wipe bg-clip fill */
+  transition: text-decoration-color 0.2s ease;
 }
 
-.section-title-link:hover {
-  filter: brightness(1.12);
+.gradient-text .section-title-link:hover,
+.gradient-text .section-title-link:focus-visible,
+.section-title-link:hover,
+.section-title-link:focus-visible {
+  color: inherit;
+  -webkit-text-fill-color: inherit;
+  opacity: 1;
+  filter: none;
+  text-decoration-line: underline;
+  /* Explicit gold — currentColor is transparent under bg-clip-text */
+  text-decoration-color: rgb(var(--color-brand-rgb) / 0.9);
 }
 
+.gradient-text .section-title-link:active,
 .section-title-link:active {
-  filter: brightness(1.05);
+  opacity: 1;
+  filter: none;
+  text-decoration-color: rgb(var(--color-brand-rgb) / 0.75);
+}
+
+/* Surah header: same face as ayah body (.arabic-quran-text), tighter heading metrics */
+.surah-name-title.arabic-quran-text,
+h3.surah-name-title {
+  font-family: 'Amiri', 'Tajawal', 'Noto Naskh Arabic', 'Traditional Arabic', 'Arabic Typesetting', 'Arial Unicode MS', serif !important;
+  line-height: 1.6 !important;
+  letter-spacing: 0.02em;
+  word-spacing: 0.1em;
 }
 
 [data-dhikr-count] {

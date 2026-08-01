@@ -12,8 +12,9 @@ interface SectionTitleLinkProps {
 
 /**
  * Section hub link wrapped around gradient titles.
- * Avoid opacity hover — `bg-clip-text` + transparent fill makes opacity look like
- * the title vanished. Prefer a subtle brightness/underline cue instead.
+ * Do not use opacity, filter, or transform on hover — they isolate the child and
+ * break parent `bg-clip-text` + `text-transparent` (title vanishes). Hover cue is
+ * an explicit-color underline via `.section-title-link` in globals.css.
  */
 export default function SectionTitleLink({ section, children }: SectionTitleLinkProps) {
   const { locale } = useLanguage();
