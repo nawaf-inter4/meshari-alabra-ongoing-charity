@@ -185,16 +185,6 @@
     "deceased_2": "ऐ अल्लाह, उनकी कब्र को जन्नत के बाग़ों में से एक बाग़ बना, और उसे जहन्नम के गड्ढों में से एक गड्ढा न बना",
     "deceased_3": "ऐ अल्लाह, उन्हें उनके घर से बेहतर घर दे, उनके परिवार से बेहतर परिवार दे, उन्हें जन्नत में प्रवेश दे और कब्र तथा आग की अज़ाब से बचा"
   },
-  "quran_stories": {
-    "title": "क़ुरआन की कहानियाँ",
-    "description": "पवित्र क़ुरआन की प्रत्येक सूरह के पीछे की सुंदर कहानियाँ जानें",
-    "featured_story": "विशेष कहानी",
-    "pages": "पृष्ठ",
-    "reading_time": "मिनट",
-    "preview": "पूर्वावलोकन",
-    "read": "पढ़ें",
-    "download": "डाउनलोड"
-  },
   "islamic_chant": {
     "title": "मिशारी का पसंदीदा इस्लामी तराना",
     "subtitle": "एक सुंदर इस्लामी तराना जिसे मिशारी बहुत पसंद करते थे, जो शांति और सुकून लाता है"
@@ -325,5 +315,27 @@
   "seo.youtube.description": "क़ुरआन तिलावत और मिशारी के पसंदीदा क़ारी सुनें—सतत दान के रूप में। उनकी याद में शांत ऑडियो; अल्लाह उन्हें क्षमा करे।",
   "language.es": "Español",
   "language.pt": "Português",
-  "language.hi": "हिन्दी"
+  "language.hi": "हिन्दी",
+  "quran_stories.pages": "पृष्ठ",
+  "quran_stories.reading_time": "मिनट",
+  "quran_stories.open_in_browser": "ब्राउज़र में खोलें",
+  "quran_stories.pdf_language_note": "PDF अभी मूल अरबी में उपलब्ध है।",
+  "quran_stories.stories.al-khidr-or-destiny.title": "खिज़्र? या तक़दीर?",
+  "quran_stories.stories.al-khidr-or-destiny.description": "हज़रत खिज़्र (अलैहिस्सलाम) और हमारी ज़िंदगी में तक़दीर के असर की शानदार कहानी",
+  "seo.quran_stories.al-khidr-or-destiny.title": "खिज़्र? या तक़दीर? | Meshari's Ongoing Charity",
+  "seo.quran_stories.al-khidr-or-destiny.description": "हज़रत खिज़्र (अलैहिस्सलाम) और हमारी ज़िंदगी में तक़दीर के असर की शानदार कहानी",
+  "quran_stories.stories.ash-shura.title": "सूरह अश-शूरा के दायरे में",
+  "quran_stories.stories.ash-shura.description": "सूरह अश-शूरा और उसके महान अर्थों पर गहरी सोच",
+  "seo.quran_stories.ash-shura.title": "सूरह अश-शूरा के दायरे में | Meshari's Ongoing Charity",
+  "seo.quran_stories.ash-shura.description": "सूरह अश-शूरा और उसके महान अर्थों पर गहरी सोच",
+  "quran_stories.stories.al-jinn.title": "सूरह अल-जिन्न के साथ क्षण",
+  "quran_stories.stories.al-jinn.description": "सूरह अल-जिन्न और जिन्न लोक के रहस्यों के साथ चिंतन के क्षण",
+  "seo.quran_stories.al-jinn.title": "सूरह अल-जिन्न के साथ क्षण | Meshari's Ongoing Charity",
+  "seo.quran_stories.al-jinn.description": "सूरह अल-जिन्न और जिन्न लोक के रहस्यों के साथ चिंतन के क्षण",
+  "quran_stories.stories.an-naml.title": "सूरह अन-नम्ल के साथ क्षण",
+  "quran_stories.stories.an-naml.description": "सूरह अन-नम्ल और सुलैमान (अलैहिस्सलाम) की कहानी के साथ चिंतन के क्षण",
+  "seo.quran_stories.an-naml.title": "सूरह अन-नम्ल के साथ क्षण | Meshari's Ongoing Charity",
+  "seo.quran_stories.an-naml.description": "सूरह अन-नम्ल और सुलैमान (अलैहिस्सलाम) की कहानी के साथ चिंतन के क्षण",
+  "seo.quran_stories.title": "कुरआन की कहानियाँ | Meshari's Ongoing Charity",
+  "seo.quran_stories.description": "चुनिंदा कुरआन सूरतों पर चिंतनपूर्ण शैक्षिक टिप्पणियाँ — सदक़ा जारिया के रूप में।"
 }

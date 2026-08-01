@@ -19,10 +19,15 @@
 
 [Live site](https://meshari.charity) · [Deployment guide](./DEPLOYMENT.md) · [White-label guide](./WHITE_LABELING.md) · [Donate for orphans](https://ehsan.sa/campaign/6FC11E15DA)
 
-[![Deploy with Vercel](https://img.shields.io/badge/Deploy%20with-Vercel-black?style=flat&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME)
+[![Deploy with Vercel](https://img.shields.io/badge/Deploy%20with-Vercel-black?style=flat&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME,NEXT_PUBLIC_MEMORIAL_NAME,NEXT_PUBLIC_DONATION_URL,NEXT_PUBLIC_COLOR_BRAND,NEXT_PUBLIC_COLOR_ACCENT&envDescription=Public%20HTTPS%20site%20URL%20and%20memorial%20white-label%20values.%20See%20.env.example.&envLink=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/blob/sandbox/.env.example)
 [![Deploy to Netlify](https://img.shields.io/badge/Deploy%20to-Netlify-00C7B7?style=flat&logo=netlify&logoColor=white)](https://app.netlify.com/start/deploy?repository=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Cloudflare](https://img.shields.io/badge/Deploy%20to-Cloudflare-F38020?style=flat&logo=cloudflare&logoColor=white)](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy on Railway](https://img.shields.io/badge/Deploy%20on-Railway-0B0D0E?style=flat&logo=railway&logoColor=white)](https://railway.com/new/template?template=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy with Docker](https://img.shields.io/badge/Deploy%20with-Docker-2496ED?style=flat&logo=docker&logoColor=white)](./DEPLOYMENT.md#docker)
+[![Deploy on CranL](https://img.shields.io/badge/Deploy%20on-CranL-0F766E?style=flat)](https://app.cranl.com)
+[![Deploy with Coolify](https://img.shields.io/badge/Deploy%20with-Coolify-111827?style=flat)](https://app.coolify.io)
+[![Deploy with Dokploy](https://img.shields.io/badge/Deploy%20with-Dokploy-0284C7?style=flat)](https://app.dokploy.com)
 
 </div>
 
@@ -73,7 +78,7 @@ Built on Next.js 16.3 Instant Navigations, Cache Components, Partial Prefetching
 - Native one-click YouTube playlist players with deferred third-party work
 - Central config for identity, memorial content, assets, SEO, PWA, colors, and media
 - Dynamic `/manifest.webmanifest` and dependency-free service worker
-- Deploy templates for Vercel, Netlify, Render, Cloudflare Workers, Railway, and Docker
+- One-click deploy paths for Vercel, Netlify, Render, Cloudflare Workers, Railway, Docker, CranL, Coolify, and Dokploy
 - LTR interface font: Lexend Deca · RTL interface font: Tajawal
 
 ### Sections
@@ -201,18 +206,18 @@ npm run build:analyze   # Bundle analyzer
 
 | Branch | Role |
 | --- | --- |
-| `sandbox` | Integration / **Sandbox** lane. Open feature PRs here first. This is the default branch for the Vercel Sandbox environment (non-production). |
-| `main` | Production. Merge only after sandbox looks good. Powers [meshari.charity](https://meshari.charity) and GitHub Releases. |
+| `sandbox` | Integration lane. Open feature PRs **here only**. Sole Vercel **Preview** branch ([sandbox.meshari.charity](https://sandbox.meshari.charity)). |
+| `main` | Production ([meshari.charity](https://meshari.charity)). Release Please + GitHub Releases. |
 
 Recommended flow:
 
-1. Create a feature branch from `sandbox`
-2. Open a PR into `sandbox` and verify the Vercel Sandbox deployment
-3. When stable, open a PR from `sandbox` into `main`
-4. After a feature branch is fully merged and related work is done, delete the remote (and local) feature branch
-5. Release Please batches conventional commits on `main` into a release PR (`fix:` → patch, `feat:` → minor)
+1. Always create a feature branch from `sandbox`
+2. Open a PR **into `sandbox`** (full CI: quality + security). Feature branches do **not** get Vercel Preview deploys
+3. After merge, verify [sandbox.meshari.charity](https://sandbox.meshari.charity) (stable Preview alias). GitHub Checks may still link to a unique `*.vercel.app` URL — that is expected
+4. Promote with a conventional title: `./scripts/promote-sandbox-to-main.sh fix "summary"` (or `feat:`) — never a bare “Promote sandbox…” title
+5. Release Please on `main` opens/publishes patch/minor from conventional commits; an automated workflow syncs version files back to `sandbox` (no manual main→sandbox rebase)
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) and [DEPLOYMENT.md](./DEPLOYMENT.md).
+See [CONTRIBUTING.md](./CONTRIBUTING.md), [DEPLOYMENT.md](./DEPLOYMENT.md), and [docs/SECURITY-HEADERS.md](./docs/SECURITY-HEADERS.md).
 
 ---
 
@@ -233,30 +238,39 @@ Crawl inventory (approximate):
 
 ## Deployment
 
-This application needs a real Next.js runtime (API routes + Cache Components). Do not deploy it as a static export. Full provider notes: [DEPLOYMENT.md](./DEPLOYMENT.md).
+Families can publish a memorial site without writing code: fork on GitHub, click a badge, set a few names and colors, then check `/health`. This app needs a real Next.js runtime (not a static export). Plain-language steps for every host: [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 ### One-click platforms
 
-[![Deploy with Vercel](https://img.shields.io/badge/Deploy%20with-Vercel-black?style=flat&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME)
+[![Deploy with Vercel](https://img.shields.io/badge/Deploy%20with-Vercel-black?style=flat&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity&env=NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_SITE_NAME,NEXT_PUBLIC_SITE_SHORT_NAME,NEXT_PUBLIC_MEMORIAL_NAME,NEXT_PUBLIC_DONATION_URL,NEXT_PUBLIC_COLOR_BRAND,NEXT_PUBLIC_COLOR_ACCENT&envDescription=Public%20HTTPS%20site%20URL%20and%20memorial%20white-label%20values.%20See%20.env.example.&envLink=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/blob/sandbox/.env.example)
 [![Deploy to Netlify](https://img.shields.io/badge/Deploy%20to-Netlify-00C7B7?style=flat&logo=netlify&logoColor=white)](https://app.netlify.com/start/deploy?repository=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Render](https://img.shields.io/badge/Deploy%20to-Render-46E3B7?style=flat&logo=render&logoColor=white)](https://render.com/deploy?repo=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
 [![Deploy to Cloudflare](https://img.shields.io/badge/Deploy%20to-Cloudflare-F38020?style=flat&logo=cloudflare&logoColor=white)](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy on Railway](https://img.shields.io/badge/Deploy%20on-Railway-0B0D0E?style=flat&logo=railway&logoColor=white)](https://railway.com/new/template?template=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity)
+[![Deploy with Docker](https://img.shields.io/badge/Deploy%20with-Docker-2496ED?style=flat&logo=docker&logoColor=white)](./DEPLOYMENT.md#docker)
+[![Deploy on CranL](https://img.shields.io/badge/Deploy%20on-CranL-0F766E?style=flat)](https://app.cranl.com)
+[![Deploy with Coolify](https://img.shields.io/badge/Deploy%20with-Coolify-111827?style=flat)](https://app.coolify.io)
+[![Deploy with Dokploy](https://img.shields.io/badge/Deploy%20with-Dokploy-0284C7?style=flat)](https://app.dokploy.com)
 
-- **Vercel:** native Next.js via `vercel.json`. Production branch = `main`. Sandbox environment branch = `sandbox`.
-- **Netlify:** Next.js runtime via `netlify.toml` and Netlify's official adapter.
-- **Render:** Docker via `render.yaml` and `Dockerfile`.
+- **Vercel:** native Next.js via `vercel.json`. Prompts for site URL, memorial name, donation URL, and colors. Production = `main` → [meshari.charity](https://meshari.charity). Preview deploys = `sandbox` only → [sandbox.meshari.charity](https://sandbox.meshari.charity) (Git Branch domain in Project Settings → Domains; `git.deploymentEnabled` ignores feature branches). See [DEPLOYMENT.md](./DEPLOYMENT.md) for Domains UI steps and GitHub URL behavior.
+- **Netlify:** Next.js runtime via `netlify.toml` (template environment hints for white-label keys).
+- **Render:** Docker via `render.yaml` and `Dockerfile`, with `/health` and prompted white-label env vars.
 - **Cloudflare:** Workers via `@opennextjs/cloudflare`, `wrangler.jsonc`, and the official [Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity) button. Plain Cloudflare Pages static export is unsupported.
+- **Railway:** Dockerfile deploy via `railway.json` and Railway’s [template-from-GitHub](https://railway.com/new/template?template=https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity) button; set `NEXT_PUBLIC_*` variables then redeploy.
+- **Docker:** one-command Compose — see [DEPLOYMENT.md § Docker](./DEPLOYMENT.md#docker).
+- **CranL:** hosted PaaS at [app.cranl.com](https://app.cranl.com) — connect GitHub, build with `Dockerfile`, port `3000` ([guide](./DEPLOYMENT.md#cranl)). Distinct from Coolify.
+- **Coolify:** Coolify Cloud or self-hosted — public/GitHub repo + Dockerfile ([guide](./DEPLOYMENT.md#coolify)).
+- **Dokploy:** Dokploy Cloud or self-hosted — GitHub application or Compose ([guide](./DEPLOYMENT.md#dokploy)).
 
-### Railway and Docker
-
-`railway.json` is included. For any Docker-compatible host:
+### Railway and Docker (quick)
 
 ```bash
 cp .env.example .env.local
-docker compose --env-file .env.local up --build
+# edit memorial name, colors, donation URL, and NEXT_PUBLIC_SITE_URL
+docker compose --env-file .env.local up --build -d
 ```
 
-The container listens on port `3000`, runs as a non-root user, and uses Next.js standalone output.
+The container listens on port `3000`, runs as a non-root user, exposes `/health`, and uses Next.js standalone output. `railway.json` selects the same Dockerfile on Railway.
 
 ### White-label before deploying
 
@@ -299,7 +313,7 @@ Branding and deployment inputs:
 - Brand, accent, link, light, and dark colors: [COLORS]
 - Quran playlist and representative thumbnail video IDs: [IDS]
 - Favorite-reciter playlist and representative thumbnail video IDs: [IDS]
-- Deployment target: [Vercel, Netlify, Render, Cloudflare, Railway, or Docker]
+- Deployment target: [Vercel, Netlify, Render, Cloudflare, Railway, Docker, CranL, Coolify, or Dokploy]
 
 Requirements:
 1. Read README.md, WHITE_LABELING.md, `/llms.txt`, .env.example,
@@ -325,7 +339,7 @@ Requirements:
 8. NEXT_PUBLIC_* values are public browser data. Never place a secret in one.
 9. Do not configure static-only hosting: the app requires a Next.js runtime for
    API routes and dynamic behavior.
-10. Branch from `sandbox`, open PRs into `sandbox` first, then promote to `main`.
+10. Branch from `sandbox`, open PRs into `sandbox` first, then promote to `main` with a `fix:` / `feat:` title.
     Delete feature branches after they are fully merged.
 11. After implementation, run and report real output from:
     npm ci --legacy-peer-deps
@@ -410,7 +424,9 @@ Requirements:
 
 ## Security and privacy
 
-**Security headers (via Proxy / platform):** HSTS, frame protections, nosniff, XSS filter, referrer and permissions policies as configured in `src/proxy.ts` and provider settings.
+**Security headers (via Proxy / platform):** HSTS (preload), `Referrer-Policy: strict-origin-when-cross-origin`, frame protections, nosniff, COOP, and CSP as configured in `src/proxy.ts` / `next.config.js`. Details and residual CSP risk: [docs/SECURITY-HEADERS.md](./docs/SECURITY-HEADERS.md).
+
+**CI Security job:** `npm audit --audit-level=high` and gitleaks on PRs to `sandbox` / `main`.
 
 **Privacy:**
 
@@ -488,9 +504,9 @@ This is a memorial project. Please read [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 1. Branch from `sandbox`
 2. Keep changes focused and respectful
-3. Run `npm run lint`, `npm run type-check`, `npm run test:e2e`, and `npm run build`
+3. Run `npm run lint`, `npm run type-check`, `npm run test:e2e`, `npm run build`, and `npm audit --audit-level=high`
 4. Use [Conventional Commits](https://www.conventionalcommits.org/) so Release Please can batch patch/minor releases
-5. Open a PR into `sandbox`, then promote to `main`
+5. Open a PR into `sandbox`, then promote with `fix:` / `feat:` via `scripts/promote-sandbox-to-main.sh`
 6. Delete the feature branch after it is fully merged
 
 ---

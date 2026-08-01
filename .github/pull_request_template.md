@@ -2,11 +2,14 @@
 
 <!-- Explain what changed and why. -->
 
+<!-- Target sandbox for feature/fix work. Promote sandbox→main only with a fix:/feat: title (see scripts/promote-sandbox-to-main.sh). -->
+
 ## Verification
 
 - [ ] `npm run lint`
 - [ ] `npm run type-check`
 - [ ] `npm run build`
+- [ ] `npm audit --audit-level=high`
 - [ ] Tested relevant behavior manually
 
 ## Memorial and content review

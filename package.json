@@ -27,7 +27,8 @@
     "clean:build": "./scripts/clean-build.sh",
     "stub:polyfills": "node ./scripts/stub-next-polyfills.cjs",
     "postinstall": "node ./scripts/stub-next-polyfills.cjs",
-    "generate:splash": "node scripts/generate-apple-splash.mjs"
+    "generate:splash": "node scripts/generate-apple-splash.mjs",
+    "generate:story-pdfs": "node scripts/generate-story-pdfs.mjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.2",
@@ -39,17 +40,17 @@
     "date-fns-jalali": "^4.1.0-0",
     "framer-motion": "^12.43.0",
     "html-to-image": "^1.11.13",
-    "i18next": "^25.7.4",
+    "i18next": "^25.10.10",
     "i18next-browser-languagedetector": "^8.2.1",
     "jspdf": "^4.2.1",
-    "lucide-react": "^0.562.0",
+    "lucide-react": "^0.577.0",
     "next": "^16.3.0-preview.10",
     "next-devtools-mcp": "^0.4.0",
-    "pdfjs-dist": "^5.4.530",
+    "pdfjs-dist": "^5.7.284",
     "postcss": "^8.5.25",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-i18next": "^16.5.1",
+    "react-i18next": "^16.6.6",
     "react-pdf": "^10.4.1",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^3.4.18"
@@ -81,7 +82,9 @@
     "@modelcontextprotocol/sdk": "^1.30.0",
     "postcss": "^8.5.25",
     "react-pdf": {
-      "pdfjs-dist": "5.4.530"
-    }
+      "pdfjs-dist": "5.7.284"
+    },
+    "glob": "^12.0.0",
+    "formdata-node": "^6.0.3"
   }
 }

@@ -185,16 +185,6 @@
     "deceased_2": "Oh Allah, haz de su tumba un jardín de los jardines del Paraíso, y no la hagas un foso de los fosos del Infierno",
     "deceased_3": "Oh Allah, concédele un hogar mejor que su hogar, una familia mejor que su familia, admítelo en el Paraíso y protéelo del tormento de la tumba y del tormento del Fuego"
   },
-  "quran_stories": {
-    "title": "Historias del Corán",
-    "description": "Descubre las hermosas historias detrás de cada sura del Sagrado Corán",
-    "featured_story": "Historia destacada",
-    "pages": "páginas",
-    "reading_time": "min",
-    "preview": "Vista previa",
-    "read": "Leer",
-    "download": "Descargar"
-  },
   "islamic_chant": {
     "title": "Cántico islámico favorito de Meshari",
     "subtitle": "Un hermoso cántico islámico que Meshari amaba profundamente, que trae paz y tranquilidad"
@@ -325,5 +315,27 @@
   "seo.youtube.description": "Escucha recitaciones del Corán y el recitador favorito de Meshari como caridad continua. Audio pacífico en su memoria—que Allah lo perdone.",
   "language.es": "Español",
   "language.pt": "Português",
-  "language.hi": "हिन्दी"
+  "language.hi": "हिन्दी",
+  "quran_stories.pages": "páginas",
+  "quran_stories.reading_time": "min",
+  "quran_stories.open_in_browser": "Abrir en el navegador",
+  "quran_stories.pdf_language_note": "El PDF está disponible actualmente en el árabe original.",
+  "quran_stories.stories.al-khidr-or-destiny.title": "¿Al-Khidr? ¿O el destino?",
+  "quran_stories.stories.al-khidr-or-destiny.description": "Una historia maravillosa sobre Al-Khidr (la paz sea con él) y el impacto del destino en nuestras vidas",
+  "seo.quran_stories.al-khidr-or-destiny.title": "¿Al-Khidr? ¿O el destino? | Meshari's Ongoing Charity",
+  "seo.quran_stories.al-khidr-or-destiny.description": "Una historia maravillosa sobre Al-Khidr (la paz sea con él) y el impacto del destino en nuestras vidas",
+  "quran_stories.stories.ash-shura.title": "En el ámbito de la Sura Ash-Shura",
+  "quran_stories.stories.ash-shura.description": "Reflexiones profundas sobre la Sura Ash-Shura y sus grandes significados",
+  "seo.quran_stories.ash-shura.title": "En el ámbito de la Sura Ash-Shura | Meshari's Ongoing Charity",
+  "seo.quran_stories.ash-shura.description": "Reflexiones profundas sobre la Sura Ash-Shura y sus grandes significados",
+  "quran_stories.stories.al-jinn.title": "Momentos con la Sura Al-Jinn",
+  "quran_stories.stories.al-jinn.description": "Momentos contemplativos con la Sura Al-Jinn y los secretos del mundo de los genios",
+  "seo.quran_stories.al-jinn.title": "Momentos con la Sura Al-Jinn | Meshari's Ongoing Charity",
+  "seo.quran_stories.al-jinn.description": "Momentos contemplativos con la Sura Al-Jinn y los secretos del mundo de los genios",
+  "quran_stories.stories.an-naml.title": "Momentos con la Sura An-Naml",
+  "quran_stories.stories.an-naml.description": "Momentos contemplativos con la Sura An-Naml y la historia de Salomón (la paz sea con él)",
+  "seo.quran_stories.an-naml.title": "Momentos con la Sura An-Naml | Meshari's Ongoing Charity",
+  "seo.quran_stories.an-naml.description": "Momentos contemplativos con la Sura An-Naml y la historia de Salomón (la paz sea con él)",
+  "seo.quran_stories.title": "Historias del Corán | Meshari's Ongoing Charity",
+  "seo.quran_stories.description": "Notas educativas contemplativas sobre suras seleccionadas del Corán como caridad continua."
 }

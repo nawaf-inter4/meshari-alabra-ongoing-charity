@@ -1,0 +1,13 @@
+# Extends the built-in gitleaks rules; only adds path allowlists for
+# false positives from committed Next.js build output (and node_modules).
+title = "meshari-alabra-ongoing-charity"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Ignore Next.js build artifacts and dependency trees (path false positives)"
+paths = [
+  '''(?:^|/)\.next(?:/.*)?$''',
+  '''(?:^|/)node_modules(?:/.*)?$''',
+]

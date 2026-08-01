@@ -1,4 +1,5 @@
 import { SUPPORTED_LOCALES, RTL_LOCALES, siteConfig } from "@/config/site";
+import { STORY_SLUGS } from "@/content/stories";
 import { SECTION_IDS } from "@/lib/routes";
 
 export function GET() {
@@ -10,6 +11,9 @@ export function GET() {
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(" ");
     return `- [${title}](${base}/${defaultLocale}/sections/${section}): Localized ${section} section page`;
+  }).join("\n");
+  const storyLinks = STORY_SLUGS.map((slug) => {
+    return `- [${slug}](${base}/${defaultLocale}/stories/${slug}): Localized Quran story page with PDF`;
   }).join("\n");
 
   const localeLinks = SUPPORTED_LOCALES.map((locale) => {
@@ -41,6 +45,11 @@ ${localeLinks}
 ## Sections
 
 ${sectionLinks}
+
+## Quran stories
+
+- [Stories index](${base}/${defaultLocale}/stories): Localized index of educational Quran story pages
+${storyLinks}
 
 ## Machine-readable endpoints
 

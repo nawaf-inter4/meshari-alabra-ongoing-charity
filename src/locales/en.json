@@ -185,16 +185,6 @@
     "deceased_2": "O Allah, make his grave a garden from the gardens of Paradise, and do not make it a pit from the pits of Hell",
     "deceased_3": "O Allah, give him a home better than his home, and a family better than his family, and admit him to Paradise and protect him from the torment of the grave and the torment of the Fire"
   },
-  "quran_stories": {
-    "title": "Quran Stories",
-    "description": "Discover the beautiful stories behind each surah of the Holy Quran",
-    "featured_story": "Featured Story",
-    "pages": "pages",
-    "reading_time": "min",
-    "preview": "Preview",
-    "read": "Read",
-    "download": "Download"
-  },
   "islamic_chant": {
     "title": "Meshari's Favorite Islamic Chant",
     "subtitle": "A beautiful Islamic chant that Meshari loved dearly, bringing peace and tranquility"
@@ -322,5 +312,27 @@
   "seo.youtube.description": "Listen to Quran recitations and Meshari's favorite reciter as ongoing charity. Peaceful audio for his memory—may Allah forgive him.",
   "language.es": "Español",
   "language.pt": "Português",
-  "language.hi": "हिन्दी"
+  "language.hi": "हिन्दी",
+  "quran_stories.pages": "pages",
+  "quran_stories.reading_time": "min",
+  "quran_stories.open_in_browser": "Open in Browser",
+  "quran_stories.pdf_language_note": "PDF is currently available in the original Arabic.",
+  "quran_stories.stories.al-khidr-or-destiny.title": "Al-Khidr? Or Destiny?",
+  "quran_stories.stories.al-khidr-or-destiny.description": "A wonderful story about Al-Khidr (peace be upon him) and the impact of destiny in our lives",
+  "seo.quran_stories.al-khidr-or-destiny.title": "Al-Khidr? Or Destiny? | Meshari's Ongoing Charity",
+  "seo.quran_stories.al-khidr-or-destiny.description": "A wonderful story about Al-Khidr (peace be upon him) and the impact of destiny in our lives",
+  "quran_stories.stories.ash-shura.title": "In the Realm of Surah Ash-Shura",
+  "quran_stories.stories.ash-shura.description": "Deep reflections on Surah Ash-Shura and its great meanings",
+  "seo.quran_stories.ash-shura.title": "In the Realm of Surah Ash-Shura | Meshari's Ongoing Charity",
+  "seo.quran_stories.ash-shura.description": "Deep reflections on Surah Ash-Shura and its great meanings",
+  "quran_stories.stories.al-jinn.title": "Moments with Surah Al-Jinn",
+  "quran_stories.stories.al-jinn.description": "Contemplative moments with Surah Al-Jinn and the secrets of the jinn world",
+  "seo.quran_stories.al-jinn.title": "Moments with Surah Al-Jinn | Meshari's Ongoing Charity",
+  "seo.quran_stories.al-jinn.description": "Contemplative moments with Surah Al-Jinn and the secrets of the jinn world",
+  "quran_stories.stories.an-naml.title": "Moments with Surah An-Naml",
+  "quran_stories.stories.an-naml.description": "Contemplative moments with Surah An-Naml and the story of Solomon (peace be upon him)",
+  "seo.quran_stories.an-naml.title": "Moments with Surah An-Naml | Meshari's Ongoing Charity",
+  "seo.quran_stories.an-naml.description": "Contemplative moments with Surah An-Naml and the story of Solomon (peace be upon him)",
+  "seo.quran_stories.title": "Quran Stories | Meshari's Ongoing Charity",
+  "seo.quran_stories.description": "Reflective educational notes on selected Quran surahs as ongoing charity."
 }
