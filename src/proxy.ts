@@ -161,8 +161,17 @@ function proxy(request: NextRequest) {
   // Preserve legacy links while consolidating every section under a real,
   // locale-prefixed server route.
   if (pathname === '/sections' || pathname.startsWith('/sections/')) {
-    const section = pathname.split('/').filter(Boolean)[1];
-    if (pathname !== '/sections' && (!section || !isSectionId(section) || pathname !== `/sections/${section}`)) {
+    const parts = pathname.split('/').filter(Boolean);
+    const section = parts[1];
+    const storySlug = parts[2];
+    const isBareSection = parts.length === 2 && !!section && isSectionId(section);
+    const isStoryUnderSection =
+      parts.length === 3 &&
+      section === 'quran-stories' &&
+      !!storySlug &&
+      isStorySlug(storySlug);
+
+    if (pathname !== '/sections' && !isBareSection && !isStoryUnderSection) {
       return notFoundResponse(request, siteConfig.identity.defaultLocale);
     }
     const url = request.nextUrl.clone();
@@ -181,14 +190,33 @@ function proxy(request: NextRequest) {
   }
 
   if (segments.length > 1) {
+    // Legacy /stories hub + detail → sections/quran-stories (308).
+    if (segments[1] === 'stories') {
+      if (segments.length === 2) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/${locale}/sections/quran-stories`;
+        const response = NextResponse.redirect(url, 308);
+        applySecurityHeaders(response, request);
+        return response;
+      }
+      if (segments.length === 3 && isStorySlug(segments[2])) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/${locale}/sections/quran-stories/${segments[2]}`;
+        const response = NextResponse.redirect(url, 308);
+        applySecurityHeaders(response, request);
+        return response;
+      }
+      return notFoundResponse(request, locale);
+    }
+
     const validSectionPath = segments.length === 3 &&
       segments[1] === 'sections' &&
       isSectionId(segments[2]);
-    const validStoriesIndex = segments.length === 2 && segments[1] === 'stories';
-    const validStoryPath = segments.length === 3 &&
-      segments[1] === 'stories' &&
-      isStorySlug(segments[2]);
-    if (!validSectionPath && !validStoriesIndex && !validStoryPath) {
+    const validStoryUnderSection = segments.length === 4 &&
+      segments[1] === 'sections' &&
+      segments[2] === 'quran-stories' &&
+      isStorySlug(segments[3]);
+    if (!validSectionPath && !validStoryUnderSection) {
       return notFoundResponse(request, locale);
     }
   }

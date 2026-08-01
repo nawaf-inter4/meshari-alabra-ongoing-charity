@@ -28,26 +28,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     SECTION_IDS.map((section) => ({
       url: `${siteConfig.identity.siteUrl}/${locale}/sections/${section}`,
       changeFrequency: "weekly" as const,
-      priority: 0.7,
+      priority: section === "quran-stories" ? 0.75 : 0.7,
       alternates: { languages: languageAlternates(`/sections/${section}`) },
     })),
   );
 
-  const storyIndexPages: MetadataRoute.Sitemap = SUPPORTED_LOCALES.map((locale) => ({
-    url: `${siteConfig.identity.siteUrl}/${locale}/stories`,
-    changeFrequency: "weekly" as const,
-    priority: 0.75,
-    alternates: { languages: languageAlternates("/stories") },
-  }));
-
   const storyPages: MetadataRoute.Sitemap = SUPPORTED_LOCALES.flatMap((locale) =>
     STORY_SLUGS.map((slug) => ({
-      url: `${siteConfig.identity.siteUrl}/${locale}/stories/${slug}`,
+      url: `${siteConfig.identity.siteUrl}/${locale}/sections/quran-stories/${slug}`,
       changeFrequency: "monthly" as const,
       priority: 0.72,
-      alternates: { languages: languageAlternates(`/stories/${slug}`) },
+      alternates: { languages: languageAlternates(`/sections/quran-stories/${slug}`) },
     })),
   );
 
-  return [...landingPages, ...sectionPages, ...storyIndexPages, ...storyPages];
+  return [...landingPages, ...sectionPages, ...storyPages];
 }

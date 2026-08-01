@@ -22,6 +22,15 @@ const sectionKeys: Record<SectionId, { title: string; subtitle: string }> = {
   'supplications': { title: 'supplications.title', subtitle: 'supplications.subtitle' },
   'hadith': { title: 'hadith.title', subtitle: 'hadith.subtitle' },
   'youtube': { title: 'youtube.title', subtitle: 'youtube.description' },
+  'quran-stories': { title: 'quran_stories.title', subtitle: 'quran_stories.description' },
+};
+
+/** SEO locale keys when the section id uses hyphens but JSON keys use underscores. */
+const sectionSeoKeys: Partial<Record<SectionId, { title: string; description: string }>> = {
+  'quran-stories': {
+    title: 'seo.quran_stories.title',
+    description: 'seo.quran_stories.description',
+  },
 };
 
 export function getSectionCopy(sectionId: SectionId, locale: SupportedLocale) {
@@ -44,8 +53,9 @@ export function getSectionCopy(sectionId: SectionId, locale: SupportedLocale) {
 function getSectionSeo(sectionId: SectionId, locale: SupportedLocale) {
   const { title: uiTitle, description: uiDescription } = getSectionCopy(sectionId, locale);
   const siteName = siteConfig.identity.shortName;
-  const seoTitleKey = `seo.${sectionId}.title`;
-  const seoDescriptionKey = `seo.${sectionId}.description`;
+  const seoKeys = sectionSeoKeys[sectionId];
+  const seoTitleKey = seoKeys?.title ?? `seo.${sectionId}.title`;
+  const seoDescriptionKey = seoKeys?.description ?? `seo.${sectionId}.description`;
   const seoTitle = translate(locale, seoTitleKey);
   const seoDescription = translate(locale, seoDescriptionKey);
 

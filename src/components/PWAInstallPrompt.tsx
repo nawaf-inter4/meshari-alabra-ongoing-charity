@@ -132,7 +132,7 @@ export default function PWAInstallPrompt() {
             <button
               type="button"
               onClick={install}
-              className="inline-flex min-h-10 shrink-0 items-center gap-1.5 self-center rounded-full bg-gradient-to-r from-islamic-gold to-islamic-green px-3 py-2 text-xs font-bold text-white transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-islamic-gold focus-visible:ring-offset-2"
+              className="inline-flex min-h-10 shrink-0 items-center gap-1.5 self-center rounded-full bg-gradient-to-r from-islamic-gold to-islamic-green px-3 py-2 text-xs font-bold text-white hover:from-islamic-green hover:to-islamic-blue transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-islamic-gold focus-visible:ring-offset-2"
             >
               <Download className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span className="leading-none whitespace-nowrap">{copy.install}</span>

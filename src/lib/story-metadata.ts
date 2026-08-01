@@ -12,11 +12,12 @@ import {
   getStoryPdfPath,
   getStoryTitle,
   isStoryPdfFallback,
+  localizedStoriesIndexHref,
   localizedStoryHref,
   type QuranStoryDefinition,
   type StorySlug,
 } from "@/content/stories";
-import { translate } from "@/lib/translations";
+import { translateWithConfig } from "@/lib/translations";
 
 const localeMap: Record<SupportedLocale, string> = {
   ar: "ar_SA",
@@ -56,8 +57,8 @@ function getStorySeo(slug: StorySlug, locale: SupportedLocale) {
   const siteName = siteConfig.identity.shortName;
   const seoTitleKey = `seo.quran_stories.${slug}.title`;
   const seoDescriptionKey = `seo.quran_stories.${slug}.description`;
-  const seoTitle = translate(locale, seoTitleKey);
-  const seoDescription = translate(locale, seoDescriptionKey);
+  const seoTitle = translateWithConfig(locale, seoTitleKey);
+  const seoDescription = translateWithConfig(locale, seoDescriptionKey);
 
   const title =
     seoTitle !== seoTitleKey
@@ -193,8 +194,8 @@ export function generateStorySchema(story: QuranStoryDefinition, locale: Support
           {
             "@type": "ListItem",
             position: 2,
-            name: translate(locale, "quran_stories.title"),
-            item: `${siteUrl}/${locale}/stories`,
+            name: translateWithConfig(locale, "quran_stories.title"),
+            item: `${siteUrl}${localizedStoriesIndexHref(locale)}`,
           },
           {
             "@type": "ListItem",
@@ -215,10 +216,10 @@ export function generateStoriesIndexMetadata(lang: string): Metadata {
   const siteName = siteConfig.identity.shortName;
   const seoTitleKey = "seo.quran_stories.title";
   const seoDescriptionKey = "seo.quran_stories.description";
-  const seoTitle = translate(locale, seoTitleKey);
-  const seoDescription = translate(locale, seoDescriptionKey);
-  const uiTitle = translate(locale, "quran_stories.title");
-  const uiDescription = translate(locale, "quran_stories.description");
+  const seoTitle = translateWithConfig(locale, seoTitleKey);
+  const seoDescription = translateWithConfig(locale, seoDescriptionKey);
+  const uiTitle = translateWithConfig(locale, "quran_stories.title");
+  const uiDescription = translateWithConfig(locale, "quran_stories.description");
 
   const title =
     seoTitle !== seoTitleKey
@@ -226,7 +227,7 @@ export function generateStoriesIndexMetadata(lang: string): Metadata {
       : `${uiTitle} | ${siteName}`;
   const description =
     seoDescription !== seoDescriptionKey ? seoDescription : uiDescription;
-  const canonicalUrl = `${siteConfig.identity.siteUrl}/${locale}/stories`;
+  const canonicalUrl = `${siteConfig.identity.siteUrl}${localizedStoriesIndexHref(locale)}`;
 
   return {
     title,
@@ -236,11 +237,11 @@ export function generateStoriesIndexMetadata(lang: string): Metadata {
       languages: Object.fromEntries([
         ...SUPPORTED_LOCALES.map((item) => [
           item,
-          `${siteConfig.identity.siteUrl}/${item}/stories`,
+          `${siteConfig.identity.siteUrl}${localizedStoriesIndexHref(item)}`,
         ]),
         [
           "x-default",
-          `${siteConfig.identity.siteUrl}/${siteConfig.identity.defaultLocale}/stories`,
+          `${siteConfig.identity.siteUrl}${localizedStoriesIndexHref(siteConfig.identity.defaultLocale)}`,
         ],
       ]),
     },

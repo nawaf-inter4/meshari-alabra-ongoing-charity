@@ -48,6 +48,6 @@ gh pr create \
 - [ ] CI (quality + security) is green on this PR
 - [ ] Sandbox Vercel deployment looks correct
 - [ ] After merge, confirm Release Please opens or updates the release PR on \`main\`
-- [ ] Do **not** manually sync \`main\` → \`sandbox\`; the release sync workflow handles version files
+- [ ] Do **not** sync \`main\` → \`sandbox\` after release; sandbox stays the integration tip
 EOF
 )"

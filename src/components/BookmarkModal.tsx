@@ -131,7 +131,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
       setCurrentPlayingKey(null);
       setAudioLoading(false);
     }
-  }, [isOpen]);
+  }, [isOpen, locale]);
 
   useEffect(() => {
     const handleBookmarksUpdate = (event: CustomEvent) => {
@@ -145,7 +145,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     return () => {
       window.removeEventListener('bookmarks-updated', handleBookmarksUpdate as EventListener);
     };
-  }, []);
+  }, [locale]);
 
   // Mirror EnhancedQuranSection audio event wiring
   useEffect(() => {
@@ -200,13 +200,16 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
       for (const key of bookmarkKeys) {
         const [surahNum, ayahNum] = key.split('-').map(Number);
         
-        // Fetch surah name
+        // Match Quran section: Arabic name for ar, englishName for other locales
         let surahName = '';
         try {
           const surahResponse = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`);
           const surahData = await surahResponse.json();
           if (surahData.code === 200) {
-            surahName = surahData.data.englishName || surahData.data.name;
+            surahName =
+              locale === 'ar'
+                ? (surahData.data.name || surahData.data.englishName)
+                : (surahData.data.englishName || surahData.data.name);
           }
         } catch (e) {
           console.error('Error fetching surah:', e);

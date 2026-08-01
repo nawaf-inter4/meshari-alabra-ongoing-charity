@@ -9,5 +9,5 @@ alwaysApply: true
 2. Feature/fix PRs merge **into `sandbox` only**. That is the integration lane.
 3. **Vercel Preview** is enabled only for the `sandbox` branch (`vercel.json` `git.deploymentEnabled`). Feature branches do not get Preview deployments. **Production** deploys from `main` only, tied to releases.
 4. Promote with a conventional title so Release Please works, e.g. `./scripts/promote-sandbox-to-main.sh fix "summary"` or `gh pr create --base main --head sandbox --title "fix: …"` / `feat: …`. Do not use bare “Promote sandbox…” titles.
-5. **Do not** manually rebase or sync `main` → `sandbox` after a release. Release Please bumps versions on `main`; `.github/workflows/sync-release-to-sandbox.yml` opens an automated PR that copies `package.json`, `CHANGELOG.md`, and `.release-please-manifest.json` onto sandbox.
+5. **Do not** rebase or sync `main` → `sandbox` after a release. Promote once; Release Please versions on `main`. Sandbox stays the integration tip without a version-sync ritual.
 6. After a feature PR is fully merged and no follow-up remains, delete the feature branch (never delete `sandbox` or `main`).

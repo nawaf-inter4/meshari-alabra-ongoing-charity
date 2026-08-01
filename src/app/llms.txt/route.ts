@@ -13,7 +13,7 @@ export function GET() {
     return `- [${title}](${base}/${defaultLocale}/sections/${section}): Localized ${section} section page`;
   }).join("\n");
   const storyLinks = STORY_SLUGS.map((slug) => {
-    return `- [${slug}](${base}/${defaultLocale}/stories/${slug}): Localized Quran story page with PDF`;
+    return `- [${slug}](${base}/${defaultLocale}/sections/quran-stories/${slug}): Localized Quran story page with PDF`;
   }).join("\n");
 
   const localeLinks = SUPPORTED_LOCALES.map((locale) => {
@@ -48,7 +48,7 @@ ${sectionLinks}
 
 ## Quran stories
 
-- [Stories index](${base}/${defaultLocale}/stories): Localized index of educational Quran story pages
+- [Stories section](${base}/${defaultLocale}/sections/quran-stories): Quran stories section with landing-style cards
 ${storyLinks}
 
 ## Machine-readable endpoints

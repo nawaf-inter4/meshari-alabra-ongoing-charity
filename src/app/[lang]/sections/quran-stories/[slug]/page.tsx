@@ -14,10 +14,10 @@ import {
   getStoryTitle,
   isStoryPdfFallback,
   isStorySlug,
-  localizedStoryHref,
+  localizedStoriesIndexHref,
 } from "@/content/stories";
 import { generateStoryMetadata } from "@/lib/story-metadata";
-import { translate } from "@/lib/translations";
+import { translateWithConfig } from "@/lib/translations";
 import {
   RTL_LOCALES,
   SUPPORTED_LOCALES,
@@ -68,10 +68,10 @@ async function StoryContent({ params }: StoryPageProps) {
       <article className="pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-3xl">
           <Link
-            href={`/${locale}/stories`}
+            href={localizedStoriesIndexHref(locale)}
             className="inline-flex text-sm text-islamic-green hover:text-islamic-gold transition-colors mb-6"
           >
-            ← {translate(locale, "quran_stories.title")}
+            ← {translateWithConfig(locale, "quran_stories.title")}
           </Link>
 
           <header className="mb-8">
@@ -87,10 +87,8 @@ async function StoryContent({ params }: StoryPageProps) {
             </p>
             {story.surahName && (
               <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-                {story.surahName.ar}
+                {locale === "ar" ? story.surahName.ar : story.surahName.en}
                 {story.surahNumber ? ` · ${story.surahNumber}` : ""}
-                {" · "}
-                {story.surahName.en}
               </p>
             )}
           </header>
@@ -115,33 +113,16 @@ async function StoryContent({ params }: StoryPageProps) {
             <a
               href={pdfPath}
               download
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-islamic-gold to-islamic-green text-white px-6 py-3 font-medium hover:opacity-95 transition-opacity"
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-islamic-gold to-islamic-green text-white px-6 py-3 font-medium hover:from-islamic-green hover:to-islamic-blue transition-colors duration-300"
             >
-              {translate(locale, "quran_stories.download")}
+              {translateWithConfig(locale, "quran_stories.download")}
             </a>
             {showPdfNote && (
               <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-                {translate(locale, "quran_stories.pdf_language_note")}
+                {translateWithConfig(locale, "quran_stories.pdf_language_note")}
               </p>
             )}
           </div>
-
-          <nav className="mt-10 flex flex-wrap gap-3" aria-label="Language versions">
-            {SUPPORTED_LOCALES.map((item) => (
-              <Link
-                key={item}
-                href={localizedStoryHref(item, slug)}
-                className={`text-sm px-3 py-1 rounded-full border ${
-                  item === locale
-                    ? "border-islamic-gold text-islamic-gold"
-                    : "border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-islamic-green"
-                }`}
-                hrefLang={item}
-              >
-                {item}
-              </Link>
-            ))}
-          </nav>
         </div>
       </article>
     </>
