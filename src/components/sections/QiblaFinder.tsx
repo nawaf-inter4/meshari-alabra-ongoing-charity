@@ -62,6 +62,7 @@ export default function QiblaFinder() {
   const smoothedHeading = useRef<number | null>(null);
   const absoluteSensor = useRef<AbsoluteOrientationSensorLike | null>(null);
   const onOrientation = useRef<(event: Event) => void>(() => {});
+  const applyHeadingRef = useRef<(rawHeading: number, mode: "absolute" | "relative") => void>(() => {});
 
   const applyHeading = (rawHeading: number, mode: "absolute" | "relative") => {
     const compensated = normalizeHeading(rawHeading - screenOrientationCompensation());
@@ -77,34 +78,38 @@ export default function QiblaFinder() {
     setCompassMode(mode);
   };
 
-  onOrientation.current = (event: Event) => {
-    const orientation = event as CompassOrientationEvent;
-    let heading: number | null = null;
-    let mode: "absolute" | "relative" = "relative";
-
-    // iOS Safari: true / magnetic north degrees (best web signal).
-    if (typeof orientation.webkitCompassHeading === "number") {
-      heading = orientation.webkitCompassHeading;
-      mode = "absolute";
-    } else if (orientation.absolute === true && orientation.alpha !== null) {
-      // W3C absolute orientation: alpha=0 when device top points north.
-      heading = 360 - orientation.alpha;
-      mode = "absolute";
-    } else if (event.type === "deviceorientationabsolute" && orientation.alpha !== null) {
-      heading = 360 - orientation.alpha;
-      mode = "absolute";
-    } else if (orientation.alpha !== null) {
-      // Relative only — useful after calibration but not true north.
-      heading = 360 - orientation.alpha;
-      mode = "relative";
-    }
-
-    if (heading === null || Number.isNaN(heading)) return;
-    applyHeading(heading, mode);
-  };
-
   const orientationListener = useRef((event: Event) => {
     onOrientation.current(event);
+  });
+
+  // Keep handlers fresh without writing refs during render (react-hooks/refs).
+  useEffect(() => {
+    applyHeadingRef.current = applyHeading;
+    onOrientation.current = (event: Event) => {
+      const orientation = event as CompassOrientationEvent;
+      let heading: number | null = null;
+      let mode: "absolute" | "relative" = "relative";
+
+      // iOS Safari: true / magnetic north degrees (best web signal).
+      if (typeof orientation.webkitCompassHeading === "number") {
+        heading = orientation.webkitCompassHeading;
+        mode = "absolute";
+      } else if (orientation.absolute === true && orientation.alpha !== null) {
+        // W3C absolute orientation: alpha=0 when device top points north.
+        heading = 360 - orientation.alpha;
+        mode = "absolute";
+      } else if (event.type === "deviceorientationabsolute" && orientation.alpha !== null) {
+        heading = 360 - orientation.alpha;
+        mode = "absolute";
+      } else if (orientation.alpha !== null) {
+        // Relative only — useful after calibration but not true north.
+        heading = 360 - orientation.alpha;
+        mode = "relative";
+      }
+
+      if (heading === null || Number.isNaN(heading)) return;
+      applyHeadingRef.current(heading, mode);
+    };
   });
 
   useEffect(() => {
@@ -119,8 +124,8 @@ export default function QiblaFinder() {
         absoluteSensor.current = null;
       }
       if (!orientationBound.current || typeof window === "undefined") return;
-      window.removeEventListener("deviceorientation", listener);
-      window.removeEventListener("deviceorientationabsolute", listener);
+      window.removeEventListener("deviceorientation", listener, true);
+      window.removeEventListener("deviceorientationabsolute", listener, true);
     };
   }, []);
 
@@ -159,7 +164,7 @@ export default function QiblaFinder() {
         const sensor = new SensorCtor({ frequency: 30, referenceFrame: "device" });
         sensor.addEventListener("reading", () => {
           if (!sensor.quaternion) return;
-          applyHeading(headingFromQuaternion(sensor.quaternion), "absolute");
+          applyHeadingRef.current(headingFromQuaternion(sensor.quaternion), "absolute");
         });
         sensor.addEventListener("error", () => {
           /* fall through to DeviceOrientation events */
