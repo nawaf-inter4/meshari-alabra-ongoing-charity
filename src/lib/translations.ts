@@ -33,11 +33,29 @@ export const translations: Record<SupportedLocale, Record<string, unknown>> = {
   hi,
 };
 
+/** Resolve flat keys (`seo.title`) or nested objects (`quran_verse.bismillah`). */
+export function lookupMessage(
+  messages: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  const direct = messages[key];
+  if (typeof direct === "string") return direct;
+
+  if (!key.includes(".")) return undefined;
+
+  let current: unknown = messages;
+  for (const part of key.split(".")) {
+    if (current == null || typeof current !== "object") return undefined;
+    current = (current as Record<string, unknown>)[part];
+  }
+  return typeof current === "string" ? current : undefined;
+}
+
 export function translate(locale: SupportedLocale, key: string, fallback = key) {
-  const localized = translations[locale][key];
-  if (typeof localized === "string") return localized;
-  const arabic = translations.ar[key];
-  return typeof arabic === "string" ? arabic : fallback;
+  const localized = lookupMessage(translations[locale], key);
+  if (localized !== undefined) return localized;
+  const arabic = lookupMessage(translations.ar, key);
+  return arabic !== undefined ? arabic : fallback;
 }
 
 /** White-label `siteConfig.content.translations` overrides first, then locale JSON (same as `t()`). */

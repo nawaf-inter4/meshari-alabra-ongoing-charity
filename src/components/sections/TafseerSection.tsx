@@ -312,6 +312,8 @@ export default function TafseerSection() {
     if (searchMode !== "verse") return;
     const trimmed = searchQuery.trim();
     if (!trimmed || trimmed.includes(":")) {
+      // Invalidate in-flight debounced text search so a late response cannot reopen suggestions.
+      textSearchSeq.current += 1;
       setSearchResults([]);
       setShowSearchResults(false);
       setTextSearchLoading(false);
@@ -332,6 +334,7 @@ export default function TafseerSection() {
 
     // Debounced full-text ayah search (Arabic or translation language).
     if (trimmed.length < 2) {
+      textSearchSeq.current += 1;
       setTextSearchLoading(false);
       return;
     }

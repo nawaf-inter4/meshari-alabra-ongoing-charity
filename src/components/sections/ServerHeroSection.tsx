@@ -1,7 +1,7 @@
 import { FileText } from "lucide-react";
 import { siteConfig, type SupportedLocale } from "@/config/site";
 import { translateWithConfig } from "@/lib/translations";
-import { heroVerse } from "@/lib/hero-verse";
+import { heroVerse, heroVerseTextProps } from "@/lib/hero-verse";
 import HeroStars from "./HeroStars";
 
 export default function ServerHeroSection({ locale }: { locale: SupportedLocale }) {
@@ -15,6 +15,9 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
   const bismillah = heroVerse(locale, "bismillah");
   const verse = heroVerse(locale, "verse");
   const sadaqallah = heroVerse(locale, "sadaqallah");
+  const bismillahProps = heroVerseTextProps(bismillah, locale);
+  const verseProps = heroVerseTextProps(verse, locale);
+  const sadaqallahProps = heroVerseTextProps(sadaqallah, locale);
 
   return (
     <section className="hero-section relative min-h-screen flex items-center justify-center px-4 pb-20 sm:pt-32 md:pt-28">
@@ -46,23 +49,23 @@ export default function ServerHeroSection({ locale }: { locale: SupportedLocale 
         <div className="mt-6 md:mt-8" data-hero-verse>
           <div className="space-y-2 md:space-y-3">
             <p
-              className="hero-verse-bismillah text-center text-lg md:text-2xl arabic-quran-text text-islamic-green"
-              dir="rtl"
-              lang="ar"
+              className={`hero-verse-bismillah text-center text-lg md:text-2xl text-islamic-green ${bismillahProps.className ?? ""}`}
+              dir={bismillahProps.dir}
+              lang={bismillahProps.lang}
             >
               {bismillah}
             </p>
             <p
-              className="hero-verse-main text-center text-lg md:text-3xl arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
-              dir="rtl"
-              lang="ar"
+              className={`hero-verse-main text-center text-lg md:text-3xl text-islamic-gold max-w-4xl mx-auto ${verseProps.className ?? ""}`}
+              dir={verseProps.dir}
+              lang={verseProps.lang}
             >
               {verse}
             </p>
             <p
-              className="hero-verse-sadaqallah text-center text-base md:text-xl arabic-quran-text text-islamic-green"
-              dir="rtl"
-              lang="ar"
+              className={`hero-verse-sadaqallah text-center text-base md:text-xl text-islamic-green ${sadaqallahProps.className ?? ""}`}
+              dir={sadaqallahProps.dir}
+              lang={sadaqallahProps.lang}
             >
               {sadaqallah}
             </p>

@@ -86,6 +86,9 @@ export default function QiblaFinder() {
   useEffect(() => {
     applyHeadingRef.current = applyHeading;
     onOrientation.current = (event: Event) => {
+      // AbsoluteOrientationSensor is the sole source while active.
+      if (absoluteSensor.current) return;
+
       const orientation = event as CompassOrientationEvent;
       let heading: number | null = null;
       let mode: "absolute" | "relative" = "relative";
@@ -152,7 +155,17 @@ export default function QiblaFinder() {
       }
     }
 
+    const bindDeviceOrientationFallback = () => {
+      if (orientationBound.current || !window.DeviceOrientationEvent) return;
+      const listener = orientationListener.current;
+      window.addEventListener("deviceorientationabsolute", listener, true);
+      window.addEventListener("deviceorientation", listener, true);
+      orientationBound.current = true;
+    };
+
     // Prefer Generic Sensor API absolute orientation when available (Chrome Android).
+    // Do not also bind relative DeviceOrientation events while this sensor is active —
+    // mixing streams pulls the smoothed heading off true north.
     const SensorCtor = (
       window as Window & {
         AbsoluteOrientationSensor?: new (options?: { frequency?: number; referenceFrame?: string }) => AbsoluteOrientationSensorLike;
@@ -167,7 +180,15 @@ export default function QiblaFinder() {
           applyHeadingRef.current(headingFromQuaternion(sensor.quaternion), "absolute");
         });
         sensor.addEventListener("error", () => {
-          /* fall through to DeviceOrientation events */
+          try {
+            sensor.stop();
+          } catch {
+            /* ignore */
+          }
+          if (absoluteSensor.current === sensor) {
+            absoluteSensor.current = null;
+          }
+          bindDeviceOrientationFallback();
         });
         sensor.start();
         absoluteSensor.current = sensor;
@@ -176,11 +197,9 @@ export default function QiblaFinder() {
       }
     }
 
-    if (orientationBound.current || !window.DeviceOrientationEvent) return;
-    const listener = orientationListener.current;
-    window.addEventListener("deviceorientationabsolute", listener, true);
-    window.addEventListener("deviceorientation", listener, true);
-    orientationBound.current = true;
+    if (!absoluteSensor.current) {
+      bindDeviceOrientationFallback();
+    }
   };
 
   const getQiblaDirection = async () => {

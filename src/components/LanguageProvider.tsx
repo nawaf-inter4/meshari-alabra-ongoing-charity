@@ -15,6 +15,7 @@ import {
   siteConfig,
   type SupportedLocale,
 } from "@/config/site";
+import { lookupMessage } from "@/lib/translations";
 
 interface LanguageContextType {
   locale: SupportedLocale;
@@ -104,8 +105,8 @@ export function LanguageProvider({
         siteConfig.content.translations["*"]?.[key];
       if (configuredTranslation?.trim()) return configuredTranslation;
 
-      const translation = messages[key];
-      return typeof translation === "string" && translation.trim() ? translation : key;
+      const translation = lookupMessage(messages, key);
+      return translation?.trim() ? translation : key;
     },
     [locale, messages],
   );
