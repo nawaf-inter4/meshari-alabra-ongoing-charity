@@ -269,10 +269,10 @@ export default function SupplicationsSection() {
     <section id="supplications" className="py-20 px-4 bg-light-secondary dark:bg-dark-secondary">
       <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ y: 14 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 mb-4">
@@ -315,19 +315,15 @@ export default function SupplicationsSection() {
           {supplications[activeTab as keyof typeof supplications].map((dua, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ 
-                duration: 0.6, 
-                delay: index * 0.1,
+              initial={{ y: 14 }}
+              whileInView={{ y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{
+                duration: 0.4,
+                delay: Math.min(index * 0.04, 0.16),
                 ease: [0.25, 0.1, 0.25, 1],
               }}
-              className="bg-light dark:bg-dark rounded-2xl p-6 md:p-8 border-2 border-islamic-gold/30 hover:border-islamic-gold transition-all duration-300 motion-safe"
-              style={{
-                willChange: 'transform, opacity',
-                transform: 'translateZ(0)',
-              }}
+              className="bg-light dark:bg-dark rounded-2xl p-6 md:p-8 border-2 border-islamic-gold/30 hover:border-islamic-gold transition-colors duration-300"
             >
               <p 
                 className="text-2xl md:text-3xl font-arabic text-right leading-loose mb-4 text-islamic-gold py-2 px-4" 

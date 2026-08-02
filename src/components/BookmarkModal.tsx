@@ -1,12 +1,18 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, BookmarkCheck, Bookmark, ChevronRight, ChevronLeft, Play, Pause, Share2 } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
 import { useRouter } from "next/navigation";
 import BidiText from "./BidiText";
 import ShareModal from "./ShareModal";
+import { notifyExternalMediaPlay } from "@/lib/media-coordination";
+import {
+  formatTranslationAttribution,
+  getTranslationIdentifier,
+} from "@/lib/quran-editions";
+import { isSupportedLocale, localeDirection, type SupportedLocale } from "@/config/site";
 
 interface BookmarkedVerse {
   surahNumber: number;
@@ -72,32 +78,14 @@ function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: {
 export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { t, locale, direction } = useLanguage();
   const router = useRouter();
+  const reduceMotion = useReducedMotion();
   const [mounted, setMounted] = useState(false);
   const isRTL = direction === "rtl";
   const audioRef = useRef<HTMLAudioElement>(null);
   const playRequestIdRef = useRef(0);
 
-  // Language-based translation mapping (same as in EnhancedQuranSection)
-  const getTranslationIdentifier = (locale: string): string => {
-    const translationMap: { [key: string]: string } = {
-      'ar': 'ar.muyassar',
-      'en': 'en.sahih',
-      'tr': 'tr.diyanet',
-      'ur': 'ur.jalandhry',
-      'id': 'id.indonesian',
-      'ms': 'ms.basmeih',
-      'bn': 'bn.bengali',
-      'fr': 'fr.hamidullah',
-      'zh': 'zh.jian',
-      'it': 'it.piccardo',
-      'ja': 'ja.japanese',
-      'ko': 'ko.korean',
-      'es': 'es.asad',
-      'pt': 'pt.elhayek',
-      'hi': 'hi.hindi',
-    };
-    return translationMap[locale] || 'en.sahih';
-  };
+  const translationId = getTranslationIdentifier(locale);
+  const uiLocale: SupportedLocale = isSupportedLocale(locale) ? locale : "en";
 
   useEffect(() => {
     setMounted(true);
@@ -131,7 +119,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
       setCurrentPlayingKey(null);
       setAudioLoading(false);
     }
-  }, [isOpen]);
+  }, [isOpen, locale]);
 
   useEffect(() => {
     const handleBookmarksUpdate = (event: CustomEvent) => {
@@ -145,7 +133,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     return () => {
       window.removeEventListener('bookmarks-updated', handleBookmarksUpdate as EventListener);
     };
-  }, []);
+  }, [locale]);
 
   // Mirror EnhancedQuranSection audio event wiring
   useEffect(() => {
@@ -200,13 +188,16 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
       for (const key of bookmarkKeys) {
         const [surahNum, ayahNum] = key.split('-').map(Number);
         
-        // Fetch surah name
+        // Match Quran section: Arabic name for ar, englishName for other locales
         let surahName = '';
         try {
           const surahResponse = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`);
           const surahData = await surahResponse.json();
           if (surahData.code === 200) {
-            surahName = surahData.data.englishName || surahData.data.name;
+            surahName =
+              locale === 'ar'
+                ? (surahData.data.name || surahData.data.englishName)
+                : (surahData.data.englishName || surahData.data.name);
           }
         } catch (e) {
           console.error('Error fetching surah:', e);
@@ -272,10 +263,12 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
   };
 
   const pauseAyah = () => {
+    playRequestIdRef.current += 1;
     if (audioRef.current) {
       audioRef.current.pause();
     }
     setIsPlaying(false);
+    setAudioLoading(false);
   };
 
   // Same audio API path as EnhancedQuranSection.playAyah
@@ -291,6 +284,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
       setCurrentPlayingKey(verseKey);
       setAudioLoading(true);
       setIsPlaying(true);
+      notifyExternalMediaPlay("quran");
 
       const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${DEFAULT_RECITER}`);
       if (requestId !== playRequestIdRef.current) {
@@ -347,10 +341,26 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
 
   const togglePlayPause = (surahNumber: number, ayahNumber: number) => {
     const verseKey = `${surahNumber}-${ayahNumber}`;
-    if (isPlaying && currentPlayingKey === verseKey) {
+    const audio = audioRef.current;
+    const sameVerse = currentPlayingKey === verseKey;
+    const activelyPlaying =
+      sameVerse &&
+      (isPlaying || audioLoading || (audio != null && !audio.paused && Boolean(audio.src)));
+
+    if (activelyPlaying) {
       pauseAyah();
       return;
     }
+
+    if (sameVerse && audio?.src && !audio.ended && audio.paused) {
+      notifyExternalMediaPlay("quran");
+      setIsPlaying(true);
+      void audio.play().catch(() => {
+        void playAyah(surahNumber, ayahNumber);
+      });
+      return;
+    }
+
     void playAyah(surahNumber, ayahNumber);
   };
 
@@ -359,7 +369,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     if (!translationText) {
       try {
         const response = await fetch(
-          `/api/quran/ayah/${verse.surahNumber}:${verse.ayahNumber}/${getTranslationIdentifier(locale)}`
+          `/api/quran/ayah/${verse.surahNumber}:${verse.ayahNumber}/${translationId}`
         );
         const data = await response.json();
         if (data.data?.text) {
@@ -384,20 +394,22 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — opacity only (no blur thrash on WebKit). */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0.1 : 0.18 }}
             onClick={onClose}
             className="fixed inset-0 bg-black/50 z-50"
           />
           
-          {/* Modal */}
+          {/* Modal — y + opacity; avoid scale (blinks on Safari). */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12 }}
+            transition={{ duration: reduceMotion ? 0.12 : 0.22, ease: [0.25, 0.1, 0.25, 1] }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             onClick={(e) => e.stopPropagation()}
           >
@@ -456,38 +468,46 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                       className="inline-flex items-center gap-2 px-6 py-3 bg-islamic-gold text-white font-semibold rounded-full hover:bg-islamic-green transition-all duration-300 glow"
                     >
                       {t("bookmarks.go_to_quran")}
-                      <motion.div
-                        animate={{ x: isRTL ? [-4, 0, -4] : [0, 4, 0] }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      >
+                      <span className={reduceMotion ? undefined : "bookmark-cta-nudge"} aria-hidden="true">
                         {isRTL ? (
                           <ChevronLeft className="w-5 h-5" />
                         ) : (
                           <ChevronRight className="w-5 h-5" />
                         )}
-                      </motion.div>
+                      </span>
                     </button>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {bookmarkedVerses.map((verse, index) => (
+                    {bookmarkedVerses.map((verse, index) => {
+                      const surahNameHasArabic = /[\u0600-\u06FF]/.test(verse.surahName || "");
+                      return (
                       <motion.div
                         key={`${verse.surahNumber}-${verse.ayahNumber}`}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold transition-all duration-300"
+                        initial={reduceMotion ? false : { y: 10 }}
+                        animate={{ y: 0 }}
+                        transition={{ delay: Math.min(index * 0.03, 0.12), duration: 0.3 }}
+                        className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold transition-colors duration-300"
                       >
                         <div className="flex items-start justify-between mb-4">
                           <div>
-                            <h3 className="text-lg font-semibold text-islamic-gold mb-1">
+                            <h3
+                              className={`text-lg font-semibold text-gray-900 dark:text-white mb-1 ${
+                                surahNameHasArabic
+                                  ? "surah-name-title arabic-quran-text"
+                                  : "font-lexend"
+                              }`}
+                              dir={surahNameHasArabic ? "rtl" : "ltr"}
+                              lang={surahNameHasArabic ? "ar" : undefined}
+                            >
                               {verse.surahName} - {t("quran.verse")} {verse.ayahNumber}
                             </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                            <p
+                              className={`text-sm text-gray-600 dark:text-gray-400 ${
+                                locale === "ar" || locale === "ur" ? "font-arabic" : "font-lexend"
+                              }`}
+                              dir={locale === "ar" || locale === "ur" ? "rtl" : "ltr"}
+                            >
                               {locale === 'ar' ? 'سورة' : locale === 'ur' ? 'سورہ' : 'Surah'} {verse.surahNumber}
                             </p>
                           </div>
@@ -531,22 +551,27 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                         
                         {verse.arabicText && (
                           <div className="mb-4">
-                            <div className="arabic-quran-text text-2xl md:text-3xl leading-relaxed text-right text-islamic-gold">
+                            <div className="arabic-quran-text text-2xl md:text-3xl leading-relaxed text-right text-gray-900 dark:text-gray-100">
                               {verse.arabicText}
                             </div>
                           </div>
                         )}
                         
-                        {/* Translation */}
+                        {/* Translation / short tafsir — same labeling as Quran section */}
                         {mounted && (
                           <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
-                            <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                              {t("quran.translation") !== "quran.translation" ? t("quran.translation") : "Translation"} ({locale.toUpperCase()})
+                            <div
+                              className="text-sm text-gray-500 dark:text-gray-400 mb-2 font-tajwal leading-normal"
+                              dir={localeDirection(uiLocale)}
+                              lang={uiLocale === "ar" || uiLocale === "ur" ? uiLocale : undefined}
+                              data-translation-language
+                            >
+                              {formatTranslationAttribution(translationId, locale, t)}
                             </div>
-                            <AyahTranslation 
-                              surahNumber={verse.surahNumber} 
-                              ayahNumber={verse.ayahNumber} 
-                              translationId={getTranslationIdentifier(locale)}
+                            <AyahTranslation
+                              surahNumber={verse.surahNumber}
+                              ayahNumber={verse.ayahNumber}
+                              translationId={translationId}
                               locale={locale}
                             />
                           </div>
@@ -559,7 +584,8 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                           → {t("bookmarks.go_to_verse")}
                         </button>
                       </motion.div>
-                    ))}
+                    );
+                    })}
                   </div>
                 )}
               </div>

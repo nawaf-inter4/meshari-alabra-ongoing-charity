@@ -15,7 +15,7 @@ import {
   siteConfig,
   type SupportedLocale,
 } from "@/config/site";
-import { translations as translationsMap } from "@/lib/translations";
+import { lookupMessage } from "@/lib/translations";
 
 interface LanguageContextType {
   locale: SupportedLocale;
@@ -31,29 +31,34 @@ function localeFromPath(pathname: string | null) {
   return candidate && isSupportedLocale(candidate) ? candidate : undefined;
 }
 
+/**
+ * Client i18n context. Messages for the active locale are passed from the
+ * server layout so the client bundle does not embed all 15 locale JSON files
+ * (~330KB) on every page — that was the main unused-JavaScript tax on `/ar`.
+ */
 export function LanguageProvider({
   children,
   initialLocale,
+  initialMessages,
 }: {
   children: React.ReactNode;
-  initialLocale?: string;
+  initialLocale: SupportedLocale;
+  initialMessages: Record<string, unknown>;
 }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [locale, setLocaleState] = useState<SupportedLocale>(() => {
-    if (initialLocale && isSupportedLocale(initialLocale)) return initialLocale;
-    const pathLocale = localeFromPath(pathname);
-    if (pathLocale) return pathLocale;
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("preferred-locale");
-      if (stored && isSupportedLocale(stored)) return stored;
-    }
-    return siteConfig.identity.defaultLocale;
-  });
+  const [locale, setLocaleState] = useState<SupportedLocale>(initialLocale);
+  const [messages, setMessages] = useState<Record<string, unknown>>(initialMessages);
+
+  // Locale segment navigations remount with a new `key`, but keep props in sync
+  // for soft updates / HMR.
+  useEffect(() => {
+    setLocaleState(initialLocale);
+    setMessages(initialMessages);
+  }, [initialLocale, initialMessages]);
 
   const direction = localeDirection(locale);
-  const translations = useMemo(() => translationsMap[locale], [locale]);
 
   useEffect(() => {
     const pathLocale = localeFromPath(pathname);
@@ -100,10 +105,10 @@ export function LanguageProvider({
         siteConfig.content.translations["*"]?.[key];
       if (configuredTranslation?.trim()) return configuredTranslation;
 
-      const translation = translations[key];
-      return typeof translation === "string" && translation.trim() ? translation : key;
+      const translation = lookupMessage(messages, key);
+      return translation?.trim() ? translation : key;
     },
-    [locale, translations],
+    [locale, messages],
   );
 
   const value = useMemo(

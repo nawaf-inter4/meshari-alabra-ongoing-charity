@@ -164,10 +164,10 @@ export default function HadithSection() {
     <section id="hadith" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ y: 14 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 mb-4">
@@ -183,10 +183,10 @@ export default function HadithSection() {
 
         {/* Category Filter */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          initial={{ y: 14 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, delay: 0.08, ease: [0.25, 0.1, 0.25, 1] }}
           className="mb-8"
         >
           <h3 className={`text-lg font-semibold mb-4 text-center text-gray-700 dark:text-gray-300 ${direction === 'rtl' ? 'font-arabic' : ''}`}>
@@ -222,9 +222,9 @@ export default function HadithSection() {
           <div className="shimmer w-full h-64 rounded-2xl" />
         ) : hadith ? (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
+            initial={{ scale: 0.98, y: 8 }}
+            animate={{ scale: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
             className="bg-light-secondary dark:bg-dark-secondary rounded-2xl p-8 md:p-12 border-2 border-islamic-gold/30 glow"
           >
             <div className="mb-6 text-center">

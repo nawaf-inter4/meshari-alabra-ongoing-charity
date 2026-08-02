@@ -11,6 +11,35 @@ const emptyNextPolyfillModule = path.join(
 );
 
 
+/** Allow white-label logo hosts from env (absolute NEXT_PUBLIC_LOGO_* URLs). */
+function remotePatternFromAssetUrl(value) {
+  if (!value || typeof value !== 'string' || !/^https?:\/\//i.test(value)) {
+    return null;
+  }
+  try {
+    const url = new URL(value);
+    return {
+      protocol: url.protocol.replace(':', ''),
+      hostname: url.hostname,
+      ...(url.port ? { port: url.port } : {}),
+      pathname: '/**',
+    };
+  } catch {
+    return null;
+  }
+}
+
+const configuredLogoRemotePatterns = [
+  process.env.NEXT_PUBLIC_LOGO_LIGHT_PATH,
+  process.env.NEXT_PUBLIC_LOGO_DARK_PATH,
+  process.env.NEXT_PUBLIC_LOGO_PATH,
+]
+  .map(remotePatternFromAssetUrl)
+  .filter(Boolean)
+  .filter((pattern, index, list) =>
+    list.findIndex((p) => p.protocol === pattern.protocol && p.hostname === pattern.hostname && p.port === pattern.port) === index,
+  );
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Automated browser tests use a separate directory so their white-label
@@ -92,9 +121,14 @@ const nextConfig = {
   experimental: {
     // TypeScript 7 uses the CLI because it no longer exposes the compiler API.
     useTypeScriptCli: true,
-    // Inline CSS into HTML in production to remove the render-blocking stylesheet
-    // round-trip (PageSpeed "Eliminate render-blocking resources").
-    inlineCss: true,
+    // Subresource Integrity on script tags (Observatory SRI bonus; pairs with nonce CSP).
+    sri: {
+      algorithm: 'sha256',
+    },
+    // External CSS (cached, smaller HTML). Inline CSS bloated the document
+    // (~60KB styles in HTML) and hurt mobile LCP more than the blocking link.
+    // style-src allows 'unsafe-inline' for React; sheets use 'self'.
+    inlineCss: false,
     // Optimize package imports (stable in Next.js 16)
     // Note: react-pdf is excluded here because it's in serverExternalPackages
     optimizePackageImports: [
@@ -149,6 +183,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'i.ytimg.com',
       },
+      ...configuredLogoRemotePatterns,
     ],
   },
 
@@ -251,6 +286,19 @@ const nextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'same-origin',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cross-Origin-Resource-Policy',
+            value: 'same-origin',
           },
         ],
       },

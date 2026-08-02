@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 /**
- * Generate per-locale story PDFs under public/stories/{slug}/{locale}.pdf
+ * Draft per-locale story PDFs under public/stories/{slug}/{locale}.pdf.
  * Arabic originals are preserved; other locales are rendered from localized
  * titles/descriptions (locale JSON) + body paragraphs (stories.ts).
+ *
+ * IMPORTANT: Do not list incomplete/synopsis PDFs in STORY_PDF_LOCALES.
+ * The app only serves locales listed there; everything else falls back to ar.pdf.
  *
  * Usage:
  *   npx playwright install chromium

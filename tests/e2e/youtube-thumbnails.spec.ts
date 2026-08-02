@@ -32,8 +32,10 @@ test("native YouTube players defer third-party scripts while memorial audio auto
   expect(embedRequests).toHaveLength(0);
 
   const memorialAudio = page.locator('audio:has(source[src="/audio-webiste.mp3"])');
-  await expect(memorialAudio).toHaveAttribute("preload", "metadata");
-  await expect(memorialAudio).toHaveAttribute("autoplay", "");
+  // Memorial audio is started via JS (muted autoplay → unmute) to protect LCP;
+  // do not require the HTML autoplay attribute or eager preload.
+  await expect(memorialAudio).toHaveAttribute("preload", "none");
+  await expect(memorialAudio).toBeAttached();
 
   await revealLazySection(page, "youtube", "iframe[title='Quran Playlist']");
   await expect.poll(() => embedRequests.some((url) => url.includes("/embed/VXb36Nzybps"))).toBeTruthy();

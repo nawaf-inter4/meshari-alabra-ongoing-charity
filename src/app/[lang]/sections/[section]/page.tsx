@@ -14,6 +14,7 @@ import DonationSection from "@/components/sections/DonationSection";
 import SupplicationsSectionWrapper from "@/components/sections/SupplicationsSectionWrapper";
 import HadithSectionWrapper from "@/components/sections/HadithSectionWrapper";
 import YouTubeSectionWrapper from "@/components/sections/YouTubeSectionWrapper";
+import QuranStoriesSection from "@/components/sections/QuranStoriesSection";
 import {
   SECTION_IDS,
   generateSectionMetadata,
@@ -25,6 +26,7 @@ import {
   isSupportedLocale,
   type SupportedLocale,
 } from "@/config/site";
+import { formatMemorialTitle } from "@/lib/seo";
 
 const sectionComponents: Record<SectionId, ComponentType> = {
   quran: QuranSectionWrapper,
@@ -36,6 +38,7 @@ const sectionComponents: Record<SectionId, ComponentType> = {
   supplications: SupplicationsSectionWrapper,
   hadith: HadithSectionWrapper,
   youtube: YouTubeSectionWrapper,
+  "quran-stories": QuranStoriesSection,
 };
 
 export const instant = true;
@@ -74,7 +77,7 @@ async function LocalizedSectionContent({ params }: SectionPageProps) {
     <>
       <SectionSchema sectionId={section} locale={locale} />
       <div className="pt-20">
-        <h1 className="sr-only">{title}</h1>
+        <h1 className="sr-only">{formatMemorialTitle(locale, title)}</h1>
         <Suspense fallback={<LoadingSection title={title} />}>
           <SectionComponent />
         </Suspense>

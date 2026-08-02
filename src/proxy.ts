@@ -4,6 +4,11 @@ import { isSupportedLocale, localeDirection, siteConfig, type SupportedLocale } 
 import { isSectionId } from '@/lib/routes';
 import { isStorySlug } from '@/content/stories';
 import { translate } from '@/lib/translations';
+import {
+  buildContentSecurityPolicy,
+  buildOfflineContentSecurityPolicy,
+  createCspNonce,
+} from '@/lib/csp';
 
 function escapeHtml(value: string) {
   return value.replace(/[&<>'"]/g, (character) => ({
@@ -47,49 +52,15 @@ function isUtilityPath(pathname: string) {
     /\.[a-z0-9]+$/i.test(pathname);
 }
 
-function buildContentSecurityPolicy() {
-  const isDev = process.env.NODE_ENV !== 'production';
-
-  // Strongest practical CSP for Cache Components / statically generated locale
-  // shells: Next.js cannot inject per-request nonces into build-time HTML, so
-  // nonce + strict-dynamic would block framework scripts unless every page is
-  // forced dynamic (a large Core Web Vitals regression for this memorial site).
-  //
-  // Production removes 'unsafe-eval'. 'unsafe-inline' remains for Next/React
-  // inline bootstrapping and JSON-LD <Script> tags — residual XSS risk if an
-  // injection path appears; prefer output encoding and avoid user HTML.
-  // Trusted Types (`require-trusted-types-for 'script'`) is deferred: it breaks
-  // Next.js + third-party analytics without a full TT migration.
-  const scriptSrc = [
-    "'self'",
-    "'unsafe-inline'",
-    ...(isDev ? ["'unsafe-eval'"] : []),
-    'https://vercel.live',
-    'https://vitals.vercel-insights.com',
-    'https://va.vercel-scripts.com',
-    'https://www.googletagmanager.com',
-    'https://www.google-analytics.com',
-  ].join(' ');
-
-  return [
-    "default-src 'self'",
-    `script-src ${scriptSrc}`,
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: https: blob:",
-    "media-src 'self' https:",
-    "connect-src 'self' https://api.aladhan.com https://api.alquran.cloud https://api.quran.com https://ipapi.co https://cdn.jsdelivr.net https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.google-analytics.com https://fonts.googleapis.com https://fonts.gstatic.com https://vercel.live",
-    "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://vercel.live",
-    "worker-src 'self' blob:",
-    "object-src 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-    "frame-ancestors 'none'",
-    ...(isDev ? [] : ['upgrade-insecure-requests']),
-  ].join('; ');
-}
-
-function applySecurityHeaders(response: NextResponse, request: NextRequest) {
+/**
+ * Apply security headers. For document navigations, also forward CSP + nonce
+ * on the *request* so Next can stamp framework scripts (see Next.js CSP guide).
+ */
+function applySecurityHeaders(
+  response: NextResponse,
+  request: NextRequest,
+  options?: { nonce?: string; csp?: string },
+) {
   response.headers.set('X-DNS-Prefetch-Control', 'on');
   response.headers.set('X-XSS-Protection', '1; mode=block');
   response.headers.set('X-Frame-Options', 'DENY');
@@ -100,8 +71,8 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
 
   // Allow payment / OAuth popups without full cross-origin isolation (COEP would
-  // break YouTube embeds). Do not set Cross-Origin-Resource-Policy globally —
-  // CORP on HTML can interfere with third-party media embedding.
+  // break YouTube embeds). Do not set Cross-Origin-Resource-Policy on HTML —
+  // CORP on documents can interfere with third-party media embedding.
   response.headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
 
   const acceptEncoding = request.headers.get('accept-encoding') || '';
@@ -109,11 +80,21 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
     response.headers.set('Vary', 'Accept-Encoding');
   }
 
-  response.headers.set('Content-Security-Policy', buildContentSecurityPolicy());
+  const isHttps =
+    request.nextUrl.protocol === "https:" ||
+    request.headers.get("x-forwarded-proto") === "https";
+  const csp =
+    options?.csp ??
+    buildContentSecurityPolicy(options?.nonce ?? createCspNonce(), {
+      upgradeInsecureRequests: isHttps,
+    });
+  response.headers.set('Content-Security-Policy', csp);
 
   if (request.nextUrl.pathname.startsWith('/icons/') ||
       request.nextUrl.pathname.startsWith('/_next/static/')) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    // Safe CORP for first-party static assets (not HTML).
+    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
 
     if (request.nextUrl.pathname.endsWith('.css')) {
       response.headers.set('Content-Type', 'text/css; charset=utf-8');
@@ -122,20 +103,25 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
 
   if (request.nextUrl.pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico)$/)) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
   }
 
   if (request.nextUrl.pathname.match(/\.(woff|woff2|ttf|eot)$/)) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
   }
 
   if (request.nextUrl.pathname.match(/\.(mp3|ogg|wav|m4a)$/)) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
     response.headers.set('Accept-Ranges', 'bytes');
+    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
   }
 
   if (request.nextUrl.pathname === '/' ||
       request.nextUrl.pathname.match(/^\/[a-z]{2}$/)) {
-    response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+    // Revalidate each navigation (CSP nonce HTML) but omit no-store so the
+    // page can enter bfcache — Lighthouse flags no-store as a bfcache blocker.
+    response.headers.set('Cache-Control', 'private, no-cache, max-age=0, must-revalidate');
   }
 
   // HSTS: keep preload + includeSubDomains (aligned with next.config.js).
@@ -145,8 +131,27 @@ function applySecurityHeaders(response: NextResponse, request: NextRequest) {
 }
 
 function continueWithSecurityHeaders(request: NextRequest) {
-  const response = NextResponse.next();
-  applySecurityHeaders(response, request);
+  const nonce = createCspNonce();
+  // Only upgrade http→https on real HTTPS deploys. Local `next start` over
+  // http://127.0.0.1 must not get upgrade-insecure-requests or CSS/workers die.
+  const isHttps =
+    request.nextUrl.protocol === "https:" ||
+    request.headers.get("x-forwarded-proto") === "https";
+  const csp = buildContentSecurityPolicy(nonce, {
+    upgradeInsecureRequests: isHttps,
+  });
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-nonce', nonce);
+  // Next extracts the nonce from the request CSP during SSR.
+  requestHeaders.set('Content-Security-Policy', csp);
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+  applySecurityHeaders(response, request, { nonce, csp });
   return response;
 }
 
@@ -154,6 +159,18 @@ function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (isUtilityPath(pathname)) {
+    // Static offline shell uses inline scripts — nonce CSP would freeze is-loading.
+    if (pathname === '/offline.html') {
+      const isHttps =
+        request.nextUrl.protocol === "https:" ||
+        request.headers.get("x-forwarded-proto") === "https";
+      const csp = buildOfflineContentSecurityPolicy({
+        upgradeInsecureRequests: isHttps,
+      });
+      const response = NextResponse.next();
+      applySecurityHeaders(response, request, { csp });
+      return response;
+    }
     // Still attach security headers (previously skipped, so `/` had no CSP).
     return continueWithSecurityHeaders(request);
   }
@@ -161,8 +178,17 @@ function proxy(request: NextRequest) {
   // Preserve legacy links while consolidating every section under a real,
   // locale-prefixed server route.
   if (pathname === '/sections' || pathname.startsWith('/sections/')) {
-    const section = pathname.split('/').filter(Boolean)[1];
-    if (pathname !== '/sections' && (!section || !isSectionId(section) || pathname !== `/sections/${section}`)) {
+    const parts = pathname.split('/').filter(Boolean);
+    const section = parts[1];
+    const storySlug = parts[2];
+    const isBareSection = parts.length === 2 && !!section && isSectionId(section);
+    const isStoryUnderSection =
+      parts.length === 3 &&
+      section === 'quran-stories' &&
+      !!storySlug &&
+      isStorySlug(storySlug);
+
+    if (pathname !== '/sections' && !isBareSection && !isStoryUnderSection) {
       return notFoundResponse(request, siteConfig.identity.defaultLocale);
     }
     const url = request.nextUrl.clone();
@@ -181,14 +207,33 @@ function proxy(request: NextRequest) {
   }
 
   if (segments.length > 1) {
+    // Legacy /stories hub + detail → sections/quran-stories (308).
+    if (segments[1] === 'stories') {
+      if (segments.length === 2) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/${locale}/sections/quran-stories`;
+        const response = NextResponse.redirect(url, 308);
+        applySecurityHeaders(response, request);
+        return response;
+      }
+      if (segments.length === 3 && isStorySlug(segments[2])) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/${locale}/sections/quran-stories/${segments[2]}`;
+        const response = NextResponse.redirect(url, 308);
+        applySecurityHeaders(response, request);
+        return response;
+      }
+      return notFoundResponse(request, locale);
+    }
+
     const validSectionPath = segments.length === 3 &&
       segments[1] === 'sections' &&
       isSectionId(segments[2]);
-    const validStoriesIndex = segments.length === 2 && segments[1] === 'stories';
-    const validStoryPath = segments.length === 3 &&
-      segments[1] === 'stories' &&
-      isStorySlug(segments[2]);
-    if (!validSectionPath && !validStoriesIndex && !validStoryPath) {
+    const validStoryUnderSection = segments.length === 4 &&
+      segments[1] === 'sections' &&
+      segments[2] === 'quran-stories' &&
+      isStorySlug(segments[3]);
+    if (!validSectionPath && !validStoryUnderSection) {
       return notFoundResponse(request, locale);
     }
   }

@@ -2,10 +2,21 @@ import { expect, test } from "@playwright/test";
 
 const locales = ["ar", "en", "ur", "tr", "id", "ms", "bn", "fr", "zh", "it", "ja", "ko", "es", "pt", "hi"] as const;
 const rtlLocales = new Set(["ar", "ur"]);
-const sections = ["quran", "tafseer", "dhikr", "prayer-times", "qibla", "donation", "supplications", "hadith", "youtube"] as const;
+const sections = [
+  "quran",
+  "tafseer",
+  "dhikr",
+  "prayer-times",
+  "qibla",
+  "donation",
+  "supplications",
+  "hadith",
+  "youtube",
+  "quran-stories",
+] as const;
 const stories = ["al-khidr-or-destiny", "ash-shura", "al-jinn", "an-naml"] as const;
 const siteUrl = "https://meshari.charity";
-const expectedPageCount = locales.length * (1 + sections.length + 1 + stories.length);
+const expectedPageCount = locales.length * (1 + sections.length + stories.length);
 
 function tags(html: string, name: string) {
   return html.match(new RegExp(`<${name}\\b[^>]*>`, "gi")) || [];
@@ -85,15 +96,21 @@ test("every localized section is a real self-canonical server page", async ({ re
 
 test("every localized Quran story page is self-canonical with schema", async ({ request }) => {
   for (const locale of locales) {
-    const indexPath = `/${locale}/stories`;
+    const indexPath = `/${locale}/sections/quran-stories`;
     const indexResponse = await request.get(indexPath);
     expect(indexResponse.status(), indexPath).toBe(200);
     const indexHtml = await indexResponse.text();
     expect(canonical(indexHtml), indexPath).toBe(`${siteUrl}${indexPath}`);
-    expectLocaleCluster(hreflangMap(indexHtml), "/stories");
+    expectLocaleCluster(hreflangMap(indexHtml), "/sections/quran-stories");
+    expect(indexHtml).toContain("section-schema-quran-stories");
+    // Hub cards + story links must be in initial HTML (no client-mount gate).
+    expect(indexHtml).toContain('id="quran-stories"');
+    for (const slug of stories) {
+      expect(indexHtml).toContain(`/${locale}/sections/quran-stories/${slug}`);
+    }
 
     for (const slug of stories) {
-      const path = `/${locale}/stories/${slug}`;
+      const path = `/${locale}/sections/quran-stories/${slug}`;
       const response = await request.get(path);
       expect(response.status(), path).toBe(200);
       const html = await response.text();
@@ -101,10 +118,24 @@ test("every localized Quran story page is self-canonical with schema", async ({ 
       expect(attribute(htmlTag || "", "lang"), `${path} lang`).toBe(locale);
       expect(attribute(htmlTag || "", "dir"), `${path} dir`).toBe(rtlLocales.has(locale) ? "rtl" : "ltr");
       expect(canonical(html), `${path} canonical`).toBe(`${siteUrl}${path}`);
-      expectLocaleCluster(hreflangMap(html), `/stories/${slug}`);
+      expectLocaleCluster(hreflangMap(html), `/sections/quran-stories/${slug}`);
       expect(html).toMatch(/<h1\b/i);
       expect(html).toContain(`story-schema-${slug}`);
+      // Language switcher chips removed from the read-story page
+      expect(html).not.toMatch(/aria-label=["']Language versions["']/i);
     }
+  }
+});
+
+test("legacy /stories routes permanently redirect under sections", async ({ request }) => {
+  for (const locale of ["ar", "en"] as const) {
+    const index = await request.get(`/${locale}/stories`, { maxRedirects: 0 });
+    expect(index.status(), `/${locale}/stories`).toBe(308);
+    expect(index.headers().location).toBe(`/${locale}/sections/quran-stories`);
+
+    const story = await request.get(`/${locale}/stories/al-khidr-or-destiny`, { maxRedirects: 0 });
+    expect(story.status()).toBe(308);
+    expect(story.headers().location).toBe(`/${locale}/sections/quran-stories/al-khidr-or-destiny`);
   }
 });
 
@@ -117,8 +148,9 @@ test(`sitemap contains only the ${expectedPageCount} canonical localized HTML pa
   const expected = [
     ...locales.map((locale) => `${siteUrl}/${locale}`),
     ...locales.flatMap((locale) => sections.map((section) => `${siteUrl}/${locale}/sections/${section}`)),
-    ...locales.map((locale) => `${siteUrl}/${locale}/stories`),
-    ...locales.flatMap((locale) => stories.map((slug) => `${siteUrl}/${locale}/stories/${slug}`)),
+    ...locales.flatMap((locale) =>
+      stories.map((slug) => `${siteUrl}/${locale}/sections/quran-stories/${slug}`),
+    ),
   ];
 
   expect(new Set(locations).size).toBe(expectedPageCount);
@@ -126,6 +158,8 @@ test(`sitemap contains only the ${expectedPageCount} canonical localized HTML pa
   expect(xml).not.toContain("manifest.webmanifest");
   expect(xml).not.toContain("llms.txt");
   expect(xml).not.toContain(`${siteUrl}</loc>`);
+  // Legacy hub paths must not appear (section route is …/sections/quran-stories/…)
+  expect(xml).not.toMatch(/meshari\.charity\/[a-z]{2}\/stories(?:\/|<)/);
 });
 
 test("new locales es/pt/hi are LTR, self-canonical, and present in sitemap", async ({ request }) => {

@@ -14,7 +14,7 @@ Thank you for helping improve Meshari's Continuous Charity. This is a memorial p
 3. When sandbox is stable, promote with a **conventional** PR title into `main` (see [Promoting to production](#promoting-to-production)).
 4. After the feature branch is fully merged and no follow-up work remains on it, delete the remote and local feature branch. Never delete `sandbox` or `main`.
 
-Do **not** rebase `sandbox` onto `main` for routine work, and do **not** open manual main→sandbox sync PRs after a release. Version files are synced automatically (see below).
+Do **not** rebase or sync `main` → `sandbox` after a release. Promote once when ready; Release Please versions on `main`. Sandbox stays the integration tip without a version-sync ritual.
 
 ## Development workflow
 
@@ -79,15 +79,9 @@ Releases follow Semantic Versioning and are automated with Release Please on `ma
 
 Release Please maintains one release pull request on `main`. Merging it updates `CHANGELOG.md` and `package.json`, creates a `vX.Y.Z` tag, and publishes the GitHub release. Do not ship production changes without that release notes path. Do not push version tags by hand unless recovering a failed automation run.
 
-### After a release (no manual main→sandbox sync)
+### After a release
 
-When Release Please updates version files on `main`, [`.github/workflows/sync-release-to-sandbox.yml`](./.github/workflows/sync-release-to-sandbox.yml) opens (or updates) a PR that copies only:
-
-- `package.json`
-- `CHANGELOG.md`
-- `.release-please-manifest.json`
-
-onto `sandbox`. Merge that PR. Do not rebase the whole of `main` into `sandbox`.
+Release Please bumps version files on `main` only. Leave `sandbox` as the integration branch tip — do **not** open main→sandbox sync PRs or rebase `main` into `sandbox` for routine releases. The next promote carries whatever is ready for production.
 
 ## CI
 

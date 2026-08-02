@@ -1,13 +1,9 @@
 "use client";
 
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import ClientHeader from "./ClientHeader";
-import HeroSection from "./sections/HeroSection";
-import SectionNavigation from "./sections/SectionNavigation";
-import Footer from "./Footer";
-import SectionSkeleton from "./SectionSkeleton";
+import MotionReveal from "./MotionReveal";
 
-// Lazy load heavy sections for better performance - reduces initial bundle size
 const YouTubePlaylist = lazy(() => import("./sections/YouTubePlaylist"));
 const DonationSection = lazy(() => import("./sections/DonationSection"));
 const PrayerTimesSection = lazy(() => import("./sections/PrayerTimesSection"));
@@ -20,64 +16,80 @@ const QiblaFinder = lazy(() => import("./sections/QiblaFinder"));
 const QuranStoriesSection = lazy(() => import("./sections/QuranStoriesSection"));
 const MeshariFavoriteReciter = lazy(() => import("./sections/MeshariFavoriteReciter"));
 const IslamicChantSection = lazy(() => import("./sections/IslamicChantSection"));
+const SectionNavigation = lazy(() => import("./sections/SectionNavigation"));
+const Footer = lazy(() => import("./Footer"));
 
-const SectionLoader = () => <SectionSkeleton compact label="Loading section" />;
+/** Quiet reserve while the chunk loads — not a skeleton that replaces the enter animation. */
+const SectionChunkFallback = () => (
+  <div className="min-h-[140px]" aria-hidden="true" />
+);
+
+function AnimatedSection({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={<SectionChunkFallback />}>
+      <MotionReveal>{children}</MotionReveal>
+    </Suspense>
+  );
+}
 
 interface HomePageProps {
   language?: string;
+  hero: ReactNode;
 }
 
-export default function HomePage({ language }: HomePageProps) {
-  // Language is now handled by URL-based detection in LanguageProvider
-  // No need to call setLocale here as it can interfere with the language switcher
-
+export default function HomePage({ hero }: HomePageProps) {
   return (
-    <main id="main-content" role="main" aria-label="Main content" className="min-h-screen bg-light dark:bg-dark islamic-pattern">
-      {/* Fixed Header with Theme, Language, and Donation */}
+    <main
+      id="main-content"
+      role="main"
+      aria-label="Main content"
+      className="min-h-screen bg-light dark:bg-dark islamic-pattern"
+    >
       <ClientHeader />
-      
-      <HeroSection />
-      
-      {/* Lazy-loaded sections with Suspense for better performance */}
-      <Suspense fallback={<SectionLoader />}>
+      {hero}
+
+      <AnimatedSection>
         <EnhancedQuranSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <DonationSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <YouTubePlaylist />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <SupplicationsSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <PrayerTimesSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <TafseerSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <HadithSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <DhikrCounter />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <QiblaFinder />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <QuranStoriesSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <MeshariFavoriteReciter />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
+      </AnimatedSection>
+      <AnimatedSection>
         <IslamicChantSection />
-      </Suspense>
-      
-      <SectionNavigation />
-      <Footer />
+      </AnimatedSection>
+      <AnimatedSection>
+        <SectionNavigation />
+      </AnimatedSection>
+      <AnimatedSection>
+        <Footer />
+      </AnimatedSection>
     </main>
   );
 }

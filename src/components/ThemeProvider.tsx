@@ -42,14 +42,15 @@ export function ThemeProvider({
     const root = document.documentElement;
     if (disableTransitionOnChange) {
       root.classList.add("theme-changing");
-      void root.offsetHeight;
     }
     root.classList.toggle("dark", resolved === "dark");
-    root.style.colorScheme = resolved;
+    // color-scheme is set via CSS (html / html.dark) — avoid inline styles + CSP friction.
     setResolvedTheme(resolved);
     if (disableTransitionOnChange) {
       requestAnimationFrame(() => {
-        root.classList.remove("theme-changing");
+        requestAnimationFrame(() => {
+          root.classList.remove("theme-changing");
+        });
       });
     }
   }, [disableTransitionOnChange, enableSystem]);
@@ -60,8 +61,22 @@ export function ThemeProvider({
       ? storedTheme
       : defaultTheme;
     setThemeState(initialTheme);
+    // Skip DOM writes when SSR already matches — avoids a post-hydrate style
+    // pass that Lantern attributes onto mobile LCP.
+    const resolved =
+      initialTheme === "system" && enableSystem
+        ? systemTheme()
+        : initialTheme === "light"
+          ? "light"
+          : "dark";
+    const root = document.documentElement;
+    if ((resolved === "dark") === root.classList.contains("dark")) {
+      root.style.colorScheme = resolved;
+      setResolvedTheme(resolved);
+      return;
+    }
     applyTheme(initialTheme);
-  }, [applyTheme, defaultTheme, storageKey]);
+  }, [applyTheme, defaultTheme, enableSystem, storageKey]);
 
   useEffect(() => {
     if (theme !== "system" || !enableSystem) return;

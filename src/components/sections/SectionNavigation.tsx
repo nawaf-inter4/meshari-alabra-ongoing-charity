@@ -1,10 +1,10 @@
 "use client";
 
 import { useLanguage } from "../LanguageProvider";
-import { motion } from "framer-motion";
-import { BookOpen, Book, Heart, Clock, DollarSign, Compass, Users, Calendar, Star, Globe, Shield, Gift, Grid3X3 } from "lucide-react";
+import { BookOpen, Book, Heart, Clock, DollarSign, Compass, Shield, Star, Globe, Grid3X3, FileText } from "lucide-react";
 import Link from "next/link";
 import { localizedSectionHref } from "@/lib/routes";
+import MotionReveal from "../MotionReveal";
 
 export default function SectionNavigation() {
   const { t, locale, direction } = useLanguage();
@@ -81,26 +81,21 @@ export default function SectionNavigation() {
       icon: Globe,
       href: localizedSectionHref(locale, "youtube"),
       color: "from-red-600 to-red-500"
+    },
+    {
+      id: "quran-stories",
+      title: t("quran_stories.title"),
+      description: t("quran_stories.description"),
+      icon: FileText,
+      href: localizedSectionHref(locale, "quran-stories"),
+      color: "from-cyan-500 to-indigo-600"
     }
   ];
 
   return (
-    <section className="py-20 px-4 bg-light-secondary dark:bg-dark-secondary">
+    <section className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ 
-            duration: 0.6,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
-          className="text-center mb-16 motion-safe"
-          style={{
-            willChange: 'transform, opacity',
-            transform: 'translateZ(0)',
-          }}
-        >
+        <MotionReveal className="text-center mb-16">
           <div className="inline-flex items-center gap-2 mb-4">
             <Grid3X3 className="w-8 h-8 text-islamic-gold" />
             <h2 className="text-4xl md:text-5xl font-bold gradient-text leading-tight py-2">
@@ -110,7 +105,7 @@ export default function SectionNavigation() {
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             {t("navigation.sections_description")}
           </p>
-        </motion.div>
+        </MotionReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {sections.map((section, index) => (
@@ -120,20 +115,9 @@ export default function SectionNavigation() {
               className="block"
               aria-label={`${section.title} - ${section.description}`}
             >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: index * 0.1,
-                  ease: [0.25, 0.1, 0.25, 1],
-                }}
-                className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold h-full flex flex-col cursor-pointer motion-safe"
-                style={{
-                  willChange: 'transform, opacity',
-                  transform: 'translateZ(0)',
-                }}
+              <MotionReveal
+                delayMs={Math.min(index * 40, 160)}
+                className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200 dark:border-gray-700 hover:border-islamic-gold h-full flex flex-col cursor-pointer"
               >
                 <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${section.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
                   <section.icon className="w-8 h-8 text-white" />
@@ -162,7 +146,7 @@ export default function SectionNavigation() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                   </div>
-              </motion.div>
+              </MotionReveal>
             </Link>
           ))}
         </div>

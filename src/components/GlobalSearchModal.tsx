@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "./LanguageProvider";
 import { Search, X, BookOpen, Clock, Compass, Heart, FileText, Bookmark, Youtube, MessageSquare } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { localizedSectionHref } from "@/lib/routes";
 
 interface SearchResult {
@@ -18,6 +18,7 @@ interface SearchResult {
 
 export default function GlobalSearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { t, locale } = useLanguage();
+  const reduceMotion = useReducedMotion();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -172,23 +173,24 @@ export default function GlobalSearchModal({ isOpen, onClose }: { isOpen: boolean
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-20 px-4" style={{ zIndex: 9999 }}>
-        {/* Backdrop */}
+        {/* Backdrop — solid dim; blur thrash on iOS Safari. */}
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={false}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+          transition={{ duration: reduceMotion ? 0.08 : 0.12 }}
+          className="fixed inset-0 bg-black/50"
           style={{ zIndex: 9998 }}
           onClick={onClose}
         />
         
-        {/* Modal */}
+        {/* Modal — transform-only (opacity fades jank on WebKit). */}
         <motion.div
           ref={modalRef}
-          initial={{ opacity: 0, y: -20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -20, scale: 0.95 }}
-          transition={{ duration: 0.2 }}
+          initial={reduceMotion ? false : { y: -10 }}
+          animate={{ y: 0 }}
+          exit={reduceMotion ? undefined : { y: -10 }}
+          transition={{ duration: reduceMotion ? 0.01 : 0.16, ease: [0.25, 0.1, 0.25, 1] }}
           className="relative w-full max-w-2xl bg-light dark:bg-dark rounded-2xl shadow-2xl border-2 border-islamic-gold/30 overflow-hidden"
           style={{ zIndex: 9999, position: 'relative' }}
         >

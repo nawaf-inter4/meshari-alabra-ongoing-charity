@@ -9,46 +9,53 @@ export async function GET(
     const { path } = await params;
     const pathString = path.join('/');
     const url = `https://api.alquran.cloud/v1/${pathString}`;
-    
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'User-Agent': `OngoingCharityApp/1.0 (${siteConfig.identity.siteUrl})`,
-      },
-      // Add timeout
-      signal: AbortSignal.timeout(10000), // 10 second timeout
-    });
+    const headers = {
+      Accept: "application/json",
+      "Accept-Encoding": "gzip, deflate, br",
+      "User-Agent": `OngoingCharityApp/1.0 (${siteConfig.identity.siteUrl})`,
+    };
 
-    if (!response.ok) {
-      // Try to get error details, but don't log 404s as errors (they're expected for "no results")
-      const errorText = await response.text().catch(() => 'Unknown error');
-      
+    // Upstream rate-limits bursty per-ayah traffic (429). Retry a couple times.
+    let response: Response | null = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      response = await fetch(url, {
+        method: "GET",
+        headers,
+        signal: AbortSignal.timeout(10000),
+      });
+      if (response.status !== 429) break;
+      await new Promise((resolve) => setTimeout(resolve, 350 * (attempt + 1)));
+    }
+
+    if (!response || !response.ok) {
+      const status = response?.status ?? 502;
+      const errorText = response
+        ? await response.text().catch(() => "Unknown error")
+        : "No response from Quran API";
+
       // Only log non-404 errors
-      if (response.status !== 404) {
-        console.error(`Quran API error (${response.status}):`, errorText.substring(0, 200));
+      if (status !== 404) {
+        console.error(`Quran API error (${status}):`, errorText.substring(0, 200));
       }
-      
-      // For 404, return a cleaner response
-      if (response.status === 404) {
+
+      if (status === 404) {
         return NextResponse.json(
-          { 
+          {
             code: 404,
-            status: 'NOT FOUND',
-            data: 'Nothing matching your search was found..'
+            status: "NOT FOUND",
+            data: "Nothing matching your search was found..",
           },
-          { status: 404 }
+          { status: 404 },
         );
       }
-      
+
       return NextResponse.json(
-        { 
-          error: 'Failed to fetch from Quran API',
-          status: response.status,
-          message: errorText.substring(0, 200) // Limit error message length
+        {
+          error: "Failed to fetch from Quran API",
+          status,
+          message: errorText.substring(0, 200),
         },
-        { status: response.status }
+        { status },
       );
     }
 
