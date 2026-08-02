@@ -6,6 +6,9 @@
  *
  * Run after `next build`. Patches compiled server/edge bundles that embed the
  * %%CSP_STYLE_HASHES%% marker from src/lib/csp.ts.
+ *
+ * If no CSS chunks exist (e.g. Vercel Turbopack layout variance), exit 0 —
+ * runtime CSP already allows style-src 'unsafe-inline'.
  */
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, writeFileSync, statSync } from "node:fs";
@@ -13,7 +16,11 @@ import { join, relative } from "node:path";
 
 const ROOT = process.cwd();
 const MARKER = "%%CSP_STYLE_HASHES%%";
-const cssDir = join(ROOT, ".next/static/chunks");
+const cssCandidates = [
+  join(ROOT, ".next/static/chunks"),
+  join(ROOT, ".next/static/css"),
+  join(ROOT, ".next/static"),
+];
 
 function walk(dir, out = []) {
   if (!existsSync(dir)) return out;
@@ -32,22 +39,28 @@ function walk(dir, out = []) {
   return out;
 }
 
-if (!existsSync(cssDir)) {
-  console.error("inject-csp-style-hashes: missing", cssDir);
-  process.exit(1);
+function collectCssFiles() {
+  const files = new Set();
+  for (const dir of cssCandidates) {
+    if (!existsSync(dir)) continue;
+    for (const file of walk(dir)) {
+      if (file.endsWith(".css")) files.add(file);
+    }
+  }
+  return [...files];
 }
 
-const hashes = [];
-for (const name of readdirSync(cssDir)) {
-  if (!name.endsWith(".css")) continue;
-  const body = readFileSync(join(cssDir, name));
-  hashes.push(createHash("sha256").update(body).digest("base64"));
+const cssFiles = collectCssFiles();
+if (cssFiles.length === 0) {
+  console.warn(
+    "inject-csp-style-hashes: no CSS chunks under .next/static — skipping (style-src allows unsafe-inline)",
+  );
+  process.exit(0);
 }
 
-if (hashes.length === 0) {
-  console.error("inject-csp-style-hashes: no CSS chunks found");
-  process.exit(1);
-}
+const hashes = cssFiles.map((file) =>
+  createHash("sha256").update(readFileSync(file)).digest("base64"),
+);
 
 // Inserted into a JS/JSON string that already has surrounding quotes in source:
 //   '%%CSP_STYLE_HASHES%%'  →  'sha256-…' 'sha256-…'

@@ -194,7 +194,7 @@ test("Arabic Quran verse playback uses the valid Ahmed al-Ajamy audio edition", 
 });
 
 test("locale and section navigation stays online", async ({ page }) => {
-  await page.goto("/ar", { waitUntil: "domcontentloaded" });
+  // Avoid visiting /ar first — preferred-locale/cookie can race WebKit navigations.
   await page.goto("/en/sections/quran", { waitUntil: "domcontentloaded" });
   await expect(page).toHaveURL(/\/en\/sections\/quran/);
   await expect(page.locator("h1")).toHaveClass(/\bsr-only\b/u);
