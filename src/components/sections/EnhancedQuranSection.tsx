@@ -293,6 +293,7 @@ export default function EnhancedQuranSection() {
   const [selectedTranslation, setSelectedTranslation] = useState<string>("");
   const [ayahTranslations, setAyahTranslations] = useState<Record<number, string>>({});
   const [translationsLoading, setTranslationsLoading] = useState(false);
+  const [translationSourceName, setTranslationSourceName] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAyah, setCurrentAyah] = useState<number>(1);
   const [audioUrl, setAudioUrl] = useState<string>("");
@@ -326,7 +327,7 @@ export default function EnhancedQuranSection() {
   const targetSurahRef = useRef<number | null>(null);
   const targetAyahRef = useRef<number | null>(null);
 
-  // Language-based translation mapping
+  // Language-based translation / tafsir edition mapping
   const getTranslationIdentifier = (locale: string): string => {
     const translationMap: { [key: string]: string } = {
       'ar': 'ar.muyassar',
@@ -346,6 +347,30 @@ export default function EnhancedQuranSection() {
       'hi': 'hi.hindi',
     };
     return translationMap[locale] || 'en.sahih';
+  };
+
+  /** Human-readable source label (not "AR") — matches the edition actually loaded. */
+  const getTranslationSourceLabel = (editionId: string, uiLocale: string): string => {
+    const sources: Record<string, { ar: string; en: string }> = {
+      "ar.muyassar": { ar: "تفسير الميسر", en: "Tafsir Al-Muyassar" },
+      "en.sahih": { ar: "صحيح إنترناشونال", en: "Sahih International" },
+      "tr.diyanet": { ar: "ديانت التركية", en: "Diyanet İşleri" },
+      "ur.jalandhry": { ar: "جالندھری", en: "Fateh Muhammad Jalandhry" },
+      "id.indonesian": { ar: "الترجمة الإندونيسية", en: "Indonesian Ministry of Religious Affairs" },
+      "ms.basmeih": { ar: "بسميق", en: "Abdullah Muhammad Basmeih" },
+      "bn.bengali": { ar: "الترجمة البنغالية", en: "Muhiuddin Khan" },
+      "fr.hamidullah": { ar: "حميد الله", en: "Muhammad Hamidullah" },
+      "zh.jian": { ar: "الترجمة الصينية المبسطة", en: "Ma Jian" },
+      "it.piccardo": { ar: "بيكاردو", en: "Hamza Roberto Piccardo" },
+      "ja.japanese": { ar: "الترجمة اليابانية", en: "Japanese" },
+      "ko.korean": { ar: "الترجمة الكورية", en: "Korean" },
+      "es.asad": { ar: "أسد", en: "Muhammad Asad" },
+      "pt.elhayek": { ar: "الحيك", en: "Samir El-Hayek" },
+      "hi.hindi": { ar: "الترجمة الهندية", en: "Suhel Farooq Khan" },
+    };
+    const entry = sources[editionId];
+    if (!entry) return editionId;
+    return uiLocale === "ar" || uiLocale === "ur" ? entry.ar : entry.en;
   };
 
   useEffect(() => {
@@ -468,6 +493,7 @@ export default function EnhancedQuranSection() {
     const controller = new AbortController();
     setTranslationsLoading(true);
     setAyahTranslations({});
+    setTranslationSourceName(getTranslationSourceLabel(selectedTranslation, locale));
 
     const loadSurahTranslations = async () => {
       try {
@@ -483,6 +509,10 @@ export default function EnhancedQuranSection() {
         }
         const data = await response.json();
         const ayahs = data?.data?.ayahs;
+        const editionName =
+          typeof data?.data?.edition?.name === "string"
+            ? data.data.edition.name.trim()
+            : "";
         if (!Array.isArray(ayahs)) {
           setAyahTranslations({});
           return;
@@ -497,6 +527,9 @@ export default function EnhancedQuranSection() {
         }
         if (!controller.signal.aborted) {
           setAyahTranslations(map);
+          if (editionName) {
+            setTranslationSourceName(editionName);
+          }
         }
       } catch (error) {
         if ((error as Error)?.name === "AbortError") return;
@@ -1801,7 +1834,12 @@ export default function EnhancedQuranSection() {
                   <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4">
                     <div className="text-sm text-gray-500 dark:text-gray-400 mb-2" dir={localeDirection(locale)} data-translation-language>
                       {mounted && t("quran.translation") !== "quran.translation" ? t("quran.translation") : "التفسير"}{" "}
-                      <bdi dir="ltr">({locale.toUpperCase()})</bdi>
+                      <span>
+                        (
+                        {translationSourceName ||
+                          getTranslationSourceLabel(selectedTranslation, locale)}
+                        )
+                      </span>
                     </div>
                     <AyahTranslation
                       translationText={ayahTranslations[ayah.numberInSurah]}
