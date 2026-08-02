@@ -194,13 +194,15 @@ test("Arabic Quran verse playback uses the valid Ahmed al-Ajamy audio edition", 
 });
 
 test("locale and section navigation stays online", async ({ page }) => {
-  await page.goto("/ar");
-  await page.goto("/en/sections/quran");
+  await page.goto("/ar", { waitUntil: "domcontentloaded" });
+  await page.goto("/en/sections/quran", { waitUntil: "domcontentloaded" });
+  await expect(page).toHaveURL(/\/en\/sections\/quran/);
   await expect(page.locator("h1")).toHaveClass(/\bsr-only\b/u);
   await expect(page.getByRole("heading", { name: "The Holy Quran", level: 2 })).toBeVisible();
   await expect(page.getByText("You are offline", { exact: true })).toHaveCount(0);
 
-  await page.goto("/ur/sections/dhikr");
+  await page.goto("/ur/sections/dhikr", { waitUntil: "domcontentloaded" });
+  await expect(page).toHaveURL(/\/ur\/sections\/dhikr/);
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   await expect(page.getByText("You are offline", { exact: true })).toHaveCount(0);
 });

@@ -14,6 +14,36 @@ export function createCspNonce(): string {
   return Buffer.from(crypto.randomUUID()).toString("base64");
 }
 
+/**
+ * CSP for static `/offline.html` — classic inline scripts, no Next nonce stamping.
+ * Nonce CSP would block the offline shell and leave `html.is-loading` forever.
+ */
+export function buildOfflineContentSecurityPolicy(options?: {
+  upgradeInsecureRequests?: boolean;
+}): string {
+  const isDev = process.env.NODE_ENV !== "production";
+  const upgradeInsecure =
+    options?.upgradeInsecureRequests ?? (!isDev && process.env.VERCEL === "1");
+
+  return [
+    "default-src 'none'",
+    "script-src 'self' 'unsafe-inline'",
+    "script-src-attr 'none'",
+    "style-src 'self' 'unsafe-inline'",
+    "style-src-attr 'unsafe-inline'",
+    "font-src 'self' data:",
+    "img-src 'self' data:",
+    "connect-src 'self'",
+    "worker-src 'self'",
+    "manifest-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    ...(upgradeInsecure ? ["upgrade-insecure-requests"] : []),
+  ].join("; ");
+}
+
 export function buildContentSecurityPolicy(
   nonce: string,
   options?: { upgradeInsecureRequests?: boolean },

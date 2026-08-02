@@ -4,7 +4,11 @@ import { isSupportedLocale, localeDirection, siteConfig, type SupportedLocale } 
 import { isSectionId } from '@/lib/routes';
 import { isStorySlug } from '@/content/stories';
 import { translate } from '@/lib/translations';
-import { buildContentSecurityPolicy, createCspNonce } from '@/lib/csp';
+import {
+  buildContentSecurityPolicy,
+  buildOfflineContentSecurityPolicy,
+  createCspNonce,
+} from '@/lib/csp';
 
 function escapeHtml(value: string) {
   return value.replace(/[&<>'"]/g, (character) => ({
@@ -155,6 +159,18 @@ function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (isUtilityPath(pathname)) {
+    // Static offline shell uses inline scripts — nonce CSP would freeze is-loading.
+    if (pathname === '/offline.html') {
+      const isHttps =
+        request.nextUrl.protocol === "https:" ||
+        request.headers.get("x-forwarded-proto") === "https";
+      const csp = buildOfflineContentSecurityPolicy({
+        upgradeInsecureRequests: isHttps,
+      });
+      const response = NextResponse.next();
+      applySecurityHeaders(response, request, { csp });
+      return response;
+    }
     // Still attach security headers (previously skipped, so `/` had no CSP).
     return continueWithSecurityHeaders(request);
   }
