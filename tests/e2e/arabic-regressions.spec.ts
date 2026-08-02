@@ -131,7 +131,8 @@ test("Arabic Quran controls keep localized badges and isolated mixed-direction t
   await expect(parenthetical.locator('bdi[dir="rtl"]')).toHaveText("الرَّحْمَنِ");
 
   const language = page.locator("[data-translation-language]").first();
-  await expect(language.locator('bdi[dir="ltr"]')).toHaveText("(AR)");
+  await expect(language).toHaveText("تفسير الميسر");
+  await expect(language).not.toContainText("(AR)");
 });
 
 test("Arabic section titles and the dhikr count are not clipped", async ({ page }, testInfo) => {

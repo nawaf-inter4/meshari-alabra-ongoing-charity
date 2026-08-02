@@ -58,9 +58,38 @@ export async function mockExternalApis(page: Page) {
         edition: {
           identifier: "ar.muyassar",
           language: "ar",
+          name: "تفسير الميسر",
+          englishName: "Tafsir Al-Muyassar",
           format: "text",
           type: "tafsir",
         },
+      };
+    } else if (pathname.includes("/surah/") && pathname.endsWith("/ar.muyassar")) {
+      // App loads tafsir/translation per surah (not per ayah) to avoid 429s.
+      data = {
+        number: 1,
+        name: "سُورَةُ ٱلْفَاتِحَةِ",
+        englishName: "Al-Faatiha",
+        numberOfAyahs: 7,
+        edition: {
+          identifier: "ar.muyassar",
+          language: "ar",
+          name: "تفسير الميسر",
+          englishName: "Tafsir Al-Muyassar",
+          format: "text",
+          type: "tafsir",
+        },
+        ayahs: [{
+          number: 1,
+          numberInSurah: 1,
+          text: "أبتدئ باسم الله، (الرَّحْمَنِ) ذي الرحمة العامة، (الرَّحِيمِ) بالمؤمنين.",
+          juz: 1,
+          manzil: 1,
+          page: 1,
+          ruku: 1,
+          hizbQuarter: 1,
+          sajda: false,
+        }],
       };
     } else if (pathname.includes("/ayah/")) {
       data = {
