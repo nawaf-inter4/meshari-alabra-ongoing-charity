@@ -48,6 +48,12 @@ Arabic `ar.pdf` files are never overwritten by that script.
 
 Arabic-named PDFs may still exist at the root of `public/stories/` for backwards compatibility. New code should use the slug/locale layout above. Static `/stories/*` PDF paths continue to be served without locale rewriting (see `src/proxy.ts`).
 
+Arabic `ar.pdf` files are never overwritten.
+
+## Legacy filenames
+
+Arabic-named PDFs may still exist at the root of `public/stories/` for backwards compatibility. New code should use the slug/locale layout above. Static `/stories/*` paths continue to be served without locale rewriting (see `src/proxy.ts`).
+
 ## Features
 
 - Home and section cards link to `/{locale}/sections/quran-stories/{slug}`
