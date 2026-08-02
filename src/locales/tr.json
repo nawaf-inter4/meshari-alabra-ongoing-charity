@@ -330,5 +330,11 @@
   "seo.quran_stories.description": "Seçilmiş Kuran sureleri üzerine düşünsel eğitim notları — sadaka-i cariye.",
   "seo.brand": "Meshari Ahmed Sulaiman Alabra için Devam Eden Sadaka",
   "quran.translation_label": "Çeviri",
-  "quran.open_tafseer": "Detaylı tefsir (İbn Kesir ve diğerleri)"
+  "quran.open_tafseer": "Detaylı tefsir (İbn Kesir ve diğerleri)",
+  "qibla.compass_hint": "Canlı pusula için telefonu düz tutun ve hareket erişimine izin verin.",
+  "qibla.compass_active": "Canlı pusula açık · cihaz yönü {heading}°",
+  "qibla.compass_denied": "Pusula erişimi reddedildi. Kıble açısı gösteriliyor; canlı yön için hareket izni verin.",
+  "qibla.compass_relative": "Bu cihazda yalnızca göreli pusula var; doğruluk daha düşük olabilir.",
+  "tafseer.search_example": "Metin veya ayet numarasıyla arayın (örn. 2:255 veya Elhamdülillah)",
+  "tafseer.search_placeholder": "Ayet metni, 2:255 veya sure adı"
 }

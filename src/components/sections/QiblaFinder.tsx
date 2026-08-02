@@ -11,10 +11,40 @@ type CompassOrientationEvent = DeviceOrientationEvent & {
   webkitCompassHeading?: number;
 };
 
+type AbsoluteOrientationSensorLike = {
+  start: () => void;
+  stop: () => void;
+  addEventListener: (type: "reading" | "error", listener: () => void) => void;
+  quaternion?: number[] | Float64Array | null;
+};
+
 function normalizeHeading(value: number) {
   let heading = value % 360;
   if (heading < 0) heading += 360;
   return heading;
+}
+
+function shortestAngleDelta(from: number, to: number) {
+  let delta = ((to - from + 540) % 360) - 180;
+  return delta;
+}
+
+function screenOrientationCompensation() {
+  if (typeof window === "undefined") return 0;
+  const orientation = window.screen?.orientation?.angle;
+  if (typeof orientation === "number") return orientation;
+  const legacy = (window as Window & { orientation?: number }).orientation;
+  return typeof legacy === "number" ? legacy : 0;
+}
+
+/** Convert AbsoluteOrientationSensor quaternion to compass heading (deg). */
+function headingFromQuaternion(q: ArrayLike<number>) {
+  const [x, y, z, w] = [q[0], q[1], q[2], q[3]];
+  // yaw around Z (device face-up on a table)
+  const siny = 2 * (w * z + x * y);
+  const cosy = 1 - 2 * (y * y + z * z);
+  const yaw = Math.atan2(siny, cosy) * (180 / Math.PI);
+  return normalizeHeading(-yaw);
 }
 
 export default function QiblaFinder() {
@@ -27,26 +57,50 @@ export default function QiblaFinder() {
   const [locationPermission, setLocationPermission] = useState<"prompt" | "granted" | "denied">("prompt");
   const [hasRequestedLocation, setHasRequestedLocation] = useState(false);
   const [compassReady, setCompassReady] = useState(false);
+  const [compassMode, setCompassMode] = useState<"absolute" | "relative" | "none">("none");
   const orientationBound = useRef(false);
+  const smoothedHeading = useRef<number | null>(null);
+  const absoluteSensor = useRef<AbsoluteOrientationSensorLike | null>(null);
   const onOrientation = useRef<(event: Event) => void>(() => {});
+
+  const applyHeading = (rawHeading: number, mode: "absolute" | "relative") => {
+    const compensated = normalizeHeading(rawHeading - screenOrientationCompensation());
+    if (smoothedHeading.current === null) {
+      smoothedHeading.current = compensated;
+    } else {
+      // Low-pass filter — reduces jitter from magnetometer noise.
+      const delta = shortestAngleDelta(smoothedHeading.current, compensated);
+      smoothedHeading.current = normalizeHeading(smoothedHeading.current + delta * 0.22);
+    }
+    setUserHeading(smoothedHeading.current);
+    setCompassReady(true);
+    setCompassMode(mode);
+  };
 
   onOrientation.current = (event: Event) => {
     const orientation = event as CompassOrientationEvent;
     let heading: number | null = null;
+    let mode: "absolute" | "relative" = "relative";
 
-    // iOS Safari exposes true compass degrees via webkitCompassHeading.
+    // iOS Safari: true / magnetic north degrees (best web signal).
     if (typeof orientation.webkitCompassHeading === "number") {
       heading = orientation.webkitCompassHeading;
+      mode = "absolute";
     } else if (orientation.absolute === true && orientation.alpha !== null) {
-      // Absolute orientation: convert alpha so 0 points north.
+      // W3C absolute orientation: alpha=0 when device top points north.
       heading = 360 - orientation.alpha;
+      mode = "absolute";
+    } else if (event.type === "deviceorientationabsolute" && orientation.alpha !== null) {
+      heading = 360 - orientation.alpha;
+      mode = "absolute";
     } else if (orientation.alpha !== null) {
-      heading = orientation.alpha;
+      // Relative only — useful after calibration but not true north.
+      heading = 360 - orientation.alpha;
+      mode = "relative";
     }
 
     if (heading === null || Number.isNaN(heading)) return;
-    setUserHeading(normalizeHeading(heading));
-    setCompassReady(true);
+    applyHeading(heading, mode);
   };
 
   const orientationListener = useRef((event: Event) => {
@@ -56,6 +110,14 @@ export default function QiblaFinder() {
   useEffect(() => {
     const listener = orientationListener.current;
     return () => {
+      if (absoluteSensor.current) {
+        try {
+          absoluteSensor.current.stop();
+        } catch {
+          /* ignore */
+        }
+        absoluteSensor.current = null;
+      }
       if (!orientationBound.current || typeof window === "undefined") return;
       window.removeEventListener("deviceorientation", listener);
       window.removeEventListener("deviceorientationabsolute", listener);
@@ -63,35 +125,53 @@ export default function QiblaFinder() {
   }, []);
 
   const enableDeviceCompass = async () => {
-    if (typeof window === "undefined" || !window.DeviceOrientationEvent) {
-      return;
-    }
+    if (typeof window === "undefined") return;
 
-    const DeviceOrientation = DeviceOrientationEvent as typeof DeviceOrientationEvent & {
+    const DeviceOrientation = window.DeviceOrientationEvent as typeof DeviceOrientationEvent & {
       requestPermission?: () => Promise<"granted" | "denied" | "default">;
     };
 
-    try {
-      if (typeof DeviceOrientation.requestPermission === "function") {
-        // Must run from a user gesture on iOS.
-        const response = await DeviceOrientation.requestPermission();
-        if (response !== "granted") {
-          setError(
-            t("qibla.compass_denied") ||
-              "Compass access was denied. Qibla angle is still shown; enable motion access for live direction.",
-          );
-          return;
+    if (DeviceOrientation) {
+      try {
+        if (typeof DeviceOrientation.requestPermission === "function") {
+          // Must run from a user gesture on iOS.
+          const response = await DeviceOrientation.requestPermission();
+          if (response !== "granted") {
+            setError(t("qibla.compass_denied"));
+            return;
+          }
         }
+      } catch {
+        setError(t("qibla.compass_denied"));
+        return;
       }
-    } catch {
-      setError(
-        t("qibla.compass_denied") ||
-          "Compass access was denied. Qibla angle is still shown; enable motion access for live direction.",
-      );
-      return;
     }
 
-    if (orientationBound.current) return;
+    // Prefer Generic Sensor API absolute orientation when available (Chrome Android).
+    const SensorCtor = (
+      window as Window & {
+        AbsoluteOrientationSensor?: new (options?: { frequency?: number; referenceFrame?: string }) => AbsoluteOrientationSensorLike;
+      }
+    ).AbsoluteOrientationSensor;
+
+    if (typeof SensorCtor === "function" && !absoluteSensor.current) {
+      try {
+        const sensor = new SensorCtor({ frequency: 30, referenceFrame: "device" });
+        sensor.addEventListener("reading", () => {
+          if (!sensor.quaternion) return;
+          applyHeading(headingFromQuaternion(sensor.quaternion), "absolute");
+        });
+        sensor.addEventListener("error", () => {
+          /* fall through to DeviceOrientation events */
+        });
+        sensor.start();
+        absoluteSensor.current = sensor;
+      } catch {
+        absoluteSensor.current = null;
+      }
+    }
+
+    if (orientationBound.current || !window.DeviceOrientationEvent) return;
     const listener = orientationListener.current;
     window.addEventListener("deviceorientationabsolute", listener, true);
     window.addEventListener("deviceorientation", listener, true);
@@ -374,11 +454,14 @@ export default function QiblaFinder() {
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-500 mb-2">
                   {compassReady
-                    ? t("qibla.compass_active") ||
-                      `Live compass active · device heading ${Math.round(userHeading)}°`
-                    : t("qibla.compass_hint") ||
-                      "Hold your phone flat and allow motion access for a live compass."}
+                    ? t("qibla.compass_active").replace("{heading}", String(Math.round(userHeading)))
+                    : t("qibla.compass_hint")}
                 </p>
+                {compassReady && compassMode === "relative" && (
+                  <p className="text-xs text-yellow-600 dark:text-yellow-400 mb-2">
+                    {t("qibla.compass_relative")}
+                  </p>
+                )}
                 {locationPermission === "denied" && (
                   <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-2">
                     {t("qibla.location_hint") || "For better accuracy, please allow location access in your browser settings."}

@@ -326,5 +326,11 @@
   "seo.quran_stories.description": "選ばれたクルアーン章についての省察的な学び——継続的な慈善として。",
   "seo.brand": "メシャリ・アハメド・スライマン・アラブラの継続的な慈善活動",
   "quran.translation_label": "翻訳",
-  "quran.open_tafseer": "詳細なタフスィール（イブン・カスィールなど）"
+  "quran.open_tafseer": "詳細なタフスィール（イブン・カスィールなど）",
+  "qibla.compass_hint": "ライブコンパスのため端末を水平に持ち、モーション許可を与えてください。",
+  "qibla.compass_active": "ライブコンパス動作中 · 端末方位 {heading}°",
+  "qibla.compass_denied": "コンパス許可が拒否されました。キブラ角度は表示されます。",
+  "qibla.compass_relative": "相対コンパスのみ利用可能で、精度が下がる場合があります。",
+  "tafseer.search_example": "本文または節番号で検索（例: 2:255）",
+  "tafseer.search_placeholder": "節の本文、2:255、または章名"
 }

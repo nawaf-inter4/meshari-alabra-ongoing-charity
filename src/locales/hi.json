@@ -340,5 +340,11 @@
   "seo.quran_stories.description": "चुनिंदा कुरआन सूरतों पर चिंतनपूर्ण शैक्षिक टिप्पणियाँ — सदक़ा जारिया के रूप में।",
   "seo.brand": "Meshari Ahmed Sulaiman Alabra के लिए सतत दान-पुण्य",
   "quran.translation_label": "अनुवाद",
-  "quran.open_tafseer": "विस्तृत तफसीर (इब्न कसीर आदि)"
+  "quran.open_tafseer": "विस्तृत तफसीर (इब्न कसीर आदि)",
+  "qibla.compass_hint": "लाइव कम्पास के लिए फ़ोन सपाट रखें और मोशन अनुमति दें।",
+  "qibla.compass_active": "लाइव कम्पास सक्रिय · डिवाइस दिशा {heading}°",
+  "qibla.compass_denied": "कम्पास अनुमति अस्वीकृत। क़िबला कोण फिर भी दिखाया जाता है।",
+  "qibla.compass_relative": "केवल सापेक्ष कम्पास उपलब्ध; सटीकता कम हो सकती है।",
+  "tafseer.search_example": "पाठ या आयत संख्या से खोजें (जैसे 2:255)",
+  "tafseer.search_placeholder": "आयत पाठ, 2:255, या सूरह नाम"
 }

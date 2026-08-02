@@ -326,5 +326,11 @@
   "seo.quran_stories.description": "Catatan reflektif tentang surat pilihan Al-Quran sebagai sedekah jariyah.",
   "seo.brand": "Amal Jariyah untuk Meshari Ahmed Sulaiman Alabra",
   "quran.translation_label": "Terjemahan",
-  "quran.open_tafseer": "Tafsir lengkap (Ibnu Katsir & lainnya)"
+  "quran.open_tafseer": "Tafsir lengkap (Ibnu Katsir & lainnya)",
+  "qibla.compass_hint": "Pegang ponsel rata dan izinkan akses gerak untuk kompas langsung.",
+  "qibla.compass_active": "Kompas langsung aktif · arah perangkat {heading}°",
+  "qibla.compass_denied": "Akses kompas ditolak. Sudut kiblat tetap ditampilkan; izinkan gerak untuk arah langsung.",
+  "qibla.compass_relative": "Hanya kompas relatif tersedia; akurasi mungkin lebih rendah.",
+  "tafseer.search_example": "Cari dengan teks atau nomor ayat (mis. 2:255 atau Alhamdulillah)",
+  "tafseer.search_placeholder": "Teks ayat, 2:255, atau nama surah"
 }

@@ -326,5 +326,11 @@
   "seo.quran_stories.description": "Note educative contemplative su sure selezionate del Corano come carità continua.",
   "seo.brand": "Carità continua per Meshari Ahmed Sulaiman Alabra",
   "quran.translation_label": "Traduzione",
-  "quran.open_tafseer": "Tafsir completo (Ibn Kathir e altri)"
+  "quran.open_tafseer": "Tafsir completo (Ibn Kathir e altri)",
+  "qibla.compass_hint": "Tieni il telefono in piano e consenti il movimento per la bussola live.",
+  "qibla.compass_active": "Bussola attiva · heading dispositivo {heading}°",
+  "qibla.compass_denied": "Accesso bussola negato. L’angolo della qibla è comunque mostrato.",
+  "qibla.compass_relative": "È disponibile solo una bussola relativa; la precisione può essere inferiore.",
+  "tafseer.search_example": "Cerca per testo o numero (es. 2:255 o Alhamdulillah)",
+  "tafseer.search_placeholder": "Testo ayah, 2:255 o nome sura"
 }

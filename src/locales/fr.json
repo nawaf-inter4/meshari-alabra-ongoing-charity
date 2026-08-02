@@ -331,5 +331,11 @@
   "seo.quran_stories.description": "Notes éducatives contemplatives sur des sourates choisies du Coran, en aumône continue.",
   "seo.brand": "Charité continue pour Meshari Ahmed Sulaiman Alabra",
   "quran.translation_label": "Traduction",
-  "quran.open_tafseer": "Tafsir complet (Ibn Kathir et autres)"
+  "quran.open_tafseer": "Tafsir complet (Ibn Kathir et autres)",
+  "qibla.compass_hint": "Tenez le téléphone à plat et autorisez le mouvement pour la boussole en direct.",
+  "qibla.compass_active": "Boussole active · cap de l’appareil {heading}°",
+  "qibla.compass_denied": "Accès boussole refusé. L’angle de la qibla reste affiché.",
+  "qibla.compass_relative": "Seule une boussole relative est disponible ; la précision peut être moindre.",
+  "tafseer.search_example": "Recherchez par texte ou numéro (ex. 2:255 ou Alhamdulillah)",
+  "tafseer.search_placeholder": "Texte d’ayah, 2:255 ou nom de sourate"
 }

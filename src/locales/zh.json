@@ -326,5 +326,11 @@
   "seo.quran_stories.description": "关于所选古兰经章节的沉思教育笔记，作为献给 Meshari Ahmed Sulaiman Alabra 的川流不息的施舍。",
   "seo.brand": "麦沙里·艾哈迈德·苏莱曼·阿拉布拉的持续慈善",
   "quran.translation_label": "译文",
-  "quran.open_tafseer": "详细经注（伊本·凯希尔等）"
+  "quran.open_tafseer": "详细经注（伊本·凯希尔等）",
+  "qibla.compass_hint": "将手机平放并允许运动访问以启用实时罗盘。",
+  "qibla.compass_active": "实时罗盘已启用 · 设备朝向 {heading}°",
+  "qibla.compass_denied": "罗盘访问被拒绝。朝拜角度仍会显示。",
+  "qibla.compass_relative": "仅有相对罗盘可用，精度可能较低。",
+  "tafseer.search_example": "按经文或节号搜索（例如 2:255）",
+  "tafseer.search_placeholder": "经文、2:255 或章名"
 }

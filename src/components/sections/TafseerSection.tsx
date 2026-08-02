@@ -1,17 +1,113 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Book, Search, ChevronDown, Globe, X, Loader2 } from "lucide-react";
 import SectionTitleLink from "./SectionTitleLink";
 import BidiText from "../BidiText";
 import {
-  TAFSEER_EDITIONS,
   defaultTafseerEdition,
+  editionDisplayName,
   editionsForLocale,
+  isRtlTafseerLanguage,
+  tafseerApiUrl,
   type TafseerEdition,
 } from "@/lib/tafseer-editions";
+
+function tafseerMessage(
+  locale: string,
+  key: "unavailable" | "error" | "text_label" | "for_ayah" | "verses",
+): string {
+  const messages: Record<typeof key, Record<string, string>> = {
+    unavailable: {
+      ar: "التفسير غير متوفر لهذه الآية في هذا المصدر.",
+      en: "Tafseer is not available for this ayah in this source.",
+      fr: "Le tafsir n'est pas disponible pour ce verset dans cette source.",
+      zh: "此来源暂无该节经文的注释。",
+      tr: "Bu kaynakta bu ayet için tefsir bulunamadı.",
+      id: "Tafsir tidak tersedia untuk ayat ini pada sumber ini.",
+      ms: "Tafsir tidak tersedia untuk ayat ini pada sumber ini.",
+      ur: "اس آیت کی تفسیر اس مصدر میں دستیاب نہیں۔",
+      es: "El tafsir no está disponible para esta aleya en esta fuente.",
+      hi: "इस स्रोत में इस आयत की तफ़्सीर उपलब्ध नहीं है।",
+      bn: "এই উৎসে এই আয়াতের তাফসীর পাওয়া যায়নি।",
+      ja: "この出典では、この節のタフシールは利用できません。",
+      it: "Il tafsir non è disponibile per questo versetto in questa fonte.",
+      pt: "O tafsir não está disponível para este versículo nesta fonte.",
+      ko: "이 출처에는 해당 절의 타프시르가 없습니다.",
+    },
+    error: {
+      ar: "التفسير غير متوفر حالياً. يرجى المحاولة لاحقاً.",
+      en: "Tafseer is temporarily unavailable. Please try again later.",
+      fr: "Le tafsir est temporairement indisponible. Réessayez plus tard.",
+      zh: "注释暂时不可用，请稍后重试。",
+      tr: "Tefsir şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.",
+      id: "Tafsir sementara tidak tersedia. Silakan coba lagi nanti.",
+      ms: "Tafsir sementara tidak tersedia. Sila cuba lagi kemudian.",
+      ur: "تفسیر فی الحال دستیاب نہیں۔ بعد میں دوبارہ کوشش کریں۔",
+      es: "El tafsir no está disponible temporalmente. Inténtalo más tarde.",
+      hi: "तफ़्सीर अस्थायी रूप से उपलब्ध नहीं है। बाद में पुनः प्रयास करें।",
+      bn: "তাফসীর সাময়িকভাবে অনুপলব্ধ। পরে আবার চেষ্টা করুন।",
+      ja: "タフシールは一時的に利用できません。後でもう一度お試しください。",
+      it: "Il tafsir non è temporaneamente disponibile. Riprova più tardi.",
+      pt: "O tafsir está temporariamente indisponível. Tente novamente mais tarde.",
+      ko: "타프시르를 일시적으로 사용할 수 없습니다. 나중에 다시 시도하세요.",
+    },
+    text_label: {
+      ar: "نص التفسير:",
+      en: "Tafseer text:",
+      fr: "Texte du tafsir :",
+      zh: "注释文本：",
+      tr: "Tefsir metni:",
+      id: "Teks tafsir:",
+      ms: "Teks tafsir:",
+      ur: "متن تفسیر:",
+      es: "Texto del tafsir:",
+      hi: "तफ़्सीर पाठ:",
+      bn: "তাফসীর পাঠ:",
+      ja: "タフシール本文：",
+      it: "Testo del tafsir:",
+      pt: "Texto do tafsir:",
+      ko: "타프시르 본문:",
+    },
+    for_ayah: {
+      ar: "التفسير للآية {ayah} من السورة {surah} — {author}",
+      en: "Tafseer for ayah {ayah} of surah {surah} — {author}",
+      fr: "Tafsir du verset {ayah} de la sourate {surah} — {author}",
+      zh: "第 {surah} 章第 {ayah} 节注释 — {author}",
+      tr: "{surah}. sure {ayah}. ayet tefsiri — {author}",
+      id: "Tafsir ayat {ayah} dari surah {surah} — {author}",
+      ms: "Tafsir ayat {ayah} dari surah {surah} — {author}",
+      ur: "سورہ {surah} کی آیت {ayah} کی تفسیر — {author}",
+      es: "Tafsir de la aleya {ayah} de la sura {surah} — {author}",
+      hi: "सूरह {surah} की आयत {ayah} की तफ़्सीर — {author}",
+      bn: "সূরা {surah} এর আয়াত {ayah} এর তাফসীর — {author}",
+      ja: "第{surah}章 {ayah}節のタフシール — {author}",
+      it: "Tafsir del versetto {ayah} della sura {surah} — {author}",
+      pt: "Tafsir do versículo {ayah} da sura {surah} — {author}",
+      ko: "{surah}장 {ayah}절 타프시르 — {author}",
+    },
+    verses: {
+      ar: "آيات",
+      en: "verses",
+      fr: "versets",
+      zh: "节",
+      tr: "ayet",
+      id: "ayat",
+      ms: "ayat",
+      ur: "آیات",
+      es: "aleyas",
+      hi: "आयतें",
+      bn: "আয়াত",
+      ja: "節",
+      it: "versetti",
+      pt: "versículos",
+      ko: "절",
+    },
+  };
+  return messages[key][locale] || messages[key].en;
+}
 
 interface TafseerResult {
   ayah: number;
@@ -149,29 +245,45 @@ export default function TafseerSection() {
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [selectedAyah, setSelectedAyah] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedEdition, setSelectedEdition] = useState(() => defaultTafseerEdition("ar"));
-  // Direction follows the tafseer edition language, not the UI locale.
-  const tafseerDirection = selectedEdition.language === "english" ? "ltr" : "rtl";
+  const [selectedEdition, setSelectedEdition] = useState(() => defaultTafseerEdition(locale));
+  const tafseerDirection = isRtlTafseerLanguage(selectedEdition.language) ? "rtl" : "ltr";
   const [tafseer, setTafseer] = useState<TafseerResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [showEditions, setShowEditions] = useState(false);
   const [showSurahs, setShowSurahs] = useState(false);
-  const [searchResults, setSearchResults] = useState<Surah[]>([]);
+  type VerseSearchHit =
+    | { kind: "surah"; surah: Surah }
+    | { kind: "ayah"; surahNumber: number; ayahNumber: number; text: string; surah?: Surah };
+
+  const [searchResults, setSearchResults] = useState<VerseSearchHit[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const [searchMode, setSearchMode] = useState<'surah' | 'verse'>('surah');
+  const [textSearchLoading, setTextSearchLoading] = useState(false);
+  const [searchMode, setSearchMode] = useState<"surah" | "verse">("surah");
   const [mounted, setMounted] = useState(false);
   const deepLinkHandled = useRef(false);
-  
+  const fetchSeq = useRef(0);
+  const lastFetchKey = useRef("");
+  const textSearchSeq = useRef(0);
+
   const editionsRef = useRef<HTMLDivElement>(null);
   const surahsRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const availableEditions = editionsForLocale(locale);
+  const editionLabel = editionDisplayName(selectedEdition, locale);
+
+  const surahLabel = useCallback(
+    (surah: Surah) => {
+      if (locale === "ar") return `${surah.number}. ${surah.arabic}`;
+      return `${surah.number}. ${surah.name} (${surah.arabic})`;
+    },
+    [locale],
+  );
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Match tafseer language to the UI locale (ar/ur/en); others get English editions first.
+  // Match tafseer source language to the UI locale when the language changes.
   useEffect(() => {
     if (!mounted) return;
     setSelectedEdition(defaultTafseerEdition(locale));
@@ -191,70 +303,135 @@ export default function TafseerSection() {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Search functionality
+  // Verse-mode autocomplete: surah names + Quran text search
   useEffect(() => {
-    if (searchQuery.length > 0) {
-      const results = SURAHS.filter(surah => 
-        surah.arabic.includes(searchQuery) || 
-        surah.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        surah.number.toString().includes(searchQuery)
-      );
-      setSearchResults(results);
-      setShowSearchResults(true);
-    } else {
+    if (searchMode !== "verse") return;
+    const trimmed = searchQuery.trim();
+    if (!trimmed || trimmed.includes(":")) {
       setSearchResults([]);
       setShowSearchResults(false);
+      setTextSearchLoading(false);
+      return;
     }
-  }, [searchQuery]);
 
-  const fetchTafseer = async (
-    surahNumber: number,
-    ayahNumber: number,
-    edition: TafseerEdition = selectedEdition,
-  ) => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/${edition.slug}/${surahNumber}/${ayahNumber}.json`,
-      );
+    const surahHits: VerseSearchHit[] = SURAHS.filter(
+      (surah) =>
+        surah.arabic.includes(trimmed) ||
+        surah.name.toLowerCase().includes(trimmed.toLowerCase()) ||
+        surah.number.toString() === trimmed,
+    )
+      .slice(0, 8)
+      .map((surah) => ({ kind: "surah" as const, surah }));
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    setSearchResults(surahHits);
+    setShowSearchResults(surahHits.length > 0);
+
+    // Debounced full-text ayah search (Arabic or translation language).
+    if (trimmed.length < 2) {
+      setTextSearchLoading(false);
+      return;
+    }
+
+    const seq = ++textSearchSeq.current;
+    setTextSearchLoading(true);
+    const timer = window.setTimeout(async () => {
+      try {
+        const isArabicQuery = /[\u0600-\u06FF]/.test(trimmed);
+        const searchLanguage = isArabicQuery ? "ar" : locale === "ar" ? "ar" : locale;
+        const response = await fetch(
+          `/api/quran/search/${encodeURIComponent(trimmed)}/all/${searchLanguage}`,
+        );
+        if (seq !== textSearchSeq.current) return;
+        if (!response.ok) {
+          setTextSearchLoading(false);
+          return;
+        }
+        const data = await response.json();
+        const matches = (data?.data?.matches || []) as Array<{
+          text?: string;
+          numberInSurah?: number;
+          surah?: { number?: number; name?: string; englishName?: string };
+        }>;
+        const ayahHits: VerseSearchHit[] = matches.slice(0, 12).map((match) => {
+          const surahNumber = match.surah?.number || 0;
+          const surah = SURAHS.find((item) => item.number === surahNumber);
+          return {
+            kind: "ayah" as const,
+            surahNumber,
+            ayahNumber: match.numberInSurah || 1,
+            text: match.text || "",
+            surah,
+          };
+        }).filter((hit) => hit.surahNumber >= 1 && hit.surahNumber <= 114);
+
+        if (seq !== textSearchSeq.current) return;
+        const merged = [...surahHits, ...ayahHits];
+        setSearchResults(merged);
+        setShowSearchResults(merged.length > 0);
+      } catch (error) {
+        if (seq === textSearchSeq.current) {
+          console.error("Tafseer text search failed:", error);
+        }
+      } finally {
+        if (seq === textSearchSeq.current) setTextSearchLoading(false);
       }
+    }, 350);
 
-      const data = await response.json();
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [searchQuery, searchMode, locale]);
 
-      if (data && data.text) {
+  const fetchTafseer = useCallback(
+    async (surahNumber: number, ayahNumber: number, edition: TafseerEdition) => {
+      const key = `${edition.slug}:${surahNumber}:${ayahNumber}`;
+      lastFetchKey.current = key;
+      const seq = ++fetchSeq.current;
+      setLoading(true);
+      try {
+        const response = await fetch(tafseerApiUrl(edition.slug, surahNumber, ayahNumber));
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (seq !== fetchSeq.current) return;
+
+        const displayName = editionDisplayName(edition, locale);
+        if (data && typeof data.text === "string" && data.text.trim()) {
+          setTafseer({
+            ayah: ayahNumber,
+            text: data.text,
+            edition: displayName,
+            author: edition.author,
+          });
+        } else {
+          setTafseer({
+            ayah: ayahNumber,
+            text: tafseerMessage(locale, "unavailable"),
+            edition: displayName,
+            author: edition.author,
+          });
+        }
+      } catch (error) {
+        console.error("Tafseer fetch error:", error);
+        if (seq !== fetchSeq.current) return;
         setTafseer({
           ayah: ayahNumber,
-          text: data.text,
-          edition: edition.name,
+          text: tafseerMessage(locale, "error"),
+          edition: editionDisplayName(edition, locale),
           author: edition.author,
         });
-      } else {
-        setTafseer({
-          ayah: ayahNumber,
-          text: "التفسير غير متوفر لهذه الآية في هذا المصدر.",
-          edition: edition.name,
-          author: edition.author,
-        });
+      } finally {
+        if (seq === fetchSeq.current) setLoading(false);
       }
-    } catch (error) {
-      console.error("Tafseer fetch error:", error);
-      setTafseer({
-        ayah: ayahNumber,
-        text: "التفسير غير متوفر حالياً. يرجى المحاولة لاحقاً.",
-        edition: edition.name,
-        author: edition.author,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [locale],
+  );
 
   // Deep link from Quran reader: /[lang]/sections/tafseer?surah=32&ayah=11
   useEffect(() => {
@@ -268,38 +445,93 @@ export default function TafseerSection() {
     const ayah =
       Number.isFinite(ayahNum) && ayahNum >= 1 && ayahNum <= surah.verses ? ayahNum : 1;
     deepLinkHandled.current = true;
-    const edition = defaultTafseerEdition(locale);
-    setSelectedEdition(edition);
+    setSelectedEdition(defaultTafseerEdition(locale));
     setSelectedSurah(surah);
     setSelectedAyah(ayah);
     setSearchMode("surah");
-    void fetchTafseer(surah.number, ayah, edition);
   }, [mounted, locale]);
 
+  // Auto-fetch when surah / ayah / edition are ready (surah picker + ayah field).
+  useEffect(() => {
+    if (!mounted || !selectedSurah) return;
+    const ayah = Math.min(Math.max(1, selectedAyah || 1), selectedSurah.verses);
+    if (ayah !== selectedAyah) {
+      setSelectedAyah(ayah);
+      return;
+    }
+    const key = `${selectedEdition.slug}:${selectedSurah.number}:${ayah}`;
+    if (lastFetchKey.current === key) return;
+    const timer = window.setTimeout(() => {
+      void fetchTafseer(selectedSurah.number, ayah, selectedEdition);
+    }, 250);
+    return () => window.clearTimeout(timer);
+  }, [mounted, selectedSurah, selectedAyah, selectedEdition, fetchTafseer]);
+
   const handleSurahSelect = (surah: Surah) => {
+    const ayah = Math.min(selectedAyah || 1, surah.verses);
     setSelectedSurah(surah);
+    setSelectedAyah(ayah);
     setShowSurahs(false);
     setSearchQuery("");
     setShowSearchResults(false);
   };
 
-  const handleSearch = () => {
-    if (selectedSurah) {
-      fetchTafseer(selectedSurah.number, selectedAyah);
+  const handleAyahChange = (value: number) => {
+    if (!Number.isFinite(value)) {
+      setSelectedAyah(1);
+      return;
     }
+    const max = selectedSurah?.verses || 286;
+    setSelectedAyah(Math.min(Math.max(1, value), max));
+  };
+
+  const handleEditionSelect = (edition: TafseerEdition) => {
+    setSelectedEdition(edition);
+    setShowEditions(false);
+  };
+
+  const handleSearch = () => {
+    if (!selectedSurah) return;
+    const ayah = Math.min(Math.max(1, selectedAyah || 1), selectedSurah.verses);
+    lastFetchKey.current = "";
+    void fetchTafseer(selectedSurah.number, ayah, selectedEdition);
+  };
+
+  const selectAyahForTafseer = (surahNumber: number, ayahNumber: number) => {
+    const surah = SURAHS.find((s) => s.number === surahNumber);
+    if (!surah || ayahNumber < 1 || ayahNumber > surah.verses) return;
+    setSelectedSurah(surah);
+    setSelectedAyah(ayahNumber);
+    setSearchMode("surah");
+    setSearchQuery("");
+    setShowSearchResults(false);
   };
 
   const handleVerseSearch = () => {
-    if (searchQuery.includes(':')) {
-      const [surahNum, ayahNum] = searchQuery.split(':').map(Number);
-      if (surahNum >= 1 && surahNum <= 114 && ayahNum >= 1) {
-        const surah = SURAHS.find(s => s.number === surahNum);
-        if (surah && ayahNum <= surah.verses) {
-          setSelectedSurah(surah);
-          setSelectedAyah(ayahNum);
-          fetchTafseer(surahNum, ayahNum);
-        }
+    const trimmed = searchQuery.trim();
+    if (!trimmed) return;
+
+    if (trimmed.includes(":")) {
+      const [surahPart, ayahPart] = trimmed.split(":");
+      const surahNum = Number.parseInt(surahPart.replace(/\D/g, ""), 10);
+      const ayahNum = Number.parseInt(ayahPart.replace(/\D/g, ""), 10);
+      if (!Number.isFinite(surahNum) || surahNum < 1 || surahNum > 114 || !Number.isFinite(ayahNum)) {
+        return;
       }
+      selectAyahForTafseer(surahNum, ayahNum);
+      return;
+    }
+
+    const firstAyah = searchResults.find((hit) => hit.kind === "ayah");
+    if (firstAyah && firstAyah.kind === "ayah") {
+      selectAyahForTafseer(firstAyah.surahNumber, firstAyah.ayahNumber);
+      return;
+    }
+
+    const firstSurah = searchResults.find((hit) => hit.kind === "surah");
+    if (firstSurah && firstSurah.kind === "surah") {
+      handleSurahSelect(firstSurah.surah);
+      setSearchMode("surah");
     }
   };
 
@@ -390,7 +622,11 @@ export default function TafseerSection() {
                     aria-haspopup="listbox"
                   >
                     <span className="truncate" suppressHydrationWarning>
-                      {selectedSurah ? `${selectedSurah.number}. ${selectedSurah.arabic}` : (t("quran.select_surah") !== "quran.select_surah" ? t("quran.select_surah") : "اختر السورة")}
+                      {selectedSurah
+                        ? surahLabel(selectedSurah)
+                        : t("quran.select_surah") !== "quran.select_surah"
+                          ? t("quran.select_surah")
+                          : "اختر السورة"}
                     </span>
                     <ChevronDown className="w-5 h-5 text-islamic-gold" aria-hidden="true" />
                   </button>
@@ -400,12 +636,17 @@ export default function TafseerSection() {
                       {SURAHS.map((surah) => (
                         <button
                           key={surah.number}
+                          type="button"
                           onClick={() => handleSurahSelect(surah)}
                           className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
-                          aria-label={`${surah.number}. ${surah.arabic} - ${surah.name} - ${surah.verses} verses`}
+                          aria-label={`${surahLabel(surah)} - ${surah.verses} ${tafseerMessage(locale, "verses")}`}
                         >
-                          <div className="font-semibold text-gray-900 dark:text-white">{surah.number}. {surah.arabic}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">{surah.name} - {surah.verses} آيات</div>
+                          <div className="font-semibold text-gray-900 dark:text-white">
+                            {surahLabel(surah)}
+                          </div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                            {surah.verses} {tafseerMessage(locale, "verses")}
+                          </div>
                         </button>
                       ))}
                     </div>
@@ -425,7 +666,7 @@ export default function TafseerSection() {
                   min="1"
                   max={selectedSurah?.verses || 1}
                   value={selectedAyah}
-                  onChange={(e) => setSelectedAyah(Number(e.target.value))}
+                  onChange={(e) => handleAyahChange(Number(e.target.value))}
                   className="w-full p-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none"
                   aria-label={t("tafseer.verse_number") !== "tafseer.verse_number" ? t("tafseer.verse_number") : "رقم الآية"}
                 />
@@ -449,7 +690,9 @@ export default function TafseerSection() {
               {/* Verse Search Input */}
               <div className="md:col-span-2 relative" ref={searchRef}>
                 <label htmlFor="verse-search-input" className="block text-sm font-semibold mb-2" suppressHydrationWarning>
-                  {t("tafseer.search_verse") !== "tafseer.search_verse" ? t("tafseer.search_verse") : "ابحث عن آية"} (مثال: 2:255 أو البقرة:255)
+                  {t("tafseer.search_example") !== "tafseer.search_example"
+                    ? t("tafseer.search_example")
+                    : "ابحث بالنص أو برقم الآية (مثال: 2:255 أو الحمد لله)"}
                 </label>
                 <div className="relative">
                   <input
@@ -458,35 +701,76 @@ export default function TafseerSection() {
                     type="search"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="مثال: 2:255 أو البقرة:255"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleVerseSearch();
+                      }
+                    }}
+                    placeholder={
+                      t("tafseer.search_placeholder") !== "tafseer.search_placeholder"
+                        ? t("tafseer.search_placeholder")
+                        : "نص آية أو 2:255 أو البقرة"
+                    }
                     className="w-full p-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none"
                     aria-label={t("tafseer.search_verse") !== "tafseer.search_verse" ? t("tafseer.search_verse") : "ابحث عن آية"}
                     autoComplete="off"
                   />
-                  {searchQuery && (
+                  {(searchQuery || textSearchLoading) && (
                     <button
                       onClick={() => setSearchQuery("")}
                       className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                       aria-label={t("clear") || "Clear search"}
                     >
-                      <X className="w-4 h-4" aria-hidden="true" />
+                      {textSearchLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                      ) : (
+                        <X className="w-4 h-4" aria-hidden="true" />
+                      )}
                     </button>
                   )}
                 </div>
                 
                 {showSearchResults && searchResults.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border-2 border-islamic-gold/30 rounded-full shadow-2xl z-50 max-h-60 overflow-y-auto">
-                    {searchResults.map((surah) => (
-                      <button
-                        key={surah.number}
-                        onClick={() => handleSurahSelect(surah)}
-                        className="w-full px-4 py-3 text-left hover:bg-islamic-gold/10 transition-colors duration-300"
-                        aria-label={`${surah.number}. ${surah.arabic} - ${surah.name} - ${surah.verses} verses`}
-                      >
-                        <div className="font-semibold">{surah.number}. {surah.arabic}</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">{surah.name} - {surah.verses} آيات</div>
-                      </button>
-                    ))}
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-2xl z-50 max-h-72 overflow-y-auto">
+                    {searchResults.map((hit) =>
+                      hit.kind === "surah" ? (
+                        <button
+                          key={`surah-${hit.surah.number}`}
+                          type="button"
+                          onClick={() => {
+                            handleSurahSelect(hit.surah);
+                            setSearchMode("surah");
+                          }}
+                          className="w-full px-4 py-3 text-left hover:bg-islamic-gold/10 transition-colors duration-300 border-b border-gray-100 dark:border-gray-700"
+                          aria-label={`${surahLabel(hit.surah)} - ${hit.surah.verses} ${tafseerMessage(locale, "verses")}`}
+                        >
+                          <div className="font-semibold">{surahLabel(hit.surah)}</div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                            {hit.surah.verses} {tafseerMessage(locale, "verses")}
+                          </div>
+                        </button>
+                      ) : (
+                        <button
+                          key={`ayah-${hit.surahNumber}-${hit.ayahNumber}-${hit.text.slice(0, 12)}`}
+                          type="button"
+                          onClick={() => selectAyahForTafseer(hit.surahNumber, hit.ayahNumber)}
+                          className="w-full px-4 py-3 text-left hover:bg-islamic-gold/10 transition-colors duration-300 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                          aria-label={`${hit.surahNumber}:${hit.ayahNumber}`}
+                        >
+                          <div className="font-semibold text-islamic-gold">
+                            {hit.surah ? surahLabel(hit.surah) : hit.surahNumber}:{hit.ayahNumber}
+                          </div>
+                          <div
+                            className="text-sm text-gray-700 dark:text-gray-300 font-arabic line-clamp-2"
+                            dir="rtl"
+                            lang="ar"
+                          >
+                            {hit.text}
+                          </div>
+                        </button>
+                      ),
+                    )}
                   </div>
                 )}
               </div>
@@ -517,33 +801,55 @@ export default function TafseerSection() {
                 type="button"
                 onClick={() => setShowEditions(!showEditions)}
                 className="w-full p-3 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-left flex items-center justify-between"
-                aria-label={t("tafseer.source") !== "tafseer.source" ? `${t("tafseer.source")}: ${selectedEdition.name}` : `مصدر التفسير: ${selectedEdition.name}`}
+                aria-label={
+                  t("tafseer.source") !== "tafseer.source"
+                    ? `${t("tafseer.source")}: ${editionLabel}`
+                    : `مصدر التفسير: ${editionLabel}`
+                }
                 aria-expanded={showEditions}
                 aria-haspopup="listbox"
               >
-                <span className="truncate">{selectedEdition.name}</span>
+                <span className="truncate">{editionLabel}</span>
                 <ChevronDown className="w-5 h-5 text-islamic-gold" aria-hidden="true" />
               </button>
               
               {showEditions && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
-                  {availableEditions.map((edition) => (
-                    <button
-                      key={edition.id}
-                      onClick={() => {
-                        setSelectedEdition(edition);
-                        setShowEditions(false);
-                      }}
-                      className={`w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${
-                        selectedEdition.id === edition.id ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white'
-                      }`}
-                      aria-label={`${edition.name} by ${edition.author}`}
-                      aria-selected={selectedEdition.id === edition.id}
-                    >
-                      <div className="font-semibold">{edition.name}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">{edition.author}</div>
-                    </button>
-                  ))}
+                  {availableEditions.map((edition) => {
+                    const label = editionDisplayName(edition, locale);
+                    return (
+                      <button
+                        key={edition.id}
+                        type="button"
+                        onClick={() => handleEditionSelect(edition)}
+                        className={`w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${
+                          selectedEdition.id === edition.id
+                            ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
+                            : "text-gray-900 dark:text-white"
+                        }`}
+                        aria-label={`${label} by ${edition.author}`}
+                        aria-selected={selectedEdition.id === edition.id}
+                      >
+                        <div
+                          className={`font-semibold ${
+                            edition.language === "arabic" || edition.language === "urdu"
+                              ? "font-arabic"
+                              : ""
+                          }`}
+                          dir={
+                            edition.language === "arabic" || edition.language === "urdu"
+                              ? "rtl"
+                              : "ltr"
+                          }
+                        >
+                          {label}
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          {edition.author}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -566,20 +872,25 @@ export default function TafseerSection() {
                 <h3 className="text-lg font-bold text-islamic-gold">{tafseer.edition}</h3>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                التفسير للآية {tafseer.ayah} من السورة {selectedSurah?.number} - {tafseer.author}
+                {tafseerMessage(locale, "for_ayah")
+                  .replace("{ayah}", String(tafseer.ayah))
+                  .replace("{surah}", selectedSurah ? surahLabel(selectedSurah) : "")
+                  .replace("{author}", tafseer.author)}
               </p>
             </div>
             
             <div className="space-y-4">
               <div className="p-4 bg-light-secondary dark:bg-dark-secondary rounded-xl">
-                <h4 className="text-sm font-semibold text-islamic-gold mb-2">نص التفسير:</h4>
+                <h4 className="text-sm font-semibold text-islamic-gold mb-2">
+                  {tafseerMessage(locale, "text_label")}
+                </h4>
                 <div
                   className={`text-lg leading-relaxed ${tafseerDirection === "rtl" ? "text-right font-arabic" : "text-left font-lexend"}`}
                   dir={tafseerDirection}
                   style={{
-                    lineHeight: '2.5',
-                    wordSpacing: '0.2em',
-                    letterSpacing: '0.05em'
+                    lineHeight: "2.5",
+                    wordSpacing: "0.2em",
+                    letterSpacing: "0.05em",
                   }}
                   data-tafseer-text
                 >
@@ -589,15 +900,13 @@ export default function TafseerSection() {
               
               <div className="flex flex-wrap gap-2">
                 <span className="px-3 py-1 bg-islamic-gold/20 text-islamic-gold rounded-full text-sm">
-                  السورة {selectedSurah?.number}
+                  {selectedSurah ? surahLabel(selectedSurah) : ""}
                 </span>
                 <span className="px-3 py-1 bg-islamic-green/20 text-islamic-green rounded-full text-sm">
-                  الآية {tafseer.ayah}
+                  {tafseer.ayah}
                 </span>
                 <span className="px-3 py-1 bg-islamic-blue/20 text-islamic-blue rounded-full text-sm">
-                  {selectedEdition.language === 'arabic' ? 'عربي' : 
-                   selectedEdition.language === 'english' ? 'English' : 
-                   selectedEdition.language === 'urdu' ? 'اردو' : selectedEdition.language}
+                  {editionLabel}
                 </span>
               </div>
             </div>
@@ -606,7 +915,11 @@ export default function TafseerSection() {
           <div className="text-center text-gray-600 dark:text-gray-400 py-12">
             <Globe className="w-16 h-16 mx-auto mb-4 text-islamic-gold/50" />
             <p className="text-lg mb-2">{t("tafseer.select_instruction")}</p>
-            <p className="text-sm">{t("tafseer.available_translations")}</p>
+            <p className="text-sm">
+              {t("tafseer.available_translations") !== "tafseer.available_translations"
+                ? t("tafseer.available_translations")
+                : t("tafseer.available_languages")}
+            </p>
           </div>
         )}
       </div>

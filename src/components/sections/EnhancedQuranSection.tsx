@@ -11,6 +11,11 @@ import SectionTitleLink from "./SectionTitleLink";
 import { localeDirection, siteConfig } from "@/config/site";
 import { notifyExternalMediaPlay } from "@/lib/media-coordination";
 import { tafseerAyahHref } from "@/lib/tafseer-editions";
+import {
+  getTranslationIdentifier,
+  getTranslationSourceLabel,
+  translationKindLabel,
+} from "@/lib/quran-editions";
 
 interface Ayah {
   number: number;
@@ -328,51 +333,6 @@ export default function EnhancedQuranSection() {
   const targetSurahRef = useRef<number | null>(null);
   const targetAyahRef = useRef<number | null>(null);
 
-  // Language-based translation / tafsir edition mapping
-  const getTranslationIdentifier = (locale: string): string => {
-    const translationMap: { [key: string]: string } = {
-      'ar': 'ar.muyassar',
-      'en': 'en.sahih',
-      'tr': 'tr.diyanet',
-      'ur': 'ur.jalandhry',
-      'id': 'id.indonesian',
-      'ms': 'ms.basmeih',
-      'bn': 'bn.bengali',
-      'fr': 'fr.hamidullah',
-      'zh': 'zh.jian',
-      'it': 'it.piccardo',
-      'ja': 'ja.japanese',
-      'ko': 'ko.korean',
-      'es': 'es.asad',
-      'pt': 'pt.elhayek',
-      'hi': 'hi.hindi',
-    };
-    return translationMap[locale] || 'en.sahih';
-  };
-
-  /** Human-readable source label (not "AR") — matches the edition actually loaded. */
-  const getTranslationSourceLabel = (editionId: string, uiLocale: string): string => {
-    const sources: Record<string, { ar: string; en: string }> = {
-      "ar.muyassar": { ar: "تفسير الميسر", en: "Tafsir Al-Muyassar" },
-      "en.sahih": { ar: "صحيح إنترناشونال", en: "Sahih International" },
-      "tr.diyanet": { ar: "ديانت التركية", en: "Diyanet İşleri" },
-      "ur.jalandhry": { ar: "جالندھری", en: "Fateh Muhammad Jalandhry" },
-      "id.indonesian": { ar: "الترجمة الإندونيسية", en: "Indonesian Ministry of Religious Affairs" },
-      "ms.basmeih": { ar: "بسميق", en: "Abdullah Muhammad Basmeih" },
-      "bn.bengali": { ar: "الترجمة البنغالية", en: "Muhiuddin Khan" },
-      "fr.hamidullah": { ar: "حميد الله", en: "Muhammad Hamidullah" },
-      "zh.jian": { ar: "الترجمة الصينية المبسطة", en: "Ma Jian" },
-      "it.piccardo": { ar: "بيكاردو", en: "Hamza Roberto Piccardo" },
-      "ja.japanese": { ar: "الترجمة اليابانية", en: "Japanese" },
-      "ko.korean": { ar: "الترجمة الكورية", en: "Korean" },
-      "es.asad": { ar: "أسد", en: "Muhammad Asad" },
-      "pt.elhayek": { ar: "الحيك", en: "Samir El-Hayek" },
-      "hi.hindi": { ar: "الترجمة الهندية", en: "Suhel Farooq Khan" },
-    };
-    const entry = sources[editionId];
-    if (!entry) return editionId;
-    return uiLocale === "ar" || uiLocale === "ur" ? entry.ar : entry.en;
-  };
 
   useEffect(() => {
     setMounted(true);
@@ -1833,14 +1793,13 @@ export default function EnhancedQuranSection() {
                 {selectedTranslation &&
                   (translationsLoading || ayahTranslations[ayah.numberInSurah]) && (
                   <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4">
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-2" dir={localeDirection(locale)} data-translation-language>
-                      {selectedTranslation === "ar.muyassar" || selectedTranslation.startsWith("ar.")
-                        ? (mounted && t("quran.translation") !== "quran.translation" ? t("quran.translation") : "التفسير")
-                        : (mounted && t("quran.translation_label") !== "quran.translation_label"
-                          ? t("quran.translation_label")
-                          : mounted && t("quran.translation") !== "quran.translation"
-                            ? t("quran.translation")
-                            : "Translation")}{" "}
+                    <div
+                      className="text-sm text-gray-500 dark:text-gray-400 mb-2 font-arabic"
+                      dir={localeDirection(locale)}
+                      lang={locale === "ar" || locale === "ur" ? locale : undefined}
+                      data-translation-language
+                    >
+                      {mounted ? translationKindLabel(selectedTranslation, locale, t) : "التفسير"}{" "}
                       <span>
                         (
                         {translationSourceName ||

@@ -8,6 +8,12 @@ import { useRouter } from "next/navigation";
 import BidiText from "./BidiText";
 import ShareModal from "./ShareModal";
 import { notifyExternalMediaPlay } from "@/lib/media-coordination";
+import {
+  getTranslationIdentifier,
+  getTranslationSourceLabel,
+  translationKindLabel,
+} from "@/lib/quran-editions";
+import { isSupportedLocale, localeDirection, type SupportedLocale } from "@/config/site";
 
 interface BookmarkedVerse {
   surahNumber: number;
@@ -79,27 +85,9 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
   const audioRef = useRef<HTMLAudioElement>(null);
   const playRequestIdRef = useRef(0);
 
-  // Language-based translation mapping (same as in EnhancedQuranSection)
-  const getTranslationIdentifier = (locale: string): string => {
-    const translationMap: { [key: string]: string } = {
-      'ar': 'ar.muyassar',
-      'en': 'en.sahih',
-      'tr': 'tr.diyanet',
-      'ur': 'ur.jalandhry',
-      'id': 'id.indonesian',
-      'ms': 'ms.basmeih',
-      'bn': 'bn.bengali',
-      'fr': 'fr.hamidullah',
-      'zh': 'zh.jian',
-      'it': 'it.piccardo',
-      'ja': 'ja.japanese',
-      'ko': 'ko.korean',
-      'es': 'es.asad',
-      'pt': 'pt.elhayek',
-      'hi': 'hi.hindi',
-    };
-    return translationMap[locale] || 'en.sahih';
-  };
+  const translationId = getTranslationIdentifier(locale);
+  const translationSource = getTranslationSourceLabel(translationId, locale);
+  const uiLocale: SupportedLocale = isSupportedLocale(locale) ? locale : "en";
 
   useEffect(() => {
     setMounted(true);
@@ -383,7 +371,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     if (!translationText) {
       try {
         const response = await fetch(
-          `/api/quran/ayah/${verse.surahNumber}:${verse.ayahNumber}/${getTranslationIdentifier(locale)}`
+          `/api/quran/ayah/${verse.surahNumber}:${verse.ayahNumber}/${translationId}`
         );
         const data = await response.json();
         if (data.data?.text) {
@@ -556,16 +544,22 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                           </div>
                         )}
                         
-                        {/* Translation */}
+                        {/* Translation / short tafsir — same labeling as Quran section */}
                         {mounted && (
                           <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
-                            <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                              {t("quran.translation") !== "quran.translation" ? t("quran.translation") : "Translation"} ({locale.toUpperCase()})
+                            <div
+                              className="text-sm text-gray-500 dark:text-gray-400 mb-2 font-arabic"
+                              dir={localeDirection(uiLocale)}
+                              lang={uiLocale === "ar" || uiLocale === "ur" ? uiLocale : undefined}
+                              data-translation-language
+                            >
+                              {translationKindLabel(translationId, locale, t)}{" "}
+                              <span>({translationSource})</span>
                             </div>
-                            <AyahTranslation 
-                              surahNumber={verse.surahNumber} 
-                              ayahNumber={verse.ayahNumber} 
-                              translationId={getTranslationIdentifier(locale)}
+                            <AyahTranslation
+                              surahNumber={verse.surahNumber}
+                              ayahNumber={verse.ayahNumber}
+                              translationId={translationId}
                               locale={locale}
                             />
                           </div>

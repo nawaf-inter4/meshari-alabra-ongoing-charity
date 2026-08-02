@@ -325,5 +325,11 @@
   "seo.quran_stories.description": "선택된 꾸란 장에 대한 성찰적 교육 노트 — 지속되는 자선으로.",
   "seo.brand": "메샤리 아흐메드 술라이만 알라브라의 지속적인 자선",
   "quran.translation_label": "번역",
-  "quran.open_tafseer": "상세 타프시르 (이븐 카시르 등)"
+  "quran.open_tafseer": "상세 타프시르 (이븐 카시르 등)",
+  "qibla.compass_hint": "실시간 나침반을 위해 휴대폰을 평평히 들고 모션 접근을 허용하세요.",
+  "qibla.compass_active": "실시간 나침반 활성 · 기기 방향 {heading}°",
+  "qibla.compass_denied": "나침반 접근이 거부되었습니다. 키블라 각도는 표시됩니다.",
+  "qibla.compass_relative": "상대 나침반만 사용 가능하며 정확도가 낮을 수 있습니다.",
+  "tafseer.search_example": "본문 또는 절 번호로 검색 (예: 2:255)",
+  "tafseer.search_placeholder": "절 본문, 2:255 또는 장 이름"
 }

@@ -337,5 +337,11 @@
   "seo.quran_stories.an-naml.description": "Contemplative moments with Surah An-Naml and the story of Solomon (peace be upon him)",
   "seo.quran_stories.title": "Quran Stories & Reflections",
   "seo.quran_stories.description": "Reflective educational notes on selected Quran surahs as ongoing charity for Meshari Ahmed Sulaiman Alabra.",
-  "seo.brand": "Ongoing Charity for Meshari Ahmed Sulaiman Alabra"
+  "seo.brand": "Ongoing Charity for Meshari Ahmed Sulaiman Alabra",
+  "qibla.compass_hint": "Hold your phone flat and allow motion access for a live compass.",
+  "qibla.compass_active": "Live compass active · device heading {heading}°",
+  "qibla.compass_denied": "Compass access was denied. Qibla angle is still shown; enable motion access for live direction.",
+  "qibla.compass_relative": "Only a relative compass is available on this device; accuracy may be lower. Keep the phone flat and retry.",
+  "tafseer.search_example": "Search by text or verse number (e.g. 2:255 or Alhamdulillah)",
+  "tafseer.search_placeholder": "Ayah text, 2:255, or surah name"
 }

@@ -324,5 +324,11 @@
   "seo.quran_stories.description": "Nota reflektif tentang surah pilihan Al-Quran sebagai sedekah jariah.",
   "seo.brand": "Amal Jariah untuk Meshari Ahmed Sulaiman Alabra",
   "quran.translation_label": "Terjemahan",
-  "quran.open_tafseer": "Tafsir penuh (Ibn Kathir & lain-lain)"
+  "quran.open_tafseer": "Tafsir penuh (Ibn Kathir & lain-lain)",
+  "qibla.compass_hint": "Pegang telefon rata dan benarkan akses gerakan untuk kompas langsung.",
+  "qibla.compass_active": "Kompas langsung aktif · arah peranti {heading}°",
+  "qibla.compass_denied": "Akses kompas ditolak. Sudut kiblat masih ditunjukkan; benarkan gerakan untuk arah langsung.",
+  "qibla.compass_relative": "Hanya kompas relatif tersedia; ketepatan mungkin lebih rendah.",
+  "tafseer.search_example": "Cari dengan teks atau nombor ayat (cth. 2:255 atau Alhamdulillah)",
+  "tafseer.search_placeholder": "Teks ayat, 2:255, atau nama surah"
 }

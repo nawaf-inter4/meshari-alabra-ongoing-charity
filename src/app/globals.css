@@ -181,6 +181,18 @@ html.dark {
   border: 0;
 }
 
+/* Reserve space while Amiri swaps in (loaded after first paint for LCP).
+ * Without this, flex items-center re-centers and the verse block jumps up. */
+[data-hero-verse] {
+  min-height: 12.5rem;
+}
+
+@media (min-width: 768px) {
+  [data-hero-verse] {
+    min-height: 16.5rem;
+  }
+}
+
 .hero-verse-bismillah,
 .hero-verse-sadaqallah,
 .hero-verse-main {
@@ -194,6 +206,8 @@ html.dark {
   display: block;
   text-align: center !important;
   unicode-bidi: isolate;
+  /* Avoid inheriting .font-arabic's 2.5 line-height before this rule applies. */
+  line-height: 1.75 !important;
 }
 
 .hero-verse-bismillah,
@@ -212,6 +226,9 @@ html.dark {
     line-height: 1.75 !important;
   }
 
+  [data-hero-verse] {
+    min-height: 11rem;
+  }
 }
 
 /* Bookmark empty-state CTA chevron — CSS instead of framer infinite loop. */
