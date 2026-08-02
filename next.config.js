@@ -11,6 +11,35 @@ const emptyNextPolyfillModule = path.join(
 );
 
 
+/** Allow white-label logo hosts from env (absolute NEXT_PUBLIC_LOGO_* URLs). */
+function remotePatternFromAssetUrl(value) {
+  if (!value || typeof value !== 'string' || !/^https?:\/\//i.test(value)) {
+    return null;
+  }
+  try {
+    const url = new URL(value);
+    return {
+      protocol: url.protocol.replace(':', ''),
+      hostname: url.hostname,
+      ...(url.port ? { port: url.port } : {}),
+      pathname: '/**',
+    };
+  } catch {
+    return null;
+  }
+}
+
+const configuredLogoRemotePatterns = [
+  process.env.NEXT_PUBLIC_LOGO_LIGHT_PATH,
+  process.env.NEXT_PUBLIC_LOGO_DARK_PATH,
+  process.env.NEXT_PUBLIC_LOGO_PATH,
+]
+  .map(remotePatternFromAssetUrl)
+  .filter(Boolean)
+  .filter((pattern, index, list) =>
+    list.findIndex((p) => p.protocol === pattern.protocol && p.hostname === pattern.hostname && p.port === pattern.port) === index,
+  );
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Automated browser tests use a separate directory so their white-label
@@ -154,6 +183,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'i.ytimg.com',
       },
+      ...configuredLogoRemotePatterns,
     ],
   },
 

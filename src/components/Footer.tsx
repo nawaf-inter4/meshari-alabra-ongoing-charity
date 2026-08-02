@@ -9,6 +9,25 @@ import { siteConfig } from "@/config/site";
 
 const ShareModal = dynamic(() => import("./ShareModal"), { ssr: false });
 
+function FooterThemeLogo({
+  src,
+  className,
+}: {
+  src: string;
+  className: string;
+}) {
+  // Absolute white-label URLs: skip next/image host allowlist failures.
+  if (/^https?:\/\//i.test(src)) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- remote white-label logo URL
+      <img src={src} alt="" width={48} height={48} className={className} aria-hidden="true" />
+    );
+  }
+  return (
+    <Image src={src} alt="" width={48} height={48} className={className} aria-hidden="true" />
+  );
+}
+
 export default function Footer() {
   const { t, locale, direction } = useLanguage();
   const [mounted, setMounted] = useState(false);
@@ -144,21 +163,13 @@ export default function Footer() {
         {/* Memorial */}
         <div className="text-center mb-8">
           {/* Theme logos: light mode → logo-light, dark mode → logo-dark (html.dark class) */}
-          <Image
+          <FooterThemeLogo
             src={siteConfig.assets.logoLight}
-            alt=""
-            width={48}
-            height={48}
             className="w-12 h-12 mx-auto mb-4 rounded-full dark:hidden"
-            aria-hidden="true"
           />
-          <Image
+          <FooterThemeLogo
             src={siteConfig.assets.logoDark}
-            alt=""
-            width={48}
-            height={48}
             className="hidden w-12 h-12 mx-auto mb-4 rounded-full dark:block"
-            aria-hidden="true"
           />
           <h3 className={`text-2xl md:text-3xl font-bold mb-2 gradient-text text-center leading-tight py-1 ${safeDirection === 'rtl' ? 'font-arabic' : ''}`}>
             {memoizedTranslations.memorialName}
