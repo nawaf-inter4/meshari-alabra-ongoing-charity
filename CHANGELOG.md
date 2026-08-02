@@ -6,6 +6,13 @@ This project uses [Semantic Versioning](https://semver.org/) and automated relea
 
 Patch and minor changes are batched: Release Please opens one release pull request on `main` that accumulates `fix:` (patch) and `feat:` (minor) commits since the last tag. Merging that pull request publishes the GitHub release and tag.
 
+## [1.3.0](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.2.0...v1.3.0) (2026-08-02)
+
+
+### Features
+
+* LCP, CSP, and Quran/tafseer UX polish ([#46](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/issues/46)) ([4a9e30c](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/commit/4a9e30c3e3797506b8693821c71043e4a8f4135d))
+
 ## [1.2.0](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.1.3...v1.2.0) (2026-08-01)
 
 
