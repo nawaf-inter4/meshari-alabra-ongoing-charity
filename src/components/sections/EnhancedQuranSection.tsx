@@ -231,49 +231,32 @@ const STATIC_AYAHS: { [key: number]: any[] } = {
   ]
 };
 
-// Component for individual ayah translation
-function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: { 
-  surahNumber: number; 
-  ayahNumber: number; 
-  translationId: string; 
-  locale: string; 
+// Renders a prefetched ayah translation/tafsir (one surah-level fetch avoids 429s).
+function AyahTranslation({
+  translationText,
+  locale,
+  loading,
+}: {
+  translationText?: string;
+  locale: string;
+  loading?: boolean;
 }) {
-  const [translationText, setTranslationText] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchTranslation = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${translationId}`);
-        const data = await response.json();
-        if (data.data && data.data.text) {
-          setTranslationText(data.data.text);
-        }
-      } catch (error) {
-        console.error("Error fetching translation:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (translationId) {
-      fetchTranslation();
-    }
-  }, [surahNumber, ayahNumber, translationId]);
-
-  if (loading) {
+  if (loading && !translationText) {
     return <div className="text-gray-500">Loading translation...</div>;
   }
 
+  if (!translationText?.trim()) {
+    return null;
+  }
+
   // RTL languages: Arabic, Urdu, Hebrew, Farsi, Yiddish, Pashto
-  const rtlLanguages = ['ar', 'ur', 'he', 'fa', 'yi', 'ps'];
+  const rtlLanguages = ["ar", "ur", "he", "fa", "yi", "ps"];
   const isRTL = rtlLanguages.includes(locale);
   const textDirection = isRTL ? "rtl" : "ltr";
-  
+
   return (
-    <div 
-      className={isRTL ? "font-arabic text-right leading-relaxed" : "font-lexend text-left leading-relaxed"} 
+    <div
+      className={isRTL ? "font-arabic text-right leading-relaxed" : "font-lexend text-left leading-relaxed"}
       dir={textDirection}
       data-quran-translation
     >
@@ -308,6 +291,8 @@ export default function EnhancedQuranSection() {
   const [reciters, setReciters] = useState<Reciter[]>([]);
   const [selectedReciter, setSelectedReciter] = useState<string>("ar.ahmedajamy");
   const [selectedTranslation, setSelectedTranslation] = useState<string>("");
+  const [ayahTranslations, setAyahTranslations] = useState<Record<number, string>>({});
+  const [translationsLoading, setTranslationsLoading] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAyah, setCurrentAyah] = useState<number>(1);
   const [audioUrl, setAudioUrl] = useState<string>("");
@@ -475,6 +460,60 @@ export default function EnhancedQuranSection() {
       setSelectedTranslation(translationId);
     }
   }, [locale, mounted]);
+
+  // One request per surah+edition — per-ayah bursts hit AlQuranCloud 429 and leave empty tafsir.
+  useEffect(() => {
+    if (!selectedSurah || !selectedTranslation) return;
+
+    const controller = new AbortController();
+    setTranslationsLoading(true);
+    setAyahTranslations({});
+
+    const loadSurahTranslations = async () => {
+      try {
+        const response = await fetch(
+          `/api/quran/surah/${selectedSurah}/${selectedTranslation}`,
+          {
+            headers: { Accept: "application/json" },
+            signal: controller.signal,
+          },
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const data = await response.json();
+        const ayahs = data?.data?.ayahs;
+        if (!Array.isArray(ayahs)) {
+          setAyahTranslations({});
+          return;
+        }
+        const map: Record<number, string> = {};
+        for (const ayah of ayahs) {
+          const n = ayah?.numberInSurah;
+          const text = typeof ayah?.text === "string" ? ayah.text.trim() : "";
+          if (typeof n === "number" && text) {
+            map[n] = text;
+          }
+        }
+        if (!controller.signal.aborted) {
+          setAyahTranslations(map);
+        }
+      } catch (error) {
+        if ((error as Error)?.name === "AbortError") return;
+        console.error("Error fetching surah translations:", error);
+        if (!controller.signal.aborted) {
+          setAyahTranslations({});
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setTranslationsLoading(false);
+        }
+      }
+    };
+
+    void loadSurahTranslations();
+    return () => controller.abort();
+  }, [selectedSurah, selectedTranslation]);
 
   // Search function - optimized for instant results with Arabic text
   const handleSearch = async (keyword: string, signal?: AbortSignal) => {
@@ -1756,18 +1795,18 @@ export default function EnhancedQuranSection() {
                   })()}
                 </div>
 
-                {/* Translation */}
-                {selectedTranslation && (
+                {/* Translation / tafsir — prefetched per surah to avoid empty cards from API 429s */}
+                {selectedTranslation &&
+                  (translationsLoading || ayahTranslations[ayah.numberInSurah]) && (
                   <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4">
                     <div className="text-sm text-gray-500 dark:text-gray-400 mb-2" dir={localeDirection(locale)} data-translation-language>
                       {mounted && t("quran.translation") !== "quran.translation" ? t("quran.translation") : "التفسير"}{" "}
                       <bdi dir="ltr">({locale.toUpperCase()})</bdi>
                     </div>
-                    <AyahTranslation 
-                      surahNumber={selectedSurah} 
-                      ayahNumber={ayah.numberInSurah} 
-                      translationId={selectedTranslation}
+                    <AyahTranslation
+                      translationText={ayahTranslations[ayah.numberInSurah]}
                       locale={locale}
+                      loading={translationsLoading}
                     />
                   </div>
                 )}
