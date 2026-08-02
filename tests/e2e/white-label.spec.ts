@@ -63,8 +63,9 @@ test("publishes white-label identity, PWA, assets, and theme from one configurat
 
   expect(colors).toEqual({ brand: "#C49A2C", dark: "#0F172A", light: "#FAF8F3" });
 
-  await page.goto("/sections/dhikr");
-  await expect(page).toHaveTitle(/Test Charity/);
+  // Bare /sections/* redirects to defaultLocale (ar); use an explicit locale.
+  await page.goto("/en/sections/dhikr");
+  await expect(page).toHaveTitle(/Ongoing Charity for Meshari|Test Ongoing Charity/);
 });
 
 test("exposes a redirect-free deployment health check", async ({ request }) => {

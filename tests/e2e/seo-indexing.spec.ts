@@ -103,6 +103,11 @@ test("every localized Quran story page is self-canonical with schema", async ({ 
     expect(canonical(indexHtml), indexPath).toBe(`${siteUrl}${indexPath}`);
     expectLocaleCluster(hreflangMap(indexHtml), "/sections/quran-stories");
     expect(indexHtml).toContain("section-schema-quran-stories");
+    // Hub cards + story links must be in initial HTML (no client-mount gate).
+    expect(indexHtml).toContain('id="quran-stories"');
+    for (const slug of stories) {
+      expect(indexHtml).toContain(`/${locale}/sections/quran-stories/${slug}`);
+    }
 
     for (const slug of stories) {
       const path = `/${locale}/sections/quran-stories/${slug}`;

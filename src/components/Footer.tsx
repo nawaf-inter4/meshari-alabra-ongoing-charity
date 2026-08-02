@@ -1,10 +1,32 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import dynamic from "next/dynamic";
 import { useLanguage } from "./LanguageProvider";
-import { Heart, Share2, Github } from "lucide-react";
-import ShareModal from "./ShareModal";
+import { Share2, Github } from "lucide-react";
+import Image from "next/image";
 import { siteConfig } from "@/config/site";
+
+const ShareModal = dynamic(() => import("./ShareModal"), { ssr: false });
+
+function FooterThemeLogo({
+  src,
+  className,
+}: {
+  src: string;
+  className: string;
+}) {
+  // Absolute white-label URLs: skip next/image host allowlist failures.
+  if (/^https?:\/\//i.test(src)) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- remote white-label logo URL
+      <img src={src} alt="" width={48} height={48} className={className} aria-hidden="true" />
+    );
+  }
+  return (
+    <Image src={src} alt="" width={48} height={48} className={className} aria-hidden="true" />
+  );
+}
 
 export default function Footer() {
   const { t, locale, direction } = useLanguage();
@@ -133,11 +155,22 @@ export default function Footer() {
   };
 
   return (
-    <footer className="py-12 px-4 bg-light-secondary dark:bg-dark-secondary border-t-2 border-islamic-gold/30">
+    <footer className="py-12 px-4 bg-light-secondary dark:bg-dark-secondary">
       <div className="max-w-6xl mx-auto">
+        {/* Soft edge above footer (same treatment as social divider below) */}
+        <div className="mb-8 h-px bg-gradient-to-r from-transparent via-islamic-gold to-transparent" aria-hidden="true" />
+
         {/* Memorial */}
         <div className="text-center mb-8">
-          <Heart className="w-12 h-12 text-islamic-gold mx-auto mb-4" fill="currentColor" />
+          {/* Theme logos: light mode → logo-light, dark mode → logo-dark (html.dark class) */}
+          <FooterThemeLogo
+            src={siteConfig.assets.logoLight}
+            className="w-12 h-12 mx-auto mb-4 rounded-full dark:hidden"
+          />
+          <FooterThemeLogo
+            src={siteConfig.assets.logoDark}
+            className="hidden w-12 h-12 mx-auto mb-4 rounded-full dark:block"
+          />
           <h3 className={`text-2xl md:text-3xl font-bold mb-2 gradient-text text-center leading-tight py-1 ${safeDirection === 'rtl' ? 'font-arabic' : ''}`}>
             {memoizedTranslations.memorialName}
           </h3>
@@ -164,12 +197,13 @@ export default function Footer() {
               {memoizedTranslations.share}
             </button>
             
-            {/* Share Modal */}
-            <ShareModal
-              isOpen={isShareModalOpen}
-              onClose={() => setIsShareModalOpen(false)}
-              mode="website"
-            />
+            {isShareModalOpen ? (
+              <ShareModal
+                isOpen
+                onClose={() => setIsShareModalOpen(false)}
+                mode="website"
+              />
+            ) : null}
             
             {siteConfig.social.links.map((link) => {
               const isX = link.includes('x.com/') || link.includes('twitter.com/');
@@ -205,21 +239,28 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Quranic Verse */}
+        {/* Quranic Verse — Amiri stack (same as hero / surah body), never UI Tajawal. */}
         <div className="text-center mb-8">
-          <div className="space-y-6">
-            {/* Bismillah */}
-            <p className={`text-xl md:text-2xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed`}>
+          <div className="space-y-3">
+            <p
+              className="hero-verse-bismillah text-center text-xl md:text-2xl font-arabic arabic-quran-text text-islamic-green"
+              dir="rtl"
+              lang="ar"
+            >
               {getQuranVerse('bismillah')}
             </p>
-            
-            {/* Quran Verse */}
-            <p className={`text-2xl md:text-3xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-gold leading-[2.5] max-w-4xl mx-auto`} style={{ lineHeight: '2.5' }}>
+            <p
+              className="hero-verse-main text-center text-2xl md:text-3xl font-arabic arabic-quran-text text-islamic-gold max-w-4xl mx-auto"
+              dir="rtl"
+              lang="ar"
+            >
               {getQuranVerse('verse')}
             </p>
-            
-            {/* Sadaqallah */}
-            <p className={`text-lg md:text-xl ${safeDirection === 'rtl' ? 'font-arabic' : ''} text-islamic-green leading-relaxed`}>
+            <p
+              className="hero-verse-sadaqallah text-center text-lg md:text-xl font-arabic arabic-quran-text text-islamic-green"
+              dir="rtl"
+              lang="ar"
+            >
               {getQuranVerse('sadaqallah')}
             </p>
           </div>

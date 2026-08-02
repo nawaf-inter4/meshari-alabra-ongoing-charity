@@ -3,11 +3,19 @@
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
+import { revealUp } from "@/lib/safe-motion";
 import { BookOpen, ChevronDown, Play, Pause, Volume2, Download, Share2, Bookmark, BookmarkCheck, Search, X } from "lucide-react";
 import ShareModal from "../ShareModal";
 import BidiText from "../BidiText";
 import SectionTitleLink from "./SectionTitleLink";
 import { localeDirection, siteConfig } from "@/config/site";
+import { notifyExternalMediaPlay } from "@/lib/media-coordination";
+import { tafseerAyahHref } from "@/lib/tafseer-editions";
+import {
+  formatTranslationAttribution,
+  getTranslationIdentifier,
+  getTranslationSourceLabel,
+} from "@/lib/quran-editions";
 
 interface Ayah {
   number: number;
@@ -229,49 +237,32 @@ const STATIC_AYAHS: { [key: number]: any[] } = {
   ]
 };
 
-// Component for individual ayah translation
-function AyahTranslation({ surahNumber, ayahNumber, translationId, locale }: { 
-  surahNumber: number; 
-  ayahNumber: number; 
-  translationId: string; 
-  locale: string; 
+// Renders a prefetched ayah translation/tafsir (one surah-level fetch avoids 429s).
+function AyahTranslation({
+  translationText,
+  locale,
+  loading,
+}: {
+  translationText?: string;
+  locale: string;
+  loading?: boolean;
 }) {
-  const [translationText, setTranslationText] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchTranslation = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${translationId}`);
-        const data = await response.json();
-        if (data.data && data.data.text) {
-          setTranslationText(data.data.text);
-        }
-      } catch (error) {
-        console.error("Error fetching translation:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (translationId) {
-      fetchTranslation();
-    }
-  }, [surahNumber, ayahNumber, translationId]);
-
-  if (loading) {
+  if (loading && !translationText) {
     return <div className="text-gray-500">Loading translation...</div>;
   }
 
+  if (!translationText?.trim()) {
+    return null;
+  }
+
   // RTL languages: Arabic, Urdu, Hebrew, Farsi, Yiddish, Pashto
-  const rtlLanguages = ['ar', 'ur', 'he', 'fa', 'yi', 'ps'];
+  const rtlLanguages = ["ar", "ur", "he", "fa", "yi", "ps"];
   const isRTL = rtlLanguages.includes(locale);
   const textDirection = isRTL ? "rtl" : "ltr";
-  
+
   return (
-    <div 
-      className={isRTL ? "font-arabic text-right leading-relaxed" : "font-lexend text-left leading-relaxed"} 
+    <div
+      className={isRTL ? "font-arabic text-right leading-relaxed" : "font-lexend text-left leading-relaxed"}
       dir={textDirection}
       data-quran-translation
     >
@@ -306,6 +297,9 @@ export default function EnhancedQuranSection() {
   const [reciters, setReciters] = useState<Reciter[]>([]);
   const [selectedReciter, setSelectedReciter] = useState<string>("ar.ahmedajamy");
   const [selectedTranslation, setSelectedTranslation] = useState<string>("");
+  const [ayahTranslations, setAyahTranslations] = useState<Record<number, string>>({});
+  const [translationsLoading, setTranslationsLoading] = useState(false);
+  const [translationSourceName, setTranslationSourceName] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAyah, setCurrentAyah] = useState<number>(1);
   const [audioUrl, setAudioUrl] = useState<string>("");
@@ -330,6 +324,7 @@ export default function EnhancedQuranSection() {
   const [skipAnimations, setSkipAnimations] = useState(false);
   
   const audioRef = useRef<HTMLAudioElement>(null);
+  const playRequestIdRef = useRef(0);
   const searchRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const reciterDropdownRef = useRef<HTMLDivElement>(null);
@@ -338,27 +333,6 @@ export default function EnhancedQuranSection() {
   const targetSurahRef = useRef<number | null>(null);
   const targetAyahRef = useRef<number | null>(null);
 
-  // Language-based translation mapping
-  const getTranslationIdentifier = (locale: string): string => {
-    const translationMap: { [key: string]: string } = {
-      'ar': 'ar.muyassar',
-      'en': 'en.sahih',
-      'tr': 'tr.diyanet',
-      'ur': 'ur.jalandhry',
-      'id': 'id.indonesian',
-      'ms': 'ms.basmeih',
-      'bn': 'bn.bengali',
-      'fr': 'fr.hamidullah',
-      'zh': 'zh.jian',
-      'it': 'it.piccardo',
-      'ja': 'ja.japanese',
-      'ko': 'ko.korean',
-      'es': 'es.asad',
-      'pt': 'pt.elhayek',
-      'hi': 'hi.hindi',
-    };
-    return translationMap[locale] || 'en.sahih';
-  };
 
   useEffect(() => {
     setMounted(true);
@@ -472,6 +446,64 @@ export default function EnhancedQuranSection() {
       setSelectedTranslation(translationId);
     }
   }, [locale, mounted]);
+
+  // One request per surah+edition — per-ayah bursts hit AlQuranCloud 429 and leave empty tafsir.
+  useEffect(() => {
+    if (!selectedSurah || !selectedTranslation) return;
+
+    const controller = new AbortController();
+    setTranslationsLoading(true);
+    setAyahTranslations({});
+    setTranslationSourceName(getTranslationSourceLabel(selectedTranslation, locale));
+
+    const loadSurahTranslations = async () => {
+      try {
+        const response = await fetch(
+          `/api/quran/surah/${selectedSurah}/${selectedTranslation}`,
+          {
+            headers: { Accept: "application/json" },
+            signal: controller.signal,
+          },
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const data = await response.json();
+        const ayahs = data?.data?.ayahs;
+        if (!Array.isArray(ayahs)) {
+          setAyahTranslations({});
+          return;
+        }
+        const map: Record<number, string> = {};
+        for (const ayah of ayahs) {
+          const n = ayah?.numberInSurah;
+          const text = typeof ayah?.text === "string" ? ayah.text.trim() : "";
+          if (typeof n === "number" && text) {
+            map[n] = text;
+          }
+        }
+        if (!controller.signal.aborted) {
+          setAyahTranslations(map);
+          // Keep curated labels — API edition.name uses Farsi yeh (ی) that
+          // subset UI fonts cannot render (tofu □ in Chrome/Safari).
+          setTranslationSourceName(getTranslationSourceLabel(selectedTranslation, locale));
+        }
+      } catch (error) {
+        if ((error as Error)?.name === "AbortError") return;
+        console.error("Error fetching surah translations:", error);
+        if (!controller.signal.aborted) {
+          setAyahTranslations({});
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setTranslationsLoading(false);
+        }
+      }
+    };
+
+    void loadSurahTranslations();
+    return () => controller.abort();
+  }, [selectedSurah, selectedTranslation]);
 
   // Search function - optimized for instant results with Arabic text
   const handleSearch = async (keyword: string, signal?: AbortSignal) => {
@@ -1102,44 +1134,56 @@ export default function EnhancedQuranSection() {
 
 
 
+  const pauseAyah = () => {
+    // Invalidate in-flight fetch/play so a late response cannot restart audio.
+    playRequestIdRef.current += 1;
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setIsPlaying(false);
+    setAudioLoading(false);
+  };
+
   const playAyah = async (surahNumber: number, ayahNumber: number) => {
+    const requestId = ++playRequestIdRef.current;
     try {
-      // Playing ayah with selected reciter
-      
       // Stop any currently playing audio
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      
+
       setCurrentAyah(ayahNumber);
       setAudioLoading(true);
       setIsPlaying(true);
-      
-      // First, fetch the ayah data to get the audio URL
+      notifyExternalMediaPlay("quran");
+
       const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${selectedReciter}`);
+      if (requestId !== playRequestIdRef.current) return;
       if (!response.ok) {
         throw new Error(`Quran audio request failed with status ${response.status}`);
       }
       const data = await response.json();
-      
+      if (requestId !== playRequestIdRef.current) return;
+
       if (data.data?.audio && (!data.data.edition || data.data.edition.format === "audio")) {
-        // Found audio URL
-        
         if (audioRef.current) {
           audioRef.current.src = data.data.audio;
           audioRef.current.load();
-          
+
           try {
             await audioRef.current.play();
-            // Audio playback started successfully
+            if (requestId !== playRequestIdRef.current) {
+              audioRef.current.pause();
+              return;
+            }
             setAudioLoading(false);
           } catch (playError) {
+            if (requestId !== playRequestIdRef.current) return;
             console.error("Error playing audio:", playError);
             setIsPlaying(false);
             setAudioLoading(false);
-            
-            // Show user-friendly error message
+
             alert(locale === "ar"
               ? "تعذر تشغيل صوت هذه الآية. يرجى المحاولة مرة أخرى أو اختيار قارئ آخر."
               : "This verse audio could not be played. Please try again or choose another reciter.");
@@ -1150,6 +1194,7 @@ export default function EnhancedQuranSection() {
         throw new Error("No valid audio edition URL found");
       }
     } catch (error) {
+      if (requestId !== playRequestIdRef.current) return;
       console.error("Error in playAyah:", error);
       setIsPlaying(false);
       setAudioLoading(false);
@@ -1159,28 +1204,41 @@ export default function EnhancedQuranSection() {
     }
   };
 
-  const togglePlayPause = async () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-        // Audio paused
-      } else {
-        if (audioRef.current.src) {
-          try {
-            await audioRef.current.play();
-            setIsPlaying(true);
-            // Audio resumed
-          } catch (error) {
-            console.error("Error resuming audio:", error);
-          }
-        } else {
-          // If no audio is loaded, play the current ayah
-          // No audio loaded, playing current ayah
-          await playAyah(selectedSurah, currentAyah);
-        }
-      }
+  const togglePlayPause = async (surahNumber?: number, ayahNumber?: number) => {
+    const targetSurah = surahNumber ?? selectedSurah;
+    const targetAyah = ayahNumber ?? currentAyah;
+    const sameAyah =
+      currentAyah === targetAyah && Number(selectedSurah) === Number(targetSurah);
+    const audio = audioRef.current;
+    const activelyPlaying =
+      sameAyah &&
+      (isPlaying || audioLoading || (audio != null && !audio.paused && Boolean(audio.src)));
+
+    // Pause must win even while the ayah URL is still loading (no src yet).
+    // Previously a missing src fell through to playAyah() and looked like "replay".
+    if (activelyPlaying) {
+      pauseAyah();
+      return;
     }
+
+    if (
+      sameAyah &&
+      audio?.src &&
+      !audio.ended &&
+      audio.paused
+    ) {
+      try {
+        notifyExternalMediaPlay("quran");
+        setIsPlaying(true);
+        await audio.play();
+      } catch (error) {
+        console.error("Error resuming audio:", error);
+        await playAyah(targetSurah, targetAyah);
+      }
+      return;
+    }
+
+    await playAyah(targetSurah, targetAyah);
   };
 
   const currentSurah = surahs.find((s) => s.number === selectedSurah);
@@ -1223,10 +1281,7 @@ export default function EnhancedQuranSection() {
     <section id="quran" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          {...revealUp}
           className="text-center mb-12"
         >
           <div className="inline-flex items-center gap-2 mb-4">
@@ -1250,10 +1305,10 @@ export default function EnhancedQuranSection() {
           </div>
         ) : (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ y: 14 }}
+            whileInView={{ y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.4, delay: 0.08, ease: [0.25, 0.1, 0.25, 1] }}
             className="grid md:grid-cols-2 gap-4 mb-8"
           >
           {/* Surah Selection */}
@@ -1267,7 +1322,6 @@ export default function EnhancedQuranSection() {
                 type="button"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="w-full p-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
-                aria-label={currentSurah ? `${currentSurah.number}. ${locale === 'ar' ? currentSurah.name : currentSurah.englishName} - ${locale === 'ar' ? currentSurah.englishName : currentSurah.name} - ${currentSurah.numberOfAyahs} ${versesLabel}` : (t("quran.select_surah") || "Select Surah")}
                 aria-expanded={isDropdownOpen}
                 aria-haspopup="listbox"
                 data-surah-select-trigger
@@ -1332,7 +1386,6 @@ export default function EnhancedQuranSection() {
                 type="button"
                 onClick={() => setIsReciterDropdownOpen(!isReciterDropdownOpen)}
                 className="w-full p-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
-                aria-label={mounted && t("quran.select_reciter") !== "quran.select_reciter" ? t("quran.select_reciter") : "اختر القارئ"}
                 aria-expanded={isReciterDropdownOpen}
                 aria-haspopup="listbox"
               >
@@ -1408,10 +1461,10 @@ export default function EnhancedQuranSection() {
 
         {/* Search Bar */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          initial={{ y: 14 }}
+          whileInView={{ y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.4, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
           className="mb-8"
           ref={searchRef}
         >
@@ -1565,22 +1618,21 @@ export default function EnhancedQuranSection() {
             : t('quran.meccan');
           return (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              initial={{ scale: 0.98, y: 8 }}
+              whileInView={{ scale: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
               className="text-center mb-8 p-8 bg-gradient-to-r from-islamic-gold/20 via-islamic-green/20 to-islamic-blue/20 rounded-2xl border-2 border-islamic-gold/30"
             >
-              <h3 
-                className="text-3xl md:text-4xl font-bold text-islamic-gold text-center mb-20" 
-                style={{ 
+              <h3
+                className="surah-name-title arabic-quran-text text-3xl md:text-4xl font-bold text-islamic-gold text-center mb-20"
+                style={{
                   display: 'block',
                   width: '100%',
                   direction: hasArabic ? 'rtl' : 'ltr',
                   unicodeBidi: hasArabic ? 'plaintext' : 'normal',
-                  fontFamily: 'Amiri',
                   paddingTop: '10px',
-                  paddingBottom: '10px'
+                  paddingBottom: '10px',
                 }}
               >
                 {surahName}
@@ -1628,18 +1680,9 @@ export default function EnhancedQuranSection() {
             </div>
             {/* Bismillah - only show for surahs other than Al-Fatihah */}
             {selectedSurah !== 1 && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6 }}
-                className="text-center mb-8 text-lg text-islamic-gold motion-safe"
-                style={{
-                  willChange: 'opacity',
-                  transform: 'translateZ(0)',
-                }}
-              >
+              <p className="text-center mb-8 text-lg text-islamic-gold">
                 ﷽
-              </motion.p>
+              </p>
             )}
             {usingStaticFallback && (
               <div className="text-center mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-600 rounded-lg">
@@ -1652,11 +1695,19 @@ export default function EnhancedQuranSection() {
               <motion.div
                 key={ayah.number}
                 data-ayah-number={ayah.numberInSurah}
-                initial={skipAnimations ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                whileInView={skipAnimations ? {} : { opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={skipAnimations ? { duration: 0 } : { duration: 0.6, delay: index * 0.1 }}
-                className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700"
+                initial={skipAnimations ? false : { y: 10 }}
+                whileInView={skipAnimations ? undefined : { y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={
+                  skipAnimations
+                    ? { duration: 0 }
+                    : {
+                        duration: 0.35,
+                        delay: Math.min(index * 0.03, 0.15),
+                        ease: [0.25, 0.1, 0.25, 1],
+                      }
+                }
+                className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200 dark:border-gray-700"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
@@ -1670,7 +1721,7 @@ export default function EnhancedQuranSection() {
                   
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => playAyah(selectedSurah, ayah.numberInSurah)}
+                      onClick={() => void togglePlayPause(selectedSurah, ayah.numberInSurah)}
                       className="p-2 rounded-full bg-islamic-gold/20 hover:bg-islamic-gold/30 transition-colors duration-300"
                       disabled={audioLoading && currentAyah === ayah.numberInSurah}
                       aria-label={isPlaying && currentAyah === ayah.numberInSurah 
@@ -1732,21 +1783,38 @@ export default function EnhancedQuranSection() {
                   })()}
                 </div>
 
-                {/* Translation */}
-                {selectedTranslation && (
+                {/* Translation / short tafsir — prefetched per surah to avoid empty cards from API 429s */}
+                {selectedTranslation &&
+                  (translationsLoading || ayahTranslations[ayah.numberInSurah]) && (
                   <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4">
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mb-2" dir={localeDirection(locale)} data-translation-language>
-                      {mounted && t("quran.translation") !== "quran.translation" ? t("quran.translation") : "التفسير"}{" "}
-                      <bdi dir="ltr">({locale.toUpperCase()})</bdi>
+                    <div
+                      className="text-sm text-gray-500 dark:text-gray-400 mb-2 font-tajwal leading-normal"
+                      dir={localeDirection(locale)}
+                      lang={locale === "ar" || locale === "ur" ? locale : undefined}
+                      data-translation-language
+                    >
+                      {mounted
+                        ? formatTranslationAttribution(selectedTranslation, locale, t)
+                        : translationSourceName || "تفسير الميسر"}
                     </div>
-                    <AyahTranslation 
-                      surahNumber={selectedSurah} 
-                      ayahNumber={ayah.numberInSurah} 
-                      translationId={selectedTranslation}
+                    <AyahTranslation
+                      translationText={ayahTranslations[ayah.numberInSurah]}
                       locale={locale}
+                      loading={translationsLoading}
                     />
                   </div>
                 )}
+                <a
+                  href={tafseerAyahHref(locale, selectedSurah, ayah.numberInSurah)}
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-islamic-gold hover:text-islamic-green transition-colors"
+                >
+                  <BookOpen className="w-4 h-4" aria-hidden="true" />
+                  {mounted && t("quran.open_tafseer") !== "quran.open_tafseer"
+                    ? t("quran.open_tafseer")
+                    : locale === "ar"
+                      ? "تفسير مفصّل (ابن كثير وغيره)"
+                      : "Full tafseer (Ibn Kathir & more)"}
+                </a>
               </motion.div>
             ))}
           </div>

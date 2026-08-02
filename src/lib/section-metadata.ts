@@ -8,6 +8,13 @@ import {
 } from "@/config/site";
 import { translate } from "@/lib/translations";
 import { SECTION_IDS, isSectionId, type SectionId } from "@/lib/routes";
+import {
+  enrichMemorialDescription,
+  formatMemorialTitle,
+  getSectionKeywords,
+  memorialLegalName,
+  seoLead,
+} from "@/lib/seo";
 
 export { SECTION_IDS, isSectionId };
 export type { SectionId };
@@ -33,6 +40,19 @@ const sectionSeoKeys: Partial<Record<SectionId, { title: string; description: st
   },
 };
 
+const sectionSchemaType: Record<SectionId, string> = {
+  quran: "WebApplication",
+  tafseer: "WebPage",
+  dhikr: "WebApplication",
+  "prayer-times": "WebApplication",
+  qibla: "WebApplication",
+  donation: "WebPage",
+  supplications: "WebPage",
+  hadith: "WebPage",
+  youtube: "CollectionPage",
+  "quran-stories": "CollectionPage",
+};
+
 export function getSectionCopy(sectionId: SectionId, locale: SupportedLocale) {
   const keys = sectionKeys[sectionId];
   const configuredTranslations = siteConfig.content.translations[locale] || {};
@@ -52,23 +72,23 @@ export function getSectionCopy(sectionId: SectionId, locale: SupportedLocale) {
 
 function getSectionSeo(sectionId: SectionId, locale: SupportedLocale) {
   const { title: uiTitle, description: uiDescription } = getSectionCopy(sectionId, locale);
-  const siteName = siteConfig.identity.shortName;
   const seoKeys = sectionSeoKeys[sectionId];
   const seoTitleKey = seoKeys?.title ?? `seo.${sectionId}.title`;
   const seoDescriptionKey = seoKeys?.description ?? `seo.${sectionId}.description`;
   const seoTitle = translate(locale, seoTitleKey);
   const seoDescription = translate(locale, seoDescriptionKey);
 
-  // Keep the localized SEO lead-in, but always end with the configured short name
-  // so white-label deployments stay brand-correct.
-  const title =
-    seoTitle !== seoTitleKey
-      ? `${seoTitle.split("|")[0].trim()} | ${siteName}`
-      : `${uiTitle} | ${siteName}`;
+  // Brand (localized charity + full name) | localized section topic/keywords.
+  const localizedLead =
+    seoTitle !== seoTitleKey ? seoLead(seoTitle, uiTitle) : uiTitle;
+  const title = formatMemorialTitle(locale, localizedLead);
+  const rawDescription =
+    seoDescription !== seoDescriptionKey ? seoDescription : uiDescription;
 
   return {
     title,
-    description: seoDescription !== seoDescriptionKey ? seoDescription : uiDescription,
+    description: enrichMemorialDescription(rawDescription, locale),
+    localizedLead,
   };
 }
 
@@ -97,8 +117,8 @@ export function generateSectionMetadata(
   const currentLang: SupportedLocale = isSupportedLocale(lang)
     ? lang
     : siteConfig.identity.defaultLocale;
-  const { title, description } = getSectionSeo(sectionId, currentLang);
-  const siteName = siteConfig.identity.shortName;
+  const { title, description, localizedLead } = getSectionSeo(sectionId, currentLang);
+  const brandName = memorialLegalName();
   
   const siteUrl = siteConfig.identity.siteUrl;
   const canonicalUrl = `${siteUrl}/${currentLang}/sections/${sectionId}`;
@@ -115,22 +135,16 @@ export function generateSectionMetadata(
     ],
   ]);
 
-  // Get comprehensive keywords for this section and language
-  const sectionSpecificKeywords = siteConfig.seo.keywords || [];
-  const baseKeywords = [
+  const allKeywords = getSectionKeywords(sectionId, currentLang, [
     title,
-    description,
-    siteName,
-    siteConfig.content.memorialLegalName,
-    currentLang === 'ar' ? 'صدقة جارية' : 'Ongoing Charity',
+    localizedLead,
     siteConfig.identity.name,
-  ];
-  const allKeywords = [...baseKeywords, ...sectionSpecificKeywords].filter(Boolean);
+  ]);
 
   return {
     title,
     description,
-    keywords: allKeywords.join(', '),
+    keywords: allKeywords,
     category: sectionId,
     authors: [{ name: siteConfig.identity.organizationName }],
     creator: siteConfig.identity.organizationName,
@@ -144,7 +158,7 @@ export function generateSectionMetadata(
       title,
       description,
       url: canonicalUrl,
-      siteName,
+      siteName: siteConfig.identity.name,
       images: [
         {
           url: siteAssetUrl(siteConfig.assets.openGraphImage),
@@ -178,6 +192,7 @@ export function generateSectionMetadata(
     },
     other: {
       'language': currentLang,
+      'og:site_name': brandName,
     },
   };
 }
@@ -189,48 +204,68 @@ export function generateSectionSchema(
   const currentLang: SupportedLocale = isSupportedLocale(lang)
     ? lang
     : siteConfig.identity.defaultLocale;
-  const { title, description } = getSectionSeo(sectionId, currentLang);
+  const { title, description, localizedLead } = getSectionSeo(sectionId, currentLang);
   const { title: sectionTitle } = getSectionCopy(sectionId, currentLang);
-  const siteName = siteConfig.identity.shortName;
+  const keywords = getSectionKeywords(sectionId, currentLang, [localizedLead, sectionTitle]);
   
   const siteUrl = siteConfig.identity.siteUrl;
   const url = `${siteUrl}/${currentLang}/sections/${sectionId}`;
+  const schemaType = sectionSchemaType[sectionId];
 
   return {
     '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    '@id': `${url}#section`,
-    name: title,
-    description,
-    url,
-    inLanguage: currentLang,
-    isPartOf: {
-      '@type': 'WebSite',
-      name: siteName,
-      url: siteUrl,
-    },
-    breadcrumb: {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: currentLang === 'ar' ? 'الرئيسية' : 'Home',
-          item: `${siteUrl}/${currentLang}`,
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: sectionTitle,
-          item: url,
-        },
-      ],
-    },
-    about: {
-      '@type': 'Person',
-      '@id': `${siteUrl}/#person`,
-      name: siteConfig.content.memorialLegalName,
-    },
+    '@graph': [
+      {
+        '@type': schemaType,
+        '@id': `${url}#section`,
+        name: title,
+        headline: localizedLead,
+        description,
+        keywords: keywords.join(', '),
+        url,
+        inLanguage: currentLang,
+        isPartOf: { '@id': `${siteUrl}/#website` },
+        about: { '@id': `${siteUrl}/#person` },
+        mainEntityOfPage: url,
+        image: siteAssetUrl(siteConfig.assets.openGraphImage),
+        ...(schemaType === 'WebApplication'
+          ? {
+              applicationCategory: 'LifestyleApplication',
+              operatingSystem: 'Any',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+              },
+            }
+          : {}),
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${url}#breadcrumb`,
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: currentLang === 'ar' ? 'الرئيسية' : 'Home',
+            item: `${siteUrl}/${currentLang}`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: sectionTitle,
+            item: url,
+          },
+        ],
+      },
+      {
+        '@type': 'Person',
+        '@id': `${siteUrl}/#person`,
+        name: memorialLegalName(),
+        alternateName: siteConfig.content.memorialAlternateName,
+        deathDate: siteConfig.content.memorialDeathDate,
+      },
+    ],
   };
 }
 

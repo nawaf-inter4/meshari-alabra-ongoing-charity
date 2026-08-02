@@ -77,7 +77,7 @@ body:focus ::-webkit-scrollbar-thumb {
 html {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
 }
 
 html:hover,
@@ -99,25 +99,22 @@ html:active {
   background: var(--color-brand) !important;
 }
 
-/* Loading shimmer */
-.shimmer {
+/*
+ * Deferred shimmer tweak — keep transform-only (critical def in globals.css).
+ * Slightly brighter band once deferred CSS loads; no background-position.
+ */
+.shimmer::after {
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.2) 20%,
-    rgba(255, 255, 255, 0.5) 60%,
-    rgba(255, 255, 255, 0)
+    rgba(255, 255, 255, 0.2) 45%,
+    rgba(255, 255, 255, 0) 100%
   );
-  animation: deferred-shimmer 2s infinite;
-  background-size: 200% 100%;
 }
 
-@keyframes deferred-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
+@media (prefers-reduced-motion: reduce) {
+  .shimmer::after {
+    animation: none !important;
   }
 }
 

@@ -1,12 +1,34 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type SyntheticEvent } from "react";
+import { notifyExternalMediaPlay } from "@/lib/media-coordination";
 
 interface NativeYouTubeIframeProps {
   src: string;
   title: string;
   className?: string;
   iframeClassName?: string;
+}
+
+function withJsApi(src: string): string {
+  try {
+    const url = new URL(src, "https://www.youtube.com");
+    if (!url.searchParams.has("enablejsapi")) {
+      url.searchParams.set("enablejsapi", "1");
+    }
+    // YouTube rejects enablejsapi origin on plain HTTP localhost — omit there.
+    if (
+      typeof window !== "undefined" &&
+      !url.searchParams.has("origin") &&
+      window.location.protocol === "https:"
+    ) {
+      url.searchParams.set("origin", window.location.origin);
+    }
+    return url.toString();
+  } catch {
+    const joiner = src.includes("?") ? "&" : "?";
+    return `${src}${joiner}enablejsapi=1`;
+  }
 }
 
 export default function NativeYouTubeIframe({
@@ -17,6 +39,11 @@ export default function NativeYouTubeIframe({
 }: NativeYouTubeIframeProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
+  const [embedSrc, setEmbedSrc] = useState(src);
+
+  useEffect(() => {
+    setEmbedSrc(withJsApi(src));
+  }, [src]);
 
   useEffect(() => {
     const element = containerRef.current;
@@ -57,17 +84,86 @@ export default function NativeYouTubeIframe({
     };
   }, []);
 
+  // YouTube posts player state over postMessage when enablejsapi=1.
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      if (
+        typeof event.origin !== "string" ||
+        (!event.origin.endsWith("youtube.com") && !event.origin.endsWith("youtube-nocookie.com"))
+      ) {
+        return;
+      }
+
+      let data: unknown = event.data;
+      if (typeof data === "string") {
+        try {
+          data = JSON.parse(data);
+        } catch {
+          return;
+        }
+      }
+      if (!data || typeof data !== "object") return;
+
+      const payload = data as {
+        event?: string;
+        info?: number | { playerState?: number };
+        data?: number;
+      };
+      // YT.PlayerState.PLAYING === 1 (shapes vary by embed revision)
+      const state =
+        typeof payload.info === "number"
+          ? payload.info
+          : typeof payload.info === "object" && payload.info
+            ? payload.info.playerState
+            : typeof payload.data === "number"
+              ? payload.data
+              : undefined;
+
+      if (state === 1 || (payload.event === "onStateChange" && state === 1)) {
+        notifyExternalMediaPlay("youtube");
+      }
+    };
+
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
+
+  const onIframeLoad = (event: SyntheticEvent<HTMLIFrameElement>) => {
+    const frame = event.currentTarget;
+    // Handshake so YT posts onStateChange to this origin.
+    try {
+      frame.contentWindow?.postMessage(
+        JSON.stringify({ event: "listening", id: frame.id || "yt-player" }),
+        "*",
+      );
+    } catch {
+      // Cross-origin handshake is best-effort.
+    }
+  };
+
+  // postMessage play detection is unreliable on some embeds / HTTP localhost —
+  // pause memorial as soon as the user engages the player chrome.
+  const onUserEngage = () => {
+    notifyExternalMediaPlay("youtube");
+  };
+
   return (
-    <div ref={containerRef} className={className}>
+    <div
+      ref={containerRef}
+      className={className}
+      onPointerDown={onUserEngage}
+      onFocusCapture={onUserEngage}
+    >
       {shouldLoad ? (
         <iframe
           className={iframeClassName}
-          src={src}
+          src={embedSrc}
           title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
           loading="lazy"
           referrerPolicy="strict-origin-when-cross-origin"
+          onLoad={onIframeLoad}
         />
       ) : null}
     </div>

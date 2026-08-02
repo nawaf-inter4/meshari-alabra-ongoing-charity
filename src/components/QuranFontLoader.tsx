@@ -2,32 +2,34 @@
 
 import { useEffect } from "react";
 
-const QURAN_FONTS_HREF = "/fonts/quran-fonts.css";
+const AMIRI_WOFF2 = "/fonts/amiri-arabic-400.woff2";
 
 /**
- * Loads Amiri / Scheherazade after first paint so they stay off the RTL
- * critical path. UI text keeps Tajawal; Quranic glyphs swap in when ready.
+ * Warm Amiri after first paint so the memorial H1 (Tajawal/Lexend) stays LCP
+ * on mobile without competing for bandwidth with a ~110KB Quran face.
  */
 export default function QuranFontLoader() {
   useEffect(() => {
-    if (typeof document === "undefined") return;
-    if (document.querySelector(`link[data-quran-fonts="true"]`)) return;
+    if (document.querySelector(`link[data-quran-preload="${AMIRI_WOFF2}"]`)) return;
 
-    const inject = () => {
-      if (document.querySelector(`link[data-quran-fonts="true"]`)) return;
+    const warm = () => {
+      if (document.querySelector(`link[data-quran-preload="${AMIRI_WOFF2}"]`)) return;
       const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = QURAN_FONTS_HREF;
-      link.dataset.quranFonts = "true";
+      link.rel = "preload";
+      link.as = "font";
+      link.type = "font/woff2";
+      link.href = AMIRI_WOFF2;
+      link.crossOrigin = "anonymous";
+      link.dataset.quranPreload = AMIRI_WOFF2;
       document.head.appendChild(link);
+      void document.fonts.load('400 24px "Amiri"').catch(() => undefined);
     };
 
     if (typeof window.requestIdleCallback === "function") {
-      const id = window.requestIdleCallback(inject, { timeout: 3500 });
+      const id = window.requestIdleCallback(warm, { timeout: 1200 });
       return () => window.cancelIdleCallback(id);
     }
-
-    const timer = window.setTimeout(inject, 1200);
+    const timer = window.setTimeout(warm, 400);
     return () => window.clearTimeout(timer);
   }, []);
 

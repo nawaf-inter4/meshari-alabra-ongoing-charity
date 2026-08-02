@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import "../globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -14,10 +15,17 @@ import {
   localeDirection,
   siteAssetUrl,
   siteConfig,
-  siteCssVariables,
+  siteCssVariablesBlock,
   type SupportedLocale,
 } from "@/config/site";
-import { translate } from "@/lib/translations";
+import { translate, translations } from "@/lib/translations";
+import { getCspNonce } from "@/lib/csp-nonce";
+import {
+  enrichMemorialDescription,
+  formatHomeTitle,
+  getHomeKeywords,
+  memorialLegalName,
+} from "@/lib/seo";
 
 // The document language and direction depend on this root segment's URL.
 // Deeper pages still validate instant navigation within the active locale.
@@ -93,24 +101,18 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!isSupportedLocale(lang)) notFound();
 
-  const title =
-    siteConfig.seo.title ||
-    translate(lang, "seo.title", translate(lang, "site.title", siteConfig.identity.name));
-  const description =
+  const title = formatHomeTitle(lang);
+  const description = enrichMemorialDescription(
     siteConfig.seo.description ||
-    translate(
-      lang,
-      "seo.description",
-      translate(lang, "hero.description", translate(lang, "site.subtitle")),
-    );
+      translate(
+        lang,
+        "seo.description",
+        translate(lang, "hero.description", translate(lang, "site.subtitle")),
+      ),
+    lang,
+  );
   const currentUrl = `${siteConfig.identity.siteUrl}/${lang}`;
-  const keywords = siteConfig.seo.keywords || [
-    title,
-    translate(lang, "hero.title"),
-    translate(lang, "quran.title"),
-    translate(lang, "supplications.title"),
-    siteConfig.content.memorialLegalName,
-  ];
+  const keywords = getHomeKeywords(lang);
 
   return {
     title,
@@ -120,7 +122,7 @@ export async function generateMetadata({
     creator: siteConfig.identity.organizationName,
     publisher: siteConfig.identity.organizationName,
     metadataBase: new URL(siteConfig.identity.siteUrl),
-    applicationName: siteConfig.identity.shortName,
+    applicationName: memorialLegalName(),
     manifest: "/manifest.webmanifest",
     icons: {
       icon: [{ url: siteConfig.assets.favicon }],
@@ -128,7 +130,7 @@ export async function generateMetadata({
     },
     appleWebApp: {
       capable: true,
-      title: siteConfig.identity.shortName,
+      title: memorialLegalName(),
       statusBarStyle: "black-translucent",
     },
     alternates: {
@@ -186,7 +188,16 @@ function LanguageContent({
   locale: SupportedLocale;
 }) {
   return (
-    <LanguageProvider initialLocale={locale}>
+    // Must wrap children AND DeferredClientShell (PWA / useLanguage consumers).
+    // Do not move LanguageProvider under a deferred homepage gate — that leaves
+    // DeferredClientShell outside the provider and crashes on useLanguage.
+    // `key` forces a clean remount when the locale segment changes so the
+    // active dictionary from the server replaces client state.
+    <LanguageProvider
+      key={locale}
+      initialLocale={locale}
+      initialMessages={translations[locale]}
+    >
       {children}
       <DeferredClientShell />
     </LanguageProvider>
@@ -200,6 +211,13 @@ export default async function LanguageLayout({
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
 }) {
+  // Request-time render so Proxy nonces can be stamped on Next framework
+  // scripts (required for Observatory-grade script-src without unsafe-inline).
+  // Cached route shells / Partial Prefetch for this segment are traded away;
+  // below-fold sections remain client-lazy. See docs/SECURITY-HEADERS.md.
+  await connection();
+  const nonce = await getCspNonce();
+
   const { lang } = await params;
   if (!isSupportedLocale(lang)) notFound();
   const direction = localeDirection(lang);
@@ -210,14 +228,17 @@ export default async function LanguageLayout({
       lang={lang}
       dir={direction}
       className="dark"
-      style={siteCssVariables}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>
-        <SEOScripts />
+        <style
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: siteCssVariablesBlock }}
+        />
+        <SEOScripts nonce={nonce} />
         <AppleSplashLinks />
-        {/* Preload only the above-the-fold UI font for this direction. */}
+        {/* Preload self-hosted faces so first paint is not a fallback flash. */}
         <link
           rel="preload"
           href={direction === "rtl" ? "/fonts/tajawal-arabic-400.woff2" : "/fonts/lexend-deca-latin.woff2"}
@@ -234,17 +255,11 @@ export default async function LanguageLayout({
             crossOrigin="anonymous"
           />
         ) : null}
+        {/* Amiri is loaded after first paint (see QuranFontLoader) so it does not
+            contend with Tajawal/Lexend on the mobile LCP path. */}
       </head>
       <body className="antialiased">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-50 bg-blue-600 text-white px-4 py-2 rounded"
-          style={{
-            top: "max(1rem, env(safe-area-inset-top, 0px))",
-            left: "max(1rem, env(safe-area-inset-left, 0px))",
-          }}
-          aria-label={skipLabel}
-        >
+        <a href="#main-content" className="skip-to-content" aria-label={skipLabel}>
           {skipLabel}
         </a>
         <ErrorBoundary>

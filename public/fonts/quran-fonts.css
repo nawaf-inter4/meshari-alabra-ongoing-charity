@@ -1,10 +1,11 @@
-/* Quranic display fonts — loaded after first paint (not in critical CSS). */
+/* Kept for bookmarks / older links — faces also live in globals.css. */
 @font-face {
   font-family: 'Amiri';
   src: url('/fonts/amiri-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
   font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
 
 @font-face {
@@ -12,7 +13,8 @@
   src: url('/fonts/amiri-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: optional;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
 
 @font-face {
@@ -20,7 +22,8 @@
   src: url('/fonts/scheherazade-new-arabic-400.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
-  font-display: optional;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }
 
 @font-face {
@@ -28,5 +31,6 @@
   src: url('/fonts/scheherazade-new-arabic-700.woff2') format('woff2');
   font-style: normal;
   font-weight: 700;
-  font-display: optional;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
 }

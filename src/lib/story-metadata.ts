@@ -18,6 +18,13 @@ import {
   type StorySlug,
 } from "@/content/stories";
 import { translateWithConfig } from "@/lib/translations";
+import {
+  enrichMemorialDescription,
+  formatMemorialTitle,
+  getSectionKeywords,
+  memorialLegalName,
+  seoLead,
+} from "@/lib/seo";
 
 const localeMap: Record<SupportedLocale, string> = {
   ar: "ar_SA",
@@ -54,20 +61,20 @@ function getStorySeo(slug: StorySlug, locale: SupportedLocale) {
   const story = getStoryBySlug(slug);
   const uiTitle = story ? getStoryTitle(story, locale) : slug;
   const uiDescription = story ? getStoryDescription(story, locale) : "";
-  const siteName = siteConfig.identity.shortName;
   const seoTitleKey = `seo.quran_stories.${slug}.title`;
   const seoDescriptionKey = `seo.quran_stories.${slug}.description`;
   const seoTitle = translateWithConfig(locale, seoTitleKey);
   const seoDescription = translateWithConfig(locale, seoDescriptionKey);
 
-  const title =
-    seoTitle !== seoTitleKey
-      ? `${seoTitle.split("|")[0].trim()} | ${siteName}`
-      : `${uiTitle} | ${siteName}`;
+  const localizedLead =
+    seoTitle !== seoTitleKey ? seoLead(seoTitle, uiTitle) : uiTitle;
+  const title = formatMemorialTitle(locale, localizedLead);
+  const rawDescription =
+    seoDescription !== seoDescriptionKey ? seoDescription : uiDescription;
 
   return {
     title,
-    description: seoDescription !== seoDescriptionKey ? seoDescription : uiDescription,
+    description: enrichMemorialDescription(rawDescription, locale),
     uiTitle,
   };
 }
@@ -86,15 +93,12 @@ export function generateStoryMetadata(slug: string, lang: string): Metadata {
   return {
     title,
     description,
-    keywords: [
+    keywords: getSectionKeywords("quran-stories", locale, [
       uiTitle,
-      description,
-      siteConfig.identity.shortName,
-      siteConfig.content.memorialLegalName,
-      story.surahName?.en,
-      story.surahName?.ar,
-      locale === "ar" ? "قصص القرآن" : "Quran stories",
-    ].filter(Boolean) as string[],
+      story.surahName?.en ?? "",
+      story.surahName?.ar ?? "",
+      memorialLegalName(),
+    ]),
     alternates: {
       canonical: canonicalUrl,
       languages: storyAlternates(slug),
@@ -188,7 +192,7 @@ export function generateStorySchema(story: QuranStoryDefinition, locale: Support
           {
             "@type": "ListItem",
             position: 1,
-            name: siteConfig.identity.shortName,
+            name: memorialLegalName(),
             item: `${siteUrl}/${locale}`,
           },
           {
@@ -205,6 +209,13 @@ export function generateStorySchema(story: QuranStoryDefinition, locale: Support
           },
         ],
       },
+      {
+        "@type": "Person",
+        "@id": `${siteUrl}/#person`,
+        name: memorialLegalName(),
+        alternateName: siteConfig.content.memorialAlternateName,
+        deathDate: siteConfig.content.memorialDeathDate,
+      },
     ],
   };
 }
@@ -213,7 +224,6 @@ export function generateStoriesIndexMetadata(lang: string): Metadata {
   const locale: SupportedLocale = isSupportedLocale(lang)
     ? lang
     : siteConfig.identity.defaultLocale;
-  const siteName = siteConfig.identity.shortName;
   const seoTitleKey = "seo.quran_stories.title";
   const seoDescriptionKey = "seo.quran_stories.description";
   const seoTitle = translateWithConfig(locale, seoTitleKey);
@@ -221,17 +231,19 @@ export function generateStoriesIndexMetadata(lang: string): Metadata {
   const uiTitle = translateWithConfig(locale, "quran_stories.title");
   const uiDescription = translateWithConfig(locale, "quran_stories.description");
 
-  const title =
-    seoTitle !== seoTitleKey
-      ? `${seoTitle.split("|")[0].trim()} | ${siteName}`
-      : `${uiTitle} | ${siteName}`;
-  const description =
-    seoDescription !== seoDescriptionKey ? seoDescription : uiDescription;
+  const localizedLead =
+    seoTitle !== seoTitleKey ? seoLead(seoTitle, uiTitle) : uiTitle;
+  const title = formatMemorialTitle(locale, localizedLead);
+  const description = enrichMemorialDescription(
+    seoDescription !== seoDescriptionKey ? seoDescription : uiDescription,
+    locale,
+  );
   const canonicalUrl = `${siteConfig.identity.siteUrl}${localizedStoriesIndexHref(locale)}`;
 
   return {
     title,
     description,
+    keywords: getSectionKeywords("quran-stories", locale, [uiTitle, localizedLead]),
     alternates: {
       canonical: canonicalUrl,
       languages: Object.fromEntries([
@@ -252,6 +264,18 @@ export function generateStoriesIndexMetadata(lang: string): Metadata {
       siteName: siteConfig.identity.name,
       locale: localeMap[locale],
       type: "website",
+      images: [
+        {
+          url: siteAssetUrl(siteConfig.assets.openGraphImage),
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }
