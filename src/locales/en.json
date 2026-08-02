@@ -58,6 +58,8 @@
   "quran.play": "Play",
   "quran.pause": "Pause",
   "quran.translation": "Translation",
+  "quran.translation_label": "Translation",
+  "quran.open_tafseer": "Full tafseer (Ibn Kathir & more)",
   "quran.meshari_favorite": "Meshari's Favorite",
   "quran.medinan": "Medinan",
   "quran.meccan": "Meccan",

@@ -10,6 +10,7 @@ import BidiText from "../BidiText";
 import SectionTitleLink from "./SectionTitleLink";
 import { localeDirection, siteConfig } from "@/config/site";
 import { notifyExternalMediaPlay } from "@/lib/media-coordination";
+import { tafseerAyahHref } from "@/lib/tafseer-editions";
 
 interface Ayah {
   number: number;
@@ -1828,12 +1829,18 @@ export default function EnhancedQuranSection() {
                   })()}
                 </div>
 
-                {/* Translation / tafsir — prefetched per surah to avoid empty cards from API 429s */}
+                {/* Translation / short tafsir — prefetched per surah to avoid empty cards from API 429s */}
                 {selectedTranslation &&
                   (translationsLoading || ayahTranslations[ayah.numberInSurah]) && (
                   <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4">
                     <div className="text-sm text-gray-500 dark:text-gray-400 mb-2" dir={localeDirection(locale)} data-translation-language>
-                      {mounted && t("quran.translation") !== "quran.translation" ? t("quran.translation") : "التفسير"}{" "}
+                      {selectedTranslation === "ar.muyassar" || selectedTranslation.startsWith("ar.")
+                        ? (mounted && t("quran.translation") !== "quran.translation" ? t("quran.translation") : "التفسير")
+                        : (mounted && t("quran.translation_label") !== "quran.translation_label"
+                          ? t("quran.translation_label")
+                          : mounted && t("quran.translation") !== "quran.translation"
+                            ? t("quran.translation")
+                            : "Translation")}{" "}
                       <span>
                         (
                         {translationSourceName ||
@@ -1848,6 +1855,17 @@ export default function EnhancedQuranSection() {
                     />
                   </div>
                 )}
+                <a
+                  href={tafseerAyahHref(locale, selectedSurah, ayah.numberInSurah)}
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-islamic-gold hover:text-islamic-green transition-colors"
+                >
+                  <BookOpen className="w-4 h-4" aria-hidden="true" />
+                  {mounted && t("quran.open_tafseer") !== "quran.open_tafseer"
+                    ? t("quran.open_tafseer")
+                    : locale === "ar"
+                      ? "تفسير مفصّل (ابن كثير وغيره)"
+                      : "Full tafseer (Ibn Kathir & more)"}
+                </a>
               </motion.div>
             ))}
           </div>

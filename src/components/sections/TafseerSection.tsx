@@ -6,14 +6,12 @@ import { motion } from "framer-motion";
 import { Book, Search, ChevronDown, Globe, X, Loader2 } from "lucide-react";
 import SectionTitleLink from "./SectionTitleLink";
 import BidiText from "../BidiText";
-
-interface TafseerEdition {
-  id: number;
-  name: string;
-  slug: string;
-  language: string;
-  author: string;
-}
+import {
+  TAFSEER_EDITIONS,
+  defaultTafseerEdition,
+  editionsForLocale,
+  type TafseerEdition,
+} from "@/lib/tafseer-editions";
 
 interface TafseerResult {
   ayah: number;
@@ -28,19 +26,6 @@ interface Surah {
   arabic: string;
   verses: number;
 }
-
-const TAFSEER_EDITIONS: TafseerEdition[] = [
-  { id: 14, name: "تفسير ابن كثير", slug: "ar-tafsir-ibn-kathir", language: "arabic", author: "Hafiz Ibn Kathir" },
-  { id: 15, name: "تفسير الطبري", slug: "ar-tafsir-al-tabari", language: "arabic", author: "Tabari" },
-  { id: 16, name: "تفسير الميسر", slug: "ar-tafsir-muyassar", language: "arabic", author: "Al Muyassar" },
-  { id: 91, name: "تفسير السعدي", slug: "ar-tafseer-al-saddi", language: "arabic", author: "Saddi" },
-  { id: 90, name: "تفسير القرطبي", slug: "ar-tafseer-al-qurtubi", language: "arabic", author: "Qurtubi" },
-  { id: 74, name: "الجلالين", slug: "en-al-jalalayn", language: "english", author: "Al-Jalalayn" },
-  { id: 169, name: "Tafsir Ibn Kathir", slug: "en-tafisr-ibn-kathir", language: "english", author: "Hafiz Ibn Kathir" },
-  { id: 108, name: "Al Qushairi Tafsir", slug: "en-al-qushairi-tafsir", language: "english", author: "Al Qushairi" },
-  { id: 160, name: "تفسیر ابن کثیر", slug: "ur-tafseer-ibn-e-kaseer", language: "urdu", author: "Hafiz Ibn Kathir" },
-  { id: 159, name: "بیان القرآن", slug: "ur-tafsir-bayan-ul-quran", language: "urdu", author: "Dr. Israr Ahmad" },
-];
 
 const SURAHS: Surah[] = [
   { number: 1, name: "Al-Faatiha", arabic: "الفاتحة", verses: 7 },
@@ -164,7 +149,7 @@ export default function TafseerSection() {
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [selectedAyah, setSelectedAyah] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedEdition, setSelectedEdition] = useState(TAFSEER_EDITIONS[0]);
+  const [selectedEdition, setSelectedEdition] = useState(() => defaultTafseerEdition("ar"));
   // Direction follows the tafseer edition language, not the UI locale.
   const tafseerDirection = selectedEdition.language === "english" ? "ltr" : "rtl";
   const [tafseer, setTafseer] = useState<TafseerResult | null>(null);
@@ -175,14 +160,22 @@ export default function TafseerSection() {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [searchMode, setSearchMode] = useState<'surah' | 'verse'>('surah');
   const [mounted, setMounted] = useState(false);
+  const deepLinkHandled = useRef(false);
   
   const editionsRef = useRef<HTMLDivElement>(null);
   const surahsRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
+  const availableEditions = editionsForLocale(locale);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Match tafseer language to the UI locale (ar/ur/en); others get English editions first.
+  useEffect(() => {
+    if (!mounted) return;
+    setSelectedEdition(defaultTafseerEdition(locale));
+  }, [locale, mounted]);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -218,47 +211,70 @@ export default function TafseerSection() {
     }
   }, [searchQuery]);
 
-  const fetchTafseer = async (surahNumber: number, ayahNumber: number) => {
+  const fetchTafseer = async (
+    surahNumber: number,
+    ayahNumber: number,
+    edition: TafseerEdition = selectedEdition,
+  ) => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/${selectedEdition.slug}/${surahNumber}/${ayahNumber}.json`
+        `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/${edition.slug}/${surahNumber}/${ayahNumber}.json`,
       );
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      // Tafseer API Response received
-      
+
       if (data && data.text) {
         setTafseer({
           ayah: ayahNumber,
           text: data.text,
-          edition: selectedEdition.name,
-          author: selectedEdition.author,
+          edition: edition.name,
+          author: edition.author,
         });
       } else {
         setTafseer({
           ayah: ayahNumber,
           text: "التفسير غير متوفر لهذه الآية في هذا المصدر.",
-          edition: selectedEdition.name,
-          author: selectedEdition.author,
+          edition: edition.name,
+          author: edition.author,
         });
       }
     } catch (error) {
-      console.error('Tafseer fetch error:', error);
+      console.error("Tafseer fetch error:", error);
       setTafseer({
         ayah: ayahNumber,
         text: "التفسير غير متوفر حالياً. يرجى المحاولة لاحقاً.",
-        edition: selectedEdition.name,
-        author: selectedEdition.author,
+        edition: edition.name,
+        author: edition.author,
       });
     } finally {
       setLoading(false);
     }
   };
+
+  // Deep link from Quran reader: /[lang]/sections/tafseer?surah=32&ayah=11
+  useEffect(() => {
+    if (!mounted || deepLinkHandled.current || typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const surahNum = Number.parseInt(params.get("surah") || "", 10);
+    const ayahNum = Number.parseInt(params.get("ayah") || "", 10);
+    if (!Number.isFinite(surahNum) || surahNum < 1 || surahNum > 114) return;
+    const surah = SURAHS.find((item) => item.number === surahNum);
+    if (!surah) return;
+    const ayah =
+      Number.isFinite(ayahNum) && ayahNum >= 1 && ayahNum <= surah.verses ? ayahNum : 1;
+    deepLinkHandled.current = true;
+    const edition = defaultTafseerEdition(locale);
+    setSelectedEdition(edition);
+    setSelectedSurah(surah);
+    setSelectedAyah(ayah);
+    setSearchMode("surah");
+    void fetchTafseer(surah.number, ayah, edition);
+  }, [mounted, locale]);
 
   const handleSurahSelect = (surah: Surah) => {
     setSelectedSurah(surah);
@@ -511,7 +527,7 @@ export default function TafseerSection() {
               
               {showEditions && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
-                  {TAFSEER_EDITIONS.map((edition) => (
+                  {availableEditions.map((edition) => (
                     <button
                       key={edition.id}
                       onClick={() => {

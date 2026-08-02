@@ -329,5 +329,7 @@
   "seo.quran_stories.an-naml.description": "Moments contemplatifs avec la sourate An-Naml et l'histoire de Salomon (paix sur lui)",
   "seo.quran_stories.title": "Histoires du Coran",
   "seo.quran_stories.description": "Notes éducatives contemplatives sur des sourates choisies du Coran, en aumône continue.",
-  "seo.brand": "Charité continue pour Meshari Ahmed Sulaiman Alabra"
+  "seo.brand": "Charité continue pour Meshari Ahmed Sulaiman Alabra",
+  "quran.translation_label": "Traduction",
+  "quran.open_tafseer": "Tafsir complet (Ibn Kathir et autres)"
 }

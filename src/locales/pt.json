@@ -338,5 +338,7 @@
   "seo.quran_stories.an-naml.description": "Momentos contemplativos com a Surata An-Naml e a história de Salomão (a paz esteja com ele)",
   "seo.quran_stories.title": "Histórias do Alcorão",
   "seo.quran_stories.description": "Notas educativas contemplativas sobre suratas selecionadas do Alcorão como caridade contínua.",
-  "seo.brand": "Caridade contínua para Meshari Ahmed Sulaiman Alabra"
+  "seo.brand": "Caridade contínua para Meshari Ahmed Sulaiman Alabra",
+  "quran.translation_label": "Tradução",
+  "quran.open_tafseer": "Tafsir completo (Ibn Kathir e outros)"
 }

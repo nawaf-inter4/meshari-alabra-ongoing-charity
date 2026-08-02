@@ -328,5 +328,7 @@
   "seo.quran_stories.an-naml.description": "Neml Suresi ve Süleyman (aleyhisselam) hikayesi ile düşünceli anlar",
   "seo.quran_stories.title": "Kuran Hikayeleri",
   "seo.quran_stories.description": "Seçilmiş Kuran sureleri üzerine düşünsel eğitim notları — sadaka-i cariye.",
-  "seo.brand": "Meshari Ahmed Sulaiman Alabra için Devam Eden Sadaka"
+  "seo.brand": "Meshari Ahmed Sulaiman Alabra için Devam Eden Sadaka",
+  "quran.translation_label": "Çeviri",
+  "quran.open_tafseer": "Detaylı tefsir (İbn Kesir ve diğerleri)"
 }

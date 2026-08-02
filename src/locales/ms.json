@@ -322,5 +322,7 @@
   "seo.quran_stories.an-naml.description": "Detik-detik kontemplatif dengan Surah An-Naml dan kisah Sulaiman (alaihissalam)",
   "seo.quran_stories.title": "Kisah Al-Quran",
   "seo.quran_stories.description": "Nota reflektif tentang surah pilihan Al-Quran sebagai sedekah jariah.",
-  "seo.brand": "Amal Jariah untuk Meshari Ahmed Sulaiman Alabra"
+  "seo.brand": "Amal Jariah untuk Meshari Ahmed Sulaiman Alabra",
+  "quran.translation_label": "Terjemahan",
+  "quran.open_tafseer": "Tafsir penuh (Ibn Kathir & lain-lain)"
 }

@@ -66,6 +66,8 @@
   "quran.play": "استماع",
   "quran.pause": "إيقاف",
   "quran.translation": "التفسير",
+  "quran.translation_label": "الترجمة",
+  "quran.open_tafseer": "تفسير مفصّل (ابن كثير وغيره)",
   "quran.meshari_favorite": "مفضل مشاري",
   "quran.medinan": "سورة مدنية",
   "quran.meccan": "سورة مكية",
