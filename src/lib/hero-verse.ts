@@ -1,5 +1,5 @@
 import type { SupportedLocale } from "@/config/site";
-import { translate } from "@/lib/translations";
+import { translateWithConfig } from "@/lib/translations";
 
 export type HeroVersePart = "bismillah" | "verse" | "sadaqallah";
 
@@ -46,7 +46,7 @@ const FALLBACKS: Record<HeroVersePart, Partial<Record<SupportedLocale, string>> 
 
 export function heroVerse(locale: SupportedLocale, part: HeroVersePart): string {
   const key = `quran_verse.${part}`;
-  const translated = translate(locale, key);
+  const translated = translateWithConfig(locale, key);
   if (translated !== key) return translated;
   return FALLBACKS[part][locale] || FALLBACKS[part].en;
 }

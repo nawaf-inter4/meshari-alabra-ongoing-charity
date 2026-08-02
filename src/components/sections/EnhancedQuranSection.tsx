@@ -325,6 +325,10 @@ export default function EnhancedQuranSection() {
   
   const audioRef = useRef<HTMLAudioElement>(null);
   const playRequestIdRef = useRef(0);
+  /** In-flight play request identity (before `audio.src` is set). */
+  const pendingPlayRef = useRef<{ surah: number; ayah: number; reciter: string } | null>(null);
+  /** Identity of the clip currently loaded in `audioRef` (not just UI selection). */
+  const loadedAudioRef = useRef<{ surah: number; ayah: number; reciter: string } | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const reciterDropdownRef = useRef<HTMLDivElement>(null);
@@ -1137,6 +1141,7 @@ export default function EnhancedQuranSection() {
   const pauseAyah = () => {
     // Invalidate in-flight fetch/play so a late response cannot restart audio.
     playRequestIdRef.current += 1;
+    pendingPlayRef.current = null;
     if (audioRef.current) {
       audioRef.current.pause();
     }
@@ -1146,6 +1151,9 @@ export default function EnhancedQuranSection() {
 
   const playAyah = async (surahNumber: number, ayahNumber: number) => {
     const requestId = ++playRequestIdRef.current;
+    const reciterId = selectedReciter;
+    const clipId = { surah: surahNumber, ayah: ayahNumber, reciter: reciterId };
+    pendingPlayRef.current = clipId;
     try {
       // Stop any currently playing audio
       if (audioRef.current) {
@@ -1158,7 +1166,7 @@ export default function EnhancedQuranSection() {
       setIsPlaying(true);
       notifyExternalMediaPlay("quran");
 
-      const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${selectedReciter}`);
+      const response = await fetch(`/api/quran/ayah/${surahNumber}:${ayahNumber}/${reciterId}`);
       if (requestId !== playRequestIdRef.current) return;
       if (!response.ok) {
         throw new Error(`Quran audio request failed with status ${response.status}`);
@@ -1170,6 +1178,8 @@ export default function EnhancedQuranSection() {
         if (audioRef.current) {
           audioRef.current.src = data.data.audio;
           audioRef.current.load();
+          loadedAudioRef.current = clipId;
+          pendingPlayRef.current = null;
 
           try {
             await audioRef.current.play();
@@ -1195,6 +1205,7 @@ export default function EnhancedQuranSection() {
       }
     } catch (error) {
       if (requestId !== playRequestIdRef.current) return;
+      pendingPlayRef.current = null;
       console.error("Error in playAyah:", error);
       setIsPlaying(false);
       setAudioLoading(false);
@@ -1205,13 +1216,25 @@ export default function EnhancedQuranSection() {
   };
 
   const togglePlayPause = async (surahNumber?: number, ayahNumber?: number) => {
-    const targetSurah = surahNumber ?? selectedSurah;
+    const targetSurah = Number(surahNumber ?? selectedSurah);
     const targetAyah = ayahNumber ?? currentAyah;
-    const sameAyah =
-      currentAyah === targetAyah && Number(selectedSurah) === Number(targetSurah);
+    const targetClip = {
+      surah: targetSurah,
+      ayah: targetAyah,
+      reciter: selectedReciter,
+    };
+    const matchesClip = (
+      clip: { surah: number; ayah: number; reciter: string } | null,
+    ) =>
+      clip != null &&
+      clip.surah === targetClip.surah &&
+      clip.ayah === targetClip.ayah &&
+      clip.reciter === targetClip.reciter;
+    const samePendingClip = matchesClip(pendingPlayRef.current);
+    const sameLoadedClip = matchesClip(loadedAudioRef.current);
     const audio = audioRef.current;
     const activelyPlaying =
-      sameAyah &&
+      (samePendingClip || sameLoadedClip) &&
       (isPlaying || audioLoading || (audio != null && !audio.paused && Boolean(audio.src)));
 
     // Pause must win even while the ayah URL is still loading (no src yet).
@@ -1221,8 +1244,9 @@ export default function EnhancedQuranSection() {
       return;
     }
 
+    // Resume only when the element still holds the requested surah/ayah/reciter.
     if (
-      sameAyah &&
+      sameLoadedClip &&
       audio?.src &&
       !audio.ended &&
       audio.paused

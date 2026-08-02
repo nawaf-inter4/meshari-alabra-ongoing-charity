@@ -1,17 +1,17 @@
 import { FileText } from "lucide-react";
 import { siteConfig, type SupportedLocale } from "@/config/site";
-import { translate } from "@/lib/translations";
+import { translateWithConfig } from "@/lib/translations";
 import { heroVerse } from "@/lib/hero-verse";
 import HeroStars from "./HeroStars";
 
 export default function ServerHeroSection({ locale }: { locale: SupportedLocale }) {
   const memorialName =
-    siteConfig.content.memorialName || translate(locale, "memorial.name");
+    siteConfig.content.memorialName || translateWithConfig(locale, "memorial.name");
   const memorialDate =
-    siteConfig.content.memorialDate || translate(locale, "memorial.death");
+    siteConfig.content.memorialDate || translateWithConfig(locale, "memorial.death");
   const description =
-    siteConfig.content.heroDescription || translate(locale, "hero.description");
-  const button = translate(locale, "hero.supplications_button");
+    siteConfig.content.heroDescription || translateWithConfig(locale, "hero.description");
+  const button = translateWithConfig(locale, "hero.supplications_button");
   const bismillah = heroVerse(locale, "bismillah");
   const verse = heroVerse(locale, "verse");
   const sadaqallah = heroVerse(locale, "sadaqallah");
