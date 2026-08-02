@@ -1,5 +1,14 @@
 /** AlQuranCloud edition ids used for inline translation / short tafsir. */
 
+/**
+ * Normalize Arabic UI labels for subset fonts (Tajawal/Amiri).
+ * AlQuranCloud often returns Farsi yeh (ی U+06CC) which many Arabic UI
+ * subsets lack — browsers then show tofu □ in Chrome and Safari.
+ */
+export function normalizeArabicUiLabel(text: string): string {
+  return text.replace(/\u06CC/g, "\u064A"); // ی → ي
+}
+
 export function getTranslationIdentifier(locale: string): string {
   const translationMap: Record<string, string> = {
     ar: "ar.muyassar",
@@ -45,8 +54,9 @@ export function getTranslationSourceLabel(editionId: string, uiLocale: string): 
     "hi.hindi": { ar: "الترجمة الهندية", en: "Suhel Farooq Khan" },
   };
   const entry = sources[editionId];
-  if (!entry) return editionId;
-  return uiLocale === "ar" || uiLocale === "ur" ? entry.ar : entry.en;
+  if (!entry) return normalizeArabicUiLabel(editionId);
+  const label = uiLocale === "ar" || uiLocale === "ur" ? entry.ar : entry.en;
+  return normalizeArabicUiLabel(label);
 }
 
 export function translationKindLabel(
@@ -65,4 +75,26 @@ export function translationKindLabel(
     return t("quran.translation");
   }
   return uiLocale === "ar" ? "الترجمة" : "Translation";
+}
+
+/**
+ * Attribution line under an ayah. Avoids "التفسير (تفسير الميسر)" —
+ * Arabic tafsir editions already include تفسير in the source name.
+ * Note: do not use JS \b with Arabic — word boundaries are ASCII-only.
+ */
+export function formatTranslationAttribution(
+  editionId: string,
+  uiLocale: string,
+  t: (key: string) => string,
+): string {
+  const source = getTranslationSourceLabel(editionId, uiLocale);
+  const isArabicTafsir = editionId === "ar.muyassar" || editionId.startsWith("ar.");
+  if (isArabicTafsir) {
+    return source;
+  }
+  const kind = translationKindLabel(editionId, uiLocale, t);
+  if (/^tafsir\b/i.test(source) && /tafsir/i.test(kind)) {
+    return source;
+  }
+  return `${kind} (${source})`;
 }

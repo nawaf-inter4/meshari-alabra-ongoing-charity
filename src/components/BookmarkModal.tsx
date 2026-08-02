@@ -9,9 +9,8 @@ import BidiText from "./BidiText";
 import ShareModal from "./ShareModal";
 import { notifyExternalMediaPlay } from "@/lib/media-coordination";
 import {
+  formatTranslationAttribution,
   getTranslationIdentifier,
-  getTranslationSourceLabel,
-  translationKindLabel,
 } from "@/lib/quran-editions";
 import { isSupportedLocale, localeDirection, type SupportedLocale } from "@/config/site";
 
@@ -86,7 +85,6 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
   const playRequestIdRef = useRef(0);
 
   const translationId = getTranslationIdentifier(locale);
-  const translationSource = getTranslationSourceLabel(translationId, locale);
   const uiLocale: SupportedLocale = isSupportedLocale(locale) ? locale : "en";
 
   useEffect(() => {
@@ -481,7 +479,9 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {bookmarkedVerses.map((verse, index) => (
+                    {bookmarkedVerses.map((verse, index) => {
+                      const surahNameHasArabic = /[\u0600-\u06FF]/.test(verse.surahName || "");
+                      return (
                       <motion.div
                         key={`${verse.surahNumber}-${verse.ayahNumber}`}
                         initial={reduceMotion ? false : { y: 10 }}
@@ -491,10 +491,23 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                       >
                         <div className="flex items-start justify-between mb-4">
                           <div>
-                            <h3 className="text-lg font-semibold text-islamic-gold mb-1">
+                            <h3
+                              className={`text-lg font-semibold text-gray-900 dark:text-white mb-1 ${
+                                surahNameHasArabic
+                                  ? "surah-name-title arabic-quran-text"
+                                  : "font-lexend"
+                              }`}
+                              dir={surahNameHasArabic ? "rtl" : "ltr"}
+                              lang={surahNameHasArabic ? "ar" : undefined}
+                            >
                               {verse.surahName} - {t("quran.verse")} {verse.ayahNumber}
                             </h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                            <p
+                              className={`text-sm text-gray-600 dark:text-gray-400 ${
+                                locale === "ar" || locale === "ur" ? "font-arabic" : "font-lexend"
+                              }`}
+                              dir={locale === "ar" || locale === "ur" ? "rtl" : "ltr"}
+                            >
                               {locale === 'ar' ? 'سورة' : locale === 'ur' ? 'سورہ' : 'Surah'} {verse.surahNumber}
                             </p>
                           </div>
@@ -538,7 +551,7 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                         
                         {verse.arabicText && (
                           <div className="mb-4">
-                            <div className="arabic-quran-text text-2xl md:text-3xl leading-relaxed text-right text-islamic-gold">
+                            <div className="arabic-quran-text text-2xl md:text-3xl leading-relaxed text-right text-gray-900 dark:text-gray-100">
                               {verse.arabicText}
                             </div>
                           </div>
@@ -548,13 +561,12 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                         {mounted && (
                           <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
                             <div
-                              className="text-sm text-gray-500 dark:text-gray-400 mb-2 font-arabic"
+                              className="text-sm text-gray-500 dark:text-gray-400 mb-2 font-tajwal leading-normal"
                               dir={localeDirection(uiLocale)}
                               lang={uiLocale === "ar" || uiLocale === "ur" ? uiLocale : undefined}
                               data-translation-language
                             >
-                              {translationKindLabel(translationId, locale, t)}{" "}
-                              <span>({translationSource})</span>
+                              {formatTranslationAttribution(translationId, locale, t)}
                             </div>
                             <AyahTranslation
                               surahNumber={verse.surahNumber}
@@ -572,7 +584,8 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
                           → {t("bookmarks.go_to_verse")}
                         </button>
                       </motion.div>
-                    ))}
+                    );
+                    })}
                   </div>
                 )}
               </div>

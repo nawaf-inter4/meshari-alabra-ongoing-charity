@@ -12,9 +12,9 @@ import { localeDirection, siteConfig } from "@/config/site";
 import { notifyExternalMediaPlay } from "@/lib/media-coordination";
 import { tafseerAyahHref } from "@/lib/tafseer-editions";
 import {
+  formatTranslationAttribution,
   getTranslationIdentifier,
   getTranslationSourceLabel,
-  translationKindLabel,
 } from "@/lib/quran-editions";
 
 interface Ayah {
@@ -470,10 +470,6 @@ export default function EnhancedQuranSection() {
         }
         const data = await response.json();
         const ayahs = data?.data?.ayahs;
-        const editionName =
-          typeof data?.data?.edition?.name === "string"
-            ? data.data.edition.name.trim()
-            : "";
         if (!Array.isArray(ayahs)) {
           setAyahTranslations({});
           return;
@@ -488,9 +484,9 @@ export default function EnhancedQuranSection() {
         }
         if (!controller.signal.aborted) {
           setAyahTranslations(map);
-          if (editionName) {
-            setTranslationSourceName(editionName);
-          }
+          // Keep curated labels — API edition.name uses Farsi yeh (ی) that
+          // subset UI fonts cannot render (tofu □ in Chrome/Safari).
+          setTranslationSourceName(getTranslationSourceLabel(selectedTranslation, locale));
         }
       } catch (error) {
         if ((error as Error)?.name === "AbortError") return;
@@ -1326,7 +1322,6 @@ export default function EnhancedQuranSection() {
                 type="button"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="w-full p-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
-                aria-label={currentSurah ? `${currentSurah.number}. ${locale === 'ar' ? currentSurah.name : currentSurah.englishName} - ${locale === 'ar' ? currentSurah.englishName : currentSurah.name} - ${currentSurah.numberOfAyahs} ${versesLabel}` : (t("quran.select_surah") || "Select Surah")}
                 aria-expanded={isDropdownOpen}
                 aria-haspopup="listbox"
                 data-surah-select-trigger
@@ -1391,7 +1386,6 @@ export default function EnhancedQuranSection() {
                 type="button"
                 onClick={() => setIsReciterDropdownOpen(!isReciterDropdownOpen)}
                 className="w-full p-4 rounded-full bg-light-secondary dark:bg-dark-secondary border-2 border-islamic-gold/30 focus:border-islamic-gold outline-none cursor-pointer text-lg flex items-center justify-between hover:shadow-lg transition-all duration-300"
-                aria-label={mounted && t("quran.select_reciter") !== "quran.select_reciter" ? t("quran.select_reciter") : "اختر القارئ"}
                 aria-expanded={isReciterDropdownOpen}
                 aria-haspopup="listbox"
               >
@@ -1794,18 +1788,14 @@ export default function EnhancedQuranSection() {
                   (translationsLoading || ayahTranslations[ayah.numberInSurah]) && (
                   <div className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-gray-700 pt-4">
                     <div
-                      className="text-sm text-gray-500 dark:text-gray-400 mb-2 font-arabic"
+                      className="text-sm text-gray-500 dark:text-gray-400 mb-2 font-tajwal leading-normal"
                       dir={localeDirection(locale)}
                       lang={locale === "ar" || locale === "ur" ? locale : undefined}
                       data-translation-language
                     >
-                      {mounted ? translationKindLabel(selectedTranslation, locale, t) : "التفسير"}{" "}
-                      <span>
-                        (
-                        {translationSourceName ||
-                          getTranslationSourceLabel(selectedTranslation, locale)}
-                        )
-                      </span>
+                      {mounted
+                        ? formatTranslationAttribution(selectedTranslation, locale, t)
+                        : translationSourceName || "تفسير الميسر"}
                     </div>
                     <AyahTranslation
                       translationText={ayahTranslations[ayah.numberInSurah]}

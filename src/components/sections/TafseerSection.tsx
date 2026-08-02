@@ -678,10 +678,10 @@ export default function TafseerSection() {
                   onClick={handleSearch}
                   disabled={!selectedSurah || loading}
                   className="w-full flex items-center justify-center gap-2 p-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed glow"
-                  aria-label={t("tafseer.search") !== "tafseer.search" ? t("tafseer.search") : "بحث"}
+                  aria-label={t("search") !== "search" ? t("search") : "Search"}
                 >
                   {loading ? <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" /> : <Search className="w-5 h-5" aria-hidden="true" />}
-                  <span suppressHydrationWarning>{t("search")}</span>
+                  <span suppressHydrationWarning>{t("search") !== "search" ? t("search") : "Search"}</span>
                 </button>
               </div>
             </div>
@@ -781,10 +781,10 @@ export default function TafseerSection() {
                   onClick={handleVerseSearch}
                   disabled={!searchQuery || loading}
                   className="w-full flex items-center justify-center gap-2 p-3 bg-islamic-gold text-white font-bold rounded-full hover:bg-islamic-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed glow"
-                  aria-label={t("search") || "Search"}
+                  aria-label={t("search") !== "search" ? t("search") : "Search"}
                 >
                   {loading ? <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" /> : <Search className="w-5 h-5" aria-hidden="true" />}
-                  {t("search")}
+                  {t("search") !== "search" ? t("search") : "Search"}
                 </button>
               </div>
             </div>
