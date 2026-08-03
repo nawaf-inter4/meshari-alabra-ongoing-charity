@@ -56,8 +56,15 @@ For the original Meshari project:
 
 1. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS origin (**Production** scope → `https://meshari.charity`). Optionally set Preview scope to `https://sandbox.meshari.charity` so sandbox builds embed the sandbox origin.
 2. Add other white-label values in Project Settings → Environment Variables.
-3. **Production** Git branch: `main` only (Project Settings → Git → Production Branch). Serves [meshari.charity](https://meshari.charity). Ship via promote + Release Please (see below).
-4. **Preview / Sandbox**: only the `sandbox` Git branch is enabled for automated deployments. `git.deploymentEnabled` in `vercel.json` sets `main` + `sandbox` to `true` and `"**": false` so feature branches do **not** create Preview deployments.
+3. **Production** Git branch: `main` only (Project Settings → Git → Production Branch). Serves [meshari.charity](https://meshari.charity).
+4. **Ignored Build Step** (Project Settings → Git → Ignored Build Step): set the command to:
+
+   ```bash
+   bash scripts/vercel-ignore-build.sh
+   ```
+
+   That script **skips** production builds on promote/other `main` commits and **builds only** when Release Please merges `chore: release v*`. Sandbox always builds Preview. This avoids a double production deploy (promote + release).
+5. **Preview / Sandbox**: only the `sandbox` Git branch is enabled for automated deployments. `git.deploymentEnabled` in `vercel.json` sets `main` + `sandbox` to `true` and `"**": false` so feature branches do **not** create Preview deployments.
 
 ### Custom domains (stable aliases)
 
@@ -110,9 +117,9 @@ Or `GET /v9/projects/{id}/domains` with a Vercel token: `sandbox.meshari.charity
 
 1. Always branch from `sandbox`.
 2. Feature/fix PR → `sandbox` (full CI once: quality + security). After merge, Vercel Preview updates from `sandbox` and the `sandbox.meshari.charity` branch domain follows that deploy.
-3. Promote `sandbox` → `main` with a conventional title (`fix:` / `feat:`) using [`scripts/promote-sandbox-to-main.sh`](./scripts/promote-sandbox-to-main.sh) (full CI once, then production deploy to `meshari.charity`).
-4. Release Please on `main` opens/publishes the versioned release and changelog. Do not treat a promote as “shipped” without that release path.
-5. Do **not** sync `main` → `sandbox` after a release. Sandbox remains the integration tip; promote again when the next batch is ready.
+3. Promote `sandbox` → `main` with a conventional title (`fix:` / `feat:`) using [`scripts/promote-sandbox-to-main.sh`](./scripts/promote-sandbox-to-main.sh). Promote **lands commits for Release Please** — with the Ignored Build Step above it does **not** trigger a production deploy by itself.
+4. Merge the Release Please PR (`chore: release vX.Y.Z`) on `main` — **that** is the single production deploy + GitHub release/tag.
+5. Do **not** sync `main` → `sandbox` after a release. Sandbox remains the integration tip; promote again when the next batch is ready. Version files sync via `.github/workflows/sync-release-to-sandbox.yml`.
 
 `sandbox` is protected and must not be deleted. Delete feature branches after they are fully merged.
 

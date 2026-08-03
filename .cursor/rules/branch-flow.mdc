@@ -7,7 +7,8 @@ alwaysApply: true
 
 1. **Always branch from `sandbox`** (never from `main` for routine feature work).
 2. Feature/fix PRs merge **into `sandbox` only**. That is the integration lane.
-3. **Vercel Preview** is enabled only for the `sandbox` branch (`vercel.json` `git.deploymentEnabled`). Feature branches do not get Preview deployments. **Production** deploys from `main` only, tied to releases.
-4. Promote with a conventional title so Release Please works, e.g. `./scripts/promote-sandbox-to-main.sh fix "summary"` or `gh pr create --base main --head sandbox --title "fix: …"` / `feat: …`. Do not use bare “Promote sandbox…” titles.
-5. **Do not** manually rebase or sync `main` → `sandbox` after a release. Release Please bumps versions on `main`; `.github/workflows/sync-release-to-sandbox.yml` opens an automated PR that copies `package.json`, `CHANGELOG.md`, and `.release-please-manifest.json` onto sandbox.
-6. After a feature PR is fully merged and no follow-up remains, delete the feature branch (never delete `sandbox` or `main`).
+3. **Vercel Preview** is enabled only for the `sandbox` branch (`vercel.json` `git.deploymentEnabled`). Feature branches do not get Preview deployments.
+4. **Production deploys once per release**: configure Vercel **Ignored Build Step** to `bash scripts/vercel-ignore-build.sh`. That script **skips** builds on promote/`main` merges and **builds only** when Release Please merges `chore: release v*` onto `main`. Preview on `sandbox` always builds.
+5. Promote with a conventional title so Release Please works, e.g. `./scripts/promote-sandbox-to-main.sh fix "summary"` or `gh pr create --base main --head sandbox --title "fix: …"` / `feat: …`. Do not use bare “Promote sandbox…” titles. Promote lands commits for Release Please — it should **not** ship a second production deployment.
+6. **Do not** manually rebase or sync `main` → `sandbox` after a release. Release Please bumps versions on `main`; `.github/workflows/sync-release-to-sandbox.yml` opens an automated PR that copies `package.json`, `CHANGELOG.md`, and `.release-please-manifest.json` onto sandbox.
+7. After a feature PR is fully merged and no follow-up remains, delete the feature branch (never delete `sandbox` or `main`).

@@ -68,13 +68,11 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     ? websiteTitle
     : `${verse?.surahName} - ${t("share.ayah")} ${verse?.ayahNumber}\n\n${verse?.arabicText}${verse?.translation ? `\n\n${verse.translation}` : ''}`;
   
-  // Prefer same-origin relative asset path so local/preview hosts always resolve.
-  const ogImagePath = siteConfig.assets.openGraphImage.startsWith("http")
-    ? siteConfig.assets.openGraphImage
-    : siteConfig.assets.openGraphImage.startsWith("/")
-      ? siteConfig.assets.openGraphImage
-      : `/${siteConfig.assets.openGraphImage}`;
-  const ogImageUrl = mode === "website" ? ogImagePath : undefined;
+  // Prefer absolute site URL so SSR/PWA/share preview never depends on relative
+  // resolution, and avoid the dynamic /og-image route as the primary source
+  // (static PNG is the Open Graph contract).
+  const ogImageUrl =
+    mode === "website" ? siteAssetUrl(siteConfig.assets.openGraphImage) : undefined;
 
   const copyToClipboard = async () => {
     try {
@@ -132,6 +130,84 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
   const captureBackground = () =>
     isDarkMode ? siteConfig.colors.backgroundDarkSecondary : siteConfig.colors.backgroundLight;
 
+  const dataUrlToBlob = (dataUrl: string) => {
+    const [header, data = ""] = dataUrl.split(",", 2);
+    const isBase64 = /;base64/i.test(header);
+    const mime = header.match(/data:([^;]+)/)?.[1] || "application/octet-stream";
+    const binary = isBase64 ? atob(data) : decodeURIComponent(data);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+  };
+
+  /** Desktop: `<a download>`. Mobile/PWA: Web Share files when available, else blob/save. */
+  const persistBlob = async (blob: Blob, filename: string) => {
+    const file = new File([blob], filename, { type: blob.type || "application/octet-stream" });
+    const nav = typeof navigator !== "undefined" ? navigator : undefined;
+    const ua = nav?.userAgent ?? "";
+    const isAppleTouch =
+      /iPad|iPhone|iPod/.test(ua) ||
+      (typeof navigator !== "undefined" &&
+        navigator.platform === "MacIntel" &&
+        navigator.maxTouchPoints > 1);
+    const standaloneNav = nav as (Navigator & { standalone?: boolean }) | undefined;
+    const isStandalone =
+      typeof window !== "undefined" &&
+      (window.matchMedia("(display-mode: standalone)").matches ||
+        Boolean(standaloneNav?.standalone));
+    const isCoarsePointer =
+      typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+    // Prefer Web Share only on phone/tablet / installed PWA — desktop Chromium
+    // often supports canShare({files}) and would open a share sheet instead of downloading.
+    const preferShare =
+      isAppleTouch ||
+      isStandalone ||
+      (/Android/i.test(ua) && isCoarsePointer);
+
+    const canShareFiles =
+      preferShare &&
+      !!nav &&
+      typeof nav.canShare === "function" &&
+      typeof nav.share === "function" &&
+      nav.canShare({ files: [file] });
+
+    if (canShareFiles) {
+      try {
+        await nav.share({
+          files: [file],
+          title: filename,
+        });
+        return;
+      } catch (error) {
+        // User dismissed the share sheet — not a failure.
+        if (error instanceof Error && error.name === "AbortError") return;
+        // Fall through to download / open fallback.
+      }
+    }
+
+    const objectUrl = URL.createObjectURL(blob);
+    try {
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = filename;
+      link.rel = "noopener";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      // iOS Safari / iOS PWAs often ignore `download` on blob URLs — open the
+      // file so the user can save/share from the system sheet.
+      if (isAppleTouch) {
+        const opened = window.open(objectUrl, "_blank", "noopener,noreferrer");
+        if (!opened) {
+          window.location.assign(objectUrl);
+        }
+      }
+    } finally {
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
+    }
+  };
+
   const downloadAsImage = async () => {
     if (mode === "website") return;
     const elementToCapture = previewCardRef.current;
@@ -142,13 +218,8 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       const dataUrl = await captureShareCardPng(elementToCapture, {
         backgroundColor: captureBackground(),
       });
-
-      const link = document.createElement("a");
-      link.download = `${verse.surahName?.replace(/\s+/g, "_")}_Ayah_${verse.ayahNumber}.png`;
-      link.href = dataUrl;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      const filename = `${verse.surahName?.replace(/\s+/g, "_")}_Ayah_${verse.ayahNumber}.png`;
+      await persistBlob(dataUrlToBlob(dataUrl), filename);
     } catch (error) {
       console.error("Error downloading image:", error);
       alert(t("share.error_download_image") || "Failed to download image. Please try again.");
@@ -188,7 +259,9 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       const imgWidth = 210;
       const imgHeight = (img.height * imgWidth) / img.width;
       pdf.addImage(dataUrl, "PNG", 0, 0, imgWidth, imgHeight, undefined, "FAST");
-      pdf.save(`${verse.surahName?.replace(/\s+/g, "_")}_Ayah_${verse.ayahNumber}.pdf`);
+      const filename = `${verse.surahName?.replace(/\s+/g, "_")}_Ayah_${verse.ayahNumber}.pdf`;
+      const pdfBlob = pdf.output("blob");
+      await persistBlob(pdfBlob, filename);
     } catch (error) {
       console.error("Error downloading PDF:", error);
       alert(t("share.error_download_pdf") || "Failed to download PDF. Please try again.");
@@ -248,15 +321,17 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                   <div className="mb-6">
                     <div className="rounded-2xl overflow-hidden shadow-lg border-2 border-islamic-gold/30">
                       <img 
-                        src={ogImageUrl || ogImagePath}
+                        src={ogImageUrl}
                         alt={websiteTitle}
                         className="w-full h-auto"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           if (target.dataset.ogFallback === "1") return;
                           target.dataset.ogFallback = "1";
-                          // Absolute configured URL, then dynamic OG route.
-                          target.src = siteAssetUrl(siteConfig.assets.openGraphImage);
+                          // Same-origin relative path, then dynamic generator as last resort.
+                          target.src = siteConfig.assets.openGraphImage.startsWith("/")
+                            ? siteConfig.assets.openGraphImage
+                            : `/${siteConfig.assets.openGraphImage}`;
                           target.onerror = () => {
                             target.src = "/og-image";
                           };

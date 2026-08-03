@@ -57,8 +57,15 @@ ${storyLinks}
 - [Robots policy](${base}/robots.txt): Crawler allow/disallow rules
 - [RSS feed](${base}/feed.xml): Generated site feed
 - [PWA manifest](${base}/manifest.webmanifest): Installable app metadata and icons
-- [Open Graph image](${base}/og-image): Generated social preview image
+- [Open Graph image](${base}/og-image.png): Static social preview image (1200×630)
+- [Dynamic Open Graph route](${base}/og-image): Generated social preview image (optional query params)
 - [Health check](${base}/health): Redirect-free JSON deployment health probe
+
+## Notable product features
+
+- Quran ayah share cards: capture a verse card and download/share as **PNG or PDF** (desktop download; mobile/PWA uses the system share sheet when available)
+- Multilingual memorial landing with server-rendered hero and localized Quran verse lines
+- Installable PWA with offline fallback and section deep links
 
 ## Optional
 

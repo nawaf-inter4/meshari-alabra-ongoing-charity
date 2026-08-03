@@ -47,6 +47,14 @@
 | --- | --- |
 | ![Quran section](./docs/screenshots/section-quran-en.png) | ![Dhikr section](./docs/screenshots/section-dhikr-en.png) |
 
+| Share ayah card (PNG) | Share ayah card (alt) |
+| --- | --- |
+| ![Share ayah card](./docs/screenshots/share-card-ayah.png) | ![Share ayah card alternate](./docs/screenshots/share-card-ayah-alt.png) |
+
+| PageSpeed Insights (mobile) | Mozilla HTTP Observatory |
+| --- | --- |
+| ![PageSpeed 100s](./docs/screenshots/pagespeed-mobile-100.png) | ![Observatory A+](./docs/screenshots/mozilla-observatory-a-plus.png) |
+
 ---
 
 ## About
@@ -62,6 +70,7 @@ Built on Next.js 16.3 Instant Navigations, Cache Components, Partial Prefetching
 - Islamic supplications (daily athkar and prayers for the deceased)
 - Location-based prayer times with Hijri calendar
 - Full Quran reading with translations (114 Surahs) — dedicated section page
+- **Share ayah cards as PNG or PDF** (desktop download + mobile/PWA share-sheet friendly)
 - Tafseer — dedicated section page
 - Hadith with authentic sources — dedicated section page
 - Dhikr counter with milestone tracking — dedicated section page
@@ -72,13 +81,14 @@ Built on Next.js 16.3 Instant Navigations, Cache Components, Partial Prefetching
 
 ### Highlights
 
-- Next.js `16.3` preview with Cache Components and Partial Prefetching
+- Next.js `16.3` (stable) with Cache Components and Partial Prefetching
 - TypeScript 7 project compilation (TypeScript 6 isolated for ESLint compatibility)
 - Playwright coverage for navigation, white-label metadata, PWA, and direction-aware typography
 - Native one-click YouTube playlist players with deferred third-party work
 - Central config for identity, memorial content, assets, SEO, PWA, colors, and media
 - Dynamic `/manifest.webmanifest` and dependency-free service worker
 - One-click deploy paths for Vercel, Netlify, Render, Cloudflare Workers, Railway, Docker, CranL, Coolify, and Dokploy
+- **Single production deploy per release** (promote does not redeploy; Release Please merge ships prod)
 - LTR interface font: Lexend Deca · RTL interface font: Tajawal
 
 ### Sections
@@ -98,6 +108,23 @@ Built on Next.js 16.3 Instant Navigations, Cache Components, Partial Prefetching
 ---
 
 ## Performance
+
+Recent lab scores on production mobile ([PageSpeed Insights](https://pagespeed.web.dev/)):
+
+| Category | Score |
+| --- | --- |
+| Performance | **100** |
+| Accessibility | **100** |
+| Best Practices | **100** |
+| SEO | **100** |
+
+Core Web Vitals (same report): FCP ~1.0s · LCP ~1.4s · TBT ~80ms · CLS ~0.007 · Speed Index ~2.1s
+
+Security headers: [Mozilla HTTP Observatory](https://developer.mozilla.org/en-US/observatory) **A+** (115/100, 10/10 tests).
+
+![PageSpeed Insights mobile 100s](./docs/screenshots/pagespeed-mobile-100.png)
+
+![Mozilla HTTP Observatory A+](./docs/screenshots/mozilla-observatory-a-plus.png)
 
 - Dynamic imports with code splitting
 - Strategic API caching (Quran ~30 days, prayer times ~6 hours)
@@ -324,7 +351,7 @@ Requirements:
    through components. Use translationOverrides for localized copy.
 3. Preserve Quranic text exactly and keep all memorial/religious language
    respectful. Do not replace content that I did not explicitly provide.
-4. Keep the application on its current Next.js 16.3 preview, Cache Components,
+4. Keep the application on its current Next.js 16.3 stable line, Cache Components,
    Partial Prefetching, Instant Navigations, React 19, and TypeScript 7 setup.
 5. Preserve native one-click YouTube players. A playlist ID controls playback;
    its representative video ID supplies the native poster, and the iframe is
