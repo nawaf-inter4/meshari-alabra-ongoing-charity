@@ -140,11 +140,32 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
     return new Blob([bytes], { type: mime });
   };
 
-  /** Desktop: `<a download>`. iOS/PWA: Web Share files, else open blob for Save Image. */
+  /** Desktop: `<a download>`. Mobile/PWA: Web Share files when available, else blob/save. */
   const persistBlob = async (blob: Blob, filename: string) => {
     const file = new File([blob], filename, { type: blob.type || "application/octet-stream" });
     const nav = typeof navigator !== "undefined" ? navigator : undefined;
+    const ua = nav?.userAgent ?? "";
+    const isAppleTouch =
+      /iPad|iPhone|iPod/.test(ua) ||
+      (typeof navigator !== "undefined" &&
+        navigator.platform === "MacIntel" &&
+        navigator.maxTouchPoints > 1);
+    const standaloneNav = nav as (Navigator & { standalone?: boolean }) | undefined;
+    const isStandalone =
+      typeof window !== "undefined" &&
+      (window.matchMedia("(display-mode: standalone)").matches ||
+        Boolean(standaloneNav?.standalone));
+    const isCoarsePointer =
+      typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+    // Prefer Web Share only on phone/tablet / installed PWA — desktop Chromium
+    // often supports canShare({files}) and would open a share sheet instead of downloading.
+    const preferShare =
+      isAppleTouch ||
+      isStandalone ||
+      (/Android/i.test(ua) && isCoarsePointer);
+
     const canShareFiles =
+      preferShare &&
       !!nav &&
       typeof nav.canShare === "function" &&
       typeof nav.share === "function" &&
@@ -173,13 +194,6 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
       document.body.appendChild(link);
       link.click();
       link.remove();
-
-      const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
-      const isAppleTouch =
-        /iPad|iPhone|iPod/.test(ua) ||
-        (typeof navigator !== "undefined" &&
-          navigator.platform === "MacIntel" &&
-          navigator.maxTouchPoints > 1);
 
       // iOS Safari / iOS PWAs often ignore `download` on blob URLs — open the
       // file so the user can save/share from the system sheet.
