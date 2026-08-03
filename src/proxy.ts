@@ -103,7 +103,19 @@ function applySecurityHeaders(
 
   if (request.nextUrl.pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico)$/)) {
     response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
-    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
+    // OG / social preview assets must be readable cross-origin by crawlers.
+    const isOgAsset =
+      request.nextUrl.pathname === '/og-image.png' ||
+      request.nextUrl.pathname === '/og-image.svg' ||
+      request.nextUrl.pathname.startsWith('/og-image.');
+    response.headers.set(
+      'Cross-Origin-Resource-Policy',
+      isOgAsset ? 'cross-origin' : 'same-origin',
+    );
+  }
+
+  if (request.nextUrl.pathname === '/og-image') {
+    response.headers.set('Cross-Origin-Resource-Policy', 'cross-origin');
   }
 
   if (request.nextUrl.pathname.match(/\.(woff|woff2|ttf|eot)$/)) {

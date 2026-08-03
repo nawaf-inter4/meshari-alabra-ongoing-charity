@@ -66,7 +66,7 @@ Rules:
 
 - PR title **must** start with `fix:` or `feat:` (optionally `fix(scope):` / `feat(scope):`). Bare titles like `Promote sandbox…` are not conventional and block Release Please from opening a useful release.
 - Prefer squash or merge commit with that conventional title/message.
-- One full CI run on the promote PR is required; then production deploys from `main`.
+- One full CI run on the promote PR is required. Promote lands commits on `main` for Release Please — **production deploy happens when the Release Please PR merges** (configure Vercel Ignored Build Step to `bash scripts/vercel-ignore-build.sh` so promote does not double-deploy).
 
 ## Release policy
 
@@ -77,7 +77,7 @@ Releases follow Semantic Versioning and are automated with Release Please on `ma
 - A commit containing `BREAKING CHANGE:` produces a **major** release.
 - `docs:`, `chore:`, `ci:`, and `test:` are included where relevant but do not normally trigger a version bump by themselves.
 
-Release Please maintains one release pull request on `main`. Merging it updates `CHANGELOG.md` and `package.json`, creates a `vX.Y.Z` tag, and publishes the GitHub release. Do not ship production changes without that release notes path. Do not push version tags by hand unless recovering a failed automation run.
+Release Please maintains one release pull request on `main`. Merging it updates `CHANGELOG.md` and `package.json`, creates a `vX.Y.Z` tag, publishes the GitHub release, and (with the Ignored Build Step) is the **sole** production deploy for that release. Do not ship production changes without that release notes path. Do not push version tags by hand unless recovering a failed automation run.
 
 ### After a release
 
