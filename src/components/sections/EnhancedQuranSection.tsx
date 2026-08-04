@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useEffectEvent } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { revealUp } from "@/lib/safe-motion";
@@ -507,7 +507,7 @@ export default function EnhancedQuranSection() {
 
     void loadSurahTranslations();
     return () => controller.abort();
-  }, [selectedSurah, selectedTranslation]);
+  }, [selectedSurah, selectedTranslation, locale]);
 
   // Search function - optimized for instant results with Arabic text
   const handleSearch = async (keyword: string, signal?: AbortSignal) => {
@@ -786,6 +786,10 @@ export default function EnhancedQuranSection() {
     }
   };
 
+  const onSearchQuery = useEffectEvent((keyword: string, signal?: AbortSignal) => {
+    void handleSearch(keyword, signal);
+  });
+
   // Instant search - no debounce for instant feedback
   useEffect(() => {
     if (!searchQuery.trim()) {
@@ -814,7 +818,7 @@ export default function EnhancedQuranSection() {
     setShowSearchResults(true);
 
     // Search immediately - no debounce for instant results
-    handleSearch(searchQuery, abortController.signal);
+    onSearchQuery(searchQuery, abortController.signal);
 
     return () => {
       // Cleanup: abort search if component unmounts or query changes
@@ -823,7 +827,7 @@ export default function EnhancedQuranSection() {
         if (!abortController.signal.aborted) {
           abortController.abort();
         }
-      } catch (e) {
+      } catch {
         // Ignore any errors from aborting - it's expected behavior
       }
     };
@@ -848,7 +852,7 @@ export default function EnhancedQuranSection() {
   }, []);
 
   // Helper function to scroll to a specific ayah
-  const scrollToAyahElement = (ayahNumber: number, retries = 30) => {
+  const scrollToAyahElement = useCallback((ayahNumber: number, retries = 30) => {
     const ayahElement = document.querySelector(`[data-ayah-number="${ayahNumber}"]`);
     if (ayahElement) {
       // Scroll to the ayah
@@ -866,7 +870,7 @@ export default function EnhancedQuranSection() {
       return false;
     }
     return false;
-  };
+  }, []);
 
   // Read URL parameters on mount
   useEffect(() => {
@@ -911,7 +915,7 @@ export default function EnhancedQuranSection() {
     } else {
       urlParamsProcessedRef.current = true;
     }
-  }, [mounted, surahs.length]);
+  }, [mounted, surahs, selectedSurah]);
 
   // Watch for ayahs to load and scroll to target ayah
   useEffect(() => {
@@ -929,10 +933,10 @@ export default function EnhancedQuranSection() {
         }
       }, 300);
     }
-  }, [mounted, selectedSurah, ayahs.length]);
+  }, [mounted, selectedSurah, ayahs.length, scrollToAyahElement]);
 
-  // Function to navigate to a specific surah and ayah
-  const navigateToAyah = (surah: number, ayah: number) => {
+  // Navigate to a specific surah and ayah (effect-event: always latest selectedSurah)
+  const navigateToAyah = useEffectEvent((surah: number, ayah: number) => {
     if (!mounted || !surah || !ayah) return;
     
     // Validate surah and ayah numbers
@@ -952,7 +956,7 @@ export default function EnhancedQuranSection() {
         scrollToAyahElement(ayah);
       }, 100);
     }
-  };
+  });
 
   // Listen for navigation to ayah events
   useEffect(() => {
@@ -965,7 +969,7 @@ export default function EnhancedQuranSection() {
     return () => {
       window.removeEventListener('navigate-to-ayah', handleNavigateToAyah as EventListener);
     };
-  }, [mounted, selectedSurah]);
+  }, []);
 
   const fetchSurahs = async () => {
     try {
