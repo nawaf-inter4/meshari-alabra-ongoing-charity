@@ -21,10 +21,10 @@ env:
 
 jobs:
   # After a PR merges, GitHub fires `push` for the same SHA that `pull_request`
-  # already validated. Detect that duplicate and detect Release Please /
-  # version-sync changes that only touch package.json, CHANGELOG, and the
-  # release manifest so heavy jobs can no-op while still reporting green for
-  # required checks.
+  # already validated. Detect that duplicate and detect trusted Release Please /
+  # version-sync changes (allowlisted paths + package.json version-only +
+  # release/sync commit subjects) so heavy jobs can no-op while still reporting
+  # green for required checks.
   preflight:
     name: Preflight
     runs-on: ubuntu-latest
@@ -66,13 +66,17 @@ jobs:
           release_only=false
 
           if [ "$EVENT_NAME" = "pull_request" ]; then
-            range="${BASE_SHA}...${HEAD_SHA}"
+            left_sha="${BASE_SHA}"
+            right_sha="${HEAD_SHA}"
           elif [ "$EVENT_NAME" = "push" ] && [ "${BEFORE_SHA}" != "0000000000000000000000000000000000000000" ]; then
-            range="${BEFORE_SHA}...${AFTER_SHA}"
+            left_sha="${BEFORE_SHA}"
+            right_sha="${AFTER_SHA}"
           else
             echo "release_only=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+
+          range="${left_sha}...${right_sha}"
 
           mapfile -t files < <(git diff --name-only "$range" || true)
           if [ "${#files[@]}" -eq 0 ]; then
@@ -83,13 +87,60 @@ jobs:
           release_only=true
           for file in "${files[@]}"; do
             case "$file" in
-              package.json|CHANGELOG.md|.release-please-manifest.json) ;;
+              package.json|package-lock.json|CHANGELOG.md|.release-please-manifest.json) ;;
               *)
                 release_only=false
                 break
                 ;;
             esac
           done
+
+          # Trusted release/sync commit subjects only (all commits in the range).
+          if [ "$release_only" = true ]; then
+            mapfile -t subjects < <(git log --no-merges --format=%s "${left_sha}..${right_sha}" || true)
+            if [ "${#subjects[@]}" -eq 0 ]; then
+              release_only=false
+            else
+              for subject in "${subjects[@]}"; do
+                case "$subject" in
+                  "chore: release v"*|"chore: sync release"*) ;;
+                  *)
+                    release_only=false
+                    break
+                    ;;
+                esac
+              done
+            fi
+          fi
+
+          # If package.json changed, require a top-level version bump and nothing else.
+          if [ "$release_only" = true ]; then
+            package_json_changed=false
+            for file in "${files[@]}"; do
+              if [ "$file" = "package.json" ]; then
+                package_json_changed=true
+                break
+              fi
+            done
+
+            if [ "$package_json_changed" = true ]; then
+              old_sha="$(git merge-base "$left_sha" "$right_sha")"
+              old_pkg="$(git show "${old_sha}:package.json")"
+              new_pkg="$(git show "${right_sha}:package.json")"
+
+              old_version="$(printf '%s\n' "$old_pkg" | jq -r '.version')"
+              new_version="$(printf '%s\n' "$new_pkg" | jq -r '.version')"
+              old_rest="$(printf '%s\n' "$old_pkg" | jq -S 'del(.version)')"
+              new_rest="$(printf '%s\n' "$new_pkg" | jq -S 'del(.version)')"
+
+              if [ "$old_version" = "$new_version" ] || [ "$old_rest" != "$new_rest" ]; then
+                echo "package.json is not a version-only change; refusing release_only short-circuit."
+                echo "  old version: ${old_version}"
+                echo "  new version: ${new_version}"
+                release_only=false
+              fi
+            fi
+          fi
 
           echo "Changed files:"
           printf ' - %s\n' "${files[@]}"
@@ -177,7 +228,7 @@ jobs:
           needs.preflight.outputs.should_skip != 'true'
           && needs.preflight.outputs.release_only == 'true'
         run: |
-          echo "Only package.json / CHANGELOG.md / .release-please-manifest.json changed."
+          echo "Trusted release/sync change only (version bump + allowlisted release files)."
           echo "Full lint, type-check, e2e, and build are skipped for this SHA."
 
       - name: Check out repository
