@@ -3,15 +3,15 @@
   "version": "1.4.0",
   "private": true,
   "engines": {
-    "node": ">=22 <23"
+    "node": ">=22.12.0 <23"
   },
   "scripts": {
     "dev": "npm run stub:polyfills && next dev --turbopack",
     "dev:webpack": "npm run stub:polyfills && next dev",
     "dev:clean": "npm run clean:all && npm run dev",
-    "build": "npm run stub:polyfills && next build && node ./scripts/inject-csp-style-hashes.mjs",
-    "build:turbo": "npm run stub:polyfills && NEXT_TURBOPACK=1 next build && node ./scripts/inject-csp-style-hashes.mjs",
-    "build:analyze": "npm run stub:polyfills && ANALYZE=true next build && node ./scripts/inject-csp-style-hashes.mjs",
+    "build": "npm run stub:polyfills && next build",
+    "build:turbo": "npm run stub:polyfills && NEXT_TURBOPACK=1 next build",
+    "build:analyze": "npm run stub:polyfills && ANALYZE=true next build",
     "build:clean": "npm run clean:all && npm run build",
     "preview": "npm run stub:polyfills && opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "npm run stub:polyfills && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
@@ -27,6 +27,8 @@
     "clean:build": "./scripts/clean-build.sh",
     "stub:polyfills": "node ./scripts/stub-next-polyfills.cjs",
     "postinstall": "node ./scripts/stub-next-polyfills.cjs",
+    "prepare": "husky || true",
+    "commitlint": "commitlint --edit",
     "generate:splash": "node scripts/generate-apple-splash.mjs",
     "generate:story-pdfs": "node scripts/generate-story-pdfs.mjs"
   },
@@ -56,6 +58,9 @@
     "tailwindcss": "^3.4.18"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
     "@next/bundle-analyzer": "16.3.0",
     "@next/playwright": "16.3.0",
     "@playwright/test": "^1.62.0",
@@ -64,10 +69,17 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.1",
     "eslint-config-next": "16.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
     "sharp": "^0.35.3",
     "typescript": "^7.0.2",
     "typescript6": "npm:@typescript/typescript6@^6.0.2",
     "wrangler": "^4.118.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "node -r ./scripts/use-typescript6.cjs ./node_modules/eslint/bin/eslint.js"
+    ]
   },
   "browserslist": [
     "chrome >= 111",

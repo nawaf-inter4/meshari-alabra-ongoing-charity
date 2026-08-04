@@ -14,7 +14,7 @@ Thank you for helping improve Meshari's Continuous Charity. This is a memorial p
 3. When sandbox is stable, promote with a **conventional** PR title into `main` (see [Promoting to production](#promoting-to-production)).
 4. After the feature branch is fully merged and no follow-up work remains on it, delete the remote and local feature branch. Never delete `sandbox` or `main`.
 
-Do **not** rebase or sync `main` → `sandbox` after a release. Promote once when ready; Release Please versions on `main`. Sandbox stays the integration tip without a version-sync ritual.
+Do **not** rebase or sync `main` → `sandbox` after a release. Promote once when ready; Release Please versions on `main`. An automated workflow (`.github/workflows/sync-release-to-sandbox.yml`) opens a small PR that copies only `package.json`, `CHANGELOG.md`, and `.release-please-manifest.json` onto sandbox — merge that when it appears; do not rebase the full `main` history into sandbox.
 
 ## Development workflow
 
@@ -31,7 +31,7 @@ Do **not** rebase or sync `main` → `sandbox` after a release. Promote once whe
    npm audit --audit-level=high
    ```
 
-5. Commit using [Conventional Commits](https://www.conventionalcommits.org/):
+5. Commit using [Conventional Commits](https://www.conventionalcommits.org/) (enforced locally by commitlint via Husky when hooks are installed):
 
    ```text
    fix: correct a broken link
@@ -39,7 +39,7 @@ Do **not** rebase or sync `main` → `sandbox` after a release. Promote once whe
    docs: improve contributor guidance
    ```
 
-   Prefer conventional **pull request titles** as well when squash-merging, so Release Please can classify the landed commit once it reaches `main`.
+   Prefer conventional **pull request titles** as well (enforced by CI on PRs to `sandbox`/`main`) when squash-merging, so Release Please can classify the landed commit once it reaches `main`.
 
 6. Open a pull request into `sandbox` describing the change and how it was verified.
 7. After merge, delete the feature branch (`gh pr merge` with delete-branch, or `git push origin --delete <branch>` / `git branch -d <branch>`). Keep `sandbox` and `main`.
@@ -81,7 +81,15 @@ Release Please maintains one release pull request on `main`. Merging it updates 
 
 ### After a release
 
-Release Please bumps version files on `main` only. Leave `sandbox` as the integration branch tip — do **not** open main→sandbox sync PRs or rebase `main` into `sandbox` for routine releases. The next promote carries whatever is ready for production.
+Release Please bumps version files on `main` only. Do **not** rebase `main` into `sandbox` or open a full main→sandbox sync for routine releases.
+
+Instead, `.github/workflows/sync-release-to-sandbox.yml` opens (or updates) a PR that copies **only**:
+
+- `package.json`
+- `CHANGELOG.md`
+- `.release-please-manifest.json`
+
+Merge that version-sync PR when CI is green. Feature work on sandbox continues from the integration tip; the next promote carries whatever is ready for production.
 
 ## CI
 
@@ -89,11 +97,16 @@ Pull requests targeting `sandbox` or `main` run:
 
 | Job | What |
 | --- | --- |
+| **Preflight** | Skips duplicate `push` runs when the same content already passed on `pull_request`; marks Release Please / version-sync PRs that only touch version files |
 | **Dependency review** | GitHub Dependency Review on pull requests (fails on high/critical advisories) |
 | **Security** | `npm audit --audit-level=high` (fails on high/critical) and gitleaks secret scan |
-| **Quality** | lint, type-check, Playwright e2e, production build |
+| **Quality** | lint, type-check, Playwright e2e (includes axe a11y smoke), production build — short-circuited for version-only PRs |
+| **PR title** | Separate workflow: Conventional Commits title via `amannn/action-semantic-pull-request` |
+| **PR labeler** | Path labels from `.github/labeler.yml` plus type labels from the PR title prefix (`feat` → enhancement, `fix` → bug, …). Separate from Release Please version tags |
 
-Feature PRs → `sandbox`: one full CI run. Promote PRs → `main`: one full CI run. Avoid stacking redundant Preview builds on feature branches (disabled in `vercel.json`).
+Feature PRs → `sandbox`: one full CI path on the PR. After merge, the follow-up `push` run is detected as a duplicate and no-ops so required checks stay green without re-linting / re-testing. Promote PRs → `main`: same pattern. Version-only Release Please / sync PRs skip the heavy quality matrix.
+
+Locally, Husky runs `commitlint` on commit messages and `lint-staged` (eslint on staged JS/TS only) — not a full-repo lint.
 
 ### Dependabot
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useEffectEvent } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, BookmarkCheck, Bookmark, ChevronRight, ChevronLeft, Play, Pause, Share2 } from "lucide-react";
 import { useLanguage } from "./LanguageProvider";
@@ -105,6 +105,73 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     translation?: string;
   } | null>(null);
 
+  const loadVerseDetails = useEffectEvent(async (bookmarkKeys: string[]) => {
+    setLoading(true);
+    try {
+      const verses: BookmarkedVerse[] = [];
+
+      for (const key of bookmarkKeys) {
+        const [surahNum, ayahNum] = key.split("-").map(Number);
+
+        // Match Quran section: Arabic name for ar, englishName for other locales
+        let surahName = "";
+        try {
+          const surahResponse = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`);
+          const surahData = await surahResponse.json();
+          if (surahData.code === 200) {
+            surahName =
+              locale === "ar"
+                ? surahData.data.name || surahData.data.englishName
+                : surahData.data.englishName || surahData.data.name;
+          }
+        } catch (e) {
+          console.error("Error fetching surah:", e);
+        }
+
+        // Fetch ayah details
+        try {
+          const ayahResponse = await fetch(`https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNum}`);
+          const ayahData = await ayahResponse.json();
+          if (ayahData.code === 200) {
+            verses.push({
+              surahNumber: surahNum,
+              ayahNumber: ayahNum,
+              surahName: surahName || `Surah ${surahNum}`,
+              arabicText: ayahData.data.text,
+              translation: ayahData.data.edition?.text || "",
+            });
+          }
+        } catch {
+          // If API fails, still add the verse with basic info
+          verses.push({
+            surahNumber: surahNum,
+            ayahNumber: ayahNum,
+            surahName: surahName || `Surah ${surahNum}`,
+          });
+        }
+      }
+
+      setBookmarkedVerses(verses);
+    } catch (e) {
+      console.error("Error loading verse details:", e);
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  const loadBookmarks = useEffectEvent(() => {
+    if (typeof window === "undefined") return;
+    const savedBookmarks = localStorage.getItem("quran-bookmarks");
+    if (!savedBookmarks) return;
+    try {
+      const bookmarkArray = JSON.parse(savedBookmarks) as string[];
+      setBookmarks(bookmarkArray);
+      void loadVerseDetails(bookmarkArray);
+    } catch (e) {
+      console.error("Error loading bookmarks:", e);
+    }
+  });
+
   useEffect(() => {
     if (isOpen) {
       loadBookmarks();
@@ -125,15 +192,15 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
     const handleBookmarksUpdate = (event: CustomEvent) => {
       if (event.detail?.bookmarks) {
         setBookmarks(event.detail.bookmarks);
-        loadVerseDetails(event.detail.bookmarks);
+        void loadVerseDetails(event.detail.bookmarks);
       }
     };
 
-    window.addEventListener('bookmarks-updated', handleBookmarksUpdate as EventListener);
+    window.addEventListener("bookmarks-updated", handleBookmarksUpdate as EventListener);
     return () => {
-      window.removeEventListener('bookmarks-updated', handleBookmarksUpdate as EventListener);
+      window.removeEventListener("bookmarks-updated", handleBookmarksUpdate as EventListener);
     };
-  }, [locale]);
+  }, []);
 
   // Mirror EnhancedQuranSection audio event wiring
   useEffect(() => {
@@ -152,87 +219,18 @@ export default function BookmarkModal({ isOpen, onClose }: { isOpen: boolean; on
       console.error("Audio playback error");
     };
 
-    audio.addEventListener('play', handlePlay);
-    audio.addEventListener('pause', handlePause);
-    audio.addEventListener('ended', handleEnded);
-    audio.addEventListener('error', handleError);
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("error", handleError);
 
     return () => {
-      audio.removeEventListener('play', handlePlay);
-      audio.removeEventListener('pause', handlePause);
-      audio.removeEventListener('ended', handleEnded);
-      audio.removeEventListener('error', handleError);
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("error", handleError);
     };
   }, []);
-
-  const loadBookmarks = () => {
-    if (typeof window !== 'undefined') {
-      const savedBookmarks = localStorage.getItem('quran-bookmarks');
-      if (savedBookmarks) {
-        try {
-          const bookmarkArray = JSON.parse(savedBookmarks);
-          setBookmarks(bookmarkArray);
-          loadVerseDetails(bookmarkArray);
-        } catch (e) {
-          console.error('Error loading bookmarks:', e);
-        }
-      }
-    }
-  };
-
-  const loadVerseDetails = async (bookmarkKeys: string[]) => {
-    setLoading(true);
-    try {
-      const verses: BookmarkedVerse[] = [];
-      
-      for (const key of bookmarkKeys) {
-        const [surahNum, ayahNum] = key.split('-').map(Number);
-        
-        // Match Quran section: Arabic name for ar, englishName for other locales
-        let surahName = '';
-        try {
-          const surahResponse = await fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`);
-          const surahData = await surahResponse.json();
-          if (surahData.code === 200) {
-            surahName =
-              locale === 'ar'
-                ? (surahData.data.name || surahData.data.englishName)
-                : (surahData.data.englishName || surahData.data.name);
-          }
-        } catch (e) {
-          console.error('Error fetching surah:', e);
-        }
-
-        // Fetch ayah details
-        try {
-          const ayahResponse = await fetch(`https://api.alquran.cloud/v1/ayah/${surahNum}:${ayahNum}`);
-          const ayahData = await ayahResponse.json();
-          if (ayahData.code === 200) {
-            verses.push({
-              surahNumber: surahNum,
-              ayahNumber: ayahNum,
-              surahName: surahName || `Surah ${surahNum}`,
-              arabicText: ayahData.data.text,
-              translation: ayahData.data.edition?.text || ''
-            });
-          }
-        } catch (e) {
-          // If API fails, still add the verse with basic info
-          verses.push({
-            surahNumber: surahNum,
-            ayahNumber: ayahNum,
-            surahName: surahName || `Surah ${surahNum}`
-          });
-        }
-      }
-      
-      setBookmarkedVerses(verses);
-    } catch (e) {
-      console.error('Error loading verse details:', e);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const removeBookmark = (surahNumber: number, ayahNumber: number) => {
     const bookmarkKey = `${surahNumber}-${ayahNumber}`;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useEffectEvent } from "react";
 import { useLanguage } from "../LanguageProvider";
 import { motion } from "framer-motion";
 import { Clock, MapPin, Bell, Search, ChevronDown, Volume2, VolumeX, AlertCircle } from "lucide-react";
@@ -36,6 +36,28 @@ export default function PrayerTimesSection() {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
   const [hijriDate, setHijriDate] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [location, setLocation] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<{city: string, country: string, lat: number, lng: number} | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const locationDropdownRef = useRef<HTMLDivElement>(null);
+  const locationIdentityRef = useRef<{ city: string; country: string } | null>(null);
+
+  // Prayer tracking state
+  const [currentPrayer, setCurrentPrayer] = useState<string>("");
+  const [nextPrayer, setNextPrayer] = useState<string>("");
+  const [timeRemaining, setTimeRemaining] = useState<string>("");
+  const [prayerData, setPrayerData] = useState<PrayerTimeData[]>([]);
+  const [isAthanPlaying, setIsAthanPlaying] = useState(false);
+  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>({ granted: false, denied: false, default: true });
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState("");
+  const athanAudioRef = useRef<HTMLAudioElement>(null);
+  const prayerCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -58,7 +80,7 @@ export default function PrayerTimesSection() {
   };
 
   // Translate location names based on locale using translation keys
-  const translateLocation = (city: string, country: string): string => {
+  const translateLocation = useCallback((city: string, country: string): string => {
     // Normalize city and country names for translation keys
     const cityKey = `location.${city.toLowerCase().replace(/\s+/g, '_')}`;
     const countryKey = `location.${country.toLowerCase().replace(/\s+/g, '_')}`;
@@ -75,104 +97,19 @@ export default function PrayerTimesSection() {
     const separator = locale === 'ar' ? '، ' : ', ';
     
     return `${translatedCity}${separator}${translatedCountry}`;
-  };
-  
-  // Update location when locale changes
+  }, [t, locale]);
+
+  const applyLocalizedLocation = useCallback((city: string, country: string) => {
+    locationIdentityRef.current = { city, country };
+    setLocation(translateLocation(city, country));
+  }, [translateLocation]);
+
+  // Update location label when locale changes (identity stays in English keys)
   useEffect(() => {
-    if (location && mounted) {
-      // Extract city and country from current location string
-      // Location format is either "City, Country" or "المدينة، الدولة"
-      const parts = location.split(/[،,]/).map(p => p.trim());
-      if (parts.length >= 2) {
-        // Try to reverse translate or use default
-        const city = parts[0];
-        const country = parts[1];
-        // Re-translate with new locale
-        setLocation(translateLocation(city, country));
-      }
-    }
-  }, [locale, mounted]);
-  const [location, setLocation] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState<{city: string, country: string, lat: number, lng: number} | null>(null);
-  const [isSearching, setIsSearching] = useState(false);
-  const locationDropdownRef = useRef<HTMLDivElement>(null);
-  
-  // Prayer tracking state
-  const [currentPrayer, setCurrentPrayer] = useState<string>("");
-  const [nextPrayer, setNextPrayer] = useState<string>("");
-  const [timeRemaining, setTimeRemaining] = useState<string>("");
-  const [prayerData, setPrayerData] = useState<PrayerTimeData[]>([]);
-  const [isAthanPlaying, setIsAthanPlaying] = useState(false);
-  const [notificationPermission, setNotificationPermission] = useState<NotificationPermission>({ granted: false, denied: false, default: true });
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState("");
-  const athanAudioRef = useRef<HTMLAudioElement>(null);
-  const prayerCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Defer Aladhan / geolocation until the section nears the viewport (off LCP path).
-  useEffect(() => {
-    const section = document.getElementById("prayer-times");
-    let cancelled = false;
-    let started = false;
-
-    const start = () => {
-      if (cancelled || started) return;
-      started = true;
-      fetchPrayerTimes();
-      updateHijriDate();
-      startPrayerTracking();
-    };
-
-    if (!section || typeof IntersectionObserver === "undefined") {
-      const idle =
-        typeof window !== "undefined" && "requestIdleCallback" in window
-          ? (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback
-          : null;
-      const handle = idle
-        ? idle(() => start(), { timeout: 4000 })
-        : window.setTimeout(start, 2000);
-      return () => {
-        cancelled = true;
-        if (idle) {
-          (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(handle as number);
-        } else {
-          clearTimeout(handle as number);
-        }
-        if (prayerCheckIntervalRef.current) {
-          clearInterval(prayerCheckIntervalRef.current);
-        }
-      };
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          start();
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "400px" },
-    );
-    observer.observe(section);
-
-    return () => {
-      cancelled = true;
-      observer.disconnect();
-      if (prayerCheckIntervalRef.current) {
-        clearInterval(prayerCheckIntervalRef.current);
-      }
-    };
-  }, []);
-
-  // Update Hijri date when locale changes
-  useEffect(() => {
-    updateHijriDate();
-  }, [locale]);
+    if (!mounted || !locationIdentityRef.current) return;
+    const { city, country } = locationIdentityRef.current;
+    setLocation(translateLocation(city, country));
+  }, [locale, mounted, translateLocation]);
 
   // Search locations function
   const searchLocations = useCallback(async () => {
@@ -309,7 +246,7 @@ export default function PrayerTimesSection() {
           Isha: formatTime(timings.Isha),
           Sunrise: formatTime(timings.Sunrise),
         });
-        setLocation(translateLocation(city, country));
+        applyLocalizedLocation(city, country);
       } else {
         throw new Error('Invalid prayer times API response');
       }
@@ -366,7 +303,7 @@ export default function PrayerTimesSection() {
           Isha: formatTime(timings.Isha),
           Sunrise: formatTime(timings.Sunrise),
         });
-        setLocation(translateLocation(siteConfig.fallbackLocation.city, siteConfig.fallbackLocation.country));
+        applyLocalizedLocation(siteConfig.fallbackLocation.city, siteConfig.fallbackLocation.country);
       } else {
         throw new Error('Invalid API response');
       }
@@ -375,7 +312,7 @@ export default function PrayerTimesSection() {
       // Error fetching default prayer times - using fallback
       setError("Using fallback prayer times");
       setPrayerTimes(siteConfig.fallbackLocation.prayerTimes);
-      setLocation(translateLocation(siteConfig.fallbackLocation.city, siteConfig.fallbackLocation.country));
+      applyLocalizedLocation(siteConfig.fallbackLocation.city, siteConfig.fallbackLocation.country);
       setLoading(false);
     }
   };
@@ -480,6 +417,74 @@ export default function PrayerTimesSection() {
       checkPrayerTimes();
     }, 60000); // Check every minute
   };
+
+  const startDeferredPrayerLoad = useEffectEvent(() => {
+    void fetchPrayerTimes();
+    void updateHijriDate();
+    startPrayerTracking();
+  });
+
+  const refreshHijriDate = useEffectEvent(() => {
+    void updateHijriDate();
+  });
+
+  // Defer Aladhan / geolocation until the section nears the viewport (off LCP path).
+  useEffect(() => {
+    const section = document.getElementById("prayer-times");
+    let cancelled = false;
+    let started = false;
+
+    const start = () => {
+      if (cancelled || started) return;
+      started = true;
+      startDeferredPrayerLoad();
+    };
+
+    if (!section || typeof IntersectionObserver === "undefined") {
+      const idle =
+        typeof window !== "undefined" && "requestIdleCallback" in window
+          ? (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback
+          : null;
+      const handle = idle
+        ? idle(() => start(), { timeout: 4000 })
+        : window.setTimeout(start, 2000);
+      return () => {
+        cancelled = true;
+        if (idle) {
+          (window as Window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(handle as number);
+        } else {
+          clearTimeout(handle as number);
+        }
+        if (prayerCheckIntervalRef.current) {
+          clearInterval(prayerCheckIntervalRef.current);
+        }
+      };
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          start();
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "400px" },
+    );
+    observer.observe(section);
+
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+      if (prayerCheckIntervalRef.current) {
+        clearInterval(prayerCheckIntervalRef.current);
+      }
+    };
+  }, []);
+
+  // Update Hijri date when locale changes
+  useEffect(() => {
+    refreshHijriDate();
+  }, [locale]);
 
   // Check current prayer and next prayer
   const checkPrayerTimes = () => {
@@ -616,7 +621,7 @@ export default function PrayerTimesSection() {
       lat: location.latitude,
       lng: location.longitude
     });
-    setLocation(translateLocation(location.city, location.country));
+    applyLocalizedLocation(location.city, location.country);
     setSearchQuery("");
     setSearchResults([]);
     setIsLocationDropdownOpen(false);

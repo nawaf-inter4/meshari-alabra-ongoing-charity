@@ -1,0 +1,74 @@
+# Canonical labels for this repo.
+# Synced by .github/workflows/labels.yml (crazy-max/ghaction-github-labeler).
+# skip-delete: true — does not remove labels that are not listed here
+# (e.g. good first issue, autorelease:*, Dependabot defaults).
+
+# --- Conventional commit / PR title types ---
+- name: enhancement
+  color: "a2eeef"
+  description: "New feature or request (feat)"
+- name: bug
+  color: "d73a4a"
+  description: "Something isn't working (fix)"
+- name: documentation
+  color: "0075ca"
+  description: "Improvements or additions to documentation (docs)"
+- name: chore
+  color: "fef2c0"
+  description: "Maintenance or tooling (chore)"
+- name: refactor
+  color: "c5def5"
+  description: "Code restructuring without behavior change (refactor)"
+- name: performance
+  color: "d4c5f9"
+  description: "Performance improvement (perf)"
+- name: style
+  color: "f9d0c4"
+  description: "Formatting or presentation-only changes (style)"
+- name: build
+  color: "bfdadc"
+  description: "Build system or bundler changes (build)"
+- name: revert
+  color: "e99695"
+  description: "Reverts a previous change (revert)"
+
+# --- Path / area labels (also applied by actions/labeler) ---
+- name: ci
+  color: "000000"
+  description: "CI / GitHub Actions / workflow config"
+- name: docs
+  color: "0075ca"
+  description: "Markdown docs and docs/ site content"
+- name: deps
+  color: "0366d6"
+  description: "Dependency lockfile or package manifest"
+- name: i18n
+  color: "5319e7"
+  description: "Locales and translation strings"
+- name: quran
+  color: "0e8a16"
+  description: "Quran section, API, editions, or fonts"
+- name: a11y
+  color: "b60205"
+  description: "Accessibility (axe, reduced motion, a11y)"
+- name: pwa
+  color: "1d76db"
+  description: "Progressive Web App / service worker / install"
+- name: seo
+  color: "fbca04"
+  description: "SEO, sitemap, robots, OG, schema"
+- name: tests
+  color: "bfd4f2"
+  description: "Playwright e2e or other automated tests"
+- name: frontend
+  color: "168700"
+  description: "UI components, Next.js app routes, styles"
+- name: content
+  color: "d93f0b"
+  description: "Stories, static content, public assets"
+- name: scripts
+  color: "e4e669"
+  description: "Repo scripts under scripts/"
+- name: config
+  color: "c2e0c6"
+  description: "App/site config, Next, Vercel, deploy manifests"
