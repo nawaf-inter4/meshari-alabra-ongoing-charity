@@ -24,7 +24,7 @@ Baseline directives:
 - **Production `script-src` has no `'unsafe-inline'`** — per-request `'nonce-…'` + `'strict-dynamic'`
 - **Production `style-src` uses `'unsafe-inline'` without a style nonce** — React CSSOM / Safari require it; a style-src nonce makes browsers ignore `'unsafe-inline'` and breaks the app. Scripts still use nonce + `strict-dynamic` (no script `'unsafe-inline'`).
 - **`upgrade-insecure-requests` only on HTTPS** — must not ship on local `http://127.0.0.1` or CSS/fonts/PDF workers fail after forced https upgrades.
-- `experimental.inlineCss` is **off** — external cached stylesheets keep HTML smaller (better mobile LCP than inlining ~60KB of CSS).
+- `experimental.inlineCss` is **off** — external cached stylesheets keep HTML smaller (better mobile LCP than inlining ~60KB of CSS). There is no post-build CSP style-hash patch step: with `inlineCss` off and `style-src` already including `'unsafe-inline'`, hashing inlined CSS chunks is unnecessary.
 
 ### Nonce + Cache Components tradeoff
 

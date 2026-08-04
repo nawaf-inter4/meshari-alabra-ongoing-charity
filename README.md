@@ -208,7 +208,7 @@ Images:           long TTL with stale-while-revalidate where configured
 
 ## Quick start
 
-**Prerequisites:** Node.js 22 (20.9+ supported) and npm.
+**Prerequisites:** Node.js 22.12+ (see `package.json` `engines`) and npm.
 
 ```bash
 git clone https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity.git
