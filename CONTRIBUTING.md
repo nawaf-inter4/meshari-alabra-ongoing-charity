@@ -102,6 +102,7 @@ Pull requests targeting `sandbox` or `main` run:
 | **Security** | `npm audit --audit-level=high` (fails on high/critical) and gitleaks secret scan |
 | **Quality** | lint, type-check, Playwright e2e (includes axe a11y smoke), production build — short-circuited for version-only PRs |
 | **PR title** | Separate workflow: Conventional Commits title via `amannn/action-semantic-pull-request` |
+| **PR labeler** | Path labels from `.github/labeler.yml` plus type labels from the PR title prefix (`feat` → enhancement, `fix` → bug, …). Separate from Release Please version tags |
 
 Feature PRs → `sandbox`: one full CI path on the PR. After merge, the follow-up `push` run is detected as a duplicate and no-ops so required checks stay green without re-linting / re-testing. Promote PRs → `main`: same pattern. Version-only Release Please / sync PRs skip the heavy quality matrix.
 
