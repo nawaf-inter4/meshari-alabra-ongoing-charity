@@ -3,15 +3,15 @@
   "version": "1.4.0",
   "private": true,
   "engines": {
-    "node": ">=22 <23"
+    "node": ">=22.12.0 <23"
   },
   "scripts": {
     "dev": "npm run stub:polyfills && next dev --turbopack",
     "dev:webpack": "npm run stub:polyfills && next dev",
     "dev:clean": "npm run clean:all && npm run dev",
-    "build": "npm run stub:polyfills && next build && node ./scripts/inject-csp-style-hashes.mjs",
-    "build:turbo": "npm run stub:polyfills && NEXT_TURBOPACK=1 next build && node ./scripts/inject-csp-style-hashes.mjs",
-    "build:analyze": "npm run stub:polyfills && ANALYZE=true next build && node ./scripts/inject-csp-style-hashes.mjs",
+    "build": "npm run stub:polyfills && next build",
+    "build:turbo": "npm run stub:polyfills && NEXT_TURBOPACK=1 next build",
+    "build:analyze": "npm run stub:polyfills && ANALYZE=true next build",
     "build:clean": "npm run clean:all && npm run build",
     "preview": "npm run stub:polyfills && opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "npm run stub:polyfills && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
@@ -59,8 +59,8 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
-    "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
     "@next/bundle-analyzer": "16.3.0",
     "@next/playwright": "16.3.0",
     "@playwright/test": "^1.62.0",
