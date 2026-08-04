@@ -1,0 +1,42 @@
+name: Feature request
+description: Suggest an improvement aligned with the memorial and charity purpose
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Ideas should stay respectful, accessible, and useful for Meshari's Continuous Charity — not commercial or promotional.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What need does this address?
+      description: Who benefits (visitors, family, maintainers) and why it belongs on this memorial site.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: What you would like to see, at a high level.
+    validations:
+      required: true
+
+  - type: textarea
+    id: a11y
+    attributes:
+      label: Accessibility / multilingual notes
+      description: Any RTL, screen-reader, or locale considerations.
+      placeholder: Should work in Arabic (RTL) and English; avoid relying on color alone…
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: memorial
+    attributes:
+      label: Memorial check
+      options:
+        - label: This idea respects Meshari's memory, avoids advertising/tracking scope creep, and does not request private personal information.
+          required: true

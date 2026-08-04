@@ -10,6 +10,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  actions: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -19,82 +20,213 @@ env:
   NEXT_TELEMETRY_DISABLED: 1
 
 jobs:
+  # After a PR merges, GitHub fires `push` for the same SHA that `pull_request`
+  # already validated. Detect that duplicate and detect Release Please /
+  # version-sync changes that only touch package.json, CHANGELOG, and the
+  # release manifest so heavy jobs can no-op while still reporting green for
+  # required checks.
+  preflight:
+    name: Preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      should_skip: ${{ steps.skip.outputs.should_skip }}
+      release_only: ${{ steps.paths.outputs.release_only }}
+    steps:
+      - id: skip
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          concurrent_skipping: same_content_newer
+          skip_after_successful_duplicate: "true"
+          do_not_skip: '["workflow_dispatch", "schedule"]'
+
+      - name: Check out repository
+        if: steps.skip.outputs.should_skip != 'true'
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Detect version-only changes
+        id: paths
+        env:
+          SHOULD_SKIP: ${{ steps.skip.outputs.should_skip }}
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          if [ "$SHOULD_SKIP" = "true" ]; then
+            echo "release_only=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          release_only=false
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            range="${BASE_SHA}...${HEAD_SHA}"
+          elif [ "$EVENT_NAME" = "push" ] && [ "${BEFORE_SHA}" != "0000000000000000000000000000000000000000" ]; then
+            range="${BEFORE_SHA}...${AFTER_SHA}"
+          else
+            echo "release_only=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          mapfile -t files < <(git diff --name-only "$range" || true)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "release_only=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          release_only=true
+          for file in "${files[@]}"; do
+            case "$file" in
+              package.json|CHANGELOG.md|.release-please-manifest.json) ;;
+              *)
+                release_only=false
+                break
+                ;;
+            esac
+          done
+
+          echo "Changed files:"
+          printf ' - %s\n' "${files[@]}"
+          echo "release_only=${release_only}" >> "$GITHUB_OUTPUT"
+
   dependency-review:
     name: Dependency review
+    needs: preflight
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
+      - name: Skip duplicate of successful run
+        if: needs.preflight.outputs.should_skip == 'true'
+        run: echo "Already validated for this content — skipping dependency review."
+
       - name: Check out repository
+        if: needs.preflight.outputs.should_skip != 'true'
         uses: actions/checkout@v7
 
       - name: Dependency review
+        if: needs.preflight.outputs.should_skip != 'true'
         uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: high
 
   security:
     name: Security
+    needs: preflight
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
+      - name: Skip duplicate of successful run
+        if: needs.preflight.outputs.should_skip == 'true'
+        run: echo "Already validated for this content — skipping security."
+
       - name: Check out repository
+        if: needs.preflight.outputs.should_skip != 'true'
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Node.js
+        if: needs.preflight.outputs.should_skip != 'true'
         uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
 
       - name: Install dependencies
+        if: needs.preflight.outputs.should_skip != 'true'
         run: npm ci --legacy-peer-deps
 
       - name: npm audit (fail on high/critical)
+        if: needs.preflight.outputs.should_skip != 'true'
         run: npm audit --audit-level=high
 
       - name: Install gitleaks
+        if: needs.preflight.outputs.should_skip != 'true'
         run: |
           curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v8.28.0/gitleaks_8.28.0_linux_x64.tar.gz" \
             | tar -xz -C /usr/local/bin gitleaks
           gitleaks version
 
       - name: Secret scan (gitleaks)
+        if: needs.preflight.outputs.should_skip != 'true'
         run: gitleaks detect --source . --config .gitleaks.toml --verbose --redact --no-banner
 
   quality:
     name: Lint, type-check, browser test, and build
+    needs: preflight
     runs-on: ubuntu-latest
+    # Full matrix needs ~30m; duplicate / version-only paths finish in seconds.
     timeout-minutes: 30
 
     steps:
+      - name: Skip duplicate of successful run
+        if: needs.preflight.outputs.should_skip == 'true'
+        run: echo "Already validated for this content — skipping quality."
+
+      - name: Version-only change — skip heavy quality
+        if: >-
+          needs.preflight.outputs.should_skip != 'true'
+          && needs.preflight.outputs.release_only == 'true'
+        run: |
+          echo "Only package.json / CHANGELOG.md / .release-please-manifest.json changed."
+          echo "Full lint, type-check, e2e, and build are skipped for this SHA."
+
       - name: Check out repository
+        if: >-
+          needs.preflight.outputs.should_skip != 'true'
+          && needs.preflight.outputs.release_only != 'true'
         uses: actions/checkout@v7
 
       - name: Set up Node.js
+        if: >-
+          needs.preflight.outputs.should_skip != 'true'
+          && needs.preflight.outputs.release_only != 'true'
         uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
 
       - name: Install dependencies
+        if: >-
+          needs.preflight.outputs.should_skip != 'true'
+          && needs.preflight.outputs.release_only != 'true'
         run: npm ci --legacy-peer-deps
 
       - name: Lint
+        if: >-
+          needs.preflight.outputs.should_skip != 'true'
+          && needs.preflight.outputs.release_only != 'true'
         run: npm run lint
 
       - name: Type-check
+        if: >-
+          needs.preflight.outputs.should_skip != 'true'
+          && needs.preflight.outputs.release_only != 'true'
         run: npm run type-check
 
       - name: Install Playwright browsers
+        if: >-
+          needs.preflight.outputs.should_skip != 'true'
+          && needs.preflight.outputs.release_only != 'true'
         run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Browser tests
+        if: >-
+          needs.preflight.outputs.should_skip != 'true'
+          && needs.preflight.outputs.release_only != 'true'
         run: npm run test:e2e
 
       - name: Build
+        if: >-
+          needs.preflight.outputs.should_skip != 'true'
+          && needs.preflight.outputs.release_only != 'true'
         run: npm run build
