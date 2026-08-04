@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useLanguage } from "./LanguageProvider";
-import { Search, X, BookOpen, Clock, Compass, Heart, FileText, Bookmark, Youtube, MessageSquare } from "lucide-react";
+import { Search, X, BookOpen, Clock, Compass, Heart, FileText, Bookmark, Youtube, MessageSquare, type LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { localizedSectionHref } from "@/lib/routes";
@@ -16,6 +16,24 @@ interface SearchResult {
   ayahNumber?: number;
 }
 
+const SECTION_DEFS: ReadonlyArray<{
+  id: string;
+  titleKey: string;
+  fallback: string;
+  url: string;
+  icon: LucideIcon;
+}> = [
+  { id: 'quran', titleKey: 'quran.title', fallback: 'القرآن الكريم', url: '/sections/quran', icon: BookOpen },
+  { id: 'prayer-times', titleKey: 'prayer.title', fallback: 'مواقيت الصلاة', url: '/sections/prayer-times', icon: Clock },
+  { id: 'qibla', titleKey: 'qibla.title', fallback: 'اتجاه القبلة', url: '/sections/qibla', icon: Compass },
+  { id: 'supplications', titleKey: 'supplications.title', fallback: 'أدعية وأذكار', url: '/sections/supplications', icon: Heart },
+  { id: 'tafseer', titleKey: 'tafseer.title', fallback: 'تفسير القرآن', url: '/sections/tafseer', icon: FileText },
+  { id: 'dhikr', titleKey: 'dhikr.title', fallback: 'عداد التسبيح', url: '/sections/dhikr', icon: MessageSquare },
+  { id: 'hadith', titleKey: 'hadith.title', fallback: 'الأحاديث النبوية', url: '/sections/hadith', icon: BookOpen },
+  { id: 'donation', titleKey: 'donation.title', fallback: 'كفالة يتيم', url: '/sections/donation', icon: Heart },
+  { id: 'youtube', titleKey: 'youtube.title', fallback: 'مقاطع القرآن الكريم', url: '/sections/youtube', icon: Youtube },
+];
+
 export default function GlobalSearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { t, locale } = useLanguage();
   const reduceMotion = useReducedMotion();
@@ -27,18 +45,14 @@ export default function GlobalSearchModal({ isOpen, onClose }: { isOpen: boolean
   const inputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Sections available for search
-  const sections = [
-    { id: 'quran', name: t("quran.title") || "القرآن الكريم", url: '/sections/quran', icon: BookOpen },
-    { id: 'prayer-times', name: t("prayer.title") || "مواقيت الصلاة", url: '/sections/prayer-times', icon: Clock },
-    { id: 'qibla', name: t("qibla.title") || "اتجاه القبلة", url: '/sections/qibla', icon: Compass },
-    { id: 'supplications', name: t("supplications.title") || "أدعية وأذكار", url: '/sections/supplications', icon: Heart },
-    { id: 'tafseer', name: t("tafseer.title") || "تفسير القرآن", url: '/sections/tafseer', icon: FileText },
-    { id: 'dhikr', name: t("dhikr.title") || "عداد التسبيح", url: '/sections/dhikr', icon: MessageSquare },
-    { id: 'hadith', name: t("hadith.title") || "الأحاديث النبوية", url: '/sections/hadith', icon: BookOpen },
-    { id: 'donation', name: t("donation.title") || "كفالة يتيم", url: '/sections/donation', icon: Heart },
-    { id: 'youtube', name: t("youtube.title") || "مقاطع القرآن الكريم", url: '/sections/youtube', icon: Youtube },
-  ];
+  const sections = useMemo(
+    () =>
+      SECTION_DEFS.map((section) => ({
+        ...section,
+        name: t(section.titleKey) || section.fallback,
+      })),
+    [t],
+  );
 
   // Focus input when modal opens
   useEffect(() => {
@@ -149,7 +163,7 @@ export default function GlobalSearchModal({ isOpen, onClose }: { isOpen: boolean
     };
 
     searchQuran();
-  }, [searchQuery, locale]);
+  }, [searchQuery, locale, sections]);
 
   const handleResultClick = (result: SearchResult) => {
     if (result.type === 'quran' && result.surahNumber && result.ayahNumber) {

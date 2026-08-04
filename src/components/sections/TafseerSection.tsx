@@ -817,21 +817,27 @@ export default function TafseerSection() {
               </button>
               
               {showEditions && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
+                <div
+                  role="listbox"
+                  aria-labelledby="tafseer-edition-trigger"
+                  className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
+                >
                   {availableEditions.map((edition) => {
                     const label = editionDisplayName(edition, locale);
+                    const isSelected = selectedEdition.id === edition.id;
                     return (
                       <button
                         key={edition.id}
                         type="button"
+                        role="option"
                         onClick={() => handleEditionSelect(edition)}
                         className={`w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0 ${
-                          selectedEdition.id === edition.id
+                          isSelected
                             ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
                             : "text-gray-900 dark:text-white"
                         }`}
                         aria-label={`${label} by ${edition.author}`}
-                        aria-selected={selectedEdition.id === edition.id}
+                        aria-selected={isSelected}
                       >
                         <div
                           className={`font-semibold ${

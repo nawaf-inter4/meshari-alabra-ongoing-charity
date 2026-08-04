@@ -320,6 +320,8 @@ export default function ShareModal({ isOpen, onClose, verse, mode = 'verse' }: S
                 {mode === 'website' ? (
                   <div className="mb-6">
                     <div className="rounded-2xl overflow-hidden shadow-lg border-2 border-islamic-gold/30">
+                      {/* Absolute OG URL + multi-step onError src swap; next/Image isn't a fit here. */}
+                      {/* eslint-disable-next-line @next/next/no-img-element -- OG preview needs imperative onError fallback chain */}
                       <img 
                         src={ogImageUrl}
                         alt={websiteTitle}
