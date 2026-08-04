@@ -6,6 +6,13 @@ This project uses [Semantic Versioning](https://semver.org/) and automated relea
 
 Patch and minor changes are batched: Release Please opens one release pull request on `main` that accumulates `fix:` (patch) and `feat:` (minor) commits since the last tag. Merging that pull request publishes the GitHub release and tag.
 
+## [1.4.1](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.4.0...v1.4.1) (2026-08-04)
+
+
+### Bug Fixes
+
+* hijri death date, CI workflow hardening, preview warnings, and eslint a11y cleanup ([#59](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/issues/59)) ([73f78c7](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/commit/73f78c778c353b301bb731c49f1d85af86bf89de))
+
 ## [1.4.0](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.3.0...v1.4.0) (2026-08-04)
 
 
