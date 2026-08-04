@@ -102,8 +102,27 @@ function applySecurityHeaders(
   }
 
   if (request.nextUrl.pathname.match(/\.(png|jpg|jpeg|gif|webp|svg|ico)$/)) {
-    response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
-    response.headers.set('Cross-Origin-Resource-Policy', 'same-origin');
+    // OG assets change without a content hash — use short revalidation, not year-long immutable.
+    const isOgAsset =
+      request.nextUrl.pathname === '/og-image.png' ||
+      request.nextUrl.pathname === '/og-image.svg' ||
+      request.nextUrl.pathname.startsWith('/og-image.');
+    response.headers.set(
+      'Cache-Control',
+      isOgAsset
+        ? 'public, max-age=86400, must-revalidate'
+        : 'public, max-age=31536000, immutable',
+    );
+    // OG / social preview assets must be readable cross-origin by crawlers.
+    response.headers.set(
+      'Cross-Origin-Resource-Policy',
+      isOgAsset ? 'cross-origin' : 'same-origin',
+    );
+  }
+
+  if (request.nextUrl.pathname === '/og-image') {
+    response.headers.set('Cross-Origin-Resource-Policy', 'cross-origin');
+    response.headers.set('Cache-Control', 'public, max-age=3600, must-revalidate');
   }
 
   if (request.nextUrl.pathname.match(/\.(woff|woff2|ttf|eot)$/)) {
