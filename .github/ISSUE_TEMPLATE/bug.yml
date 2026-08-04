@@ -1,0 +1,64 @@
+name: Bug report
+description: Report a problem with the memorial site or charity tools
+title: "fix: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping care for Meshari's Continuous Charity. Please keep reports respectful and focused.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What went wrong?
+      description: A short description of the bug and where you saw it (page, locale, device).
+      placeholder: On /ar/sections/quran the audio player fails to start on Safari…
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps others can follow.
+      placeholder: |
+        1. Open https://meshari.charity/ar
+        2. …
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: dropdown
+    id: locale
+    attributes:
+      label: Locale / language
+      options:
+        - ar (Arabic)
+        - en (English)
+        - Other / multiple
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Browser / device
+      placeholder: Safari 18 on iPhone, Chrome on macOS, …
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: memorial
+    attributes:
+      label: Memorial check
+      options:
+        - label: This report does not include private personal data or disrespectful content about Meshari or Islamic sources.
+          required: true

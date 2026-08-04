@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security report
+    url: https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/blob/sandbox/SECURITY.md
+    about: Please follow SECURITY.md for vulnerability reports — do not file a public issue.

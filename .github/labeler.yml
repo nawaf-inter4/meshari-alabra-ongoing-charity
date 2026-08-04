@@ -1,0 +1,124 @@
+# Path-based PR labels (actions/labeler@v5).
+# Label names must exist in the repo (see .github/labels.yml + labels sync).
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**/*"
+          - ".husky/**/*"
+          - "commitlint.config.*"
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**/*"
+          - "*.md"
+          - "LICENSE"
+
+deps:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "package-lock.json"
+          - ".npmrc"
+
+i18n:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/locales/**/*"
+          - "src/lib/translations.ts"
+          - "src/components/LanguageProvider.tsx"
+          - "src/components/LanguageSwitcher.tsx"
+          - "src/components/BidiText.tsx"
+
+quran:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/components/sections/Quran*"
+          - "src/components/sections/EnhancedQuran*"
+          - "src/components/sections/Tafseer*"
+          - "src/components/QuranFontLoader.tsx"
+          - "src/app/api/quran/**/*"
+          - "src/lib/quran-editions.ts"
+          - "src/lib/tafseer-editions.ts"
+          - "src/lib/hero-verse.ts"
+          - "public/fonts/**/*"
+
+a11y:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/a11y*"
+          - "src/components/AccessibilityOptimizer.tsx"
+          - "tests/e2e/a11y.spec.ts"
+
+pwa:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/components/PWA*"
+          - "src/lib/pwa-copy.ts"
+          - "src/app/manifest.ts"
+          - "public/splash/**/*"
+          - "tests/e2e/pwa.spec.ts"
+
+seo:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/lib/seo.ts"
+          - "src/components/*Schema*"
+          - "src/components/SEOScripts.tsx"
+          - "src/app/sitemap.ts"
+          - "src/app/robots.ts"
+          - "src/app/og-image/**/*"
+          - "src/app/llms.txt/**/*"
+          - "src/app/feed.xml/**/*"
+          - "tests/e2e/seo-indexing.spec.ts"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tests/**/*"
+          - "playwright.config.*"
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/app/**/*"
+          - "src/components/**/*"
+          - "src/styles/**/*"
+          - "tailwind.config.*"
+          - "postcss.config.*"
+
+content:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/content/**/*"
+          - "public/stories/**/*"
+          - "public/audio/**/*"
+          - "public/icons/**/*"
+          - "public/flags/**/*"
+
+scripts:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "scripts/**/*"
+
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/config/**/*"
+          - "next.config.*"
+          - "vercel.json"
+          - "open-next.config.*"
+          - "wrangler.jsonc"
+          - "compose.yaml"
+          - "Dockerfile"
+          - "netlify.toml"
+          - "railway.json"
+          - "render.yaml"
+          - "tsconfig*.json"
+          - "eslint.config.*"
+          - "release-please-config.json"
+          - ".release-please-manifest.json"
+          - ".gitleaks.toml"
+          - ".vercelignore"
+          - ".dockerignore"
