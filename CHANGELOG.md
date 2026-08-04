@@ -6,6 +6,13 @@ This project uses [Semantic Versioning](https://semver.org/) and automated relea
 
 Patch and minor changes are batched: Release Please opens one release pull request on `main` that accumulates `fix:` (patch) and `feat:` (minor) commits since the last tag. Merging that pull request publishes the GitHub release and tag.
 
+## [1.4.0](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.3.0...v1.4.0) (2026-08-04)
+
+
+### Features
+
+* single release deploy, OG/share fixes, and Next 16.3 ([#50](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/issues/50)) ([8ba0df5](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/commit/8ba0df5e6ddc7562976928b7be9653fda9e1193e))
+
 ## [1.3.0](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.2.0...v1.3.0) (2026-08-02)
 
 
