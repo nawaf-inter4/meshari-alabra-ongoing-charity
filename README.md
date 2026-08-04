@@ -15,7 +15,7 @@
 **A multilingual Islamic memorial site dedicated to Meshari Ahmed Sulaiman Alabra**  
 **مشاري بن أحمد بن سليمان العبره (رحمه الله)**
 
-*March 29, 2023 — may Allah have mercy on him*
+*March 29, 2023 (7th Ramadan, 1444h) — may Allah have mercy on him*
 
 [Live site](https://meshari.charity) · [Deployment guide](./DEPLOYMENT.md) · [White-label guide](./WHITE_LABELING.md) · [Donate for orphans](https://ehsan.sa/campaign/6FC11E15DA)
 
@@ -517,7 +517,7 @@ meshari-alabra-ongoing-charity/
 **Meshari Ahmed Sulaiman Alabra**  
 **مشاري بن أحمد بن سليمان العبره (رحمه الله)**
 
-*Passed away on March 29, 2023 in Riyadh, Saudi Arabia*
+*Passed away on March 29, 2023 (7th Ramadan, 1444h) in Riyadh, Saudi Arabia*
 
 > إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ  
 > *Indeed we belong to Allah, and indeed to Him we will return.*
