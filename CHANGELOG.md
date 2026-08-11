@@ -6,6 +6,13 @@ This project uses [Semantic Versioning](https://semver.org/) and automated relea
 
 Patch and minor changes are batched: Release Please opens one release pull request on `main` that accumulates `fix:` (patch) and `feat:` (minor) commits since the last tag. Merging that pull request publishes the GitHub release and tag.
 
+## [1.4.2](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.4.1...v1.4.2) (2026-08-11)
+
+
+### Bug Fixes
+
+* bump js-yaml, dompurify, and nanoid for npm audit ([#65](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/issues/65)) ([ef5cd2f](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/commit/ef5cd2fd1358d2a8b498b7dafefb142fb3709413))
+
 ## [1.4.1](https://github.com/nawaf-inter4/meshari-alabra-ongoing-charity/compare/v1.4.0...v1.4.1) (2026-08-04)
 
 
