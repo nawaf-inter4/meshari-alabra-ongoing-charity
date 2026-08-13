@@ -189,7 +189,7 @@ jobs:
         if: needs.preflight.outputs.should_skip != 'true'
         uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 22.13
           cache: npm
 
       - name: Install dependencies
@@ -243,7 +243,7 @@ jobs:
           && needs.preflight.outputs.release_only != 'true'
         uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 22.13
           cache: npm
 
       - name: Install dependencies

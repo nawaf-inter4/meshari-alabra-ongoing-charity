@@ -63,7 +63,10 @@ export default function PDFThumbnail({
       try {
         const pdfModule = await import("pdfjs-dist");
         pdfModule.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
-        loadingTask = pdfModule.getDocument({ url: pdfUrl, withCredentials: false });
+        loadingTask = pdfModule.getDocument({
+          url: pdfUrl,
+          withCredentials: false,
+        });
         const pdf = await loadingTask.promise;
         const page = await pdf.getPage(1);
         if (cancelled || !canvasRef.current) return;
@@ -80,6 +83,7 @@ export default function PDFThumbnail({
         canvas.height = Math.floor(viewport.height * pixelRatio);
         canvas.style.width = `${Math.floor(viewport.width)}px`;
         canvas.style.height = `${Math.floor(viewport.height)}px`;
+        context.setTransform(1, 0, 0, 1, 0, 0);
 
         const currentRenderTask = page.render({
           canvas,
