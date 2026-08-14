@@ -3,7 +3,7 @@
   "version": "1.4.2",
   "private": true,
   "engines": {
-    "node": ">=22.12.0 <23"
+    "node": ">=22.13.0 <23"
   },
   "scripts": {
     "dev": "npm run stub:polyfills && next dev --turbopack",
@@ -26,7 +26,7 @@
     "clean:all": "rm -rf .next node_modules package-lock.json .turbo .swc && npm cache clean --force",
     "clean:build": "./scripts/clean-build.sh",
     "stub:polyfills": "node ./scripts/stub-next-polyfills.cjs",
-    "postinstall": "node ./scripts/stub-next-polyfills.cjs",
+    "postinstall": "node ./scripts/stub-next-polyfills.cjs && node ./scripts/sync-pdf-worker.cjs",
     "prepare": "husky || true",
     "commitlint": "commitlint --edit",
     "generate:splash": "node scripts/generate-apple-splash.mjs",
@@ -40,7 +40,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "date-fns-jalali": "^4.1.0-0",
-    "framer-motion": "^12.43.0",
+    "framer-motion": "^13.1.0",
     "html-to-image": "^1.11.13",
     "i18next": "^25.10.10",
     "i18next-browser-languagedetector": "^8.2.1",
@@ -48,7 +48,7 @@
     "lucide-react": "^0.577.0",
     "next": "16.3.0",
     "next-devtools-mcp": "^0.4.0",
-    "pdfjs-dist": "5.4.296",
+    "pdfjs-dist": "6.2.108",
     "postcss": "^8.5.25",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -63,18 +63,18 @@
     "@commitlint/config-conventional": "^21.2.0",
     "@next/bundle-analyzer": "16.3.0",
     "@next/playwright": "16.3.0",
-    "@playwright/test": "^1.62.0",
-    "@types/node": "^26.1.2",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "eslint": "^9.39.1",
     "eslint-config-next": "16.3.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.2",
+    "lint-staged": "^17.3.0",
     "sharp": "^0.35.3",
     "typescript": "^7.0.2",
     "typescript6": "npm:@typescript/typescript6@^6.0.2",
-    "wrangler": "^4.118.0"
+    "wrangler": "^4.120.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -93,7 +93,7 @@
   "overrides": {
     "@modelcontextprotocol/sdk": "^1.30.0",
     "postcss": "^8.5.25",
-    "pdfjs-dist": "5.4.296",
+    "pdfjs-dist": "6.2.108",
     "glob": "^12.0.0",
     "formdata-node": "^6.0.3",
     "fast-uri": "^3.1.5",
