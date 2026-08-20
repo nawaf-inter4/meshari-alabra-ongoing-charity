@@ -58,23 +58,23 @@
     "tailwindcss": "^3.4.18"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.12.1",
-    "@commitlint/cli": "^21.2.1",
+    "@axe-core/playwright": "^4.13.0",
+    "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.0",
-    "@next/bundle-analyzer": "16.3.0",
-    "@next/playwright": "16.3.0",
+    "@next/bundle-analyzer": "16.3.1",
+    "@next/playwright": "16.3.1",
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "eslint": "^9.39.1",
-    "eslint-config-next": "16.3.0",
+    "eslint-config-next": "16.3.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.3.0",
     "sharp": "^0.35.3",
     "typescript": "^7.0.2",
     "typescript6": "npm:@typescript/typescript6@^6.0.2",
-    "wrangler": "^4.120.0"
+    "wrangler": "^4.123.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
